@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.guanshiyun</groupId>
+		<artifactId>gsy-system-cloud</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>sys-user-server</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>sys-user-server</name>
+	<description>sys-user-server</description>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
+	<properties>
+		<common.version>0.0.1-SNAPSHOT</common.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>com.guanshiyun</groupId>
+			<artifactId>sys-common-utils</artifactId>
+			<version>${common.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<skip>true</skip> <!-- 跳过 repackage -->
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

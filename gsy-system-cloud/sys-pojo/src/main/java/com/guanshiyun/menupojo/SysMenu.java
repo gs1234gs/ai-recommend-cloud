@@ -1,0 +1,63 @@
+package com.guanshiyun.menupojo;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+
+/**
+ * 菜单实体类
+ * */
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Table("sys_menu")
+public class SysMenu {
+    //菜单id
+   @Id
+   private BigInteger id;
+   //菜单名称
+    private String name;
+    //父级菜单id
+    private BigInteger parentId;
+    //显示顺序
+    private int orderNum;
+    //路由地址
+    private String path;
+    //组件路径
+    private String component;
+    //路由参数
+    private String query;
+    //路由名称
+    private String routeName;
+    //是否外链,0是，，1否
+    private short isFrame;
+    //是否缓存，0是，1否
+    private short isCache;
+    //菜单类型，M目录，C菜单,F按钮
+    private String type;
+    //菜单状态，0显示，1隐藏
+    private short visible;
+    //菜单状态，0正常，1停用
+    private short status;
+    //权限标识
+    private String perms;
+    //图标
+    private String icon;
+    //创建者id
+    private BigInteger creatorId;
+    //创建时间
+    private LocalDateTime createTime;
+    //更新者id
+    private BigInteger updaterId;
+    //更新时间
+    private LocalDateTime updateTime;
+    //备注
+    private String remark;
+}

@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: system-app
+          uri: lb://system-app
+          predicates:
+            - Path=/sys-api/**
+
+

@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: ModuleTest
+
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/cit
+    username: root
+    password: 1234
+server:
+  port: 10000

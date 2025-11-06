@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+      discovery:
+        namespace: dev
+logging:
+  level:
+    com.alibaba.nacos.client: DEBUG
+    org.springframework.ai.chat.client.advisor: DEBUG

@@ -1,0 +1,8 @@
+${AnsiColor.RED}   ( (
+    ) )
+  ........
+  |      |]     ${AnsiColor.DEFAULT}                    ${AnsiColor.CYAN}  (\_/)
+  \      /                             (o.o)
+   `----'                              > ^ <  ${AnsiColor.DEFAULT}
+
+   ${AnsiColor.RED}JAVA${AnsiColor.DEFAULT}                                ${AnsiColor.CYAN}GO${AnsiColor.DEFAULT}

@@ -1,0 +1,34 @@
+package com.guanshiyun.service.resetforget.impl;
+
+import com.guanshiyun.pojo.signreqpojo.SignRequestUser;
+import com.guanshiyun.repository.resetforget.ResetForgetRepository;
+import com.guanshiyun.responsepojo.Result;
+import com.guanshiyun.service.resetforget.ResetForgetService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+
+@Service
+@RequiredArgsConstructor
+public class ResetForgetServiceImpl implements ResetForgetService {
+    private final ResetForgetRepository resetForgetRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public Mono<Result> resetForget(SignRequestUser signRequestUser) {
+        return resetForgetRepository.findByUsername(signRequestUser.getUsername())
+                .flatMap(resetUser -> {
+                    resetUser.setPassword(passwordEncoder.encode(signRequestUser.getPassword()));
+                    return resetForgetRepository.save(resetUser)
+                            .map(user ->
+                                    Result.success("修改密码成功"));
+                })
+                .switchIfEmpty(Mono.just(
+                        Result.error("修改密码失败")
+                ))
+                .onErrorResume(e->Mono.just(
+                        Result.error("修改密码失败")
+                ));
+    }
+}

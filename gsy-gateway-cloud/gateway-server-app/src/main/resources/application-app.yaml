@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+#      系统模块
+        - id: system-app
+          uri: lb://system-app
+          predicates:
+            - Path=/sys-api/**
+
+#ai模块
+        - id: ai-app
+          uri: lb://ai-app
+          predicates:
+            - Path=/ai-api/**

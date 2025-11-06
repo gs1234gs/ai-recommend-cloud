@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: ai-app
+  profiles:
+    active: data,middleware,ollama
+
+server:
+  port: 1949

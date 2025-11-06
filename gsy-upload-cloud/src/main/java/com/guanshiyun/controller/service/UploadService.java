@@ -1,0 +1,13 @@
+package com.guanshiyun.upload;
+
+import com.guanshiyun.responsepojo.ResultT;
+import org.springframework.http.codec.multipart.PartEvent;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+import java.util.List;
+
+public interface UploadService {
+    Mono<ResultT<List<String>>> uploadFile(Flux<PartEvent> partEventFlux);
+    Flux<ResultT< String>> deleteFile(String url);
+}
