@@ -20,6 +20,8 @@
         <module>public-pojo-spring-boot-starter</module>
         <module>db-table-spring-boot-autoconfigure</module>
         <module>db-table-spring-boot-starter</module>
+        <module>web-client-spring-boot-autoconfigure</module>
+        <module>web-client-spring-boot-starter</module>
 
     </modules>
     <groupId>com.guanshiyun</groupId>
