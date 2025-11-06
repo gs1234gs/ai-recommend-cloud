@@ -1,13 +1,13 @@
-package com.guanshiyun.controller.click;
+package com.guanshiyun.service.click;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.guanshiyun.controller.click.vo.UserClickVO;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-@Slf4j
-@RestController
-@RequestMapping("/click")
-@RequiredArgsConstructor
-public class UserClickController {
+import java.math.BigInteger;
+
+public interface UserClickService {
+   Mono<BigInteger> save(UserClickVO userClickVO);
+   // 查询点击记录
+   Flux<UserClickVO> findAll(Integer rows);
 }

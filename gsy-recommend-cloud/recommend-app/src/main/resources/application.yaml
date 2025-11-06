@@ -1,13 +1,13 @@
 spring:
   application:
-    name: behavior-app
+    name: recommend-app
   profiles:
     active: dev,middleware
   output:
     ansi:
       enabled: ALWAYS
 server:
-  port: 2001
+  port: 2002
 
 logging:
   level:

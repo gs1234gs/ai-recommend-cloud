@@ -1,5 +1,7 @@
 package com.guanshiyun.service.sysuser;
 
+import com.guanshiyun.controller.sysuser.vo.SysUserSaveVO;
+import com.guanshiyun.controller.sysuser.vo.SysUserVO;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.userpojo.SysUser;
@@ -17,9 +19,9 @@ public interface SysUserService {
 
     Mono< Long> deleteUserByIds(Collection<BigInteger> ids);
 
-    Mono<SysUser> findById(BigInteger id);
+    Mono<SysUserVO> findById(BigInteger id);
 
-    Mono<SysUser> updateUserById(SysUser sysUser);
+    Mono<BigInteger> updateUserById(SysUserVO sysUserVO);
 
-    Mono<SysUser> save(SysUser sysUser);
+    Mono<BigInteger> save(SysUserSaveVO sysUserSaveVO);
 }

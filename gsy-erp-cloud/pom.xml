@@ -9,8 +9,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>gsy-erp-cloud</artifactId>
-    <name>erp-server-cloud</name>
-    <description>erp-server-cloud</description>
+    <name>gsy-erp-cloud</name>
+    <description>gsy-erp-cloud</description>
     <url/>
     <licenses>
         <license/>

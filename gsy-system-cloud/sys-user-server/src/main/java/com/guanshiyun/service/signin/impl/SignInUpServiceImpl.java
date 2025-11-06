@@ -3,6 +3,7 @@ package com.guanshiyun.service.signin.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.guanshiyun.consts.ConstClassNickName;
+import com.guanshiyun.consts.code.HttpCodeConst;
 import com.guanshiyun.menupojo.SysMenu;
 import com.guanshiyun.repository.signin.SignInUpRepository;
 import com.guanshiyun.responsepojo.Result;
@@ -20,6 +21,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -38,6 +40,7 @@ public class SignInUpServiceImpl implements SignInUpService {
     private final SysMenuService sysMenuService;
     private final SysRoleMenuService sysRoleMenuService;
     private final ReactiveRedisUtil redisUtil;
+    private final TransactionalOperator transactionalOperator;
 
     @Override
     public Mono<SignUser> signIn(String username) {
@@ -57,7 +60,7 @@ public class SignInUpServiceImpl implements SignInUpService {
                 .build();
         return signInUpRepository.findByUsername(signUser.getUsername())
                 .flatMap(existUser -> Mono.just(Result.builder()
-                                .code(400)
+                                .code(HttpCodeConst.BAD_REQUEST)
                                 .msg("用户已存在,请重新注册")
                                 .data(null)
                                 .build()
@@ -66,17 +69,21 @@ public class SignInUpServiceImpl implements SignInUpService {
                 .switchIfEmpty(signInUpRepository.save(sysUser)
                         .flatMap(user ->
                                 sysUserRoleService.addUserRole(sysUser.getId(), RoleIdConst.ROLE_COMMON_USER)
-                                        .flatMap(result ->
-                                                Mono.just(
-                                                        Result.builder()
-                                                                .code(200)
-                                                                .msg("注册成功")
-                                                                .data(null)
-                                                                .build()
-                                                )
+                                        .map(result -> {
+                                            //添加角色
+                                            log.info("注册成功: {}", result);
+                                                    return
+                                                            Result.builder()
+                                                                    .code(HttpCodeConst.OK)
+                                                                    .msg("注册成功")
+                                                                    .data(null)
+                                                                    .build()
+                                                    ;
+                                                }
 
                                         )
                         )
+                        .transform(transactionalOperator::transactional)
                 )
                 .onErrorResume(throwable -> {
                     log.error("注册失败", throwable);

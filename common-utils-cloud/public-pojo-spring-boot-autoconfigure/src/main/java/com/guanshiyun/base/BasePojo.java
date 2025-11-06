@@ -1,9 +1,10 @@
 package com.guanshiyun.base;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -18,18 +19,16 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public abstract class BasePojo {
+@FieldNameConstants
+@SuperBuilder
+public class BasePojo {
     /**
      * 创建者，目前使用 SysUser 的 id 编号
      *
-     * 使用 String 类型的原因是，未来可能会存在非数值的情况，留好拓展性。
      */
     public BigInteger creator;
     /**
      * 更新者，目前使用 SysUser 的 id 编号
-     *
-     * 使用 String 类型的原因是，未来可能会存在非数值的情况，留好拓展性。
      */
     public BigInteger updater;
     /**
@@ -41,7 +40,7 @@ public abstract class BasePojo {
      */
     public LocalDateTime updateTime;
     /**
-     * 是否删除
+     * 是否删除，删除标记,0-未删除，1-已删除
      */
-    public short deleted;
+    public short delFlag;
 }

@@ -30,6 +30,11 @@
     <dependencies>
         <dependency>
             <groupId>com.guanshiyun</groupId>
+            <artifactId>gsy-ai-cloud</artifactId>
+            <version>${snapshotName}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.guanshiyun</groupId>
             <artifactId>ai-server</artifactId>
             <version>${snapshotName}</version>
         </dependency>

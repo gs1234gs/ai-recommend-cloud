@@ -1,13 +1,14 @@
-package com.guanshiyun.controller.search;
+package com.guanshiyun.service.search;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.guanshiyun.controller.search.vo.UserSearchVO;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-@Slf4j
-@RequiredArgsConstructor
-@RequestMapping("/search/")
-@RestController
-public class UserSearchController {
+import java.math.BigInteger;
+
+public interface UserSearchService {
+    //保存搜索记录
+    Mono<BigInteger> save(UserSearchVO userSearchVO);
+    //查询搜索记录
+    Flux<UserSearchVO> findAll(Integer rows);
 }

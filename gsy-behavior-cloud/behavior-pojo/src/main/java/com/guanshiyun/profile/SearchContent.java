@@ -1,34 +1,34 @@
 package com.guanshiyun.profile;
 
-import com.guanshiyun.base.BasePojo;
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Table;
+import lombok.experimental.FieldNameConstants;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table("search_content")
-public class SearchContent extends BasePojo {
+@Builder
+@ToString(callSuper = true)
+@FieldNameConstants
+public class SearchContent implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     //搜索内容id
-    @Id
     private BigInteger id;
     //搜索内容
     private String content;
-    //浏览时长，秒
-    private Integer duration;
-//     价格区间,
-    //最高价格
+    // 最高价格
     private BigDecimal maxPrice;
     //最低价格
     private BigDecimal minPrice;
-    //、品牌等
+    //品牌id等
     private BigInteger brandId;
     /**商品类别 */
-    private Integer goodsCategoryId;
+    private Integer categoryId;
+    //搜索时间
+    private BigInteger searchTime;
 }

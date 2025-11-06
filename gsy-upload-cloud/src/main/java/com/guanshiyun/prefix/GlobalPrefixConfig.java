@@ -6,7 +6,7 @@ import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 @Configuration
 public class GlobalPrefixConfig implements WebFluxConfigurer {
-    private static final String API_PREFIX = "/sys-api";
+    private static final String API_PREFIX = "/upload-api";
     @Override
     public void configurePathMatching(PathMatchConfigurer configurer) {
         configurer.addPathPrefix(API_PREFIX, c -> true);

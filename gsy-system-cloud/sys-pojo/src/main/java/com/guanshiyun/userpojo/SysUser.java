@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 * */
 @Data
 @Builder
+@FieldNameConstants
 @AllArgsConstructor
 @NoArgsConstructor
 @Table("sys_user")
@@ -36,7 +38,7 @@ public class SysUser {
     private String phoneNumber;
     //身份证
     private String idCard;
-    //性别,0男，1女
+    //性别，0男，1女，2未知
     private short gender;
     //用户头像
     private String image;

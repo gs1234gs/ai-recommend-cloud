@@ -1,9 +1,25 @@
 package com.guanshiyun.controller.sysuser.vo;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
+
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
 
-public class SysUserVO {
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldNameConstants
+public class SysUserSaveVO implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private BigInteger id;
     //部门id
     private int deptId;
@@ -42,4 +58,6 @@ public class SysUserVO {
     private LocalDateTime updateTime;
     //备注
     private String remark;
+    //角色id
+    private List<BigInteger> roleIdList;
 }

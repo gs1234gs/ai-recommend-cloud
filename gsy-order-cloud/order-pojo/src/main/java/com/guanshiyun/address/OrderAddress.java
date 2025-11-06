@@ -2,15 +2,27 @@ package com.guanshiyun.address;
 
 import com.guanshiyun.base.BasePojo;
 import lombok.*;
+import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigInteger;
-@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderAddress extends BasePojo {
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
+@FieldNameConstants
+@ToString(callSuper = true)
+@Table("order_address")
+public class OrderAddress extends BasePojo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     //地址id
+    @Id
     private BigInteger id;
     //地址
     private String address;

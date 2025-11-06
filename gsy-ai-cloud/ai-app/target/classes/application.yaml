@@ -6,3 +6,15 @@ spring:
 
 server:
   port: 1949
+  shutdown: graceful
+
+
+logging:
+  level:
+    com.alibaba.nacos.client: DEBUG
+    org.springframework.ai.chat.client.advisor: DEBUG
+  # sql日志级别
+    root: INFO
+    io.r2dbc.spi: DEBUG           # R2DBC SPI 层日志
+    org.springframework.r2dbc.core: DEBUG   # Spring R2DBC 核心模板日志
+    com.zaxxer.r2dbc: DEBUG

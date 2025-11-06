@@ -17,9 +17,9 @@ public interface SysMenuService {
 
     Mono<Long> deleteById(BigInteger id);
 
-    Flux<SysMenu> save(SysMenu sysMenu);
+    Mono<BigInteger> save(SysMenu sysMenu);
 
-    Flux<SysMenu> updateById(SysMenu sysMenu);
+   Mono<BigInteger> updateById(SysMenu sysMenu);
 
     Flux<SysMenu> findAll();
 

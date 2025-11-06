@@ -3,14 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.12</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>com.guanshiyun</groupId>
+        <artifactId>common-utils-cloud</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
-    <groupId>com.guanshiyun</groupId>
     <artifactId>microservice-security-spring-boot-autoconfigure</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <name>microservice-security-spring-boot-autoconfigure</name>
     <description>microservice-security-spring-boot-autoconfigure</description>
     <url/>
@@ -28,6 +26,9 @@
     </scm>
     <properties>
         <java.version>21</java.version>
+        <snapshotName>0.0.1-SNAPSHOT</snapshotName>
+        <fastjson.version>1.2.83</fastjson.version>
+        <jackson.version>2.19.2</jackson.version>
     </properties>
     <dependencies>
         <dependency>
@@ -37,6 +38,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.guanshiyun</groupId>
+            <artifactId>common-utils-spring-boot-starter</artifactId>
+            <version>${snapshotName}</version>
         </dependency>
         <dependency>
             <groupId>com.mysql</groupId>
@@ -51,32 +57,28 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.83</version>
+            <version>${fastjson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
-            <version>2.19.2</version>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.19.2</version>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.aliyun.oss</groupId>
+            <groupId>com.guanshiyun</groupId>
             <artifactId>aliyun-oss-spring-boot-starter</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>${snapshotName}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.guanshiyun</groupId>
+            <artifactId>public-pojo-spring-boot-starter</artifactId>
+            <version>${snapshotName}</version>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

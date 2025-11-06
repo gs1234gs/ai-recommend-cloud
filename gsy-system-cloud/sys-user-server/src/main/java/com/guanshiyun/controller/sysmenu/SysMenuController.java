@@ -1,5 +1,6 @@
 package com.guanshiyun.controller.sysmenu;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.consts.code.HttpCodeConst;
 import com.guanshiyun.menupojo.SysMenu;
@@ -7,6 +8,7 @@ import com.guanshiyun.menupojo.reponse.SysMenuResponse;
 import com.guanshiyun.menuutil.MenuTreeUtils;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.sysmenu.SysMenuService;
+import com.guanshiyun.tree.TreeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -44,26 +46,56 @@ public class SysMenuController {
                         }
                 );
     }
+    @GetMapping("/findByUserId")
+    public Mono<ResultT<List<SysMenuResponse>>> findByUserId() {
+        return sysMenuService.findMenuByUserId()
+                .map(menu -> BeanUtil.toBean(menu, SysMenuResponse.class))
+                .collectList()
+                .map(menuList -> TreeUtil.buildTree(menuList,
+                        SysMenuResponse.Fields.id,
+                        SysMenuResponse.Fields.parentId,
+                        SysMenuResponse.Fields.children,
+                        SysMenuResponse.Fields.orderNum
+                        )
+                )
+                .map(menuList -> // 明确泛型
+                        {
+                            log.info("获取菜单成功：{}", menuList.size());
+                            return ResultT.<List<SysMenuResponse>>builder()
+                                    .code(HttpCodeConst.OK)
+                                    .msg("成功")
+                                    .data(menuList)
+                                    .build();
+                        }
+                );
+    }
 
     //获取菜单列表
-    @GetMapping({"/menuList/{id}"})
-    public Mono<ResultT<List<SysMenu>>> sysMenuList(
+    @GetMapping({"/findByParentId/{id}"})
+    public Mono<ResultT<List<SysMenuResponse>>> sysMenuList(
             @PathVariable(name = "id", required = false) BigInteger id) {
         return sysMenuService.findAllByParentId(id)
+                .map(menu -> BeanUtil.toBean(menu, SysMenuResponse.class))
                 .collectList()
                 .flatMap(menuList ->
                         Mono.just(
-                                ResultT.<List<SysMenu>>builder()
+                                ResultT.<List<SysMenuResponse>>builder()
                                         .code(HttpCodeConst.OK)
                                         .msg("成功")
-                                        .data(menuList)
+                                        .data(TreeUtil.buildTree(
+                                                menuList,
+                                                SysMenuResponse.Fields.id,
+                                                SysMenuResponse.Fields.parentId,
+                                                SysMenuResponse.Fields.children,
+                                                SysMenu.Fields.orderNum
+                                                ))
                                         .build()
                         )
                 );
     }
 
     //删除菜单
-    @GetMapping("/delete/{id}")
+    @GetMapping("/deleteById/{id}")
     public Mono<ResultT<Long>> deleteMenu(@PathVariable BigInteger id) {
         return sysMenuService.deleteById(id)
                 .map(result ->
@@ -90,25 +122,20 @@ public class SysMenuController {
                 });
     }
 
-    //添加菜单
-    @PostMapping("/add")
-    public Mono<ResultT<List<SysMenuResponse>>> addMenu(@RequestBody SysMenu sysMenu) {
+    //添加菜单或者更新菜单
+    @PostMapping("/save")
+    public Mono<ResultT<BigInteger>> addMenu(@RequestBody SysMenu sysMenu) {
         return sysMenuService.save(sysMenu)
-                .collectList()
-                .flatMap(menuList ->
-                        menuTreeUtils.buildMenuTree(menuList)
-                                .collectList()
-                )
-                .map(menuList ->
-                        ResultT.<List<SysMenuResponse>>builder()
+                .map(id ->
+                        ResultT.<BigInteger>builder()
                                 .code(HttpCodeConst.OK)
                                 .msg("成功")
-                                .data(menuList)
+                                .data(id)
                                 .build()
                 )
                 .switchIfEmpty(
                         Mono.just(
-                                ResultT.<List<SysMenuResponse>>builder()
+                                ResultT.<BigInteger>builder()
                                         .code(HttpCodeConst.UNAUTHORIZED)
                                         .msg("添加失败")
                                         .data(null)
@@ -117,7 +144,7 @@ public class SysMenuController {
                 )
                 .onErrorResume(throwable ->
                         Mono.just(
-                                ResultT.<List<SysMenuResponse>>builder()
+                                ResultT.<BigInteger>builder()
                                         .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                                         .msg("系统错误")
                                         .data(null)
@@ -127,24 +154,19 @@ public class SysMenuController {
     }
 
     //修改菜单
-    @PutMapping("/update")
-    public Mono<ResultT<List<SysMenuResponse>>> updateMenu(@RequestBody SysMenu sysMenu) {
+    @PutMapping("/updateById")
+    public Mono<ResultT<BigInteger>> updateMenu(@RequestBody SysMenu sysMenu) {
         return sysMenuService.updateById(sysMenu)
-                .collectList()
-                .flatMap(menuList ->
-                        menuTreeUtils.buildMenuTree(menuList)
-                                .collectList()
-                )
-                .map(menuList ->
-                        ResultT.<List<SysMenuResponse>>builder()
+                .map(id ->
+                        ResultT.<BigInteger>builder()
                                 .code(HttpCodeConst.OK)
                                 .msg("成功")
-                                .data(menuList)
+                                .data(id)
                                 .build()
                 )
                 .switchIfEmpty(
                         Mono.just(
-                                ResultT.<List<SysMenuResponse>>builder()
+                                ResultT.<BigInteger>builder()
                                         .code(HttpCodeConst.UNAUTHORIZED)
                                         .msg("修改失败")
                                         .data(null)
@@ -153,7 +175,7 @@ public class SysMenuController {
                 )
                 .onErrorResume(throwable ->
                         Mono.just(
-                                ResultT.<List<SysMenuResponse>>builder()
+                                ResultT.<BigInteger>builder()
                                         .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                                         .msg("系统错误")
                                         .data(null)
@@ -170,6 +192,46 @@ public class SysMenuController {
                 .flatMap(menuList ->
                         menuTreeUtils.buildMenuTree(menuList)
                                 .collectList()
+                )
+                .map(menuList ->
+                        ResultT.<List<SysMenuResponse>>builder()
+                                .code(HttpCodeConst.OK)
+                                .msg("成功")
+                                .data(menuList)
+                                .build()
+                ).onErrorResume(throwable ->
+                        Mono.just(
+                                ResultT.<List<SysMenuResponse>>builder()
+                                        .code(HttpCodeConst.UNAUTHORIZED)
+                                        .msg("获取菜单树失败")
+                                        .data(null)
+                                        .build()
+                        )
+                )
+                .switchIfEmpty(
+                        Mono.just(
+                                ResultT.<List<SysMenuResponse>>builder()
+                                        .code(HttpCodeConst.UNAUTHORIZED)
+                                        .msg("获取菜单树失败")
+                                        .data(null)
+                                        .build()
+                        )
+                );
+    }
+
+    //获取菜单树
+    @GetMapping("/findAll")
+    public Mono<ResultT<List<SysMenuResponse>>> findAll() {
+        return sysMenuService.findAll()
+                .map(menu ->BeanUtil.toBean(menu, SysMenuResponse.class))
+                .collectList()
+                .map(menuList ->
+                        TreeUtil.buildTree(menuList,
+                                SysMenuResponse.Fields.id,
+                                SysMenuResponse.Fields.parentId,
+                                SysMenuResponse.Fields.children,
+                                SysMenuResponse.Fields.orderNum
+                                )
                 )
                 .map(menuList ->
                         ResultT.<List<SysMenuResponse>>builder()

@@ -14,13 +14,13 @@ import java.math.BigInteger;
 import java.util.List;
 
 @RestController
-@RequestMapping("/roleMenu")
+@RequestMapping("/roleMenu/")
 @RequiredArgsConstructor
 public class SysRoleMenuController {
     private final SysRoleMenuService sysRoleMenuService;
 
     //添加角色菜单
-    @PostMapping("/add")
+    @PostMapping("/save")
     public Mono<ResultT<SysRoleMenu>> addRoleMenu(@RequestBody SysRelationRequest sysRelationRequest) {
         return sysRoleMenuService.addRoleMenu(sysRelationRequest)
                 .map(addRoleMenu -> ResultT.<SysRoleMenu>builder()

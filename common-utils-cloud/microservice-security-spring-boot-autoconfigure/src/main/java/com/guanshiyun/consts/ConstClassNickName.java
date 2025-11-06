@@ -23,6 +23,6 @@ public class ConstClassNickName {
     //授权
     public static final String REDIS_AUTHORITY_KEY = "guanshiyun:security:authority";
 
-    //菜单存储键
-    public static final String REDIS_MENU_KEY = "guanshiyun:security:menu";
+    //访问路劲存储键
+    public static final String REDIS_REQUEST_URL_KEY = "guanshiyun:security:path";
 }

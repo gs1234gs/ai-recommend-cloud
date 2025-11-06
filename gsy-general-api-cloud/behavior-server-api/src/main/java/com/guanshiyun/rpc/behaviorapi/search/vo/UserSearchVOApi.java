@@ -1,18 +1,19 @@
-package com.guanshiyun.controller.search.vo;
+package com.guanshiyun.rpc.behaviorapi.search.vo;
 
-import com.guanshiyun.profile.SearchContent;
+import com.guanshiyun.rpc.profile.SearchContentApi;
 import lombok.*;
 
 import java.math.BigInteger;
 import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @ToString(callSuper = true)
-public class UserSearchVO {
+public class UserSearchVOApi {
     //会话 id
     private BigInteger id;
     //搜索内容
-    private List<SearchContent> searchContent;
+    private List<SearchContentApi> searchContent;
 }

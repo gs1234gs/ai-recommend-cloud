@@ -9,24 +9,113 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>gsy-recommend-cloud</artifactId>
-	<name>recommend-server-cloud</name>
-	<description>recommend-server-cloud</description>
-	<url/>
-	<licenses>
-		<license/>
-	</licenses>
-	<developers>
-		<developer/>
-	</developers>
-	<scm>
-		<connection/>
-		<developerConnection/>
-		<tag/>
-		<url/>
-	</scm>
+	<packaging>pom</packaging>
+	<name>gsy-recommend-cloud</name>
+	<description>gsy-recommend-cloud</description>
+	<modules>
+		<module>recommend-app</module>
+		<module>recommend-pojo</module>
+		<module>recommend-server</module>
+		<module>recommend-common-utils</module>
+	</modules>
 	<properties>
+		<snapshotName>0.0.1-SNAPSHOT</snapshotName>
+		<loadbalancer.version>4.2.1</loadbalancer.version>
+		<junit.version>4.13.2</junit.version>
+		<r2dbc.mysql.version>1.4.1</r2dbc.mysql.version>
+		<mysql.version>8.4.0</mysql.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-loadbalancer</artifactId>
+			<version>${loadbalancer.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba.cloud</groupId>
+			<artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.guanshiyun</groupId>
+			<artifactId>common-utils-spring-boot-starter</artifactId>
+			<version>${snapshotName}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.guanshiyun</groupId>
+			<artifactId>behavior-server-api</artifactId>
+			<version>${snapshotName}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.guanshiyun</groupId>
+			<artifactId>db-table-spring-boot-starter</artifactId>
+			<version>${snapshotName}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.guanshiyun</groupId>
+			<artifactId>microservice-security-spring-boot-starter</artifactId>
+			<version>${snapshotName}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.guanshiyun</groupId>
+			<artifactId>common-utils-spring-boot-starter</artifactId>
+			<version>${snapshotName}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.guanshiyun</groupId>
+			<artifactId>public-pojo-spring-boot-starter</artifactId>
+			<version>${snapshotName}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.guanshiyun</groupId>
+			<artifactId>recommend-server-api</artifactId>
+			<version>${snapshotName}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-r2dbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>io.asyncer</groupId>
+			<artifactId>r2dbc-mysql</artifactId>
+			<version>${r2dbc.mysql.version}</version>
+		</dependency>
+		<!-- H2 Database (for dev) -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- R2DBC Driver for H2 -->
+		<dependency>
+			<groupId>io.r2dbc</groupId>
+			<artifactId>r2dbc-h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<version>${mysql.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>

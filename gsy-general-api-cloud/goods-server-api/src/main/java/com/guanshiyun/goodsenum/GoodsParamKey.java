@@ -1,5 +1,5 @@
-package com.guanshiyun.aienums;
+package com.guanshiyun.goodsenum;
 
-public class AiParamKey {
+public class GoodsParamKey {
 
 }

@@ -1,6 +1,6 @@
-package com.guanshiyun.behaviorenums;
+package com.guanshiyun.sysenums;
 
-public class BehaviorParamKey {
+public class SysParamKey {
     // 参数key
     public static final String ROWS = "rows";
 }

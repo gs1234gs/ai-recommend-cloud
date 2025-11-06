@@ -3,14 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.12</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>com.guanshiyun</groupId>
+        <artifactId>common-utils-cloud</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
-    <groupId>com.guanshiyun</groupId>
     <artifactId>common-utils-spring-boot-autoconfigure</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
     <name>common-utils-spring-boot-autoconfigure</name>
     <description>common-utils-spring-boot-autoconfigure</description>
     <url/>
@@ -29,6 +27,12 @@
     <properties>
         <java.version>21</java.version>
         <hutool.version>5.8.39</hutool.version>
+        <snapshotName>0.0.1-SNAPSHOT</snapshotName>
+        <gson.version>2.13.2</gson.version>
+        <lang3.version>3.19.0</lang3.version>
+        <databind.version>2.19.2</databind.version>
+
+
     </properties>
     <dependencies>
         <dependency>
@@ -39,6 +43,22 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${lang3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${databind.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
@@ -53,15 +73,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis-reactive</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.guanshiyun</groupId>
+            <artifactId>public-pojo-spring-boot-starter</artifactId>
+            <version>${snapshotName}</version>
+        </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

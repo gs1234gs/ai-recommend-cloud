@@ -1,2 +1,4 @@
-package com.guanshiyun.orderrpc.vo;public class PurchaseOrderVOApi {
+package com.guanshiyun.rpc.order.vo;
+
+public class PurchaseOrderVOApi {
 }

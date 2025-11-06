@@ -1,10 +1,13 @@
 spring:
   cloud:
+    loadbalancer:
+      enabled: true
     nacos:
       server-addr: 127.0.0.1:8848
       username: nacos
       password: nacos
       discovery:
+        enabled: true
         namespace: dev
     openfeign:
       client:

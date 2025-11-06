@@ -7,6 +7,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -41,7 +42,14 @@ public class CustomReactiveAuthenticationManager implements ReactiveAuthenticati
         //认证成功
         return signInUpService.signIn(username)
                 .switchIfEmpty(Mono.error(new BadCredentialsException("用户不存在")))
-                .flatMap(user -> Mono.fromCallable(() -> passwordEncoder.matches(password, user.getPassword()))
+                .flatMap(
+                        user -> Mono.fromCallable(() -> {
+                            log.info("用户名：{}", username);
+                            log.info("密码：{}", password);
+                            log.info("用户信息：{}", user);
+                            log.info("密码匹配：{}", passwordEncoder.matches(password, user.getPassword()));
+                                   return passwordEncoder.matches(password, user.getPassword());
+                                })
                             .filter(Boolean::booleanValue)
                             .switchIfEmpty(Mono.error(new BadCredentialsException("用户名或密码错误")))
                             .map(matches -> new UsernamePasswordAuthenticationToken(
@@ -50,5 +58,15 @@ public class CustomReactiveAuthenticationManager implements ReactiveAuthenticati
                                     Collections.emptyList()
                             ))
                 );
+    }
+    public static void main(String[] args) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        System.out.println(bCryptPasswordEncoder.encode("123456"));
+        System.out.println(bCryptPasswordEncoder.matches(
+
+                "123456",
+                "$2a$10$HeOf0/bbu3etDUEjwTs6Eu.rR/NX.lYjir66sGhxB5E8m4GoXMDCi"
+        ));
+
     }
 }

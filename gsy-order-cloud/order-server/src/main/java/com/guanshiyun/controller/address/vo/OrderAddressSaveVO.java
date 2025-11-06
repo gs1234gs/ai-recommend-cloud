@@ -1,19 +1,23 @@
 package com.guanshiyun.controller.address.vo;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigInteger;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
 @FieldNameConstants
 @ToString(callSuper = true)
-public class OrderAddressVO implements Serializable {
+public class OrderAddressSaveVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     private BigInteger id;

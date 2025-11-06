@@ -1,4 +1,4 @@
-package com.guanshiyun.profile;
+package com.guanshiyun.rpc.profile;
 
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @ToString(callSuper = true)
 @FieldNameConstants
-public class ClickProfile implements Serializable {
+public class ClickProfileApi implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     //用户点击画像

@@ -1,11 +1,11 @@
-package com.guanshiyun.rpc.behaviorapi.apibehaviorimpl;
+package com.guanshiyun.rpc.behaviorapi.browse.apibehaviorimpl;
 
 import com.guanshiyun.behaviorenums.BehaviorApiUrl;
 import com.guanshiyun.behaviorenums.BehaviorParamKey;
 import com.guanshiyun.behaviorenums.BehaviorPrefix;
 import com.guanshiyun.responsepojo.ResultT;
-import com.guanshiyun.rpc.behaviorapi.UserBrowseServiceApi;
-import com.guanshiyun.rpc.behaviorapi.vo.UserBrowseVOApi;
+import com.guanshiyun.rpc.behaviorapi.browse.UserBrowseServiceApi;
+import com.guanshiyun.rpc.behaviorapi.browse.vo.UserBrowseVOApi;
 import com.guanshiyun.webutils.WebClientUtils;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;

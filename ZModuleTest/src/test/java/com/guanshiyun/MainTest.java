@@ -1,22 +1,28 @@
 package com.guanshiyun;
 
-import com.alibaba.cloud.ai.dashscope.api.DashScopeAgentApi;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.Arrays;
 
 @SpringBootTest
 public class MainTest {
 
-    @Autowired
-   private DashScopeAgentApi dashScopeAgentApi;
     @Test
     void contextLoads() {
-        // 只要能执行到这行，就说明注入成功了
-        System.out.println("注入成功！dashScopeAgentApi = " + dashScopeAgentApi);
-        // 也可以打印类名，确认具体实现
-        System.out.println("实际类型: " + dashScopeAgentApi.getClass().getName());
+
     }
+    public static void main(String[] args) {
+//        System.out.println(1>>2);
+//        System.out.println(2<<1);
+//        System.out.println(~4);
+//        if((~1>2) ^ (2>~3))
+//            System.out.println("1");
+        int [] arr = {2,1,3,4,9,5,7,6,8,10};
+        int[] array = Arrays.stream(arr).sorted().toArray();
+
+    }
+
 
 
 }

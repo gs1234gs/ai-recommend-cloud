@@ -2,17 +2,14 @@ package com.guanshiyun.responsepojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /**
  *
  * @Description: 分页结果类
  *
  * */
-@Data
+@Getter
 @Builder// 用于创建对象时，自动填充属性的注解，使用链式调用
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,4 +21,12 @@ public class PageResult {
     private long total;
     //结果集
     private Object rows;
+    public PageResult setTotal(long total){
+        this.total = total;
+        return this;
+    }
+    public PageResult setRows(Object rows){
+        this.rows = rows;
+        return this;
+    }
 }

@@ -1,13 +1,17 @@
-package com.guanshiyun.controller.collect;
+package com.guanshiyun.repository.collect;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.guanshiyun.collect.UserCollect;
+import org.springframework.data.r2dbc.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import reactor.core.publisher.Flux;
 
-@Slf4j
-@RestController
-@RequestMapping("/collect")
-@RequiredArgsConstructor
-public class UserCollectController {
+import java.math.BigInteger;
+
+public interface UserCollectRepository extends ReactiveCrudRepository<UserCollect, BigInteger> {
+    @Query("SELECT * FROM user_collect WHERE creator = :useId ORDER BY id DESC LIMIT :rows")
+    Flux<UserCollect> findAll(@Param("rows") Integer rows,@Param("useId") BigInteger useId);
+
+    @Query("SELECT * FROM user_collect ORDER BY id DESC LIMIT :rows")
+    Flux<UserCollect> findAll(@Param("rows") Integer rows);
 }

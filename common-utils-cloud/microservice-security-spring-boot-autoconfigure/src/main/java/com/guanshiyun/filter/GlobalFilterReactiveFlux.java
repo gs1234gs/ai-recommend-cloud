@@ -5,12 +5,14 @@ import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.consts.ConstHeaderLocals;
 import com.guanshiyun.consts.ConstMapClassNickName;
 import com.guanshiyun.consts.PublicEndpoints;
+import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
+import com.guanshiyun.utils.OnDisableBusinessWebFilterCondition;
 import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.RequestPath;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -18,13 +20,13 @@ import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class AiFilter implements WebFilter {
+@Conditional(OnDisableBusinessWebFilterCondition.class)
+public class GlobalFilterReactiveFlux implements WebFilter {
 
     private final MyBigInteger myBigInteger;
 
@@ -37,24 +39,30 @@ public class AiFilter implements WebFilter {
             return chain.filter(exchange);
         }
         HttpHeaders headers = exchange.getRequest().getHeaders();
-        log.info("请求头：{}", headers);
+//        log.info("请求头：{}", headers);
         String userJson = headers.getFirst(ConstHeaderLocals.USER_INFO_KEY);
-        if (StringUtil.isNullOrEmpty(userJson)) {
+//        if (StringUtil.isNullOrEmpty(userJson)) {
+//            log.warn("用户信息为空：{}", userJson);
+//            ServerHttpResponse response = exchange.getResponse();
+//            return response.writeWith(Mono.just(
+//                    response.bufferFactory()
+//                            .wrap(JSONObject.toJSONString(
+//                                            ResultT
+//                                                    .<Object>builder()
+//                                                    .code(401)
+//                                                    .msg("未登陆")
+//                                                    .data(userJson)
+//                                                    .build()
+//                                    ).getBytes(StandardCharsets.UTF_8)
+//                            )
+//            ));
+//        }
+        if(StringUtil.isNullOrEmpty(userJson)){
             log.warn("用户信息为空：{}", userJson);
-            ServerHttpResponse response = exchange.getResponse();
-            return response.writeWith(Mono.just(
-                    response.bufferFactory()
-                            .wrap(JSONObject.toJSONString(
-                                            ResultT
-                                                    .<Object>builder()
-                                                    .code(401)
-                                                    .msg("未登陆")
-                                                    .data(userJson)
-                                                    .build()
-                                    ).getBytes(StandardCharsets.UTF_8)
-                            )
-            ));
+            //放行，可能是游客，后续优化
+            return chain.filter(exchange);
         }
+        log.info("用户信息：{}", userJson);
         Map userMap = JSONObject.parseObject(userJson, Map.class);
         BigInteger userId = myBigInteger.bigInteger(
                 userMap.get(

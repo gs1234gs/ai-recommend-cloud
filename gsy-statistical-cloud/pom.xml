@@ -9,8 +9,8 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>gsy-statistical-cloud</artifactId>
-	<name>statistical-server-cloud</name>
-	<description>statistical-server-cloud</description>
+	<name>gsy-statistical-cloud</name>
+	<description>gsy-statistical-cloud</description>
 	<url/>
 	<licenses>
 		<license/>

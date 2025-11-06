@@ -45,6 +45,10 @@ public class AliOSSProperties {
      */
 
     public String toString() {
-        return "AliOSSProperties{endpoint = " + endpoint + ", bucketName = " + bucketName + ", accessKeyId = " + accessKeyId + ", accessKeySecret = " + accessKeySecret +  "}";
+        return "AliOSSProperties{endpoint = " +
+                endpoint + ", bucketName = " + bucketName +
+                ", accessKeyId = " + accessKeyId +
+                ", accessKeySecret = " +
+                accessKeySecret +  "}";
     }
 }

@@ -1,7 +1,12 @@
 package com.guanshiyun.warehouse;
 
 import com.guanshiyun.base.BasePojo;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -13,7 +18,8 @@ import java.math.BigInteger;
  * */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
+@FieldNameConstants
 @AllArgsConstructor
 @NoArgsConstructor
 @Table("warehouse")

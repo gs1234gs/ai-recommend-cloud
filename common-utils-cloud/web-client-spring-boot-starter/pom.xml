@@ -8,9 +8,9 @@
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>common-utils-spring-boot-starter</artifactId>
-    <name>common-utils-spring-boot-starter</name>
-    <description>common-utils-spring-boot-starter</description>
+    <artifactId>web-client-spring-boot-starter</artifactId>
+    <name>web-client-spring-boot-starter</name>
+    <description>web-client-spring-boot-starter</description>
     <url/>
     <licenses>
         <license/>
@@ -31,7 +31,7 @@
     <dependencies>
         <dependency>
             <groupId>com.guanshiyun</groupId>
-            <artifactId>common-utils-spring-boot-autoconfigure</artifactId>
+            <artifactId>web-client-spring-boot-autoconfigure</artifactId>
             <version>${snapshotName}</version>
         </dependency>
     </dependencies>

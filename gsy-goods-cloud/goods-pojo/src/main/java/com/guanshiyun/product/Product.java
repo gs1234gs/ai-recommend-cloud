@@ -1,20 +1,27 @@
 package com.guanshiyun.product;
 
 import com.guanshiyun.base.BasePojo;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
+
 /**
  * 商品信息
  * */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldNameConstants
 @Table("product")
 public class Product extends BasePojo {
     //商品id
@@ -22,8 +29,6 @@ public class Product extends BasePojo {
     private BigInteger id;
     //商品名称
     private String name;
-    //商品价格
-    private BigDecimal price;
     //商品描述
     private String description;
     //商品图片
@@ -36,6 +41,12 @@ public class Product extends BasePojo {
     private String placeOfOrigin;
     //商品等级，
     private short level;
+    //分类
+    private BigInteger categoryId;
+    // 上架时间
+    private LocalDateTime publishTime;
+    // 下架时间
+    private LocalDateTime offlineTime;
 }
 /**
  * 实体商品，仓库；

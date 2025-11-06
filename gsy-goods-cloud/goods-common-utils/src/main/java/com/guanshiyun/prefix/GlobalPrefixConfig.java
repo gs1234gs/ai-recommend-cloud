@@ -6,7 +6,7 @@ import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 @Configuration
 public class GlobalPrefixConfig implements WebFluxConfigurer {
-    private static final String API_PREFIX = "/ai-api";
+    private static final String API_PREFIX = "/goods-api";
     @Override
     public void configurePathMatching(PathMatchConfigurer configurer) {
         configurer.addPathPrefix(API_PREFIX, c -> true);

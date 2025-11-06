@@ -8,9 +8,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>aliyun-oss-spring-boot-starter</artifactId>
-	<name>aliyun-oss-spring-boot-starter</name>
-	<description>aliyun-oss-spring-boot-starter</description>
+	<artifactId>db-table-spring-boot-starter</artifactId>
+	<name>db-table-spring-boot-starter</name>
+	<description>db-table-spring-boot-starter</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -29,10 +29,9 @@
 		<snapshotName>0.0.1-SNAPSHOT</snapshotName>
 	</properties>
 	<dependencies>
-
 		<dependency>
 			<groupId>com.guanshiyun</groupId>
-			<artifactId>aliyun-oss-spring-boot-autoconfigure</artifactId>
+			<artifactId>db-table-spring-boot-autoconfigure</artifactId>
 			<version>${snapshotName}</version>
 		</dependency>
 

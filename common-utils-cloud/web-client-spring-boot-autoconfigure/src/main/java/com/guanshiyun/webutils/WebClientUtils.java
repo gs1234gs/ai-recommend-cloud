@@ -1,2 +1,9 @@
-package com.guanshiyun.webutils;public class WebClientUtils {
+package com.guanshiyun.webutils;
+
+import org.springframework.core.ParameterizedTypeReference;
+
+public class WebClientUtils {
+    public static <T> ParameterizedTypeReference<T> typeRef() {
+        return new ParameterizedTypeReference<T>() {};
+    }
 }

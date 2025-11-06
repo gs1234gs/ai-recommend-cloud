@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.guanshiyun</groupId>
-        <artifactId>guanshiyun</artifactId>
+        <artifactId>gsy-general-api-cloud</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>recommend-server-api</artifactId>
-    <name>recommend-server-api</name>
-    <description>recommend-server-api</description>
+    <artifactId>behavior-server-api</artifactId>
+    <name>behavior-server-api</name>
+    <description>behavior-server-api</description>
     <url/>
     <licenses>
         <license/>
@@ -25,7 +25,7 @@
         <url/>
     </scm>
     <properties>
-        <java.version>25</java.version>
+
     </properties>
     <dependencies>
 

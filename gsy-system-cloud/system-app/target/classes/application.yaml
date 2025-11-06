@@ -11,7 +11,11 @@ logging:
     root: INFO
     io.r2dbc.spi: DEBUG           # R2DBC SPI 层日志
     org.springframework.r2dbc.core: DEBUG   # Spring R2DBC 核心模板日志
-    com.zaxxer.r2dbc: DEBUG       # 如果使用 HikariR2DBC（不常见）
+    org.springframework.r2dbc.connection: DEBUG
+    io.r2dbc.mysql: DEBUG
+    io.r2dbc.pool: DEBUG
+    com.alibaba.nacos.client: DEBUG
+
 
 
 

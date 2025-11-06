@@ -9,9 +9,9 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <packaging>jar</packaging>
-    <artifactId>ai-server-api</artifactId>
-    <name>ai-server-api</name>
-    <description>ai-server-api</description>
+    <artifactId>order-server-api</artifactId>
+    <name>order-server-api</name>
+    <description>order-server-api</description>
     <url/>
     <licenses>
         <license/>

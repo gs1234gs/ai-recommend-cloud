@@ -1,6 +1,7 @@
-package com.guanshiyun.utils;
+package com.db.page;
 
-import com.guanshiyun.consts.ConstNumber;
+
+import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.requestpojo.RequestPage;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,6 +13,7 @@ import java.util.Objects;
  */
 @Slf4j
 public class PageUtils {
+
     //判断requestPage是否为空
     public static <T> RequestPage<T> pageValidation(RequestPage<T> requestPage, Class<T> clazz) {
         T condition = null;
@@ -43,7 +45,7 @@ public class PageUtils {
                         :
                         //如果不为空，则返回requestPage
                         requestPage.setPageNum(
-                                pageNum(requestPage.getPageNum())
+                                        pageNum(requestPage.getPageNum())
                                 )
                                 .setPageSize(
                                         pageSize(requestPage.getPageSize())
@@ -51,9 +53,23 @@ public class PageUtils {
                 );
     }
 
+    /**
+     * 校验分页请求，支持任意 condition 类型
+     */
+    public static <C> RequestPage<C> pageValidation(RequestPage<C> requestPage) {
+        if (requestPage == null) {
+            requestPage = new RequestPage<>();
+        }
+        requestPage.setPageNum(pageNum(requestPage.getPageNum()));
+
+        requestPage.setPageSize(pageSize(requestPage.getPageSize()));
+        return requestPage;
+    }
+
     //判断pageNum和pageSize是否合法
     //获取pageNum
     public static BigInteger pageNum(BigInteger pageNum) {
+
         try {
             return (
                     pageNum != null

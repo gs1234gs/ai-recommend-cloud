@@ -1,6 +1,6 @@
 spring:
   r2dbc:
-    url: r2dbc:mysql://localhost:3306/gsy-behavior-cloud
+    url: r2dbc:mysql://localhost:3306/gsy-recommend-cloud
     username: root
     password: 1234
   data:
@@ -17,7 +17,7 @@ spring:
           min-idle: 0       # 最小空闲连接数
           max-wait: -1ms    # 获取连接的最大等待时间（-1 表示无限制）
     mongodb:
-      uri: mongodb://127.0.0.1:27017/gsy-behavior-cloud
+      uri: mongodb://127.0.0.1:27017/gsy-recommend-cloud
   jackson:
     date-format: yyy-MM-dd HH:mm:ss
     time-zone: GMT+8

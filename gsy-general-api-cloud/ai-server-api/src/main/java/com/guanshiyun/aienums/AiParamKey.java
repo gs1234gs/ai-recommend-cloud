@@ -1,6 +1,5 @@
-package com.guanshiyun.enums;
+package com.guanshiyun.aienums;
 
-public class ParamKey {
-    // 参数key
-    public static final String ROWS = "rows";
+public class AiParamKey {
+
 }

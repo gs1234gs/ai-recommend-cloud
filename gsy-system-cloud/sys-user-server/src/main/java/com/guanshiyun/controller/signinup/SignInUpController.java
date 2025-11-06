@@ -48,5 +48,4 @@ public class SignInUpController {
     public Mono<Result> signUp(@RequestBody SysUser signUpUser) {
         return signInUpService.signUp(signUpUser);
     }
-
 }

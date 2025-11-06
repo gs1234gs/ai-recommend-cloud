@@ -2,12 +2,12 @@ package com.guanshiyun.requestpojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
 
-@Data
+@Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,4 +18,16 @@ public class RequestPage<T> {
     private Integer pageSize;
     // 查询条件
     private T condition;
+    public RequestPage< T> setPageNum(BigInteger pageNum){
+        this.pageNum = pageNum;
+        return this;
+    }
+    public RequestPage< T> setPageSize(Integer pageSize){
+        this.pageSize = pageSize;
+        return this;
+    }
+    public RequestPage< T> setCondition(T condition){
+        this.condition = condition;
+        return this;
+    }
 }

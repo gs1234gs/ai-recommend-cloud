@@ -1,4 +1,4 @@
-package com.guanshiyun.profile;
+package com.guanshiyun.rpc.profile;
 
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
@@ -18,7 +18,7 @@ import java.util.List;
 @FieldNameConstants
 @Builder
 @ToString(callSuper = true)
-public class BrowseProfile implements Serializable {
+public class BrowseProfileApi implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     /** 主键ID */

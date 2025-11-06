@@ -1,10 +1,10 @@
 package com.guanshiyun.profile;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldNameConstants;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,15 +13,21 @@ import java.util.List;
  * 用户画像（兴趣、偏好、地理位置等）
  * */
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserBrowseProfile  {
+@FieldNameConstants
+@Builder
+@ToString(callSuper = true)
+public class BrowseProfile implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     /** 主键ID */
     private BigInteger id;
-    //创建时间
-    private LocalDateTime createTime;
     //sku id
     List<BigInteger> skuId;
+    //浏览开始时间
+    private LocalDateTime browseStartTime;
+    //浏览结束时间
+    private LocalDateTime browseEndTime;
 
 }

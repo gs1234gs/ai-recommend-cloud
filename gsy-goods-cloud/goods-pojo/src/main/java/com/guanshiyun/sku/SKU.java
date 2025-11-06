@@ -1,12 +1,20 @@
 package com.guanshiyun.sku;
 
 import com.guanshiyun.base.BasePojo;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 
 /**
  *
@@ -14,29 +22,24 @@ import java.math.BigInteger;
  * */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
+@FieldNameConstants
 @AllArgsConstructor
 @NoArgsConstructor
 @Table("sku")
-public class SKU extends BasePojo {
+public class SKU extends BasePojo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     /** SKU 主键ID */
     @Id
     private BigInteger id;
+    //商品id
 
-    /** 所属SPU ID（商品标准单元） */
-    private Long spuId;
-
-    /** SKU 名称（通常为SPU名 + 规格描述） */
+    /** 名称*/
     private String name;
 
     /** 商品编码（内部唯一编码） */
     private String skuCode;
-
-    /** 条形码（外部编码，可选） */
-    private String barCode;
-
-    /** 规格（例如：颜色=黑色；尺寸=128GB） */
-    private String spec;
 
     /** 销售价 */
     private BigDecimal price;
@@ -46,17 +49,21 @@ public class SKU extends BasePojo {
 
     /** 库存数量 */
     private Integer stock;
-
-    /** 锁定库存（未发货但已下单） */
-    private Integer lockedStock;
-
-    /** 商品图片URL */
-    private String imageUrl;
+    /** 销售量 */
+    private Integer salesVolume;
 
     /** 状态（0=下架，1=上架） */
     private short status;
 
     /** 权重（用于推荐、排序） */
     private BigDecimal weight;
+    //排序值
+    private Integer sort;
+    // 上架时间
+    private LocalDateTime publishTime;
+    // 下架时间
+    private LocalDateTime offlineTime;
+    // 商品详情
+    private String detailContent;
 
 }

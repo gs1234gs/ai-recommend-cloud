@@ -6,12 +6,18 @@
         <groupId>com.guanshiyun</groupId>
         <artifactId>guanshiyun</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath> ../pom.xml</relativePath>
     </parent>
     <packaging>pom</packaging>
+    <modules>
+        <module>ai-pojo</module>
+        <module>ai-server</module>
+        <module>ai-app</module>
+        <module>ai-common-util</module>
+    </modules>
     <artifactId>gsy-ai-cloud</artifactId>
-    <name>ai-server-cloud</name>
-    <description>ai-server-cloud</description>
+    <name>gsy-ai-cloud</name>
+    <description>gsy-ai-cloud</description>
     <url/>
     <licenses>
         <license/>
@@ -27,7 +33,7 @@
     </scm>
     <properties>
         <nacos.version>2023.0.3.3</nacos.version>
-        <loadbalancer.version>4.2.0</loadbalancer.version>
+        <loadbalancer.version>4.2.1</loadbalancer.version>
         <r2dbc.mysql.version>1.4.1</r2dbc.mysql.version>
         <mysql.version>8.4.0</mysql.version>
         <snapshotName>0.0.1-SNAPSHOT</snapshotName>
@@ -40,7 +46,6 @@
             <artifactId>spring-ai-redis-store-spring-boot-starter</artifactId>
             <version>${ai.version}</version>
         </dependency>
-
 
         <dependency>
             <groupId>com.guanshiyun</groupId>
@@ -70,6 +75,11 @@
             <version>${snapshotName}</version>
         </dependency>
         <dependency>
+            <groupId>com.guanshiyun</groupId>
+            <artifactId>db-table-spring-boot-starter</artifactId>
+            <version>${snapshotName}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
@@ -87,7 +97,19 @@
             <artifactId>r2dbc-mysql</artifactId>
             <version>${r2dbc.mysql.version}</version>
         </dependency>
+        <!-- H2 Database (for dev) -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 
+        <!-- R2DBC Driver for H2 -->
+        <dependency>
+            <groupId>io.r2dbc</groupId>
+            <artifactId>r2dbc-h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
 <!--        <dependency>-->
 <!--            <groupId>com.mysql</groupId>-->
 <!--            <artifactId>mysql-connector-j</artifactId>-->
@@ -113,8 +135,6 @@
             <artifactId>spring-ai-autoconfigure-model-chat-memory</artifactId>
             <version>${memorey.version}</version>
         </dependency>
-
-
     </dependencies>
 
     <build>

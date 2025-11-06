@@ -1,6 +1,5 @@
 package com.guanshiyun.service.sysmenurole.impl;
 
-import com.guanshiyun.consts.SqlConstRepository;
 import com.guanshiyun.relation.SysRelationRequest;
 import com.guanshiyun.relationpojo.SysRoleMenu;
 import com.guanshiyun.repository.menurole.SysRoleMenuRepository;
@@ -40,9 +39,9 @@ public class SysRoleMenuServiceImpl implements SysRoleMenuService {
 
     @Override
     public Mono<Long> deleteRoleMenu(BigInteger roleId, List<BigInteger> menuIds) {
-        return databaseClient.sql("delete from sys_role_menu where role_id = :roleId and menu_id in (:menuIds)")
-                .bind(SqlConstRepository.ROLE_ID, roleId)
-                .bind(SqlConstRepository.MENU_IDS, menuIds)
+        return databaseClient.sql("delete from sys_role_menu where role_id = :roleId and menu_id in (:menuId)")
+                .bind(SysRoleMenu.Fields.roleId, roleId)
+                .bind(SysRoleMenu.Fields.menuId, menuIds)
                 .fetch()
                 .rowsUpdated();
     }

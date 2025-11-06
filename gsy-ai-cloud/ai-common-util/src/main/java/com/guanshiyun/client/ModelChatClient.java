@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class ModelChatClient {
     private final OllamaChatModel ollamaModel;
-
     @Bean
     public ChatClient chatClient() {
        return ChatClient.builder(ollamaModel).build();

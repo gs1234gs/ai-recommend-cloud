@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
  * */
 @Data
 @Builder
+@FieldNameConstants
 @AllArgsConstructor
 @NoArgsConstructor
 @Table("sys_role")

@@ -1,4 +1,4 @@
-package com.guanshiyun.repository;
+package com.guanshiyun.repository.sku;
 
 import com.guanshiyun.sku.SKU;
 import org.springframework.data.r2dbc.repository.Query;
@@ -37,4 +37,11 @@ public interface SKURepository extends ReactiveCrudRepository<SKU, BigInteger> {
             SELECT * FROM sku WHERE product_id = :productId
             """)
     Flux<List<SKU>> findAllByProductId(BigInteger productId);
+//根据id减库存
+    @Query("UPDATE product SET stock = stock - :count WHERE id = :id AND stock >= :count")
+    Mono<Integer> reduceStockById(@Param("id") BigInteger id,@Param("count") Integer count);
+
+    //添加库存
+    @Query("UPDATE product SET stock = stock + :count WHERE id = :id")
+    Mono<Integer> addStockById( @Param("id")BigInteger id,@Param("count") Integer count);
 }

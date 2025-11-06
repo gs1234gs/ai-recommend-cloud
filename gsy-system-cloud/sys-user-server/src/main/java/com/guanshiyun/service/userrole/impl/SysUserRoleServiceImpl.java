@@ -1,7 +1,5 @@
 package com.guanshiyun.service.userrole.impl;
 
-import com.guanshiyun.consts.ConstNumber;
-import com.guanshiyun.consts.SqlConstRepository;
 import com.guanshiyun.consts.code.HttpCodeConst;
 import com.guanshiyun.relation.SysRelationRequest;
 import com.guanshiyun.relationpojo.SysUserRole;
@@ -33,30 +31,30 @@ public class SysUserRoleServiceImpl implements SysUserRoleService {
                 .userId(userId)
                 .roleId(roleId)
                 .build();
-        return sysUserRoleRepository.existsByUserIdAndRoleId(userId, roleId)
+        return sysUserRoleRepository.findExistsUserRole(userId, roleId)
                 .flatMap(existUserRole -> {
-                            if (existUserRole.equals(ConstNumber.LONG_ZERO))
-                                return Mono.just(ResultT.<SysUserRole>builder()
-                                        .code(HttpCodeConst.CONFLICT)
-                                        .msg("已拥有此角色")
-                                        .data(null)
-                                        .build());
+                            if (!existUserRole.equals(BigInteger.ZERO)) {
+                                log.info("用户已经用有次角色");
+                               return Mono.error(new Exception("用户已经用有次角色"));
+                            }
                             return sysUserRoleRepository.save(sysUserRole)
-                                    .map(userRole -> ResultT.<SysUserRole>builder()
-                                            .code(HttpCodeConst.OK)
-                                            .msg("添加成功")
-                                            .data(userRole)
-                                            .build());
+                                    .map(userRole -> {
+                                        log.info("添加用户角色关系成功: {}", userRole);
+                                               return ResultT.<SysUserRole>builder()
+                                                        .code(HttpCodeConst.OK)
+                                                        .msg("添加成功")
+                                                        .data(userRole)
+                                                        .build();
+                                            }
+                                    );
                         }
 
                 )
-                .onErrorResume(throwable -> Mono.just(ResultT
-                        .<SysUserRole>builder()
-                        .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
-                        .msg("添加失败")
-                        .data(null)
-                        .build()
-                ));
+                .onErrorResume(throwable -> {
+                    log.error("添加用户角色失败", throwable);
+                           return Mono.error(new Exception("添加用户角色失败",throwable));
+                        }
+                );
     }
 
     @Override
@@ -67,10 +65,10 @@ public class SysUserRoleServiceImpl implements SysUserRoleService {
     @Override
     public Mono<Long> deleteUserRoleByRoleId(List<BigInteger> roleIds, BigInteger userId) {
         return databaseClient.sql(
-                "delete from sys_user_role where role_id in (:roleIds) and user_id = :userId"
+                "delete from sys_user_role where role_id in (:roleId) and user_id = :userId"
                 )
-                .bind(SqlConstRepository.ROLE_IDS, roleIds)
-                .bind(SqlConstRepository.USER_ID, userId)
+                .bind(SysUserRole.Fields.roleId, roleIds)
+                .bind(SysUserRole.Fields.userId, userId)
                 .fetch()
                 .rowsUpdated();
     }

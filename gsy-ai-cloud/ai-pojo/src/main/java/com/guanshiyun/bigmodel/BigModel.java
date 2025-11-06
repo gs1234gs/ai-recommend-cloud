@@ -1,10 +1,7 @@
 package com.guanshiyun.bigmodel;
 
-import com.guanshiyun.base.BasePojo;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -17,9 +14,10 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldNameConstants
 @Builder
 @Table("big_model")
-public class BigModel extends BasePojo {
+public class BigModel {
     //大模型id
     @Id
     private BigInteger id;
@@ -27,22 +25,31 @@ public class BigModel extends BasePojo {
     private String name;
     //大模型类型
     private Integer type;
-    //创建者
-    private BigInteger creator;
-    //更新者
-    private BigInteger updater;
-    //创建时间
-    private LocalDateTime createTime;
-    //更新时间
-    private LocalDateTime updateTime;
     //大模型状态，0-未启用，1-启用
     private short status;
-    //删除标记,0-未删除，1-已删除
-    private short delFlag;
     //大模型描述
     private String description;
     //大模型版本
     private String version;
-    //租户id
-    public BigInteger tenantId;
+    /**
+     * 创建者，目前使用 SysUser 的 id 编号
+     *
+     */
+    public BigInteger creator;
+    /**
+     * 更新者，目前使用 SysUser 的 id 编号
+     */
+    public BigInteger updater;
+    /**
+     * 创建时间
+     */
+    public LocalDateTime createTime;
+    /**
+     * 最后更新时间
+     */
+    public LocalDateTime updateTime;
+    /**
+     * 是否删除，删除标记,0-未删除，1-已删除
+     */
+    public short delFlag;
 }

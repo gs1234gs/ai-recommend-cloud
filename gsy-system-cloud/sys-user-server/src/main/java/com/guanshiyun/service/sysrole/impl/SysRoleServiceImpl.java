@@ -1,15 +1,24 @@
 package com.guanshiyun.service.sysrole.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import com.db.constsql.SqlConst;
+import com.db.r2dbcupdate.R2dbcUpdateHelper;
+import com.db.tablename.EntityTableNameUtils;
+import com.db.tablename.MyStringUtils;
 import com.guanshiyun.consts.ConstNumber;
-import com.guanshiyun.consts.SqlConstRepository;
-import com.guanshiyun.pageutil.PageNumSizeUtil;
+import com.guanshiyun.controller.sysrole.vo.SysRoleSaveVO;
+import com.guanshiyun.controller.sysrole.vo.SysRoleVO;
+import com.guanshiyun.relationpojo.SysRoleMenu;
 import com.guanshiyun.repository.sysrole.SysRoleRepository;
 import com.guanshiyun.repository.userrole.SysUserRoleRepository;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.rolepojo.SysRole;
 import com.guanshiyun.service.sysrole.SysRoleService;
+import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
+import com.guanshiyun.userpojo.SysUser;
+import com.db.page.PageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
@@ -22,114 +31,110 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
-import java.util.Collections;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class SysRoleServiceImpl implements SysRoleService {
     private final SysRoleRepository sysRoleRepository;
     private final R2dbcEntityTemplate template;
-    private final StringBuilder sb;
     private final DatabaseClient databaseClient;
     private final TransactionalOperator transactionalOperator;
     private final SysUserRoleRepository sysUserRoleRepository;
+    private final R2dbcUpdateHelper r2dbcUpdateHelper;
 
-    //目前添加，就暂时返回全部数据
+    //添加或者更新角色
     @Override
-    public Flux<SysRole> save(SysRole sysRole) {
-        sysRole.setId(null);
-        return sysRoleRepository.save(sysRole)
-                .flatMapMany(sysRoleAdd ->
-                        sysRoleRepository.findAll()
-                );
+    public Mono<BigInteger> save(SysRoleSaveVO sysRoleSaveVO) {
+        SysRole sysRole = BeanUtil.toBean(sysRoleSaveVO, SysRole.class);
+        LocalDateTime now = LocalDateTime.now();
+        return Mono.deferContextual(ctx -> {
+            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
+                return Mono.error(new Exception("用户ID不存在"));
+            BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+            if (Objects.isNull(sysRole.getId())) {
+                sysRole.setCreateTime(now);
+                sysRole.setUpdaterId(userId);
+                return sysRoleRepository.save(sysRole)
+                        .map(SysRole::getId);
+            }
+            sysRole.setUpdaterId(userId);
+            sysRole.setUpdateTime(now);
+            return r2dbcUpdateHelper.updateIgnoreNull(
+                    EntityTableNameUtils.getName(
+                            SysRole.class),
+                    sysRole,
+                    SysRole.Fields.id);
+        });
     }
 
     @Override
-    public Mono<PageResultT<List<SysRole>>> findPage(RequestPage<SysRole> requestPage) {
+    public Mono<PageResultT<List<SysRoleVO>>> findPage(RequestPage<SysRoleVO> requestPage) {
         requestPage = isRequestPageNUll(requestPage);
         // 前端没传 pageSize 时默认10条
-        BigInteger pageNum = PageNumSizeUtil.pageNum(requestPage.getPageNum());
-        int pageSize = PageNumSizeUtil.pageSize(requestPage.getPageSize());
+        BigInteger pageNum = PageUtils.pageNum(requestPage.getPageNum());
+        int pageSize = PageUtils.pageSize(requestPage.getPageSize());
         // 条件
         Criteria criteria = Criteria.empty();
         String name = requestPage.getCondition().getName();
         //不为空，模糊查询
-        if (!StrUtil.isBlank(name)) {
-            String sql = sb.append(SqlConstRepository.PERCENT)
-                    .append(name)
-                    .append(SqlConstRepository.PERCENT)
-                    .toString();
-            criteria = criteria.and(SqlConstRepository.USERNAME).like(sql);
-            // 清空
-            sb.delete(ConstNumber.INT_ZERO, sb.length());
+        if (StrUtil.isNotBlank(name)) {
+            criteria = criteria.and(SysUser.Fields.username).like(SqlConst.PERCENT + name + SqlConst.PERCENT);
         }
-        BigInteger offset = BigInteger.ZERO;
-        final Criteria finalCriteria = criteria;
-        // 最后一条ID
-        if (pageNum != null &&
-                pageNum.compareTo(BigInteger.ZERO) > ConstNumber.INTEGER_ZERO) {
-            //计算起始条数
-            offset = pageNum.subtract(BigInteger.ONE).multiply(BigInteger.valueOf(pageSize));
-        }
-        return template.select(Query.query(criteria)
-                                .sort(Sort.by(Sort.Order.desc(SqlConstRepository.ID)))
-                                .offset(offset.longValue())
-                                .limit(ConstNumber.INT_ONE),
-                        SysRole.class)
-                .map(SysRole::getId)
-                .singleOrEmpty()
-                .flatMap(lastId -> lastId == null ?
-                        Mono.just(PageResultT.<List<SysRole>>builder()
-                                .total(0)
-                                .rows(Collections.emptyList())
-                                .build()) :
-                        template.select(
-                                        Query.query(
-                                                        finalCriteria.and(SqlConstRepository.ID)
-                                                                .lessThanOrEquals(lastId)
-                                                )
-                                                .sort(Sort.by(Sort.Order.desc(SqlConstRepository.ID)))
-                                                .limit(pageSize),
-                                        SysRole.class
-                                )
-                                .collectList()
-                                .flatMap(sysRoles ->
-                                        sysRoleRepository.count(
-                                                )
-                                                .map(total ->
-                                                        PageResultT.<List<SysRole>>builder()
-                                                                .total(total)
-                                                                .rows(sysRoles)
-                                                                .build()
-                                                )
-                                )
+        BigInteger offset =
+                pageNum.subtract(BigInteger.ONE).multiply(BigInteger.valueOf(pageSize));
+        // 数据查询：按 createTime 降序，推荐加上 id 作为二级排序
+        Query dataQuery = Query.query(criteria)
+                .sort(Sort.by(
+                        Sort.Order.desc(MyStringUtils.camelToUnderlineSmart(SysRole.Fields.createTime)),
+                        Sort.Order.desc(SysRole.Fields.id) // 防止 createTime 重复导致数据错位
+                ))
+                .offset(offset.longValue())
+                .limit(pageSize);
+        // 总数查询
+        Query countQuery = Query.query(criteria);
+        return template.select(countQuery, SysRole.class)
+                .count()
+                .flatMap(count -> template.select(dataQuery, SysRole.class)
+                        .map(role -> BeanUtil.toBean(role, SysRoleVO.class))
+                        .collectList()
+                        .map(list -> PageResultT.<List<SysRoleVO>>builder()
+                                .total(count)
+                                .rows(list)
+                                .build()
+                        )
                 );
     }
 
     @Override
     public Mono<Long> deleteRoleById(BigInteger id) {
         return databaseClient.sql("DELETE FROM sys_role WHERE id = :id")
-                .bind(SqlConstRepository.ID, id)
+                .bind(SysRole.Fields.id, id)
                 .fetch()
                 .rowsUpdated()
                 .flatMap(rowsUpdated ->
-                        databaseClient.sql("delete from sys_role_menu where role_id = :id")
-                                .bind(SqlConstRepository.ID, id)
+                        databaseClient.sql("delete from sys_role_menu where role_id = :role_id")
+                                .bind(MyStringUtils.camelToUnderlineSmart(
+                                        SysRoleMenu.Fields.roleId
+                                ), id)
                                 .fetch()
                                 .rowsUpdated()
                                 .flatMap(rowsChildren ->
-                                        databaseClient.sql("delete from sys_user_role where role_id = :id")
-                                                .bind(SqlConstRepository.ID, id)
+                                        databaseClient.sql("delete from sys_user_role where role_id = :role_id")
+                                                .bind(MyStringUtils.camelToUnderlineSmart(
+                                                        SysRoleMenu.Fields.roleId), id)
                                                 .fetch()
                                                 .rowsUpdated()
                                                 .thenReturn(rowsUpdated)
-                                        )
-                        )
+                                )
+                )
                 .as(transaction ->
                         transaction.as(transactionalOperator::transactional)
-                        );
+                );
     }
+
     //根据用户id获取角色
     @Override
     public Flux<SysRole> findAllByUserId(BigInteger userId) {
@@ -138,13 +143,28 @@ public class SysRoleServiceImpl implements SysRoleService {
                 .flatMapMany(sysRoleRepository::findAllById);
     }
 
+    @Override
+    public Mono<SysRoleVO> findById(BigInteger id) {
+        return sysRoleRepository.findById(id)
+                .map(sysRole -> BeanUtil.toBean(sysRole, SysRoleVO.class));
+    }
 
-    private RequestPage<SysRole> isRequestPageNUll(RequestPage<SysRole> requestPage) {
+    @Override
+    public Mono<BigInteger> update(SysRoleSaveVO sysRoleSaveVO) {
+        return r2dbcUpdateHelper.updateIgnoreNull(
+                EntityTableNameUtils.getName(SysRole.class),
+                sysRoleSaveVO,
+                SysRole.Fields.id
+        );
+    }
+
+
+    private RequestPage<SysRoleVO> isRequestPageNUll(RequestPage<SysRoleVO> requestPage) {
         return requestPage == null ?
-                RequestPage.<SysRole>builder()
+                RequestPage.<SysRoleVO>builder()
                         .pageNum(BigInteger.ZERO)
                         .pageSize(ConstNumber.INT_ZERO)
-                        .condition(SysRole.builder().build())
+                        .condition(SysRoleVO.builder().build())
                         .build() :
                 requestPage;
     }

@@ -1,2 +1,4 @@
-package com.guanshiyun.rpc.address.vo;public class OrderAddressVOApi {
+package com.guanshiyun.rpc.address.vo;
+
+public class OrderAddressVOApi {
 }

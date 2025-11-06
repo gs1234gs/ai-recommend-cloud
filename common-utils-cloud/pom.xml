@@ -8,6 +8,20 @@
         <version>3.3.12</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+    <packaging>pom</packaging>
+    <modules>
+        <module>aliyun-oss-spring-boot-autoconfigure</module>
+        <module>aliyun-oss-spring-boot-starter</module>
+        <module>common-utils-spring-boot-autoconfigure</module>
+        <module>common-utils-spring-boot-starter</module>
+        <module>microservice-security-spring-boot-autoconfigure</module>
+        <module>microservice-security-spring-boot-starter</module>
+        <module>public-pojo-spring-boot-autoconfigure</module>
+        <module>public-pojo-spring-boot-starter</module>
+        <module>db-table-spring-boot-autoconfigure</module>
+        <module>db-table-spring-boot-starter</module>
+
+    </modules>
     <groupId>com.guanshiyun</groupId>
     <artifactId>common-utils-cloud</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -28,21 +42,43 @@
     </scm>
     <properties>
         <java.version>21</java.version>
+        <project-version>2023.0.3.4</project-version>
+        <spring-cloud.version>2023.0.4</spring-cloud.version>
     </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--      <dependency>-->
+            <!--        <groupId>com.fasterxml.jackson.core</groupId>-->
+            <!--        <artifactId>jackson-databind</artifactId>-->
+            <!--      </dependency>-->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>${project-version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>aliyun-spring-boot-dependencies</artifactId>
+                <version>1.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

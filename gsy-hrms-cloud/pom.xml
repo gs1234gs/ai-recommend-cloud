@@ -9,8 +9,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>gsy-hrms-cloud</artifactId>
-    <name>hrms-server-cloud</name>
-    <description>hrms-server-cloud</description>
+    <name>gsy-hrms-cloud</name>
+    <description>gsy-hrms-cloud</description>
     <url/>
     <licenses>
         <license/>

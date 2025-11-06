@@ -1,2 +1,4 @@
-package com.guanshiyun.service.knowledge;public interface KnowledgeService {
+package com.guanshiyun.service.knowledge;
+
+public interface KnowledgeService {
 }

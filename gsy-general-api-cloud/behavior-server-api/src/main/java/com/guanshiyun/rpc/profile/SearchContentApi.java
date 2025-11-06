@@ -1,4 +1,4 @@
-package com.guanshiyun.profile;
+package com.guanshiyun.rpc.profile;
 
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
@@ -14,7 +14,7 @@ import java.math.BigInteger;
 @Builder
 @ToString(callSuper = true)
 @FieldNameConstants
-public class SearchContent implements Serializable {
+public class SearchContentApi implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     //搜索内容id

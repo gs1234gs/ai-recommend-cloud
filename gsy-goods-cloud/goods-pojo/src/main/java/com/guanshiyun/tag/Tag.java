@@ -1,12 +1,18 @@
 package com.guanshiyun.tag;
 
 import com.guanshiyun.base.BasePojo;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 
 
 /**
@@ -14,9 +20,10 @@ import java.math.BigInteger;
  * */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldNameConstants
 @Table("tag")
 public class Tag extends BasePojo {
     /** 标签主键ID */
@@ -29,12 +36,6 @@ public class Tag extends BasePojo {
     /** 标签编码（英文或拼音，方便系统使用） */
     private String code;
 
-    /** 标签类型（0=系统标签，1=人工标签，2=算法生成标签） */
-    private Integer type;
-
-    /** 标签描述 */
-    private String description;
-
     /** 标签颜色（用于前端展示，例如 #FF9900） */
     private String color;
 
@@ -43,4 +44,18 @@ public class Tag extends BasePojo {
 
     /** 标签权重（用于推荐优先级或排序） */
     private BigDecimal weight;
+    /** 排序值 */
+    private Integer sort;
+    //材料组成
+    private String composition;
+    //产地
+    private String placeOfOrigin;
+    //重量
+    private BigDecimal productWeight;
+    //生产日期
+    private LocalDateTime productionDate;
+    //保质期，单位：天
+    private Integer shelfLife;
+    /** 标签描述 */
+    private String description;
 }

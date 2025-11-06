@@ -1,5 +1,5 @@
 package com.guanshiyun.aienums;
 
-public class AiParamKey {
+public class OrderParamKey {
 
 }

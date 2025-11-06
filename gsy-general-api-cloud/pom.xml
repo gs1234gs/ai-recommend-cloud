@@ -16,10 +16,12 @@
         <module>recommend-server-api</module>
         <module>statistical-server-api</module>
         <module>sys-server-api</module>
+        <module>goods-server-api</module>
+        <module>behavior-server-api</module>
     </modules>
     <artifactId>gsy-general-api-cloud</artifactId>
-    <name>deneral-api-cloud</name>
-    <description>deneral-api-cloud</description>
+    <name>gsy-general-api-cloud</name>
+    <description>gsy-general-api-cloud</description>
     <url/>
     <licenses>
         <license/>
@@ -34,10 +36,47 @@
         <url/>
     </scm>
     <properties>
-        <java.version>25</java.version>
+        <nacos.version>2023.0.3.3</nacos.version>
+        <loadbalancer.version>4.2.1</loadbalancer.version>
+        <snapshotName>0.0.1-SNAPSHOT</snapshotName>
+        <feign.version>4.2.1</feign.version>
     </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <version>${nacos.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.guanshiyun</groupId>
+            <artifactId>web-client-spring-boot-starter</artifactId>
+            <version>${snapshotName}</version>
+        </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>com.playtika.reactivefeign</groupId>-->
+<!--            <artifactId>feign-reactor-cloud</artifactId>-->
+<!--            <version>${feign.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.playtika.reactivefeign</groupId>-->
+<!--            <artifactId>feign-reactor-spring-configuration</artifactId>-->
+<!--            <version>${feign.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>com.playtika.reactivefeign</groupId>-->
+<!--            <artifactId>feign-reactor-webclient</artifactId>-->
+<!--            <version>${feign.version}</version>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>

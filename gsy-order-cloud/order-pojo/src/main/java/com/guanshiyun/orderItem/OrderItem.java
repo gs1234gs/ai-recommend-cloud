@@ -2,24 +2,32 @@ package com.guanshiyun.orderItem;
 
 import com.guanshiyun.base.BasePojo;
 import lombok.*;
+import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigInteger;
 
 //订单明细
-@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
+@EqualsAndHashCode(callSuper = true)
+@FieldNameConstants
+@ToString(callSuper = true)
 @Table("order_item")
-public class OrderItem extends BasePojo {
+public class OrderItem extends BasePojo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     //订单明细id
+    @Id
     private BigInteger id;
     //订单id
-    private BigInteger orderId;
-    //商品id
-    private BigInteger goodsId;
-    //商品数量
-    private Integer num;
+    private BigInteger purchaseOrderId;
+    //收货地址
+    private BigInteger addressId;
 }

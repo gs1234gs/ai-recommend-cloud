@@ -1,10 +1,12 @@
 package com.guanshiyun.controller.sysrole;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.guanshiyun.consts.code.HttpCodeConst;
+import com.guanshiyun.controller.sysrole.vo.SysRoleSaveVO;
+import com.guanshiyun.controller.sysrole.vo.SysRoleVO;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.responsepojo.ResultT;
-import com.guanshiyun.rolepojo.SysRole;
 import com.guanshiyun.service.sysrole.SysRoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,30 +18,29 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/sysRole")
+@RequestMapping("/sysRole/")
 @RequiredArgsConstructor
 public class SysRoleController {
     private final SysRoleService sysRoleService;
 
-    //添加角色
-    @PostMapping("/add")
-    public Mono<ResultT<Object>> addRole(@RequestBody SysRole sysRole) {
-        return sysRoleService.save(sysRole)
-                .collectList()
-                .flatMap(roleList ->
+    //添加角色或者修改角色
+    @PostMapping("save")
+    public Mono<ResultT<BigInteger>> save(@RequestBody SysRoleSaveVO sysRoleSaveVO) {
+        return sysRoleService.save(sysRoleSaveVO)
+                .flatMap(id ->
                         Mono.just(
-                                ResultT.builder()
+                                ResultT.<BigInteger>builder()
                                         .code(HttpCodeConst.OK)
-                                        .msg("添加成功")
-                                        .data(roleList)
+                                        .msg("成功")
+                                        .data(id)
                                         .build()
                         )
                 )
                 .switchIfEmpty(
                         Mono.just(
-                                ResultT.builder()
+                                ResultT.<BigInteger>builder()
                                         .code(HttpCodeConst.OK)
-                                        .msg("添加失败")
+                                        .msg("失败")
                                         .data(null)
                                         .build()
                         )
@@ -48,7 +49,7 @@ public class SysRoleController {
                         throwable -> {
                             log.error("添加角色失败", throwable);
                             return Mono.just(
-                                    ResultT.builder()
+                                    ResultT.<BigInteger>builder()
                                             .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                                             .msg("服务器错误")
                                             .data(null)
@@ -59,7 +60,7 @@ public class SysRoleController {
     }
 
     //删除角色
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("deleteById/{id}")
     public Mono<ResultT<Long>> deleteRole(@PathVariable BigInteger id) {
         return sysRoleService.deleteRoleById(id)
                 .map(result ->
@@ -90,22 +91,21 @@ public class SysRoleController {
     }
 
     //修改角色
-    @PutMapping("/update")
-    public Mono<ResultT<List<SysRole>>> updateRole(@RequestBody SysRole sysRole) {
-        return sysRoleService.save(sysRole)
-                .collectList()
-                .flatMap(roleList ->
+    @PutMapping("updateById")
+    public Mono<ResultT<BigInteger>> updateRole(@RequestBody SysRoleSaveVO sysRoleVO) {
+        return sysRoleService.update(sysRoleVO)
+                .flatMap(id ->
                         Mono.just(
-                                ResultT.<List<SysRole>>builder()
+                                ResultT.<BigInteger>builder()
                                         .code(HttpCodeConst.OK)
                                         .msg("修改成功")
-                                        .data(roleList)
+                                        .data(id)
                                         .build()
                         )
                 )
                 .switchIfEmpty(
                         Mono.just(
-                                ResultT.<List<SysRole>>builder()
+                                ResultT.<BigInteger>builder()
                                         .code(HttpCodeConst.OK)
                                         .msg("修改失败")
                                         .data(null)
@@ -116,7 +116,7 @@ public class SysRoleController {
                         throwable -> {
                             log.error("修改角色失败", throwable);
                             return Mono.just(
-                                    ResultT.<List<SysRole>>builder()
+                                    ResultT.<BigInteger>builder()
                                             .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                                             .msg("修改角色失败")
                                             .data(null)
@@ -128,12 +128,12 @@ public class SysRoleController {
     }
 
     //查询角色
-    @PostMapping("roleList")
-    public Mono<ResultT<PageResultT<List<SysRole>>>> roleList(
-            @RequestBody(required = false) RequestPage<SysRole> requestPage) {
+    @PostMapping("findPage")
+    public Mono<ResultT<PageResultT<List<SysRoleVO>>>> roleList(
+            @RequestBody(required = false) RequestPage<SysRoleVO> requestPage) {
         return sysRoleService.findPage(requestPage)
                 .map(pageResult ->
-                        ResultT.<PageResultT<List<SysRole>>>builder()
+                        ResultT.<PageResultT<List<SysRoleVO>>>builder()
                                 .code(HttpCodeConst.OK)
                                 .msg("获取用户列表成功")
                                 .data(pageResult)
@@ -141,7 +141,7 @@ public class SysRoleController {
                 )
                 .onErrorResume(throwable -> {
                     log.error("获取用户列表失败", throwable);
-                    return Mono.just(ResultT.<PageResultT<List<SysRole>>>builder()
+                    return Mono.just(ResultT.<PageResultT<List<SysRoleVO>>>builder()
                             .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                             .msg("获取用户列表失败")
                             .data(null)
@@ -150,12 +150,13 @@ public class SysRoleController {
     }
 
     //根据用户id获取角色
-    @GetMapping("roleList/{userId}")
-    public Mono<ResultT<List<SysRole>>> roleList(@PathVariable BigInteger userId) {
+    @GetMapping("findRoleList/{userId}")
+    public Mono<ResultT<List<SysRoleVO>>> roleList(@PathVariable BigInteger userId) {
         return sysRoleService.findAllByUserId(userId)
+                .map(role -> BeanUtil.toBean(role, SysRoleVO.class))
                 .collectList()
                 .map(roleList ->
-                        ResultT.<List<SysRole>>builder()
+                        ResultT.<List<SysRoleVO>>builder()
                                 .code(HttpCodeConst.OK)
                                 .msg("获取角色列表成功")
                                 .data(roleList)
@@ -163,7 +164,7 @@ public class SysRoleController {
                 )
                 .switchIfEmpty(
                         Mono.just(
-                                ResultT.<List<SysRole>>builder()
+                                ResultT.<List<SysRoleVO>>builder()
                                         .code(HttpCodeConst.OK)
                                         .msg("获取角色列表失败")
                                         .data(null)
@@ -174,7 +175,7 @@ public class SysRoleController {
                         throwable -> {
                             log.error("获取角色列表失败", throwable);
                             return Mono.just(
-                                    ResultT.<List<SysRole>>builder()
+                                    ResultT.<List<SysRoleVO>>builder()
                                             .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                                             .msg("获取角色列表失败")
                                             .data(null)
@@ -183,5 +184,38 @@ public class SysRoleController {
                         }
                 );
     }
+    @GetMapping("findById/{id}")
+    public Mono<ResultT<SysRoleVO>> findById(@PathVariable BigInteger id) {
+        return sysRoleService.findById(id)
+                .map(role ->
+                        ResultT.<SysRoleVO>builder()
+                                .code(HttpCodeConst.OK)
+                                .msg("获取角色成功")
+                                .data(role)
+                                .build()
+                )
+                .switchIfEmpty(
+                        Mono.just(
+                                ResultT.<SysRoleVO>builder()
+                                        .code(HttpCodeConst.OK)
+                                        .msg("获取角色失败")
+                                        .data(null)
+                                        .build()
+                        )
+                )
+                .onErrorResume(
+                        throwable -> {
+                            log.error("获取角色失败", throwable);
+                            return Mono.just(
+                                    ResultT.<SysRoleVO>builder()
+                                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                            .msg("获取角色失败")
+                                            .data(null)
+                                            .build()
+                            );
+                        }
+                );
+    }
+
 
 }

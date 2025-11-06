@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.guanshiyun</groupId>
-        <artifactId>guanshiyun</artifactId>
+        <artifactId>gsy-general-api-cloud</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>ai-server-api</artifactId>
-    <name>ai-server-api</name>
-    <description>ai-server-api</description>
+    <artifactId>goods-server-api</artifactId>
+    <name>goods-server-api</name>
+    <description>goods-server-api</description>
     <url/>
     <licenses>
         <license/>
@@ -25,7 +25,7 @@
         <url/>
     </scm>
     <properties>
-        <java.version>25</java.version>
+
     </properties>
     <dependencies>
 

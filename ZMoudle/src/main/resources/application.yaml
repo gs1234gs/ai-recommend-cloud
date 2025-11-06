@@ -1,1 +1,5 @@
-spring.application.name=ZMoudle
+spring:
+  application:
+    name: ZMoudle
+  profiles:
+    active: dev

@@ -8,9 +8,9 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
-	<artifactId>aliyun-oss-spring-boot-autoconfigure</artifactId>
-	<name>aliyun-oss-spring-boot-autoconfigure</name>
-	<description>aliyun-oss-spring-boot-autoconfigure</description>
+	<artifactId>db-table-spring-boot-autoconfigure</artifactId>
+	<name>db-table-spring-boot-autoconfigure</name>
+	<description>db-table-spring-boot-autoconfigure</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -28,50 +28,35 @@
 		<java.version>21</java.version>
 		<maven.compiler.source>21</maven.compiler.source>
 		<maven.compiler.target>21</maven.compiler.target>
-		<jjwt-impl.version>0.12.6</jjwt-impl.version>
-		<sdk.oss.version>3.18.3</sdk.oss.version>
-		<fastjson.version>2.0.58</fastjson.version>
+		<snapshotName>0.0.1-SNAPSHOT</snapshotName>
 	</properties>
 	<dependencies>
-		<!--引入aliyun,jwt令牌依赖-->
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-api</artifactId>
-			<version>${jjwt-impl.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-impl</artifactId>
-			<version>${jjwt-impl.version}</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt-jackson</artifactId> <!-- or jjwt-gson if Gson is preferred -->
-			<version>${jjwt-impl.version}</version>
-			<scope>runtime</scope>
-		</dependency>
-		<!--
-		aliyun oss依赖
-		-->
-		<dependency>
-			<groupId>com.aliyun.oss</groupId>
-			<artifactId>aliyun-sdk-oss</artifactId>
-			<version>${sdk.oss.version}</version>
-		</dependency>
 
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>${fastjson.version}</version>
-		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-r2dbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.guanshiyun</groupId>
+			<artifactId>common-utils-spring-boot-starter</artifactId>
+			<version>${snapshotName}</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-core</artifactId>
+			<version>5.8.29</version>
 		</dependency>
 	</dependencies>
 

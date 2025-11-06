@@ -1,13 +1,14 @@
-package com.guanshiyun.controller.collect;
+package com.guanshiyun.service.collect;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.guanshiyun.controller.collect.vo.UserCollectVO;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-@Slf4j
-@RestController
-@RequestMapping("/collect")
-@RequiredArgsConstructor
-public class UserCollectController {
+import java.math.BigInteger;
+
+public interface UserCollectService {
+    //保存收藏记录
+    Mono<BigInteger> save(UserCollectVO userCollectVO);
+    //查询收藏记录
+    Flux<UserCollectVO> findAll(Integer rows);
 }

@@ -1,10 +1,19 @@
 package com.guanshiyun.controller.order.vo;
 
+import lombok.*;
+import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-
-public class PurChaseOrderVO {
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@SuperBuilder
+@FieldNameConstants
+@ToString(callSuper = true)
+public class PurChaseOrderSaveVO {
     private BigInteger id;
     //订单编号
     private String orderNo;
@@ -34,4 +43,6 @@ public class PurChaseOrderVO {
     private String remark;
     //商品数量
     private Integer num;
+    //地址 id
+    private BigInteger addressId;
 }

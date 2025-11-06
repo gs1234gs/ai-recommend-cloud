@@ -1,6 +1,8 @@
 spring:
   application:
     name: ModuleTest
+  profiles:
+    active: dev
 
   r2dbc:
     url: r2dbc:mysql://localhost:3306/cit
@@ -8,3 +10,5 @@ spring:
     password: 1234
 server:
   port: 10000
+
+

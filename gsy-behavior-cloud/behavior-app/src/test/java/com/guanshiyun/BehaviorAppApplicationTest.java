@@ -1,38 +1,42 @@
 package com.guanshiyun;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import com.guanshiyun.service.browse.UserBrowseService;
+import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import reactor.util.context.Context;
+
+import java.math.BigInteger;
 
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-    extends TestCase
+@SpringBootTest
+public class BehaviorAppApplicationTest
 {
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
+    @Autowired
+    private UserBrowseService userBrowseService;
+
+    @Test
+    public void test()
     {
-        super( testName );
+        userBrowseService.findAll(10)
+                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(1)))
+                .collectList()
+                .map(i->{
+                    System.out.println("=======================");
+                    i.forEach(System.out::println);
+                    System.out.println("=======================");
+                    return i;
+                })
+                .doOnSuccess(i->{
+                    System.out.println("=======================");
+                    i.forEach(System.out::println);
+                    System.out.println("=======================");
+                })
+                .doOnError(Throwable::printStackTrace)
+                .subscribe();
     }
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
-
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
-    }
 }

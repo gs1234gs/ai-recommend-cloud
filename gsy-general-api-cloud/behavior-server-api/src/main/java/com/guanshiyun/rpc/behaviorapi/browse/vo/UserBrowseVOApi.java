@@ -1,4 +1,4 @@
-package com.guanshiyun.rpc.behaviorapi.vo;
+package com.guanshiyun.rpc.behaviorapi.browse.vo;
 
 
 import com.guanshiyun.rpc.profile.BrowseProfileApi;

@@ -17,13 +17,13 @@ import java.util.Objects;
 
 @Slf4j
 @RestController
-@RequestMapping("/userRole")
+@RequestMapping("/userRole/")
 @RequiredArgsConstructor
 public class SysUserRoleController {
     private final SysUserRoleService sysUserRoleService;
     //添加用户角色关系
-    @PostMapping("/add")
-    public Mono<ResultT<SysUserRole>> addUserRole(
+    @PostMapping("save")
+    public Mono<ResultT<SysUserRole>> save(
             @RequestBody SysRelationRequest sysRelationRequest
             ){
         return sysUserRoleService.addUserRole(sysRelationRequest)
@@ -48,7 +48,7 @@ public class SysUserRoleController {
                 ));
     }
     //删除用户角色关系
-    @DeleteMapping("/delete")
+    @DeleteMapping("delete")
     public Mono<ResultT<Long>> deleteUserRoleByRoleId(
             @RequestParam (required = false) BigInteger userId,
             @RequestParam (required = false) List<BigInteger> roleId){
@@ -86,7 +86,7 @@ public class SysUserRoleController {
     }
     //修改用户角色关系
     //查询用户角色关系
-    @GetMapping("/roleList/{userId}")
+    @GetMapping("findRoleList/{userId}")
     public Mono<ResultT<List<BigInteger>>> findRoleIdsByUserId(@PathVariable BigInteger userId){
         return sysUserRoleService.findRoleIdsByUserId(userId)
                 .collectList()

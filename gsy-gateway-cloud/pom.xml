@@ -9,8 +9,8 @@
         <relativePath>../pom.xml</relativePath>  <!-- lookup parent from repository -->
     </parent>
     <artifactId>gsy-gateway-cloud</artifactId>
-    <name>gateway-server-cloud</name>
-    <description>gateway-server-cloud</description>
+    <name>gsy-gateway-cloud</name>
+    <description>gsy-gateway-cloud</description>
     <packaging>pom</packaging>
     <modules>
         <module>gateway-server-app</module>
@@ -29,7 +29,7 @@
         <url/>
     </scm>
     <properties>
-        <gareway.version>4.2.0</gareway.version>
+        <gareway.version>4.2.1</gareway.version>
         <hutool.version>5.8.39</hutool.version>
         <snapshotName>0.0.1-SNAPSHOT</snapshotName>
     </properties>

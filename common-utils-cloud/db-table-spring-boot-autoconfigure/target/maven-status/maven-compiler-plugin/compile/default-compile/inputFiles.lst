@@ -1,4 +1,11 @@
-D:\myai\end\ai-recommend-cloud\common-utils-cloud\aliyun-oss-spring-boot-autoconfigure\src\main\java\com\aliyun\oss\AliOSSProperties.java
-D:\myai\end\ai-recommend-cloud\common-utils-cloud\aliyun-oss-spring-boot-autoconfigure\src\main\java\com\aliyun\oss\AliOSSUtils.java
-D:\myai\end\ai-recommend-cloud\common-utils-cloud\aliyun-oss-spring-boot-autoconfigure\src\main\java\com\aliyun\oss\AliyunOSSAutoConfiguration.java
-D:\myai\end\ai-recommend-cloud\common-utils-cloud\aliyun-oss-spring-boot-autoconfigure\src\main\java\com\aliyun\oss\JwtUtils.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\db-table-spring-boot-autoconfigure\src\main\java\com\db\configbean\ConfigBean.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\db-table-spring-boot-autoconfigure\src\main\java\com\db\constsql\SqlConst.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\db-table-spring-boot-autoconfigure\src\main\java\com\db\cursorQuery\CursorQuery.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\db-table-spring-boot-autoconfigure\src\main\java\com\db\cursorQuery\ReactivePageQuery.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\db-table-spring-boot-autoconfigure\src\main\java\com\db\dbnumber\ConstNumber.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\db-table-spring-boot-autoconfigure\src\main\java\com\db\dbsqlconst\SqlConst.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\db-table-spring-boot-autoconfigure\src\main\java\com\db\page\CursorPageUtil.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\db-table-spring-boot-autoconfigure\src\main\java\com\db\page\PageUtils.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\db-table-spring-boot-autoconfigure\src\main\java\com\db\r2dbcupdate\R2dbcUpdateHelper.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\db-table-spring-boot-autoconfigure\src\main\java\com\db\tablename\EntityTableNameUtils.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\db-table-spring-boot-autoconfigure\src\main\java\com\db\tablename\MyStringUtils.java

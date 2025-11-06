@@ -1,9 +1,9 @@
-package com.guanshiyun.upload.impl;
+package com.guanshiyun.controller.service.impl;
 
 import com.aliyun.oss.AliOSSUtils;
 import com.guanshiyun.consts.code.HttpCodeConst;
+import com.guanshiyun.controller.service.UploadService;
 import com.guanshiyun.responsepojo.ResultT;
-import com.guanshiyun.upload.UploadService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.codec.multipart.FilePartEvent;
@@ -28,8 +28,12 @@ public class UploadServiceImpl implements UploadService {
                         PartEvent event = signal.get();
                         if (event instanceof FilePartEvent filePart) {
                             String fileName = filePart.filename();
-                            System.out.println("接收文件: " + fileName);
-                            return Mono.just(fileName);
+                            if (fileName.isEmpty()) {
+                                return Mono.error(new IllegalArgumentException("文件名不能为空"));
+                            }
+                            log.info("文件名: {}", fileName);
+                            //转化为 Flux<DataBuffer>
+                            return aliOSSUtils.uploadReactive(fileName, partEvents.map(PartEvent::content));
 
                         } else {
                             return Mono.error(new RuntimeException("文件上传失败"));

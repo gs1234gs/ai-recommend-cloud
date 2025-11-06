@@ -2,6 +2,12 @@ package com.guanshiyun.snowflake;
 
 import java.math.BigInteger;
 import java.time.Instant;
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -127,36 +133,49 @@ public class SnowflakePermanent {
         }
         return ts;
     }
+    public  String StringNextId(){
+        return nextId().toString();
+    }
 
     /**
      * 主方法：测试高并发生成ID
      */
-    public static void main(String[] args) throws InterruptedException {
-        long epoch = Instant.parse("2025-01-01T00:00:00Z").toEpochMilli();
-        SnowflakePermanent generator = new SnowflakePermanent(epoch, 1, 1);
+    public static void main(String[] args) throws InterruptedException {  // Snowflake ID 生成器
+        SnowflakePermanent generator = new SnowflakePermanent(
+                System.currentTimeMillis(), 1, 1
+        );
 
-        int threads = 32;
-        int perThread = 100_000; // 每线程生成数量
+        int threads = 32;      // 线程数
+        int perThread = 10000_00;  // 每线程生成 ID 数量
 
-        java.util.Set<BigInteger> ids = java.util.Collections.newSetFromMap(
-                new java.util.concurrent.ConcurrentHashMap<>());
+        // 使用 ConcurrentHashMap 来做线程安全的 Set
+        Set<BigInteger> ids = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
-        java.util.concurrent.ExecutorService exec = java.util.concurrent.Executors.newFixedThreadPool(threads);
+        // 创建线程池
+        ExecutorService exec = Executors.newFixedThreadPool(threads);
 
-        // 并发生成ID
+        // 并发生成 ID
         for (int i = 0; i < threads; i++) {
             exec.submit(() -> {
                 for (int j = 0; j < perThread; j++) {
                     BigInteger id = generator.nextId();
+
+                    // 查重逻辑：如果已经存在，打印重复 ID
                     if (!ids.add(id)) {
                         System.err.println("Duplicate detected: " + id);
+                        System.out.println("id重复了: "+id);
                     }
                 }
             });
         }
 
         exec.shutdown();
-        exec.awaitTermination(1, java.util.concurrent.TimeUnit.MINUTES);
+        exec.awaitTermination(1, TimeUnit.MINUTES);
 
+        // 输出总共生成的唯一 ID 数量
         System.out.println("Total generated IDs: " + ids.size());
-    }}
+
+        // 如果想打印前 10 个 ID 示例
+//        ids.stream().limit(10).forEach(id -> System.out.println("Sample ID: " + id));
+    }
+}
