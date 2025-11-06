@@ -1,0 +1,857 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="SCOPE_TYPE" value="4" />
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="50bf314b-8bcd-417a-90fa-052ef7204d7a" name="Changes" comment="新建分支" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$/demo">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin Class" />
+        <option value="Enum" />
+        <option value="package-info" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <excluded-from-favorite>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$" source="master" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </excluded-from-favorite>
+    <favorite-branches>
+      <branch-storage>
+        <map>
+          <entry type="LOCAL">
+            <value>
+              <list>
+                <branch-info repo="$PROJECT_DIR$/../job/xxl-job" source="3.2.0-release" />
+              </list>
+            </value>
+          </entry>
+        </map>
+      </branch-storage>
+    </favorite-branches>
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="ai-recommend-gsy" />
+        <entry key="$PROJECT_DIR$/../job/xxl-job" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="SYNC" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "gs1234gs"
+  }
+}]]></component>
+  <component name="GitToolBoxStore">
+    <option name="recentBranches">
+      <RecentBranches>
+        <option name="branchesForRepo">
+          <list>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="ai-recommend-gsy" />
+                    <option name="lastUsedInstant" value="1762396211" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="3.2.0-release" />
+                    <option name="lastUsedInstant" value="1761536634" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="master" />
+                    <option name="lastUsedInstant" value="1759065418" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$/../job/xxl-job" />
+            </RecentBranchesForRepo>
+            <RecentBranchesForRepo>
+              <option name="branches">
+                <list>
+                  <RecentBranch>
+                    <option name="branchName" value="main" />
+                    <option name="lastUsedInstant" value="1762396500" />
+                  </RecentBranch>
+                  <RecentBranch>
+                    <option name="branchName" value="ai-recommend-gsy" />
+                    <option name="lastUsedInstant" value="1762396210" />
+                  </RecentBranch>
+                </list>
+              </option>
+              <option name="repositoryRootUrl" value="file://$PROJECT_DIR$" />
+            </RecentBranchesForRepo>
+          </list>
+        </option>
+      </RecentBranches>
+    </option>
+  </component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/gs1234gs/ai-recommend-cloud.git",
+    "accountId": "670e1cd6-f4b3-45c3-b23d-95f56f18f2ee"
+  }
+}]]></component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="customMavenHome" value="D:\app\jdk21\apache-maven-3.9.11" />
+        <option name="localRepository" value="D:\app\jdk21\apache-maven-3.9.11\conf\repository" />
+        <option name="mavenHomeTypeForPersistence" value="CUSTOM" />
+        <option name="userSettingsFile" value="D:\app\jdk21\apache-maven-3.9.11\conf\settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="jdkForImporter" value="21" />
+        <option name="workspaceImportForciblyTurnedOn" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="MavenRunner">
+    <option name="jreName" value="21" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="31VWnbx7wh2aS5tTkfXAgJqbbZz" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="openDirectoriesWithSingleClick" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Application.CustomReactiveAuthenticationManager.executor": "Run",
+    "Application.GatewayServerAppApplication.executor": "Run",
+    "Application.Main.executor": "Run",
+    "Application.MainApplication.executor": "Run",
+    "Application.MainTest.executor": "Run",
+    "Application.MainTest1.executor": "Run",
+    "Application.MyStringUtils.executor": "Run",
+    "Application.ResultNumber.executor": "Run",
+    "Application.SnowflakePermanent.executor": "Run",
+    "Application.SystemAppApplication.executor": "Run",
+    "Application.Test1.executor": "Run",
+    "Application.TestController.executor": "Run",
+    "Application.ZMoudleApplicationTests.executor": "Run",
+    "JAR Application.system-app-0.0.1-SNAPSHOT.jar.executor": "Run",
+    "JUnit.AiAppApplicationTests.Test5.executor": "Run",
+    "JUnit.AiAppApplicationTests.Test6.executor": "Run",
+    "JUnit.AiAppApplicationTests.Test7.executor": "Run",
+    "JUnit.AiAppApplicationTests.chatClientTest (1).executor": "Run",
+    "JUnit.AiAppApplicationTests.chatClientTest.executor": "Run",
+    "JUnit.AiAppApplicationTests.contextLoads.executor": "Run",
+    "JUnit.AiAppApplicationTests.executor": "Run",
+    "JUnit.AiAppApplicationTests.reReadingTest.executor": "Run",
+    "JUnit.AiAppApplicationTests.reReadingTest2.executor": "Run",
+    "JUnit.AiAppApplicationTests.reReadingTest3.executor": "Run",
+    "JUnit.AiAppApplicationTests.reReadingTest4.executor": "Run",
+    "JUnit.AiAppApplicationTests.testFindCursorPageChat_ShouldReturnRecords.executor": "Run",
+    "JUnit.BehaviorAppApplicationTest.test.executor": "Run",
+    "JUnit.GatewayServerAppApplicationTest.contextLoads.executor": "Run",
+    "JUnit.GoodsAppApplicationTest.test.executor": "Run",
+    "JUnit.GoodsAppApplicationTest.test2.executor": "Run",
+    "JUnit.GoodsAppApplicationTest.test3.executor": "Run",
+    "JUnit.GoodsAppApplicationTest.test4.executor": "Run",
+    "JUnit.GoodsAppApplicationTest.test5.executor": "Run",
+    "JUnit.Main.contextLoads.executor": "Run",
+    "JUnit.MainTest.contextLoads.executor": "Run",
+    "JUnit.ModuleTestApplicationTests.contextLoads.executor": "Run",
+    "JUnit.RecommendAppApplicationTest.test.executor": "Run",
+    "JUnit.RecommendAppApplicationTest.test1.executor": "Run",
+    "JUnit.RecommendAppApplicationTest.testFeignProxy.executor": "Run",
+    "JUnit.SystemAppApplicationTests.contextLoads.executor": "Run",
+    "JUnit.SystemAppApplicationTests.test.executor": "Run",
+    "JUnit.SystemAppApplicationTests.test2.executor": "Run",
+    "JUnit.UploadAppApplicationTest.contextLoads.executor": "Run",
+    "JUnit.UploadAppApplicationTest.testUploadFileViaHttp.executor": "Run",
+    "JUnit.WarehouseAppApplicationTest.test1Del.executor": "Run",
+    "JUnit.WarehouseAppApplicationTest.test2.executor": "Run",
+    "JUnit.WarehouseAppApplicationTest.test3.executor": "Run",
+    "JUnit.WarehouseAppApplicationTest.testCreateWarehouses.executor": "Run",
+    "JUnit.ZMoudleApplicationTests.contextLoads.executor": "Run",
+    "JUnit.ZMoudleApplicationTests.executor": "Run",
+    "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
+    "Maven.ai-common-util [install].executor": "Run",
+    "Maven.aliyun-oss-spring-boot-autoconfigure [org.apache.maven.plugins:maven-clean-plugin:3.4.1:clean].executor": "Run",
+    "Maven.aliyun-oss-spring-boot-autoconfigure [org.apache.maven.plugins:maven-install-plugin:3.1.4:help].executor": "Run",
+    "Maven.aliyun-oss-spring-boot-starter [package].executor": "Run",
+    "Maven.behavior-server-api [clean].executor": "Run",
+    "Maven.behavior-server-api [install].executor": "Run",
+    "Maven.common-utils-cloud [clean].executor": "Run",
+    "Maven.common-utils-cloud [compile].executor": "Run",
+    "Maven.common-utils-cloud [install].executor": "Run",
+    "Maven.common-utils-cloud [org.apache.maven.plugins:maven-clean-plugin:3.3.2:clean].executor": "Run",
+    "Maven.common-utils-cloud [org.apache.maven.plugins:maven-install-plugin:3.1.4:help].executor": "Run",
+    "Maven.common-utils-cloud [org.apache.maven.plugins:maven-install-plugin:3.1.4:install].executor": "Run",
+    "Maven.common-utils-cloud [package].executor": "Run",
+    "Maven.common-utils-cloud [validate].executor": "Run",
+    "Maven.common-utils-spring-boot-starter [install].executor": "Run",
+    "Maven.gateway-server-app [clean].executor": "Run",
+    "Maven.gateway-server-app [org.apache.maven.plugins:maven-clean-plugin:3.3.2:clean].executor": "Run",
+    "Maven.gateway-server-app [package].executor": "Run",
+    "Maven.gsy-ai-cloud [clean].executor": "Run",
+    "Maven.gsy-ai-cloud [install].executor": "Run",
+    "Maven.guanshiyun [clean].executor": "Run",
+    "Maven.guanshiyun [install].executor": "Run",
+    "Maven.guanshiyun [org.apache.maven.plugins:maven-clean-plugin:3.3.2:clean].executor": "Run",
+    "Maven.guanshiyun [org.apache.maven.plugins:maven-clean-plugin:3.3.2:help].executor": "Run",
+    "Maven.guanshiyun [package].executor": "Run",
+    "Maven.guanshiyun.executor": "Run",
+    "Maven.microservice-security-spring-boot-autoconfigure [clean].executor": "Run",
+    "Maven.microservice-security-spring-boot-autoconfigure [org.apache.maven.plugins:maven-clean-plugin:3.3.2:clean].executor": "Run",
+    "Maven.statistical-server-cloud [clean].executor": "Run",
+    "Maven.system-app [package].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Notification.DisplayName-DoNotAsk-DatabaseConfigFileWatcher.found": "Database connection parameters found",
+    "Notification.DoNotAsk-DatabaseConfigFileWatcher.found": "true",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "Spring Boot.AiAppApplication.executor": "Run",
+    "Spring Boot.AiCommonUtilApplication.executor": "Run",
+    "Spring Boot.AiServerCloudApplication.executor": "Run",
+    "Spring Boot.AnalysisRecommendCloudApplication.executor": "Run",
+    "Spring Boot.BehaviorAppApplication.executor": "Run",
+    "Spring Boot.ErpServerCloudApplication.executor": "Run",
+    "Spring Boot.GatewayServerAppApplication.executor": "Run",
+    "Spring Boot.GatewayServerCloudApplication.executor": "Run",
+    "Spring Boot.GoodsAppApplication.executor": "Run",
+    "Spring Boot.ModuleTestApplication (1).executor": "Run",
+    "Spring Boot.ModuleTestApplication.executor": "Run",
+    "Spring Boot.OrderAppApplication.executor": "Run",
+    "Spring Boot.RecommendAppApplication.executor": "Run",
+    "Spring Boot.SampleApplication.executor": "Run",
+    "Spring Boot.SysPojoApplication.executor": "Run",
+    "Spring Boot.SystemAppApplication.executor": "Run",
+    "Spring Boot.UploadAppApplication.executor": "Run",
+    "Spring Boot.XxlJobAdminApplication.executor": "Run",
+    "Spring Boot.XxlJobExecutorApplication.executor": "Run",
+    "Spring Boot.ZMoudleApplication.executor": "Run",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "jdk.selected.JAVA_MODULE": "21",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/myai/end/ai-recommend-cloud/gsy-general-api-cloud",
+    "mysql-explain.enableMySQLExplain": "true",
+    "mysql-explain.existMysqlJar": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.configurations.included.in.services": "true",
+    "settings.build.tools.auto.reload": "SELECTIVE",
+    "settings.editor.selected.configurable": "Code Search",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "D:\\app\\idea\\IntelliJ IDEA 2024.1.7\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "two.files.diff.last.used.file": "D:/myai/end/ai-recommend-cloud/common-utils-cloud/public-pojo-spring-boot-autoconfigure/pom.xml",
+    "two.files.diff.last.used.folder": "D:/myai/end/ai-recommend-cloud/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
+  }
+}]]></component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RebelAgentSelection">
+    <selection>jr</selection>
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\myai\end\ai-recommend-cloud\gsy-general-api-cloud" />
+      <recent name="D:\myai\end\ai-recommend-cloud\gsy-order-cloud\order-app\src\main\resources" />
+      <recent name="D:\myai\end\ai-recommend-cloud\gsy-general-api-cloud\sys-server-api\src\main\java\com\guanshiyun" />
+      <recent name="D:\myai\end\ai-recommend-cloud\gsy-general-api-cloud\goods-server-api\src\main\java\com\guanshiyun\goodsenum" />
+      <recent name="D:\myai\end\ai-recommend-cloud\gsy-general-api-cloud\ai-server-api\src\main\java\com\guanshiyun" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.guanshiyun" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.guanshiyun.controller.sysuser.vo" />
+      <recent name="com.guanshiyun.perfix" />
+      <recent name="com.guanshiyun.controller.address.vo" />
+      <recent name="com.guanshiyun.controller.order.vo" />
+      <recent name="com.xinghe.zmoudle.pojo" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="Application" />
+        <option value="MicronautRunConfigurationType" />
+        <option value="QuarkusRunConfigurationType" />
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="Application.CustomReactiveAuthenticationManager">
+    <configuration name="CustomReactiveAuthenticationManager" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.guanshiyun.security.reponse.CustomReactiveAuthenticationManager" />
+      <module name="sys-user-server" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.guanshiyun.security.reponse.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestController" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.xinghe.zmoudle.controller.TestController" />
+      <module name="ZMoudle" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.xinghe.zmoudle.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RecommendAppApplicationTest.test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="recommend-app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.guanshiyun.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.guanshiyun" />
+      <option name="MAIN_CLASS_NAME" value="com.guanshiyun.RecommendAppApplicationTest" />
+      <option name="METHOD_NAME" value="test" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RecommendAppApplicationTest.test1" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="recommend-app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.guanshiyun.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.guanshiyun" />
+      <option name="MAIN_CLASS_NAME" value="com.guanshiyun.RecommendAppApplicationTest" />
+      <option name="METHOD_NAME" value="test1" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RecommendAppApplicationTest.testFeignProxy" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="recommend-app" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.guanshiyun.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.guanshiyun" />
+      <option name="MAIN_CLASS_NAME" value="com.guanshiyun.RecommendAppApplicationTest" />
+      <option name="METHOD_NAME" value="testFeignProxy" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="gsy-ai-cloud" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="gsy-ai-cloud" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <configuration name="guanshiyun" type="MavenRunConfiguration" factoryName="Maven" nameIsGenerated="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="cmdOptions" />
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list />
+            </option>
+            <option name="multimoduleDir" />
+            <option name="pomFileName" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <configuration name="AiAppApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="ai-app" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.guanshiyun.AiAppApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BehaviorAppApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="behavior-app" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.guanshiyun.BehaviorAppApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GatewayServerAppApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="gateway-server-app" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.guanshiyun.GatewayServerAppApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GoodsAppApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="goods-app" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.guanshiyun.GoodsAppApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ModuleTestApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="ZModuleTest" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.guanshiyun.ModuleTestApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OrderAppApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="order-app" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.guanshiyun.OrderAppApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="RecommendAppApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="recommend-app" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.guanshiyun.RecommendAppApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SystemAppApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="system-app" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.guanshiyun.SystemAppApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UploadAppApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="gsy-upload-cloud" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.guanshiyun.UploadAppApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="XxlJobAdminApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="xxl-job-admin" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.xxl.job.admin.XxlJobAdminApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="XxlJobExecutorApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="xxl-job-executor-sample-springboot" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.xxl.job.executor.XxlJobExecutorApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ZMoudleApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="ZMoudle" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.xinghe.zmoudle.ZMoudleApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.CustomReactiveAuthenticationManager" />
+      <item itemvalue="Application.TestController" />
+      <item itemvalue="JUnit.RecommendAppApplicationTest.testFeignProxy" />
+      <item itemvalue="JUnit.RecommendAppApplicationTest.test1" />
+      <item itemvalue="JUnit.RecommendAppApplicationTest.test" />
+      <item itemvalue="Maven.guanshiyun" />
+      <item itemvalue="Spring Boot.GatewayServerAppApplication" />
+      <item itemvalue="Spring Boot.RecommendAppApplication" />
+      <item itemvalue="Spring Boot.AiAppApplication" />
+      <item itemvalue="Spring Boot.BehaviorAppApplication" />
+      <item itemvalue="Spring Boot.GoodsAppApplication" />
+      <item itemvalue="Spring Boot.ModuleTestApplication" />
+      <item itemvalue="Spring Boot.OrderAppApplication" />
+      <item itemvalue="Spring Boot.SystemAppApplication" />
+      <item itemvalue="Spring Boot.UploadAppApplication" />
+      <item itemvalue="Spring Boot.XxlJobAdminApplication" />
+      <item itemvalue="Spring Boot.XxlJobExecutorApplication" />
+      <item itemvalue="Spring Boot.ZMoudleApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.RecommendAppApplicationTest.test" />
+        <item itemvalue="JUnit.RecommendAppApplicationTest.test1" />
+        <item itemvalue="JUnit.RecommendAppApplicationTest.testFeignProxy" />
+        <item itemvalue="Application.TestController" />
+        <item itemvalue="Application.CustomReactiveAuthenticationManager" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.19416.15" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.19416.15" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="50bf314b-8bcd-417a-90fa-052ef7204d7a" name="Changes" comment="" />
+      <created>1746087422697</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1746087422697</updated>
+      <workItem from="1746087423735" duration="457000" />
+      <workItem from="1755609890259" duration="3906000" />
+      <workItem from="1755700932687" duration="2226000" />
+      <workItem from="1755704507780" duration="231000" />
+      <workItem from="1755704747544" duration="24000" />
+      <workItem from="1755704778083" duration="513000" />
+      <workItem from="1755779267152" duration="264000" />
+      <workItem from="1755782842811" duration="8992000" />
+      <workItem from="1755795621330" duration="173000" />
+      <workItem from="1755866418133" duration="17939000" />
+      <workItem from="1755927116895" duration="4448000" />
+      <workItem from="1755933303098" duration="22723000" />
+      <workItem from="1755957920535" duration="549000" />
+      <workItem from="1755958515054" duration="3161000" />
+      <workItem from="1756041190115" duration="13995000" />
+      <workItem from="1756294465325" duration="17434000" />
+      <workItem from="1756381019254" duration="15181000" />
+      <workItem from="1756555572011" duration="13505000" />
+      <workItem from="1756732242886" duration="10707000" />
+      <workItem from="1756903230239" duration="4524000" />
+      <workItem from="1757077215525" duration="7393000" />
+      <workItem from="1757135157094" duration="29158000" />
+      <workItem from="1757245948270" duration="13274000" />
+      <workItem from="1757298023115" duration="2000" />
+      <workItem from="1757419163656" duration="14577000" />
+      <workItem from="1757469465085" duration="2000" />
+      <workItem from="1757603700018" duration="6288000" />
+      <workItem from="1757688212939" duration="4193000" />
+      <workItem from="1757755959102" duration="17320000" />
+      <workItem from="1757820286679" duration="2579000" />
+      <workItem from="1757822888636" duration="5070000" />
+      <workItem from="1757841737582" duration="7989000" />
+      <workItem from="1757853624480" duration="11266000" />
+      <workItem from="1758097006225" duration="581000" />
+      <workItem from="1758163435781" duration="30000" />
+      <workItem from="1758330676733" duration="981000" />
+      <workItem from="1758331673292" duration="12121000" />
+      <workItem from="1758964900958" duration="127000" />
+      <workItem from="1758965177487" duration="4000" />
+      <workItem from="1758965184521" duration="492000" />
+      <workItem from="1758965703831" duration="4138000" />
+      <workItem from="1758983555791" duration="19000" />
+      <workItem from="1758983578642" duration="7698000" />
+      <workItem from="1759053318367" duration="6977000" />
+      <workItem from="1759064307260" duration="6206000" />
+      <workItem from="1759501238713" duration="198000" />
+      <workItem from="1759501455137" duration="540000" />
+      <workItem from="1759502009844" duration="1498000" />
+      <workItem from="1759503621536" duration="185000" />
+      <workItem from="1759505233142" duration="300000" />
+      <workItem from="1759505922776" duration="294000" />
+      <workItem from="1759507531704" duration="42000" />
+      <workItem from="1759507651664" duration="78000" />
+      <workItem from="1759508717066" duration="93000" />
+      <workItem from="1759508839934" duration="73000" />
+      <workItem from="1759508917005" duration="37000" />
+      <workItem from="1759509389988" duration="167000" />
+      <workItem from="1759509560710" duration="94000" />
+      <workItem from="1759509805600" duration="258000" />
+      <workItem from="1759510068493" duration="4000" />
+      <workItem from="1759510087195" duration="7000" />
+      <workItem from="1759510160254" duration="95000" />
+      <workItem from="1759515616007" duration="672000" />
+      <workItem from="1759516319106" duration="76000" />
+      <workItem from="1759542366221" duration="30000" />
+      <workItem from="1759542996740" duration="39000" />
+      <workItem from="1759544089808" duration="765000" />
+      <workItem from="1759544992330" duration="19000" />
+      <workItem from="1759547200043" duration="108000" />
+      <workItem from="1759547349927" duration="2659000" />
+      <workItem from="1759552197026" duration="349000" />
+      <workItem from="1759552714734" duration="184000" />
+      <workItem from="1759553032554" duration="26000" />
+      <workItem from="1759553456698" duration="587000" />
+      <workItem from="1759554121351" duration="152000" />
+      <workItem from="1759554277184" duration="85000" />
+      <workItem from="1759554542982" duration="5000" />
+      <workItem from="1759554557187" duration="9000" />
+      <workItem from="1759554818683" duration="173000" />
+      <workItem from="1759588085074" duration="23000" />
+      <workItem from="1759588529572" duration="10000" />
+      <workItem from="1759588580340" duration="367000" />
+      <workItem from="1759589365195" duration="101000" />
+      <workItem from="1759589866274" duration="3758000" />
+      <workItem from="1759644659073" duration="13297000" />
+      <workItem from="1759675025834" duration="8000" />
+      <workItem from="1759819539161" duration="6688000" />
+      <workItem from="1760322166685" duration="39000" />
+      <workItem from="1760447500793" duration="758000" />
+      <workItem from="1760448264064" duration="6895000" />
+      <workItem from="1760522433005" duration="5412000" />
+      <workItem from="1760535434520" duration="3397000" />
+      <workItem from="1760595934105" duration="4730000" />
+      <workItem from="1760601507152" duration="3080000" />
+      <workItem from="1760679557786" duration="1048000" />
+      <workItem from="1760680819717" duration="3637000" />
+      <workItem from="1760684962223" duration="5050000" />
+      <workItem from="1760690808504" duration="7299000" />
+      <workItem from="1760750912315" duration="5904000" />
+      <workItem from="1760757223468" duration="6203000" />
+      <workItem from="1760765239641" duration="6883000" />
+      <workItem from="1760788643333" duration="6654000" />
+      <workItem from="1760805021114" duration="4181000" />
+      <workItem from="1760842031039" duration="5315000" />
+      <workItem from="1760848317269" duration="4035000" />
+      <workItem from="1760854135047" duration="526000" />
+      <workItem from="1760869825440" duration="16665000" />
+      <workItem from="1760922148594" duration="41887000" />
+      <workItem from="1761023314339" duration="3912000" />
+      <workItem from="1761028980191" duration="1264000" />
+      <workItem from="1761036313585" duration="7019000" />
+      <workItem from="1761109633451" duration="8805000" />
+      <workItem from="1761118870749" duration="7513000" />
+      <workItem from="1761134806206" duration="5952000" />
+      <workItem from="1761181691390" duration="14210000" />
+      <workItem from="1761216900930" duration="5535000" />
+      <workItem from="1761226156493" duration="1813000" />
+      <workItem from="1761227974791" duration="2977000" />
+      <workItem from="1761267355732" duration="4161000" />
+      <workItem from="1761297619948" duration="761000" />
+      <workItem from="1761375705287" duration="29301000" />
+      <workItem from="1761461428875" duration="22063000" />
+      <workItem from="1761491960515" duration="1565000" />
+      <workItem from="1761494172165" duration="4229000" />
+      <workItem from="1761527307579" duration="18000" />
+      <workItem from="1761528170342" duration="3695000" />
+      <workItem from="1761531969809" duration="130000" />
+      <workItem from="1761532112196" duration="884000" />
+      <workItem from="1761533406018" duration="4000" />
+      <workItem from="1761533413836" duration="14000" />
+      <workItem from="1761533504926" duration="420000" />
+      <workItem from="1761534031704" duration="114000" />
+      <workItem from="1761534194584" duration="3553000" />
+      <workItem from="1761540788578" duration="1721000" />
+      <workItem from="1761543692360" duration="3955000" />
+      <workItem from="1761547801032" duration="6767000" />
+      <workItem from="1761554654272" duration="6377000" />
+      <workItem from="1761569501787" duration="245000" />
+      <workItem from="1761570459542" duration="4133000" />
+      <workItem from="1761623154938" duration="566000" />
+      <workItem from="1761626563621" duration="3738000" />
+      <workItem from="1761630618878" duration="668000" />
+      <workItem from="1761649753116" duration="7074000" />
+      <workItem from="1761699103393" duration="92000" />
+      <workItem from="1761728206690" duration="56000" />
+      <workItem from="1761789699236" duration="25556000" />
+      <workItem from="1761874432322" duration="21090000" />
+      <workItem from="1761960671321" duration="19876000" />
+      <workItem from="1762087743434" duration="8340000" />
+      <workItem from="1762130960631" duration="52000" />
+      <workItem from="1762161681731" duration="7128000" />
+      <workItem from="1762217682387" duration="1000" />
+      <workItem from="1762226012722" duration="26481000" />
+      <workItem from="1762304100978" duration="9151000" />
+      <workItem from="1762320892329" duration="16000" />
+      <workItem from="1762320923853" duration="60000" />
+      <workItem from="1762395507789" duration="1183000" />
+    </task>
+    <task id="LOCAL-00001" summary="第一次推送">
+      <option name="closed" value="true" />
+      <created>1762395711138</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1762395711138</updated>
+    </task>
+    <task id="LOCAL-00002" summary="修改pom文件">
+      <option name="closed" value="true" />
+      <created>1762395921472</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1762395921472</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-core" />
+    <option featureType="dependencySupport" implementationName="java:io.projectreactor:reactor-core" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.data:spring-data-commons" />
+    <option featureType="com.intellij.configurationType" implementationName="SpringBootApplicationConfigurationType" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework.boot:spring-boot" />
+    <option featureType="dependencySupport" implementationName="java:org.springframework:spring-webmvc" />
+    <option featureType="dependencySupport" implementationName="java:org.projectlombok:lombok" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="master" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="第一次推送" />
+    <MESSAGE value="修改pom文件" />
+    <MESSAGE value="新建分支" />
+    <option name="LAST_COMMIT_MESSAGE" value="新建分支" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/../../ai-recommend-cloud/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/service/signin/impl/SignInUpServiceImpl.java</url>
+          <line>50</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/../../ai-recommend-cloud/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/service/signin/impl/SignInUpServiceImpl.java</url>
+          <line>65</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/../../ai-recommend-cloud/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/reponse/CustomReactiveAuthenticationManager.java</url>
+          <line>47</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/../../ai-recommend-cloud/gsy-gateway-cloud/gateway-server-app/src/main/java/com/guanshiyun/filter/GatewayGlobalFilter.java</url>
+          <line>100</line>
+          <option name="timeStamp" value="47" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/../../ai-recommend-cloud/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/service/sysuser/impl/SysUserServiceImpl.java</url>
+          <line>176</line>
+          <option name="timeStamp" value="51" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/../../ai-recommend-cloud/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/service/sysuser/impl/SysUserServiceImpl.java</url>
+          <line>175</line>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

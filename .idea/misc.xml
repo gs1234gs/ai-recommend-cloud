@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/system-user-server/pom.xml" />
+        <option value="$PROJECT_DIR$/erp-server-cloud/pom.xml" />
+        <option value="$PROJECT_DIR$/system-server-cloud/pom.xml" />
+        <option value="$PROJECT_DIR$/hrms-server-cloud/pom.xml" />
+        <option value="$PROJECT_DIR$/ai-server-cloud/pom.xml" />
+        <option value="$PROJECT_DIR$/gateway-server-cloud/pom.xml" />
+        <option value="$PROJECT_DIR$/statistical-server-cloud/pom.xml" />
+        <option value="$PROJECT_DIR$/recommend-server-cloud/pom.xml" />
+        <option value="$PROJECT_DIR$/common-utils-cloud/pom.xml" />
+        <option value="$PROJECT_DIR$/system-server-cloud/system-app/pom.xml" />
+        <option value="$PROJECT_DIR$/system-server-cloud/sys-common-utils/pom.xml" />
+        <option value="$PROJECT_DIR$/system-server-cloud/sys-user-server/pom.xml" />
+        <option value="$PROJECT_DIR$/system-server-cloud/sys-pojo/pom.xml" />
+        <option value="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/pom.xml" />
+        <option value="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-starter/pom.xml" />
+        <option value="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/pom.xml" />
+        <option value="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-starter/pom.xml" />
+        <option value="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/pom.xml" />
+        <option value="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-starter/pom.xml" />
+        <option value="$PROJECT_DIR$/gateway-server-cloud/gateway-server-app/pom.xml" />
+        <option value="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/pom.xml" />
+        <option value="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-starter/pom.xml" />
+        <option value="$PROJECT_DIR$/ai-server-cloud/ai-server-app/pom.xml" />
+        <option value="$PROJECT_DIR$/ai-server-cloud/ai-server/pom.xml" />
+        <option value="$PROJECT_DIR$/ai-server-cloud/ai-app/pom.xml" />
+        <option value="$PROJECT_DIR$/deneral-api-cloud/pom.xml" />
+        <option value="$PROJECT_DIR$/general-api-cloud/pom.xml" />
+        <option value="$PROJECT_DIR$/../job/PowerJob/pom.xml" />
+        <option value="$PROJECT_DIR$/general-api-cloud/sys-server-api/pom.xml" />
+        <option value="$PROJECT_DIR$/general-api-cloud/ai-server-api/pom.xml" />
+        <option value="$PROJECT_DIR$/general-api-cloud/statistical-server-api/pom.xml" />
+        <option value="$PROJECT_DIR$/general-api-cloud/hrms-server-api/pom.xml" />
+        <option value="$PROJECT_DIR$/general-api-cloud/erp-server-api/pom.xml" />
+        <option value="$PROJECT_DIR$/general-api-cloud/recommend-server-api/pom.xml" />
+        <option value="$PROJECT_DIR$/ai-server-cloud/ai-pojo/pom.xml" />
+        <option value="$PROJECT_DIR$/ai-server-cloud/ai-common-util/pom.xml" />
+        <option value="$PROJECT_DIR$/ModuleTest/pom.xml" />
+        <option value="$PROJECT_DIR$/goods-server-cloud/pom.xml" />
+        <option value="$PROJECT_DIR$/goods-server-cloud/goods-server/pom.xml" />
+        <option value="$PROJECT_DIR$/goods-server-cloud/goods-popo/pom.xml" />
+        <option value="$PROJECT_DIR$/goods-server-cloud/goods-common-utils/pom.xml" />
+        <option value="$PROJECT_DIR$/goods-server-cloud/goods-app/pom.xml" />
+        <option value="$PROJECT_DIR$/ZModuleTest/pom.xml" />
+        <option value="$PROJECT_DIR$/../job/xxl-job/pom.xml" />
+        <option value="$PROJECT_DIR$/gsy-goods-cloud/goods-app/pom.xml" />
+        <option value="$PROJECT_DIR$/gsy-goods-cloud/goods-common-utils/pom.xml" />
+        <option value="$PROJECT_DIR$/gsy-goods-cloud/goods-popo/pom.xml" />
+        <option value="$PROJECT_DIR$/gsy-goods-cloud/goods-server/pom.xml" />
+        <option value="$PROJECT_DIR$/gsy-erp-cloud/pom.xml" />
+        <option value="$PROJECT_DIR$/gsy-ai-cloud/ai-app/pom.xml" />
+        <option value="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/pom.xml" />
+        <option value="$PROJECT_DIR$/gsy-statistical-cloud/pom.xml" />
+        <option value="$PROJECT_DIR$/gsy-system-cloud/pom.xml" />
+        <option value="$PROJECT_DIR$/gsy-recommend-cloud/pom.xml" />
+        <option value="$PROJECT_DIR$/gsy-goods-cloud/pom.xml" />
+        <option value="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/pom.xml" />
+        <option value="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-starter/pom.xml" />
+        <option value="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/pom.xml" />
+        <option value="$PROJECT_DIR$/ZMoudle/pom.xml" />
+        <option value="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/pom.xml" />
+        <option value="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/pom.xml" />
+        <option value="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-starter/pom.xml" />
+        <option value="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/pom.xml" />
+      </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/../job/xxl-job/pom.xml" />
+        <option value="$PROJECT_DIR$/../job/xxl-job/xxl-job-admin/pom.xml" />
+        <option value="$PROJECT_DIR$/../job/xxl-job/xxl-job-core/pom.xml" />
+        <option value="$PROJECT_DIR$/../job/xxl-job/xxl-job-executor-samples/pom.xml" />
+        <option value="$PROJECT_DIR$/../job/xxl-job/xxl-job-executor-samples/xxl-job-executor-sample-frameless/pom.xml" />
+        <option value="$PROJECT_DIR$/../job/xxl-job/xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/pom.xml" />
+        <option value="$PROJECT_DIR$/../job/xxl-job/xxl-job-executor-samples/xxl-job-executor-sample-springboot/pom.xml" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="21" project-jdk-type="JavaSDK" />
+</project>

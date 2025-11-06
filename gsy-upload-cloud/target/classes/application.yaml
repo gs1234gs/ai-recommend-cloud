@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: upload-app
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      write-dates-as-timestamps: false
+  codec:
+    max-in-memory-size: 100MB
+
+#aliyun-oss
+aliyun:
+  oss:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    bucketName: gsy-ai-recommend-cloud
+    accessKeyId: LTAI5tNC3nPEEfGJ2P56wTvG
+    accessKeySecret: 5VeOsZIVmOSGPsBVWvIcyhE4y4MUbE
+
+logging:
+  level:
+    com.alibaba.nacos.client: DEBUG
+    org.springframework.ai.chat.client.advisor: DEBUG
+
+server:
+  port: 1979

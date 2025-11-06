@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: behavior-app
+  profiles:
+    active: dev,middleware
+  output:
+    ansi:
+      enabled: ALWAYS
+server:
+  port: 2001
+
+logging:
+  level:
+    root: INFO
+    io.r2dbc.spi: DEBUG           # R2DBC SPI 层日志
+    org.springframework.r2dbc.core: DEBUG   # Spring R2DBC 核心模板日志
+    com.zaxxer.r2dbc: DEBUG       # 如果使用 HikariR2DBC（不常见）

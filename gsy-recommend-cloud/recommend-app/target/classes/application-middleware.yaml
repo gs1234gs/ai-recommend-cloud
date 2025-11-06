@@ -1,0 +1,26 @@
+spring:
+  cloud:
+    loadbalancer:
+      enabled: true
+    nacos:
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+      discovery:
+        enabled: true
+        namespace: dev
+    openfeign:
+      client:
+        default-config:
+      httpclient:
+        connection-timeout: 5000
+        ok-http:
+          read-timeout: 10000
+      circuitbreaker:
+        enabled: true
+
+logging:
+  level:
+    com.alibaba.nacos.client: DEBUG
+
+
