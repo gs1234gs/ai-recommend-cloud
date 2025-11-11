@@ -49,6 +49,13 @@
     <project-version>2023.0.3.4</project-version>
     <spring-cloud.version>2023.0.4</spring-cloud.version>
     <fastjson.version>2.0.58</fastjson.version>
+    <snapshotName>0.0.1-SNAPSHOT</snapshotName>
+    <r2dbc.mysql.version>1.4.1</r2dbc.mysql.version>
+    <junit.version>4.13.2</junit.version>
+    <gareway.version>4.2.1</gareway.version>
+    <hutool.version>5.8.39</hutool.version>
+    <ai.version>1.0.0-M6</ai.version>
+    <memorey.version>1.0.0</memorey.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -58,6 +65,15 @@
         <version>${spring-cloud.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.asyncer</groupId>
+        <artifactId>r2dbc-mysql</artifactId>
+      </dependency>
+      <dependency>
+        <groupId>com.mysql</groupId>
+        <artifactId>mysql-connector-j</artifactId>
+        <version>${mysql.version}</version>
       </dependency>
 <!--      <dependency>-->
 <!--        <groupId>com.fasterxml.jackson.core</groupId>-->
@@ -82,6 +98,11 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+<!--      <dependency>-->
+<!--        <groupId>org.springdoc</groupId>-->
+<!--        <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>-->
+<!--        <version>2.6.0</version> &lt;!&ndash;  稳定版 &ndash;&gt;-->
+<!--      </dependency>-->
     </dependencies>
   </dependencyManagement>
   <dependencies>
@@ -89,6 +110,10 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-webflux</artifactId>
     </dependency>
+<!--    <dependency>-->
+<!--      <groupId>org.springframework</groupId>-->
+<!--      <artifactId>spring-webflux</artifactId>-->
+<!--    </dependency>-->
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>

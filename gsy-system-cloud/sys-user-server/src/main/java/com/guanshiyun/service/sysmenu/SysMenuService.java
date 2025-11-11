@@ -1,6 +1,7 @@
 package com.guanshiyun.service.sysmenu;
 
 import com.guanshiyun.menupojo.SysMenu;
+import com.guanshiyun.menupojo.reponse.SysMenuResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -23,4 +24,7 @@ public interface SysMenuService {
 
     Flux<SysMenu> findAll();
 
+    Flux<SysMenu> findMenuByRoleId(BigInteger roleId);
+
+    Mono<SysMenuResponse> findById(BigInteger id);
 }

@@ -25,10 +25,7 @@
         <url/>
     </scm>
     <properties>
-        <java.version>21</java.version>
-        <snapshotName>0.0.1-SNAPSHOT</snapshotName>
-        <fastjson.version>1.2.83</fastjson.version>
-        <jackson.version>2.19.2</jackson.version>
+
     </properties>
     <dependencies>
         <dependency>

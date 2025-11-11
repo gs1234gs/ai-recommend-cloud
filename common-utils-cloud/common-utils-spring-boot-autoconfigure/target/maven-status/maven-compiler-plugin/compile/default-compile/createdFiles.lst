@@ -5,3 +5,5 @@ com\guanshiyun\threadcontext\ThreadSecurityLocalKey.class
 com\guanshiyun\print\start\SystemStartPrintln.class
 com\guanshiyun\utils\BeanConvertUtil.class
 com\guanshiyun\biginteger\MyBigInteger.class
+com\guanshiyun\tree\TreeUtil.class
+com\guanshiyun\utils\WebContextUtils.class

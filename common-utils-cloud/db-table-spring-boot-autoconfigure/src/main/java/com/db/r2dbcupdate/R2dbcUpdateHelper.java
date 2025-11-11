@@ -1,5 +1,6 @@
 package com.db.r2dbcupdate;
 
+import com.guanshiyun.biginteger.MyBigInteger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.r2dbc.core.DatabaseClient;
@@ -9,12 +10,14 @@ import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 @Slf4j
 @RequiredArgsConstructor
 public class R2dbcUpdateHelper {
     private final DatabaseClient databaseClient;
+    private final MyBigInteger myBigInteger;
 
     /**
      * 通用动态更新，忽略 null 字段
@@ -87,6 +90,11 @@ public class R2dbcUpdateHelper {
         }
         spec = spec.bind(idFieldName, idValue);
 
-        return spec.fetch().rowsUpdated().map(BigInteger::valueOf);
+//        return spec.fetch().rowsUpdated().map(BigInteger::valueOf);
+        // 执行并判断是否更新成功
+        final Object idValueTemp = idValue;
+        return spec.fetch()
+                .rowsUpdated()
+                .flatMap(rowsUpdated -> rowsUpdated > 0 ? Mono.just(myBigInteger.bigIntegerOrNull(idValueTemp)) : Mono.empty());
     }
 }

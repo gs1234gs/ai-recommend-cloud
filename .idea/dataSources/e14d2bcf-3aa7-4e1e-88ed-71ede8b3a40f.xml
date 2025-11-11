@@ -996,7 +996,7 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="294" parent="1" name="gsy-goods-cloud">
-      <LastIntrospectionLocalTimestamp>2025-11-01.07:41:13</LastIntrospectionLocalTimestamp>
+      <LastIntrospectionLocalTimestamp>2025-11-06.05:50:48</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="295" parent="1" name="gsy-order-cloud">

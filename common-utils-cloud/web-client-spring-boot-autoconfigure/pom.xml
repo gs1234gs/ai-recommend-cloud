@@ -24,12 +24,6 @@
         <tag/>
         <url/>
     </scm>
-    <properties>
-        <java.version>21</java.version>
-        <hutool.version>5.8.39</hutool.version>
-        <snapshotName>0.0.1-SNAPSHOT</snapshotName>
-        <loadbalancer.version>4.2.1</loadbalancer.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -15,14 +15,13 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <snapshot.version>0.0.1-SNAPSHOT</snapshot.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.guanshiyun</groupId>
             <artifactId>goods-server</artifactId>
-            <version>${snapshot.version}</version>
+            <version>${snapshotName}</version>
         </dependency>
     </dependencies>
 </project>

@@ -29,7 +29,7 @@ public class SysMenu {
     //父级菜单id
     private BigInteger parentId;
     //显示顺序
-    private int orderNum;
+    private int sort;
     //路由地址
     private String path;
     //组件路径

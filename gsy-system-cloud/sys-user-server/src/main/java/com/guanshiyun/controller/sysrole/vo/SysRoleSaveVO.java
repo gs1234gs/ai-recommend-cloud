@@ -10,6 +10,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Data
 @Builder
 @FieldNameConstants
@@ -45,4 +47,6 @@ public class SysRoleSaveVO implements Serializable {
     private LocalDateTime updateTime;
     // 备注
     private String remark;
+    //菜单
+    private List<BigInteger> menuIdList;
 }

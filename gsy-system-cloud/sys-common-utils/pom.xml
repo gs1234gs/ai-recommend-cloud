@@ -24,14 +24,11 @@
 		<tag/>
 		<url/>
 	</scm>
-	<properties>
-		<pojo.version>0.0.1-SNAPSHOT</pojo.version>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>com.guanshiyun</groupId>
 			<artifactId>sys-pojo</artifactId>
-			<version>${pojo.version}</version>
+			<version>${snapshotName}</version>
 		</dependency>
 	</dependencies>
 	<build>

@@ -36,10 +36,7 @@
         <url/>
     </scm>
     <properties>
-        <nacos.version>2023.0.3.3</nacos.version>
-        <loadbalancer.version>4.2.1</loadbalancer.version>
-        <snapshotName>0.0.1-SNAPSHOT</snapshotName>
-        <feign.version>4.2.1</feign.version>
+<!--        <feign.version>4.2.1</feign.version>-->
     </properties>
     <dependencies>
         <dependency>
@@ -49,7 +46,6 @@
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-            <version>${nacos.version}</version>
         </dependency>
         <dependency>
             <groupId>com.guanshiyun</groupId>

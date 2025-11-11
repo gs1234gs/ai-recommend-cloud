@@ -1,11 +1,12 @@
 package com.guanshiyun.service.sysmenu.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.menupojo.SysMenu;
-import com.guanshiyun.relationpojo.SysRoleMenu;
+import com.guanshiyun.menupojo.reponse.SysMenuResponse;
 import com.guanshiyun.repository.menurole.SysRoleMenuRepository;
 import com.guanshiyun.repository.sysmenu.SysMenuRepository;
 import com.guanshiyun.repository.userrole.SysUserRoleRepository;
@@ -21,8 +22,8 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -77,25 +78,105 @@ public class SysMenuServiceImpl implements SysMenuService {
         return sysMenuRepository.findAllByParentId(id);
     }
 
-    @Override
-    public Mono<Long> deleteById(BigInteger id) {
-        if (Objects.isNull(id))
-            return Mono.just(ConstNumber.LONG_ZERO);
-        //避免误操作，只能删除id大于100000的菜单
-        if (id.compareTo(BigInteger.valueOf(100000)) < 0)
-            return Mono.just(ConstNumber.LONG_ZERO);
-        return databaseClient.sql("delete from sys_menu where id = :id")
-                .bind(SysMenu.Fields.id, id)
-                .fetch()
-                .rowsUpdated()
-                .flatMap(rowsUpdated ->
-                        databaseClient.sql("delete from sys_role_menu where menu_id = :menuId")
-                                .bind(SysRoleMenu.Fields.menuId, id)
-                                .fetch()
-                                .rowsUpdated()
-                                .thenReturn(rowsUpdated)
+//    @Override
+//    public Mono<Long> deleteById(BigInteger id) {
+//        if (Objects.isNull(id))
+//            return Mono.just(ConstNumber.LONG_ZERO);
+//        //避免误操作，只能删除id大于100000的菜单
+//        if (id.compareTo(BigInteger.valueOf(131)) < 0)
+//            return Mono.just(ConstNumber.LONG_ZERO);
+//        return databaseClient.sql("delete from sys_menu where id = :id")
+//                .bind(SysMenu.Fields.id, id)
+//                .fetch()
+//                .rowsUpdated()
+//                .flatMap(rowsUpdated ->
+//                        {
+//                            //删除子集，孙子级
+//                            //查询子集
+//                            sysMenuRepository.findAllByParentId( id);
+//                           return databaseClient.sql("delete from sys_role_menu where menu_id = :menuId")
+//                                    .bind(SysRoleMenu.Fields.menuId, id)
+//                                    .fetch()
+//                                    .rowsUpdated()
+//                                    .thenReturn(rowsUpdated);
+//                        }
+//                )
+//                .as(transaction -> transaction.as(transactionalOperator::transactional));
+//    }
+@Override
+public Mono<Long> deleteById(BigInteger id) {
+    if (id == null || id.compareTo(BigInteger.valueOf(131)) <= 0) {
+        return Mono.just(ConstNumber.LONG_ZERO);
+    }
+
+    return collectAllDescendantIds(id)
+            .flatMap(allIds -> {
+                if (allIds.isEmpty()) {
+                    return Mono.just(0L);
+                }
+
+                String placeholders = allIds.stream()
+                        .map(i -> "?")
+                        .collect(Collectors.joining(", "));
+
+                // 删除角色菜单关联
+                Mono<Long> deleteRoleMenu = bindList(
+                        databaseClient.sql("DELETE FROM sys_role_menu WHERE menu_id IN (" + placeholders + ")"),
+                        allIds
                 )
-                .as(transaction -> transaction.as(transactionalOperator::transactional));
+                        .fetch()
+                        .rowsUpdated();
+
+                // 删除菜单
+                Mono<Long> deleteMenu = bindList(
+                        databaseClient.sql("DELETE FROM sys_menu WHERE id IN (" + placeholders + ")"),
+                        allIds
+                )
+                        .fetch()
+                        .rowsUpdated();
+
+                return deleteRoleMenu.then(deleteMenu)
+                        .as(transactionalOperator::transactional);
+            });
+}
+
+    // 辅助方法：绑定列表到 SQL 参数（按位置）
+    private DatabaseClient.GenericExecuteSpec bindList(DatabaseClient.GenericExecuteSpec spec, List<?> values) {
+        for (int i = 0; i < values.size(); i++) {
+            spec = spec.bind(i, values.get(i));
+        }
+        return spec;
+    }
+
+    /**
+     * 使用响应式 BFS（广度优先）收集所有后代菜单 ID（包括自己）
+     */
+    private Mono<List<BigInteger>> collectAllDescendantIds(BigInteger rootId) {
+        return Mono.just(Collections.singletonList(rootId)) // 初始层：[rootId]
+                .expand(currentBatch -> {
+                    if (currentBatch.isEmpty()) {
+                        return Mono.empty(); // 终止 expand
+                    }
+
+                    String inClause = currentBatch.stream()
+                            .map(i -> "?")
+                            .collect(Collectors.joining(", "));
+
+                    //  使用 bindList 工具方法绑定参数列表
+                    return bindList(
+                            databaseClient.sql("SELECT id FROM sys_menu WHERE parent_id IN (" + inClause + ")"),
+                            currentBatch
+                    )
+                            .fetch()
+                            .all()
+                            .map(row ->myBigInteger.bigInteger(row.get(SysMenu.Fields.id)))
+                            .collectList()
+                            .filter(nextBatch -> !nextBatch.isEmpty());
+                })
+                .reduce(new ArrayList<>(), (acc, batch) -> {
+                    acc.addAll(batch);
+                    return acc;
+                });
     }
 
     @Override
@@ -112,7 +193,7 @@ public class SysMenuServiceImpl implements SysMenuService {
                 sysMenu.setCreateTime(LocalDateTime.now());
                 sysMenu.setCreatorId(userId);
               return sysMenuRepository.save(sysMenu)
-                        .map(SysMenu::getId);
+                        .map(save->sysMenu.getId());
             }
             sysMenu.setUpdaterId(userId);
             sysMenu.setUpdateTime(LocalDateTime.now());
@@ -120,7 +201,8 @@ public class SysMenuServiceImpl implements SysMenuService {
                     EntityTableNameUtils.getName(SysMenu.class),
                     sysMenu,
                     SysMenu.Fields.id
-            );
+            )
+                    .map(update -> sysMenu.getId());
         });
     }
 
@@ -137,5 +219,18 @@ public class SysMenuServiceImpl implements SysMenuService {
     @Override
     public Flux<SysMenu> findAll() {
         return sysMenuRepository.findAll();
+    }
+
+    @Override
+    public Flux<SysMenu> findMenuByRoleId(BigInteger roleId) {
+        return sysRoleMenuRepository.findMenuIdByRoleId(roleId)
+                .collectList()
+                .flatMapMany(sysMenuRepository::findAllById);
+    }
+
+    @Override
+    public Mono<SysMenuResponse> findById(BigInteger id) {
+        return sysMenuRepository.findById(id)
+                .map(sysMenu -> BeanUtil.toBean(sysMenu, SysMenuResponse.class));
     }
 }

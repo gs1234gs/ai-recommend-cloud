@@ -24,9 +24,6 @@
         <tag/>
 
     </scm>
-    <properties>
-        <snapshotName>0.0.1-SNAPSHOT</snapshotName>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>com.guanshiyun</groupId>

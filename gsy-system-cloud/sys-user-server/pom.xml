@@ -9,7 +9,6 @@
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	<artifactId>sys-user-server</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>sys-user-server</name>
 	<description>sys-user-server</description>
 	<url/>
@@ -25,14 +24,11 @@
 		<tag/>
 		<url/>
 	</scm>
-	<properties>
-		<common.version>0.0.1-SNAPSHOT</common.version>
-	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>com.guanshiyun</groupId>
 			<artifactId>sys-common-utils</artifactId>
-			<version>${common.version}</version>
+			<version>${snapshotName}</version>
 		</dependency>
 	</dependencies>
 

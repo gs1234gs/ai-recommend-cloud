@@ -46,6 +46,25 @@ public class SysMenuController {
                         }
                 );
     }
+    @GetMapping("findById/{id}")
+    public Mono<ResultT<SysMenuResponse>> findById(@PathVariable BigInteger id) {
+        return sysMenuService.findById(id)
+                .map(menu ->
+                        ResultT.<SysMenuResponse>builder()
+                                .code(HttpCodeConst.OK)
+                                .msg("成功")
+                                .data(menu)
+                                .build()
+                )
+                .onErrorResume(throwable -> {
+                    log.warn("获取菜单失败", throwable);
+                    return Mono.just(ResultT.<SysMenuResponse>builder()
+                            .code(HttpCodeConst.UNAUTHORIZED)
+                            .msg("获取菜单失败")
+                            .build()
+                    );
+                });
+    }
     @GetMapping("/findByUserId")
     public Mono<ResultT<List<SysMenuResponse>>> findByUserId() {
         return sysMenuService.findMenuByUserId()
@@ -55,7 +74,7 @@ public class SysMenuController {
                         SysMenuResponse.Fields.id,
                         SysMenuResponse.Fields.parentId,
                         SysMenuResponse.Fields.children,
-                        SysMenuResponse.Fields.orderNum
+                        SysMenuResponse.Fields.sort
                         )
                 )
                 .map(menuList -> // 明确泛型
@@ -87,7 +106,7 @@ public class SysMenuController {
                                                 SysMenuResponse.Fields.id,
                                                 SysMenuResponse.Fields.parentId,
                                                 SysMenuResponse.Fields.children,
-                                                SysMenu.Fields.orderNum
+                                                SysMenu.Fields.sort
                                                 ))
                                         .build()
                         )
@@ -95,7 +114,7 @@ public class SysMenuController {
     }
 
     //删除菜单
-    @GetMapping("/deleteById/{id}")
+    @DeleteMapping("/deleteById/{id}")
     public Mono<ResultT<Long>> deleteMenu(@PathVariable BigInteger id) {
         return sysMenuService.deleteById(id)
                 .map(result ->
@@ -230,7 +249,7 @@ public class SysMenuController {
                                 SysMenuResponse.Fields.id,
                                 SysMenuResponse.Fields.parentId,
                                 SysMenuResponse.Fields.children,
-                                SysMenuResponse.Fields.orderNum
+                                SysMenuResponse.Fields.sort
                                 )
                 )
                 .map(menuList ->
@@ -257,5 +276,33 @@ public class SysMenuController {
                                         .build()
                         )
                 );
+    }
+    //根据角色id获取菜单
+    @GetMapping("/findMenuByRoleId/{roleId}")
+    public Mono<ResultT<List<SysMenuResponse>>> findMenuByRoleId(@PathVariable BigInteger roleId) {
+        return sysMenuService.findMenuByRoleId(roleId)
+                .map(menu ->BeanUtil.toBean(menu, SysMenuResponse.class))
+                .collectList()
+                .map(menuList ->
+                        ResultT.<List<SysMenuResponse>>builder()
+                                .code(HttpCodeConst.OK)
+                                .msg("成功")
+                                .data(TreeUtil.buildTree(menuList,
+                                        SysMenuResponse.Fields.id,
+                                        SysMenuResponse.Fields.parentId,
+                                        SysMenuResponse.Fields.children,
+                                        SysMenuResponse.Fields.sort
+                                ))
+                                .build()
+                )
+                .onErrorResume(throwable ->{
+                    return Mono.just(
+                            ResultT.<List<SysMenuResponse>>builder()
+                                    .code(HttpCodeConst.UNAUTHORIZED)
+                                    .msg("获取菜单树失败")
+                                    .data(null)
+                                    .build()
+                    );
+                });
     }
 }

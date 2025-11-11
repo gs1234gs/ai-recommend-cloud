@@ -1,4 +1,4 @@
-package com.guanshiyun.security.exception;
+package com.guanshiyun.exception;
 
 
 import com.guanshiyun.responsepojo.ResultT;

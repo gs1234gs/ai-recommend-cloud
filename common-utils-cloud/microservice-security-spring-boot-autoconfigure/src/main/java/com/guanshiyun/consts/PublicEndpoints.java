@@ -10,5 +10,11 @@ public class PublicEndpoints {
             "/sys-api/refresh",
             "/sys-api/verify",
             "/sys-api/reset/forget",
-            "/sys-api/customer/use");
+            "/sys-api/customer/use",
+            "/swagger-ui.html",
+            "/swagger-ui/swagger-ui.html",
+            "/swagger-ui/index.html",
+            "/v3/api-docs",
+            "/v3/api-docs/**",
+            "/webjars/**");
 }

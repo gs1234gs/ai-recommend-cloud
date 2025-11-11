@@ -3,13 +3,14 @@ package com.guanshiyun.service.sysrole.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.db.constsql.SqlConst;
+import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.db.tablename.MyStringUtils;
-import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.controller.sysrole.vo.SysRoleSaveVO;
 import com.guanshiyun.controller.sysrole.vo.SysRoleVO;
 import com.guanshiyun.relationpojo.SysRoleMenu;
+import com.guanshiyun.repository.menurole.SysRoleMenuRepository;
 import com.guanshiyun.repository.sysrole.SysRoleRepository;
 import com.guanshiyun.repository.userrole.SysUserRoleRepository;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -18,8 +19,8 @@ import com.guanshiyun.rolepojo.SysRole;
 import com.guanshiyun.service.sysrole.SysRoleService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.userpojo.SysUser;
-import com.db.page.PageUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Criteria;
@@ -34,7 +35,7 @@ import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SysRoleServiceImpl implements SysRoleService {
@@ -44,6 +45,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     private final TransactionalOperator transactionalOperator;
     private final SysUserRoleRepository sysUserRoleRepository;
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
+    private final SysRoleMenuRepository sysRoleMenuRepository;
 
     //添加或者更新角色
     @Override
@@ -58,7 +60,18 @@ public class SysRoleServiceImpl implements SysRoleService {
                 sysRole.setCreateTime(now);
                 sysRole.setUpdaterId(userId);
                 return sysRoleRepository.save(sysRole)
-                        .map(SysRole::getId);
+                        .flatMap(sysRoleSave->{
+                            List<SysRoleMenu> sysRoleMenuList = sysRoleSaveVO.getMenuIdList().stream()
+                                    .map(menuId -> SysRoleMenu.builder()
+                                            .roleId(sysRoleSave.getId())
+                                            .menuId(menuId)
+                                            .build()
+                                    )
+                                    .toList();
+                            return sysRoleMenuRepository.saveAll(sysRoleMenuList)
+                                    .collectList()
+                                    .then(Mono.just(sysRoleSave.getId()));
+                        }).transform(transactionalOperator::transactional);
             }
             sysRole.setUpdaterId(userId);
             sysRole.setUpdateTime(now);
@@ -66,16 +79,31 @@ public class SysRoleServiceImpl implements SysRoleService {
                     EntityTableNameUtils.getName(
                             SysRole.class),
                     sysRole,
-                    SysRole.Fields.id);
+                    SysRole.Fields.id)
+                    .flatMap(id->{
+                        if(sysRoleSaveVO.getMenuIdList().isEmpty())
+                            return Mono.just(id);
+                        return sysRoleMenuRepository.deleteAllByRoleId(sysRole.getId())
+                                .then(sysRoleMenuRepository.saveAll(
+                                        sysRoleSaveVO.getMenuIdList().stream()
+                                                .map(menuId -> SysRoleMenu.builder()
+                                                        .roleId(sysRole.getId())
+                                                        .menuId(menuId)
+                                                        .build()
+                                                )
+                                                .toList()
+                                ).then(Mono.just(id))
+                                );
+                    }).transform(transactionalOperator::transactional);
         });
     }
 
     @Override
     public Mono<PageResultT<List<SysRoleVO>>> findPage(RequestPage<SysRoleVO> requestPage) {
-        requestPage = isRequestPageNUll(requestPage);
+        requestPage = PageUtils.pageValidation(requestPage,SysRoleVO.class);
         // 前端没传 pageSize 时默认10条
-        BigInteger pageNum = PageUtils.pageNum(requestPage.getPageNum());
-        int pageSize = PageUtils.pageSize(requestPage.getPageSize());
+        BigInteger pageNum = requestPage.getPageNum();
+        int pageSize = requestPage.getPageSize();
         // 条件
         Criteria criteria = Criteria.empty();
         String name = requestPage.getCondition().getName();
@@ -105,7 +133,11 @@ public class SysRoleServiceImpl implements SysRoleService {
                                 .rows(list)
                                 .build()
                         )
-                );
+                )
+                .onErrorResume(throwable -> {
+                    log.error("查询角色列表异常", throwable);
+                    return Mono.just(PageResultT.<List<SysRoleVO>>builder().build());
+                });
     }
 
     @Override
@@ -115,16 +147,16 @@ public class SysRoleServiceImpl implements SysRoleService {
                 .fetch()
                 .rowsUpdated()
                 .flatMap(rowsUpdated ->
-                        databaseClient.sql("delete from sys_role_menu where role_id = :role_id")
-                                .bind(MyStringUtils.camelToUnderlineSmart(
+                        databaseClient.sql("delete from sys_role_menu where role_id = :roleId")
+                                .bind(
                                         SysRoleMenu.Fields.roleId
-                                ), id)
+                                , id)
                                 .fetch()
                                 .rowsUpdated()
                                 .flatMap(rowsChildren ->
-                                        databaseClient.sql("delete from sys_user_role where role_id = :role_id")
-                                                .bind(MyStringUtils.camelToUnderlineSmart(
-                                                        SysRoleMenu.Fields.roleId), id)
+                                        databaseClient.sql("delete from sys_user_role where role_id = :roleId")
+                                                .bind(
+                                                        SysRoleMenu.Fields.roleId, id)
                                                 .fetch()
                                                 .rowsUpdated()
                                                 .thenReturn(rowsUpdated)
@@ -156,16 +188,5 @@ public class SysRoleServiceImpl implements SysRoleService {
                 sysRoleSaveVO,
                 SysRole.Fields.id
         );
-    }
-
-
-    private RequestPage<SysRoleVO> isRequestPageNUll(RequestPage<SysRoleVO> requestPage) {
-        return requestPage == null ?
-                RequestPage.<SysRoleVO>builder()
-                        .pageNum(BigInteger.ZERO)
-                        .pageSize(ConstNumber.INT_ZERO)
-                        .condition(SysRoleVO.builder().build())
-                        .build() :
-                requestPage;
     }
 }

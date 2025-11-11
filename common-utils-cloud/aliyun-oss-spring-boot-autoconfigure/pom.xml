@@ -25,15 +25,8 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>21</java.version>
 		<maven.compiler.source>21</maven.compiler.source>
-		<maven.compiler.target>21</maven.compiler.target>
-		<jjwt-impl.version>0.12.6</jjwt-impl.version>
-		<sdk.oss.version>3.18.3</sdk.oss.version>
-		<fastjson.version>2.0.58</fastjson.version>
-		<jaxbr.version>2.3.9</jaxbr.version>
-		<jaxbapi.version>2.3.1</jaxbapi.version>
-		<jafx.version>1.1.1</jafx.version>
+
 	</properties>
 	<dependencies>
 		<!--引入aliyun,jwt令牌依赖-->

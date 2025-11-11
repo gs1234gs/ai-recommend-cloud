@@ -19,17 +19,11 @@
 		<module>recommend-common-utils</module>
 	</modules>
 	<properties>
-		<snapshotName>0.0.1-SNAPSHOT</snapshotName>
-		<loadbalancer.version>4.2.1</loadbalancer.version>
-		<junit.version>4.13.2</junit.version>
-		<r2dbc.mysql.version>1.4.1</r2dbc.mysql.version>
-		<mysql.version>8.4.0</mysql.version>
 	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-loadbalancer</artifactId>
-			<version>${loadbalancer.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba.cloud</groupId>

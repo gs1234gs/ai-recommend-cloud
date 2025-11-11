@@ -7,7 +7,6 @@ import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.biginteger.MyBigInteger;
-import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.controller.sysuser.vo.SysUserSaveVO;
 import com.guanshiyun.controller.sysuser.vo.SysUserVO;
 import com.guanshiyun.relationpojo.SysUserRole;
@@ -37,7 +36,6 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -61,10 +59,10 @@ public class SysUserServiceImpl implements SysUserService {
      */
     @Override
     public Mono<PageResultT<List<SysUser>>> findPage(RequestPage<SysUser> requestPage) {
-        requestPage = isRequestPageNUll(requestPage);
+        requestPage = PageUtils.pageValidation(requestPage, SysUser.class);
         // 前端没传 pageSize 时默认10条
-        BigInteger pageNum = PageUtils.pageNum(requestPage.getPageNum());
-        int pageSize = PageUtils.pageSize(requestPage.getPageSize());
+        BigInteger pageNum = requestPage.getPageNum();
+        int pageSize = requestPage.getPageSize();
         // 条件
         Criteria criteria = Criteria.empty();
         String username = requestPage.getCondition().getUsername();
@@ -228,17 +226,5 @@ public class SysUserServiceImpl implements SysUserService {
                         .then(Mono.just(id));
             });
         });
-    }
-
-    private RequestPage<SysUser> isRequestPageNUll(RequestPage<SysUser> requestPage) {
-        return requestPage == null ?
-                RequestPage.<SysUser>builder()
-                        .pageNum(BigInteger.ZERO)
-                        .pageSize(ConstNumber.INT_ZERO)
-                        .condition(SysUser.builder()
-                                .build()
-                        )
-                        .build() :
-                requestPage;
     }
 }

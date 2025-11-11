@@ -8,6 +8,7 @@ import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.sysrole.SysRoleService;
+//import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ public class SysRoleController {
     private final SysRoleService sysRoleService;
 
     //添加角色或者修改角色
+//    @Operation(summary = "添加角色或者修改角色")
     @PostMapping("save")
     public Mono<ResultT<BigInteger>> save(@RequestBody SysRoleSaveVO sysRoleSaveVO) {
         return sysRoleService.save(sysRoleSaveVO)
@@ -150,7 +152,7 @@ public class SysRoleController {
     }
 
     //根据用户id获取角色
-    @GetMapping("findRoleList/{userId}")
+    @GetMapping("findRoleListByUserId/{userId}")
     public Mono<ResultT<List<SysRoleVO>>> roleList(@PathVariable BigInteger userId) {
         return sysRoleService.findAllByUserId(userId)
                 .map(role -> BeanUtil.toBean(role, SysRoleVO.class))

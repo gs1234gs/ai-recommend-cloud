@@ -29,9 +29,6 @@
         <url/>
     </scm>
     <properties>
-        <gareway.version>4.2.1</gareway.version>
-        <hutool.version>5.8.39</hutool.version>
-        <snapshotName>0.0.1-SNAPSHOT</snapshotName>
     </properties>
     <dependencies>
         <dependency>

@@ -24,10 +24,6 @@
         <tag/>
         <url/>
     </scm>
-    <properties>
-        <java.version>21</java.version>
-        <snapshotName>0.0.1-SNAPSHOT</snapshotName>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>com.guanshiyun</groupId>
