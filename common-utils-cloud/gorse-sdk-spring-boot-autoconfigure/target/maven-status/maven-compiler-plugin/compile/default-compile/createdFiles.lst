@@ -1,0 +1,16 @@
+com\guanshiyun\user\User$UserBuilder.class
+com\guanshiyun\goconfig\GorseProperties$GorsePropertiesBuilder.class
+com\guanshiyun\feedback\Feedback$FeedbackBuilder.class
+com\guanshiyun\goser\GorseClient.class
+com\guanshiyun\user\User.class
+META-INF\spring-configuration-metadata.json
+com\guanshiyun\rowAffected\RowAffected.class
+com\guanshiyun\items\Item$ItemBuilder.class
+com\guanshiyun\source\Score.class
+com\guanshiyun\goconfig\GorseConfig.class
+com\guanshiyun\goconfig\GorseProperties.class
+com\guanshiyun\rowAffected\RowAffected$RowAffectedBuilder.class
+com\guanshiyun\source\Score$ScoreBuilder.class
+com\guanshiyun\feedback\Feedback.class
+com\guanshiyun\goser\GorseClient$GorseClientBuilder.class
+com\guanshiyun\items\Item.class

@@ -15,6 +15,7 @@ import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.category.CategoryService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
+import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -104,11 +105,18 @@ public class CategoryServiceImpl implements CategoryService {
                                 .map(item->BeanUtil.toBean(item,CategoryVO.class))
                                 .collectList()
                                 .map(rows -> PageResultT.<List<CategoryVO>>builder()
-                                        .total( count)
+                                        .total(count)
                                         .rows( rows)
                                         .build()
                                 )
 
                 );
+    }
+
+    @Override
+    public Mono<List<CategoryVO>> findAll() {
+        return categoryRepository.findAll()
+                .mapNotNull(item-> BeanConvertUtil.toBean(item,CategoryVO.class))
+                .collectList();
     }
 }

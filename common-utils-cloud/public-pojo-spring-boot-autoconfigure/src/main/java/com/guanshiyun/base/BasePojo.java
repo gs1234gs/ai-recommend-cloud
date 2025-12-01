@@ -3,6 +3,7 @@ package com.guanshiyun.base;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldNameConstants
 @SuperBuilder
+@Accessors(chain = true)
 public class BasePojo {
     /**
      * 创建者，目前使用 SysUser 的 id 编号

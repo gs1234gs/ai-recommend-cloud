@@ -3,10 +3,10 @@ package com.guanshiyun.service.signin.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.guanshiyun.consts.ConstClassNickName;
-import com.guanshiyun.consts.code.HttpCodeConst;
+import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.menupojo.SysMenu;
 import com.guanshiyun.repository.signin.SignInUpRepository;
-import com.guanshiyun.responsepojo.Result;
+import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.roleId.RoleIdConst;
 import com.guanshiyun.security.redisConfig.ReactiveRedisUtil;
 import com.guanshiyun.service.signin.SignInUpService;
@@ -50,7 +50,7 @@ public class SignInUpServiceImpl implements SignInUpService {
     }
 
     @Override
-    public Mono<Result> signUp(SysUser signUser) {
+    public Mono<ResultT<String>> signUp(SysUser signUser) {
         SysUser sysUser = SysUser.builder()
                 .id(null)
                 .createTime(LocalDateTime.now())
@@ -59,7 +59,7 @@ public class SignInUpServiceImpl implements SignInUpService {
                 .nickName(signUser.getNickName())
                 .build();
         return signInUpRepository.findByUsername(signUser.getUsername())
-                .flatMap(existUser -> Mono.just(Result.builder()
+                .flatMap(existUser -> Mono.just(ResultT.<String>builder()
                                 .code(HttpCodeConst.BAD_REQUEST)
                                 .msg("用户已存在,请重新注册")
                                 .data(null)
@@ -73,7 +73,7 @@ public class SignInUpServiceImpl implements SignInUpService {
                                             //添加角色
                                             log.info("注册成功: {}", result);
                                                     return
-                                                            Result.builder()
+                                                            ResultT.<String>builder()
                                                                     .code(HttpCodeConst.OK)
                                                                     .msg("注册成功")
                                                                     .data(null)
@@ -87,7 +87,7 @@ public class SignInUpServiceImpl implements SignInUpService {
                 )
                 .onErrorResume(throwable -> {
                     log.error("注册失败", throwable);
-                    return Mono.just(Result.builder()
+                    return Mono.just(ResultT.<String>builder()
                             .code(500)
                             .msg("注册失败")
                             .data(null)

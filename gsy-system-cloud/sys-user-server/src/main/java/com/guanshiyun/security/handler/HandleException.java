@@ -1,7 +1,7 @@
 package com.guanshiyun.security.handler;
 
 import cn.hutool.json.JSONUtil;
-import com.guanshiyun.consts.code.HttpCodeConst;
+import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.responsepojo.ResultT;
 import org.springframework.security.web.server.ServerAuthenticationEntryPoint;
 import org.springframework.security.web.server.authorization.ServerAccessDeniedHandler;

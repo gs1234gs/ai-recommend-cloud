@@ -1,5 +1,6 @@
 package com.guanshiyun.service.chat.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.db.constsql.SqlConst;
 import com.db.cursorQuery.CursorQuery;
@@ -7,6 +8,7 @@ import com.db.page.PageUtils;
 import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.chat.ChatRecord;
 import com.guanshiyun.consts.ConstNumber;
+import com.guanshiyun.controller.chat.vo.ChatRecordVO;
 import com.guanshiyun.repository.chat.ChatRecordRepository;
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -19,7 +21,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.data.relational.core.query.Query;
-import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -37,24 +38,23 @@ public class ChatRecordServiceImpl implements ChatRecordService {
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
     private final ChatRecordRepository chatRecordRepository;
     private final MyBigInteger myBigInteger;
-    private final DatabaseClient databaseClient;
 
     @Override
-    public Mono<PageResultT<List<ChatRecord>>> findPageChat(RequestPage<ChatRecord> requestPage) {
+    public Mono<PageResultT<List<ChatRecordVO>>> findPageChat(RequestPage<ChatRecordVO> requestPage) {
         //校验参数
-        RequestPage<ChatRecord> chatRecordRequestPage = PageUtils.pageValidation(requestPage, ChatRecord.class);
+        RequestPage<ChatRecordVO> chatRecordRequestPage = PageUtils.pageValidation(requestPage, ChatRecordVO.class);
         //起始页码
         BigInteger pageNum = chatRecordRequestPage.getPageNum();
         //每页数量
         Integer pageSize = PageUtils.pageSize(chatRecordRequestPage.getPageSize());
         //查询条件
-        ChatRecord condition = chatRecordRequestPage.getCondition();
+        ChatRecord condition = BeanUtil.toBean(chatRecordRequestPage.getCondition(), ChatRecord.class);
         //标题
         String title = condition.getTitle();
 
         return Mono.deferContextual(ctx -> {
             if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
-                return Mono.just(PageResultT.<List<ChatRecord>>builder()
+                return Mono.just(PageResultT.<List<ChatRecordVO>>builder()
                         .total(0L)
                         .rows(Collections.emptyList())
                         .build());
@@ -65,7 +65,7 @@ public class ChatRecordServiceImpl implements ChatRecordService {
 
                     // 用户未登录，返回空结果
                     if (userId == null) {
-                        return Mono.just(PageResultT.<List<ChatRecord>>builder()
+                        return Mono.just(PageResultT.<List<ChatRecordVO>>builder()
                                 .total(0L)
                                 .rows(Collections.emptyList())
                                 .build());
@@ -99,17 +99,19 @@ public class ChatRecordServiceImpl implements ChatRecordService {
                     return r2dbcEntityTemplate.select(countQuery, ChatRecord.class)
                             .count()
                             .flatMap(count -> r2dbcEntityTemplate.select(dataQuery, ChatRecord.class)
+                                    .map(chatRecord -> BeanUtil.toBean(chatRecord, ChatRecordVO.class))
                                     .collectList()
-                                    .map(list -> PageResultT.<List<ChatRecord>>builder()
+                                    .map(list -> PageResultT.<List<ChatRecordVO>>builder()
                                             .total(count)
-                                            .rows(list)
+                                            .rows(list
+                                            )
                                             .build()
                                     )
                             );
                 })
                 .onErrorResume(throwable -> {
                     log.error("分页查询对话记录失败", throwable);
-                    return Mono.just(PageResultT.<List<ChatRecord>>builder()
+                    return Mono.just(PageResultT.<List<ChatRecordVO>>builder()
                             .total(0L)
                             .rows(Collections.emptyList())
                             .build());
@@ -134,40 +136,6 @@ public class ChatRecordServiceImpl implements ChatRecordService {
                     });
         });
     }
-
-    //    @Override
-//    public Flux<ChatRecord> findCursorPageChat(RequestCursorPage<ChatRecord> requestCursorPage) {
-//        ChatRecord condition = requestCursorPage.getCondition();
-//        BigInteger lastId = requestCursorPage.getLastId();
-//        Integer pageSize = requestCursorPage.getPageSize();
-//        String order = requestCursorPage.getOrder();
-//        String title = condition.getTitle();
-//        //使用 Query 构建查询条件
-//        Criteria criteria = Criteria.where(ChatRecord.Fields.title).like("%"+title+"%");
-//        Sort sort;
-//        if (SortOrderEnum.ASC.getKey().equalsIgnoreCase(order)) {
-//            // 🔄 往后翻：查比 lastId 更新的数据
-//            if (Objects.nonNull(lastId)) {
-//                criteria = criteria.and(ChatRecord.Fields.id).greaterThan(lastId);
-//            }
-//            log.info("往后翻：查比 lastId 更新的数据");
-//            sort = Sort.by(Sort.Order.asc(ChatRecord.Fields.id)); // 升序：id 小 → 大
-//        } else {
-//            // 🔽 往前翻：查比 lastId 更老的数据
-//            if (Objects.nonNull(lastId)) {
-//                criteria = criteria.and(ChatRecord.Fields.id).lessThan(lastId);
-//            }
-//            log.info("往前翻：查比 lastId 更老的数据");
-//            sort = Sort.by(Sort.Order.desc(ChatRecord.Fields.id)); // 降序：id 大 → 小
-//        }
-//        // 创建 Pageable：第 0 页，size = pageSize + 1，带排序
-//        Pageable pageable = PageRequest.of(0, pageSize + 1, sort);
-//        Query query = Query.query(criteria).limit(pageSize + 1).with(pageable);
-//        return r2dbcEntityTemplate
-//                .select(ChatRecord.class)
-//                .matching(query)
-//                .all();
-//    }
     @Override
     public Flux<ChatRecord> findCursorPageChat(RequestCursorPage<ChatRecord> requestCursorPage) {
         return Flux.deferContextual(ctx -> {

@@ -1,5 +1,7 @@
 package com.guanshiyun.controller.tag.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -25,6 +27,7 @@ public class TagSaveVO {
     private short status;
 
     /** 标签权重（用于推荐优先级或排序） */
+    @JsonSerialize(using = ToStringSerializer.class)
     private BigDecimal weight;
     /** 排序值 */
     private Integer sort;
@@ -33,6 +36,7 @@ public class TagSaveVO {
     //产地
     private String placeOfOrigin;
     //重量
+    @JsonSerialize(using = ToStringSerializer.class)
     private BigDecimal productWeight;
     //生产日期
     private LocalDateTime productionDate;

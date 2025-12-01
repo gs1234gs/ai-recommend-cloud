@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="@localhost">
-  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.52">
+  <database-model serializer="dbm" dbms="MYSQL" family-id="MYSQL" format-version="4.53">
     <root id="1">
       <DefaultCasing>lower/lower</DefaultCasing>
       <DefaultEngine>InnoDB</DefaultEngine>
@@ -989,17 +989,24 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="292" parent="1" name="gsy-ai-cloud">
-      <LastIntrospectionLocalTimestamp>2025-10-15.13:58:40</LastIntrospectionLocalTimestamp>
+      <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
+      <LastIntrospectionLevel>3</LastIntrospectionLevel>
+      <LastIntrospectionLocalTimestamp>2025-11-27.06:04:04</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="293" parent="1" name="gsy-behavior-cloud">
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="294" parent="1" name="gsy-goods-cloud">
-      <LastIntrospectionLocalTimestamp>2025-11-06.05:50:48</LastIntrospectionLocalTimestamp>
+      <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
+      <LastIntrospectionLevel>3</LastIntrospectionLevel>
+      <LastIntrospectionLocalTimestamp>2025-11-27.06:08:30</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="295" parent="1" name="gsy-order-cloud">
+      <AutoIntrospectionLevel>3</AutoIntrospectionLevel>
+      <LastIntrospectionLevel>3</LastIntrospectionLevel>
+      <LastIntrospectionLocalTimestamp>2025-11-27.06:04:04</LastIntrospectionLocalTimestamp>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
     <schema id="296" parent="1" name="gsy-recommend-cloud">
@@ -1050,785 +1057,1258 @@ sys|schema||mysql.sys|localhost|TRIGGER|G</Grants>
     <schema id="311" parent="1" name="hs-salary-cloud">
       <CollationName>utf8mb4_general_ci</CollationName>
     </schema>
-    <schema id="312" parent="1" name="information_schema">
+    <schema id="312" parent="1" name="hs-wis-cloud">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="313" parent="1" name="information_schema">
       <CollationName>utf8mb3_general_ci</CollationName>
     </schema>
-    <schema id="313" parent="1" name="mall">
+    <schema id="314" parent="1" name="mall">
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
-    <schema id="314" parent="1" name="mysql">
+    <schema id="315" parent="1" name="mcms">
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
-    <schema id="315" parent="1" name="performance_schema">
+    <schema id="316" parent="1" name="mysql">
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
-    <schema id="316" parent="1" name="ruoyi-vue-pro">
+    <schema id="317" parent="1" name="performance_schema">
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
-    <schema id="317" parent="1" name="sky_order">
+    <schema id="318" parent="1" name="ruoyi-vue-pro">
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
-    <schema id="318" parent="1" name="stf">
+    <schema id="319" parent="1" name="sky_order">
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
-    <schema id="319" parent="1" name="stg">
+    <schema id="320" parent="1" name="stf">
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
-    <schema id="320" parent="1" name="stock_prediction">
+    <schema id="321" parent="1" name="stg">
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
-    <schema id="321" parent="1" name="sys_server_cloud">
+    <schema id="322" parent="1" name="stock_prediction">
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
-    <schema id="322" parent="1" name="test">
+    <schema id="323" parent="1" name="sys_server_cloud">
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </schema>
-    <schema id="323" parent="1" name="xxl_job">
+    <schema id="324" parent="1" name="test">
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </schema>
+    <schema id="325" parent="1" name="xxl_job">
       <CollationName>utf8mb4_unicode_ci</CollationName>
     </schema>
-    <user id="324" parent="1" name="Biadmin">
+    <user id="326" parent="1" name="Biadmin">
       <Plugin>caching_sha2_password</Plugin>
     </user>
-    <user id="325" parent="1" name="mysql.infoschema">
+    <user id="327" parent="1" name="mysql.infoschema">
       <CanLogin>0</CanLogin>
       <Host>localhost</Host>
       <Plugin>caching_sha2_password</Plugin>
     </user>
-    <user id="326" parent="1" name="mysql.session">
+    <user id="328" parent="1" name="mysql.session">
       <CanLogin>0</CanLogin>
       <Host>localhost</Host>
       <Plugin>caching_sha2_password</Plugin>
     </user>
-    <user id="327" parent="1" name="mysql.sys">
+    <user id="329" parent="1" name="mysql.sys">
       <CanLogin>0</CanLogin>
       <Host>localhost</Host>
       <Plugin>caching_sha2_password</Plugin>
     </user>
-    <user id="328" parent="1" name="root">
+    <user id="330" parent="1" name="root">
       <Plugin>caching_sha2_password</Plugin>
     </user>
-    <table id="329" parent="294" name="category">
+    <table id="331" parent="292" name="big_model">
+      <DetailsLevel>3</DetailsLevel>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </table>
+    <table id="332" parent="292" name="chat_record">
+      <DetailsLevel>3</DetailsLevel>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </table>
+    <table id="333" parent="292" name="knowledge_repository">
+      <Comment>聊天记录</Comment>
+      <DetailsLevel>3</DetailsLevel>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </table>
+    <table id="334" parent="294" name="category">
       <Comment>商品分类</Comment>
+      <DetailsLevel>3</DetailsLevel>
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_0900_ai_ci</CollationName>
     </table>
-    <table id="330" parent="294" name="product">
+    <table id="335" parent="294" name="product">
       <Comment>商品表</Comment>
+      <DetailsLevel>3</DetailsLevel>
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_unicode_ci</CollationName>
     </table>
-    <table id="331" parent="294" name="product_tag">
+    <table id="336" parent="294" name="product_category">
+      <DetailsLevel>3</DetailsLevel>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </table>
+    <table id="337" parent="294" name="product_tag">
       <Comment>商品标签关联表</Comment>
+      <DetailsLevel>3</DetailsLevel>
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_unicode_ci</CollationName>
     </table>
-    <table id="332" parent="294" name="product_warehouse">
+    <table id="338" parent="294" name="product_warehouse">
       <Comment>商品仓库关联表</Comment>
+      <DetailsLevel>3</DetailsLevel>
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_unicode_ci</CollationName>
     </table>
-    <table id="333" parent="294" name="sku">
+    <table id="339" parent="294" name="sku">
       <Comment>库存单元表（SKU）</Comment>
+      <DetailsLevel>3</DetailsLevel>
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_unicode_ci</CollationName>
     </table>
-    <table id="334" parent="294" name="tag">
+    <table id="340" parent="294" name="tag">
       <Comment>标签字典表</Comment>
+      <DetailsLevel>3</DetailsLevel>
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_unicode_ci</CollationName>
     </table>
-    <table id="335" parent="294" name="warehouse">
+    <table id="341" parent="294" name="warehouse">
       <Comment>仓库信息表</Comment>
+      <DetailsLevel>3</DetailsLevel>
       <Engine>InnoDB</Engine>
       <CollationName>utf8mb4_unicode_ci</CollationName>
     </table>
-    <column id="336" parent="329" name="id">
-      <AutoIncrement>1</AutoIncrement>
-      <Comment>分类主键ID</Comment>
-      <DasType>bigint|0s</DasType>
+    <table id="342" parent="295" name="order_address">
+      <DetailsLevel>3</DetailsLevel>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </table>
+    <table id="343" parent="295" name="order_item">
+      <Comment>订单地址关联表</Comment>
+      <DetailsLevel>3</DetailsLevel>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </table>
+    <table id="344" parent="295" name="purchase_order">
+      <DetailsLevel>3</DetailsLevel>
+      <Engine>InnoDB</Engine>
+      <CollationName>utf8mb4_0900_ai_ci</CollationName>
+    </table>
+    <column id="345" parent="331" name="id">
+      <Comment>主键id</Comment>
+      <DefaultExpression>1</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>1</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="337" parent="329" name="name">
-      <Comment>分类名称</Comment>
-      <DasType>varchar(255)|0s</DasType>
+    <column id="346" parent="331" name="name">
+      <Comment>大模型名称</Comment>
       <Position>2</Position>
+      <StoredType>varchar(255)|0s</StoredType>
     </column>
-    <column id="338" parent="329" name="level">
-      <Comment>分类层级（如 1=一级分类，2=二级分类）</Comment>
-      <DasType>int|0s</DasType>
+    <column id="347" parent="331" name="type">
+      <Comment>大模型类型</Comment>
       <Position>3</Position>
+      <StoredType>int|0s</StoredType>
     </column>
-    <column id="339" parent="329" name="code">
-      <Comment>分类编码（用于快速检索或编码管理）</Comment>
-      <DasType>varchar(255)|0s</DasType>
+    <column id="348" parent="331" name="status">
+      <Comment>大模型状态,0-未启用，1-启用</Comment>
+      <DefaultExpression>1</DefaultExpression>
       <Position>4</Position>
+      <StoredType>tinyint|0s</StoredType>
     </column>
-    <column id="340" parent="329" name="sortOrder">
-      <Comment>排序字段（越小越靠前）</Comment>
-      <DasType>int|0s</DasType>
+    <column id="349" parent="331" name="creator">
+      <Comment>创建者id</Comment>
       <Position>5</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="341" parent="329" name="iconUrl">
-      <Comment>分类图标（URL）</Comment>
-      <DasType>varchar(1024)|0s</DasType>
+    <column id="350" parent="331" name="updater">
+      <Comment>更新者id</Comment>
       <Position>6</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="342" parent="329" name="status">
-      <Comment>状态,是否启用（1=启用，0=禁用）</Comment>
-      <DasType>tinyint|0s</DasType>
-      <Position>7</Position>
-    </column>
-    <column id="343" parent="329" name="recommended">
-      <Comment>是否为推荐分类（如首页展示）,(0 = 否，1表示是)</Comment>
-      <DasType>tinyint|0s</DasType>
-      <Position>8</Position>
-    </column>
-    <column id="344" parent="329" name="creator">
-      <Comment>创建者</Comment>
-      <DasType>bigint|0s</DasType>
-      <Position>9</Position>
-    </column>
-    <column id="345" parent="329" name="updater">
-      <Comment>更新者</Comment>
-      <DasType>bigint|0s</DasType>
-      <Position>10</Position>
-    </column>
-    <column id="346" parent="329" name="create_time">
+    <column id="351" parent="331" name="create_time">
       <Comment>创建时间</Comment>
-      <DasType>datetime|0s</DasType>
-      <Position>11</Position>
+      <Position>7</Position>
+      <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="347" parent="329" name="update_time">
-      <Comment>最后更新时间</Comment>
-      <DasType>datetime|0s</DasType>
-      <Position>12</Position>
+    <column id="352" parent="331" name="update_time">
+      <Comment>更新时间</Comment>
+      <Position>8</Position>
+      <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="348" parent="329" name="del_flag">
+    <column id="353" parent="331" name="del_flag">
       <Comment>是否删除，删除标记,0-未删除，1-已删除</Comment>
-      <DasType>tinyint|0s</DasType>
-      <Position>13</Position>
+      <DefaultExpression>0</DefaultExpression>
+      <Position>9</Position>
+      <StoredType>tinyint|0s</StoredType>
     </column>
-    <index id="349" parent="329" name="PRIMARY">
+    <column id="354" parent="331" name="description">
+      <Comment>大模型描述</Comment>
+      <Position>10</Position>
+      <StoredType>varchar(255)|0s</StoredType>
+    </column>
+    <column id="355" parent="331" name="version">
+      <Comment>大模型版本</Comment>
+      <Position>11</Position>
+      <StoredType>varchar(255)|0s</StoredType>
+    </column>
+    <index id="356" parent="331" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <key id="350" parent="329" name="PRIMARY">
+    <key id="357" parent="331" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="351" parent="330" name="id">
-      <AutoIncrement>11</AutoIncrement>
-      <Comment>商品id</Comment>
-      <DasType>bigint|0s</DasType>
+    <column id="358" parent="332" name="id">
+      <Comment>聊天记录id</Comment>
+      <DefaultExpression>1</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>1</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="352" parent="330" name="name">
-      <Comment>商品名称</Comment>
-      <DasType>varchar(255)|0s</DasType>
-      <NotNull>1</NotNull>
+    <column id="359" parent="332" name="title">
       <Position>2</Position>
+      <StoredType>varchar(64)|0s</StoredType>
     </column>
-    <column id="353" parent="330" name="description">
-      <Comment>商品描述</Comment>
-      <DasType>text|0s</DasType>
-      <Position>3</Position>
-    </column>
-    <column id="354" parent="330" name="image">
-      <Comment>商品图片 URL</Comment>
-      <DasType>varchar(500)|0s</DasType>
-      <Position>4</Position>
-    </column>
-    <column id="355" parent="330" name="video">
-      <Comment>视频 URL</Comment>
-      <DasType>varchar(500)|0s</DasType>
-      <Position>5</Position>
-    </column>
-    <column id="356" parent="330" name="brand">
-      <Comment>品牌</Comment>
-      <DasType>varchar(100)|0s</DasType>
-      <Position>6</Position>
-    </column>
-    <column id="357" parent="330" name="place_of_origin">
-      <Comment>产地</Comment>
-      <DasType>varchar(100)|0s</DasType>
-      <Position>7</Position>
-    </column>
-    <column id="358" parent="330" name="level">
-      <Comment>商品等级</Comment>
-      <DasType>smallint|0s</DasType>
-      <NotNull>1</NotNull>
-      <Position>8</Position>
-    </column>
-    <column id="359" parent="330" name="creator">
-      <Comment>创建者ID</Comment>
-      <DasType>bigint|0s</DasType>
-      <Position>9</Position>
-    </column>
-    <column id="360" parent="330" name="updater">
-      <Comment>更新者ID</Comment>
-      <DasType>bigint|0s</DasType>
-      <Position>10</Position>
-    </column>
-    <column id="361" parent="330" name="create_time">
-      <Comment>创建时间</Comment>
-      <DasType>datetime|0s</DasType>
-      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
-      <Position>11</Position>
-    </column>
-    <column id="362" parent="330" name="update_time">
-      <Comment>最后更新时间</Comment>
-      <DasType>datetime|0s</DasType>
-      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
-      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
-      <Position>12</Position>
-    </column>
-    <column id="363" parent="330" name="del_flag">
-      <Comment>是否删除：0-未删除，1-已删除</Comment>
-      <DasType>tinyint|0s</DasType>
+    <column id="360" parent="332" name="del_flag">
+      <Comment>是否删除，0表示否，1表示是</Comment>
       <DefaultExpression>0</DefaultExpression>
-      <NotNull>1</NotNull>
-      <Position>13</Position>
+      <Position>3</Position>
+      <StoredType>tinyint|0s</StoredType>
     </column>
-    <column id="364" parent="330" name="category_id">
-      <Comment>分类id</Comment>
-      <DasType>bigint|0s</DasType>
-      <Position>14</Position>
+    <column id="361" parent="332" name="creator">
+      <Comment>创建者id</Comment>
+      <Position>4</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="365" parent="330" name="publish_time">
-      <Comment>上架时间</Comment>
-      <DasType>datetime|0s</DasType>
-      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
-      <Position>15</Position>
+    <column id="362" parent="332" name="updater">
+      <Comment>更新者id</Comment>
+      <Position>5</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="366" parent="330" name="offline_time">
-      <Comment>下架时间</Comment>
-      <DasType>datetime|0s</DasType>
-      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
-      <Position>16</Position>
+    <column id="363" parent="332" name="create_time">
+      <Comment>创建时间</Comment>
+      <Position>6</Position>
+      <StoredType>datetime|0s</StoredType>
     </column>
-    <index id="367" parent="330" name="PRIMARY">
+    <column id="364" parent="332" name="update_time">
+      <Comment>更新时间</Comment>
+      <Position>7</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <index id="365" parent="332" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="368" parent="330" name="idx_brand">
+    <key id="366" parent="332" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="367" parent="333" name="id">
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>bigint|0s</StoredType>
+    </column>
+    <column id="368" parent="333" name="create_time">
+      <Comment>创建时间</Comment>
+      <Position>2</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="369" parent="333" name="update_time">
+      <Comment>更新时间</Comment>
+      <Position>3</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="370" parent="333" name="del_flag">
+      <Comment>是否删除，0否，1是</Comment>
+      <Position>4</Position>
+      <StoredType>tinyint|0s</StoredType>
+    </column>
+    <column id="371" parent="333" name="creator">
+      <Comment>创建者</Comment>
+      <Position>5</Position>
+      <StoredType>bigint|0s</StoredType>
+    </column>
+    <column id="372" parent="333" name="updater">
+      <Comment>更新者</Comment>
+      <Position>6</Position>
+      <StoredType>bigint|0s</StoredType>
+    </column>
+    <index id="373" parent="333" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="374" parent="333" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="375" parent="334" name="id">
+      <AutoIncrement>1</AutoIncrement>
+      <Comment>分类主键ID</Comment>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>bigint|0s</StoredType>
+    </column>
+    <column id="376" parent="334" name="name">
+      <Comment>分类名称</Comment>
+      <Position>2</Position>
+      <StoredType>varchar(255)|0s</StoredType>
+    </column>
+    <column id="377" parent="334" name="level">
+      <Comment>分类层级（如 1=一级分类，2=二级分类）</Comment>
+      <Position>3</Position>
+      <StoredType>int|0s</StoredType>
+    </column>
+    <column id="378" parent="334" name="code">
+      <Comment>分类编码（用于快速检索或编码管理）</Comment>
+      <Position>4</Position>
+      <StoredType>varchar(255)|0s</StoredType>
+    </column>
+    <column id="379" parent="334" name="sortOrder">
+      <Comment>排序字段（越小越靠前）</Comment>
+      <Position>5</Position>
+      <StoredType>int|0s</StoredType>
+    </column>
+    <column id="380" parent="334" name="iconUrl">
+      <Comment>分类图标（URL）</Comment>
+      <Position>6</Position>
+      <StoredType>varchar(1024)|0s</StoredType>
+    </column>
+    <column id="381" parent="334" name="status">
+      <Comment>状态,是否启用（1=启用，0=禁用）</Comment>
+      <Position>7</Position>
+      <StoredType>tinyint|0s</StoredType>
+    </column>
+    <column id="382" parent="334" name="recommended">
+      <Comment>是否为推荐分类（如首页展示）,(0 = 否，1表示是)</Comment>
+      <Position>8</Position>
+      <StoredType>tinyint|0s</StoredType>
+    </column>
+    <column id="383" parent="334" name="creator">
+      <Comment>创建者</Comment>
+      <Position>9</Position>
+      <StoredType>bigint|0s</StoredType>
+    </column>
+    <column id="384" parent="334" name="updater">
+      <Comment>更新者</Comment>
+      <Position>10</Position>
+      <StoredType>bigint|0s</StoredType>
+    </column>
+    <column id="385" parent="334" name="create_time">
+      <Comment>创建时间</Comment>
+      <Position>11</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="386" parent="334" name="update_time">
+      <Comment>最后更新时间</Comment>
+      <Position>12</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="387" parent="334" name="del_flag">
+      <Comment>是否删除，删除标记,0-未删除，1-已删除</Comment>
+      <Position>13</Position>
+      <StoredType>tinyint|0s</StoredType>
+    </column>
+    <index id="388" parent="334" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="389" parent="334" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="390" parent="335" name="id">
+      <AutoIncrement>11</AutoIncrement>
+      <Comment>商品id</Comment>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>bigint|0s</StoredType>
+    </column>
+    <column id="391" parent="335" name="name">
+      <Comment>商品名称</Comment>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StoredType>varchar(255)|0s</StoredType>
+    </column>
+    <column id="392" parent="335" name="description">
+      <Comment>商品描述</Comment>
+      <Position>3</Position>
+      <StoredType>text|0s</StoredType>
+    </column>
+    <column id="393" parent="335" name="image">
+      <Comment>商品图片 URL</Comment>
+      <Position>4</Position>
+      <StoredType>varchar(500)|0s</StoredType>
+    </column>
+    <column id="394" parent="335" name="video">
+      <Comment>视频 URL</Comment>
+      <Position>5</Position>
+      <StoredType>varchar(500)|0s</StoredType>
+    </column>
+    <column id="395" parent="335" name="brand">
+      <Comment>品牌</Comment>
+      <Position>6</Position>
+      <StoredType>varchar(100)|0s</StoredType>
+    </column>
+    <column id="396" parent="335" name="place_of_origin">
+      <Comment>产地</Comment>
+      <Position>7</Position>
+      <StoredType>varchar(100)|0s</StoredType>
+    </column>
+    <column id="397" parent="335" name="level">
+      <Comment>商品等级</Comment>
+      <NotNull>1</NotNull>
+      <Position>8</Position>
+      <StoredType>smallint|0s</StoredType>
+    </column>
+    <column id="398" parent="335" name="creator">
+      <Comment>创建者ID</Comment>
+      <Position>9</Position>
+      <StoredType>bigint|0s</StoredType>
+    </column>
+    <column id="399" parent="335" name="updater">
+      <Comment>更新者ID</Comment>
+      <Position>10</Position>
+      <StoredType>bigint|0s</StoredType>
+    </column>
+    <column id="400" parent="335" name="create_time">
+      <Comment>创建时间</Comment>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <Position>11</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="401" parent="335" name="update_time">
+      <Comment>最后更新时间</Comment>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>12</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="402" parent="335" name="del_flag">
+      <Comment>是否删除：0-未删除，1-已删除</Comment>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>13</Position>
+      <StoredType>tinyint|0s</StoredType>
+    </column>
+    <column id="403" parent="335" name="category_id">
+      <Comment>分类id</Comment>
+      <Position>14</Position>
+      <StoredType>bigint|0s</StoredType>
+    </column>
+    <column id="404" parent="335" name="publish_time">
+      <Comment>上架时间</Comment>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <Position>15</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="405" parent="335" name="offline_time">
+      <Comment>下架时间</Comment>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <Position>16</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <index id="406" parent="335" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="407" parent="335" name="idx_brand">
       <ColNames>brand</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="369" parent="330" name="idx_create_time">
+    <index id="408" parent="335" name="idx_create_time">
       <ColNames>create_time</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="370" parent="330" name="idx_del_flag">
+    <index id="409" parent="335" name="idx_del_flag">
       <ColNames>del_flag</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="371" parent="330" name="PRIMARY">
+    <key id="410" parent="335" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <column id="372" parent="331" name="id">
+    <column id="411" parent="336" name="id">
       <AutoIncrement>1</AutoIncrement>
-      <Comment>主键ID</Comment>
-      <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="373" parent="331" name="product_id">
-      <Comment>商品ID，关联 product 表</Comment>
-      <DasType>bigint|0s</DasType>
-      <NotNull>1</NotNull>
+    <column id="412" parent="336" name="product_id">
       <Position>2</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="374" parent="331" name="tag_id">
-      <Comment>标签ID，关联 tag 表</Comment>
-      <DasType>bigint|0s</DasType>
-      <NotNull>1</NotNull>
+    <column id="413" parent="336" name="category_id">
       <Position>3</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="375" parent="331" name="creator">
-      <Comment>创建者ID</Comment>
-      <DasType>bigint|0s</DasType>
+    <column id="414" parent="336" name="creator">
       <Position>4</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="376" parent="331" name="updater">
-      <Comment>更新者ID</Comment>
-      <DasType>bigint|0s</DasType>
+    <column id="415" parent="336" name="updater">
       <Position>5</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="377" parent="331" name="create_time">
-      <Comment>创建时间</Comment>
-      <DasType>datetime|0s</DasType>
-      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+    <column id="416" parent="336" name="create_time">
       <Position>6</Position>
+      <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="378" parent="331" name="update_time">
-      <Comment>最后更新时间</Comment>
-      <DasType>datetime|0s</DasType>
-      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
-      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+    <column id="417" parent="336" name="update_time">
       <Position>7</Position>
+      <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="379" parent="331" name="del_flag">
-      <Comment>是否删除：0=未删除，1=已删除</Comment>
-      <DasType>tinyint|0s</DasType>
-      <DefaultExpression>0</DefaultExpression>
-      <NotNull>1</NotNull>
+    <column id="418" parent="336" name="del_flag">
       <Position>8</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <index id="380" parent="331" name="PRIMARY">
+    <index id="419" parent="336" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="381" parent="331" name="uk_product_tag">
+    <key id="420" parent="336" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="421" parent="337" name="id">
+      <AutoIncrement>1</AutoIncrement>
+      <Comment>主键ID</Comment>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>bigint|0s</StoredType>
+    </column>
+    <column id="422" parent="337" name="product_id">
+      <Comment>商品ID，关联 product 表</Comment>
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StoredType>bigint|0s</StoredType>
+    </column>
+    <column id="423" parent="337" name="tag_id">
+      <Comment>标签ID，关联 tag 表</Comment>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+      <StoredType>bigint|0s</StoredType>
+    </column>
+    <column id="424" parent="337" name="creator">
+      <Comment>创建者ID</Comment>
+      <Position>4</Position>
+      <StoredType>bigint|0s</StoredType>
+    </column>
+    <column id="425" parent="337" name="updater">
+      <Comment>更新者ID</Comment>
+      <Position>5</Position>
+      <StoredType>bigint|0s</StoredType>
+    </column>
+    <column id="426" parent="337" name="create_time">
+      <Comment>创建时间</Comment>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <Position>6</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="427" parent="337" name="update_time">
+      <Comment>最后更新时间</Comment>
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
+      <Position>7</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="428" parent="337" name="del_flag">
+      <Comment>是否删除：0=未删除，1=已删除</Comment>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>8</Position>
+      <StoredType>tinyint|0s</StoredType>
+    </column>
+    <index id="429" parent="337" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <index id="430" parent="337" name="uk_product_tag">
       <ColNames>product_id
 tag_id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="382" parent="331" name="idx_tag_id">
+    <index id="431" parent="337" name="idx_tag_id">
       <ColNames>tag_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="383" parent="331" name="idx_del_flag">
+    <index id="432" parent="337" name="idx_del_flag">
       <ColNames>del_flag</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="384" parent="331" name="PRIMARY">
+    <key id="433" parent="337" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="385" parent="331" name="uk_product_tag">
+    <key id="434" parent="337" name="uk_product_tag">
       <UnderlyingIndexName>uk_product_tag</UnderlyingIndexName>
     </key>
-    <column id="386" parent="332" name="id">
+    <column id="435" parent="338" name="id">
       <AutoIncrement>18</AutoIncrement>
       <Comment>主键ID</Comment>
-      <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="387" parent="332" name="product_id">
+    <column id="436" parent="338" name="product_id">
       <Comment>商品ID，关联 product 表</Comment>
-      <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="388" parent="332" name="warehouse_id">
+    <column id="437" parent="338" name="warehouse_id">
       <Comment>仓库ID，关联 warehouse 表</Comment>
-      <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="389" parent="332" name="creator">
+    <column id="438" parent="338" name="creator">
       <Comment>创建者ID</Comment>
-      <DasType>bigint|0s</DasType>
       <Position>4</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="390" parent="332" name="updater">
+    <column id="439" parent="338" name="updater">
       <Comment>更新者ID</Comment>
-      <DasType>bigint|0s</DasType>
       <Position>5</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="391" parent="332" name="create_time">
+    <column id="440" parent="338" name="create_time">
       <Comment>创建时间</Comment>
-      <DasType>datetime|0s</DasType>
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <Position>6</Position>
+      <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="392" parent="332" name="update_time">
+    <column id="441" parent="338" name="update_time">
       <Comment>最后更新时间</Comment>
-      <DasType>datetime|0s</DasType>
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
       <Position>7</Position>
+      <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="393" parent="332" name="del_flag">
+    <column id="442" parent="338" name="del_flag">
       <Comment>是否删除：0=未删除，1=已删除</Comment>
-      <DasType>tinyint|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>8</Position>
+      <StoredType>tinyint|0s</StoredType>
     </column>
-    <index id="394" parent="332" name="PRIMARY">
+    <index id="443" parent="338" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="395" parent="332" name="uk_product_warehouse">
+    <index id="444" parent="338" name="uk_product_warehouse">
       <ColNames>product_id
 warehouse_id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="396" parent="332" name="idx_warehouse_id">
+    <index id="445" parent="338" name="idx_warehouse_id">
       <ColNames>warehouse_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="397" parent="332" name="idx_del_flag">
+    <index id="446" parent="338" name="idx_del_flag">
       <ColNames>del_flag</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="398" parent="332" name="PRIMARY">
+    <key id="447" parent="338" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="399" parent="332" name="uk_product_warehouse">
+    <key id="448" parent="338" name="uk_product_warehouse">
       <UnderlyingIndexName>uk_product_warehouse</UnderlyingIndexName>
     </key>
-    <column id="400" parent="333" name="id">
+    <column id="449" parent="339" name="id">
       <AutoIncrement>1</AutoIncrement>
       <Comment>SKU 主键ID</Comment>
-      <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="401" parent="333" name="product_id">
+    <column id="450" parent="339" name="product_id">
       <Comment>商品id</Comment>
-      <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="402" parent="333" name="name">
+    <column id="451" parent="339" name="name">
       <Comment>SKU 名称（通常为 SPU 名 + 规格描述，如 iPhone 15 黑色 128GB）</Comment>
-      <DasType>varchar(255)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
+      <StoredType>varchar(255)|0s</StoredType>
     </column>
-    <column id="403" parent="333" name="sku_code">
+    <column id="452" parent="339" name="sku_code">
       <Comment>商品内部唯一编码，用于系统识别</Comment>
-      <DasType>varchar(100)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>4</Position>
+      <StoredType>varchar(100)|0s</StoredType>
     </column>
-    <column id="404" parent="333" name="price">
+    <column id="453" parent="339" name="price">
       <Comment>销售价</Comment>
-      <DasType>decimal(19,2 digit)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>5</Position>
+      <StoredType>decimal(19,2 digit)|0s</StoredType>
     </column>
-    <column id="405" parent="333" name="cost_price">
+    <column id="454" parent="339" name="cost_price">
       <Comment>成本价（可选）</Comment>
-      <DasType>decimal(19,2 digit)|0s</DasType>
       <Position>6</Position>
+      <StoredType>decimal(19,2 digit)|0s</StoredType>
     </column>
-    <column id="406" parent="333" name="stock">
+    <column id="455" parent="339" name="stock">
       <Comment>库存数量</Comment>
-      <DasType>int|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>7</Position>
+      <StoredType>int|0s</StoredType>
     </column>
-    <column id="407" parent="333" name="status">
+    <column id="456" parent="339" name="status">
       <Comment>状态：0=下架，1=上架</Comment>
-      <DasType>smallint|0s</DasType>
       <DefaultExpression>1</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>8</Position>
+      <StoredType>smallint|0s</StoredType>
     </column>
-    <column id="408" parent="333" name="weight">
+    <column id="457" parent="339" name="weight">
       <Comment>权重（用于推荐、排序，如热销权重）</Comment>
-      <DasType>decimal(10,6 digit)|0s</DasType>
       <DefaultExpression>1.000000</DefaultExpression>
       <Position>9</Position>
+      <StoredType>decimal(10,6 digit)|0s</StoredType>
     </column>
-    <column id="409" parent="333" name="creator">
+    <column id="458" parent="339" name="creator">
       <Comment>创建者ID</Comment>
-      <DasType>bigint|0s</DasType>
       <Position>10</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="410" parent="333" name="updater">
+    <column id="459" parent="339" name="updater">
       <Comment>更新者ID</Comment>
-      <DasType>bigint|0s</DasType>
       <Position>11</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="411" parent="333" name="create_time">
+    <column id="460" parent="339" name="create_time">
       <Comment>创建时间</Comment>
-      <DasType>datetime|0s</DasType>
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <Position>12</Position>
+      <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="412" parent="333" name="update_time">
+    <column id="461" parent="339" name="update_time">
       <Comment>最后更新时间</Comment>
-      <DasType>datetime|0s</DasType>
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
       <Position>13</Position>
+      <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="413" parent="333" name="del_flag">
+    <column id="462" parent="339" name="del_flag">
       <Comment>是否删除：0=未删除，1=已删除</Comment>
-      <DasType>tinyint|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>14</Position>
+      <StoredType>tinyint|0s</StoredType>
     </column>
-    <column id="414" parent="333" name="sort">
+    <column id="463" parent="339" name="sort">
       <Comment>排序值</Comment>
-      <DasType>int|0s</DasType>
       <Position>15</Position>
+      <StoredType>int|0s</StoredType>
     </column>
-    <column id="415" parent="333" name="publish_time">
+    <column id="464" parent="339" name="publish_time">
       <Comment>上架时间</Comment>
-      <DasType>datetime|0s</DasType>
       <Position>16</Position>
+      <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="416" parent="333" name="offline_time">
+    <column id="465" parent="339" name="offline_time">
       <Comment>下架时间</Comment>
-      <DasType>datetime|0s</DasType>
       <Position>17</Position>
+      <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="417" parent="333" name="detail_content">
+    <column id="466" parent="339" name="detail_content">
       <Comment>商品详情</Comment>
-      <DasType>longtext|0s</DasType>
       <Position>18</Position>
+      <StoredType>longtext|0s</StoredType>
     </column>
-    <index id="418" parent="333" name="PRIMARY">
+    <index id="467" parent="339" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="419" parent="333" name="uk_sku_code">
+    <index id="468" parent="339" name="uk_sku_code">
       <ColNames>sku_code</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="420" parent="333" name="idx_spu_id">
+    <index id="469" parent="339" name="idx_spu_id">
       <ColNames>product_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="421" parent="333" name="idx_status">
+    <index id="470" parent="339" name="idx_status">
       <ColNames>status</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="422" parent="333" name="idx_create_time">
+    <index id="471" parent="339" name="idx_create_time">
       <ColNames>create_time</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="423" parent="333" name="idx_del_flag">
+    <index id="472" parent="339" name="idx_del_flag">
       <ColNames>del_flag</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="424" parent="333" name="PRIMARY">
+    <key id="473" parent="339" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="425" parent="333" name="uk_sku_code">
+    <key id="474" parent="339" name="uk_sku_code">
       <UnderlyingIndexName>uk_sku_code</UnderlyingIndexName>
     </key>
-    <column id="426" parent="334" name="id">
+    <column id="475" parent="340" name="id">
       <AutoIncrement>1</AutoIncrement>
       <Comment>标签主键ID</Comment>
-      <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="427" parent="334" name="name">
+    <column id="476" parent="340" name="name">
       <Comment>标签名称（中文名，如“热销”、“新品”、“环保”）</Comment>
-      <DasType>varchar(50)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
+      <StoredType>varchar(50)|0s</StoredType>
     </column>
-    <column id="428" parent="334" name="code">
+    <column id="477" parent="340" name="code">
       <Comment>标签编码（英文或拼音，用于系统识别，如 hot_sale, new_arrival）</Comment>
-      <DasType>varchar(50)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
+      <StoredType>varchar(50)|0s</StoredType>
     </column>
-    <column id="429" parent="334" name="description">
+    <column id="478" parent="340" name="description">
       <Comment>标签描述，用于说明标签用途或规则</Comment>
-      <DasType>varchar(255)|0s</DasType>
       <Position>4</Position>
+      <StoredType>varchar(255)|0s</StoredType>
     </column>
-    <column id="430" parent="334" name="color">
+    <column id="479" parent="340" name="color">
       <Comment>标签颜色（前端展示用，格式：#FF9900）</Comment>
-      <DasType>char(7)|0s</DasType>
       <Position>5</Position>
+      <StoredType>char(7)|0s</StoredType>
     </column>
-    <column id="431" parent="334" name="status">
+    <column id="480" parent="340" name="status">
       <Comment>状态：1=启用，0=禁用</Comment>
-      <DasType>smallint|0s</DasType>
       <DefaultExpression>1</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>6</Position>
+      <StoredType>smallint|0s</StoredType>
     </column>
-    <column id="432" parent="334" name="weight">
+    <column id="481" parent="340" name="weight">
       <Comment>标签权重（用于推荐优先级或排序，如 1.5=高优先级）</Comment>
-      <DasType>decimal(10,6 digit)|0s</DasType>
       <DefaultExpression>1.000000</DefaultExpression>
       <Position>7</Position>
+      <StoredType>decimal(10,6 digit)|0s</StoredType>
     </column>
-    <column id="433" parent="334" name="creator">
+    <column id="482" parent="340" name="creator">
       <Comment>创建者ID</Comment>
-      <DasType>bigint|0s</DasType>
       <Position>8</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="434" parent="334" name="updater">
+    <column id="483" parent="340" name="updater">
       <Comment>更新者ID</Comment>
-      <DasType>bigint|0s</DasType>
       <Position>9</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="435" parent="334" name="create_time">
+    <column id="484" parent="340" name="create_time">
       <Comment>创建时间</Comment>
-      <DasType>datetime|0s</DasType>
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <Position>10</Position>
+      <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="436" parent="334" name="update_time">
+    <column id="485" parent="340" name="update_time">
       <Comment>最后更新时间</Comment>
-      <DasType>datetime|0s</DasType>
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
       <Position>11</Position>
+      <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="437" parent="334" name="del_flag">
+    <column id="486" parent="340" name="del_flag">
       <Comment>是否删除：0=未删除，1=已删除</Comment>
-      <DasType>tinyint|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>12</Position>
+      <StoredType>tinyint|0s</StoredType>
     </column>
-    <index id="438" parent="334" name="PRIMARY">
+    <index id="487" parent="340" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="439" parent="334" name="uk_name">
+    <index id="488" parent="340" name="uk_name">
       <ColNames>name</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="440" parent="334" name="uk_code">
+    <index id="489" parent="340" name="uk_code">
       <ColNames>code</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="441" parent="334" name="idx_status">
+    <index id="490" parent="340" name="idx_status">
       <ColNames>status</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="442" parent="334" name="idx_weight">
+    <index id="491" parent="340" name="idx_weight">
       <ColNames>weight</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="443" parent="334" name="idx_del_flag">
+    <index id="492" parent="340" name="idx_del_flag">
       <ColNames>del_flag</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="444" parent="334" name="PRIMARY">
+    <key id="493" parent="340" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="445" parent="334" name="uk_name">
+    <key id="494" parent="340" name="uk_name">
       <UnderlyingIndexName>uk_name</UnderlyingIndexName>
     </key>
-    <key id="446" parent="334" name="uk_code">
+    <key id="495" parent="340" name="uk_code">
       <UnderlyingIndexName>uk_code</UnderlyingIndexName>
     </key>
-    <column id="447" parent="335" name="id">
+    <column id="496" parent="341" name="id">
       <AutoIncrement>19</AutoIncrement>
       <Comment>主键ID</Comment>
-      <DasType>bigint|0s</DasType>
       <NotNull>1</NotNull>
       <Position>1</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="448" parent="335" name="name">
+    <column id="497" parent="341" name="name">
       <Comment>仓库名称（如：北京仓、上海保税仓、华南中心仓）</Comment>
-      <DasType>varchar(100)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>2</Position>
+      <StoredType>varchar(100)|0s</StoredType>
     </column>
-    <column id="449" parent="335" name="address">
+    <column id="498" parent="341" name="address">
       <Comment>仓库详细地址（省市区+街道）</Comment>
-      <DasType>varchar(500)|0s</DasType>
       <NotNull>1</NotNull>
       <Position>3</Position>
+      <StoredType>varchar(500)|0s</StoredType>
     </column>
-    <column id="450" parent="335" name="capacity">
+    <column id="499" parent="341" name="capacity">
       <Comment>仓库容量（单位：件，可存储商品总数量）</Comment>
-      <DasType>int|0s</DasType>
       <Position>4</Position>
+      <StoredType>int|0s</StoredType>
     </column>
-    <column id="451" parent="335" name="status">
+    <column id="500" parent="341" name="status">
       <Comment>仓库状态：0=禁用，1=启用</Comment>
-      <DasType>smallint|0s</DasType>
       <DefaultExpression>1</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>5</Position>
+      <StoredType>smallint|0s</StoredType>
     </column>
-    <column id="452" parent="335" name="admin_id">
+    <column id="501" parent="341" name="admin_id">
       <Comment>仓库管理员ID（关联用户表 user.id）</Comment>
-      <DasType>bigint|0s</DasType>
       <Position>6</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="453" parent="335" name="creator">
+    <column id="502" parent="341" name="creator">
       <Comment>创建者ID</Comment>
-      <DasType>bigint|0s</DasType>
       <Position>7</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="454" parent="335" name="updater">
+    <column id="503" parent="341" name="updater">
       <Comment>更新者ID</Comment>
-      <DasType>bigint|0s</DasType>
       <Position>8</Position>
+      <StoredType>bigint|0s</StoredType>
     </column>
-    <column id="455" parent="335" name="create_time">
+    <column id="504" parent="341" name="create_time">
       <Comment>创建时间</Comment>
-      <DasType>datetime|0s</DasType>
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <Position>9</Position>
+      <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="456" parent="335" name="update_time">
+    <column id="505" parent="341" name="update_time">
       <Comment>最后更新时间</Comment>
-      <DasType>datetime|0s</DasType>
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <OnUpdate>CURRENT_TIMESTAMP</OnUpdate>
       <Position>10</Position>
+      <StoredType>datetime|0s</StoredType>
     </column>
-    <column id="457" parent="335" name="del_flag">
+    <column id="506" parent="341" name="del_flag">
       <Comment>是否删除：0=未删除，1=已删除</Comment>
-      <DasType>tinyint|0s</DasType>
       <DefaultExpression>0</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>11</Position>
+      <StoredType>tinyint|0s</StoredType>
     </column>
-    <index id="458" parent="335" name="PRIMARY">
+    <index id="507" parent="341" name="PRIMARY">
       <ColNames>id</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="459" parent="335" name="uk_name">
+    <index id="508" parent="341" name="uk_name">
       <ColNames>name</ColNames>
       <Type>btree</Type>
       <Unique>1</Unique>
     </index>
-    <index id="460" parent="335" name="idx_status">
+    <index id="509" parent="341" name="idx_status">
       <ColNames>status</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="461" parent="335" name="idx_admin_id">
+    <index id="510" parent="341" name="idx_admin_id">
       <ColNames>admin_id</ColNames>
       <Type>btree</Type>
     </index>
-    <index id="462" parent="335" name="idx_del_flag">
+    <index id="511" parent="341" name="idx_del_flag">
       <ColNames>del_flag</ColNames>
       <Type>btree</Type>
     </index>
-    <key id="463" parent="335" name="PRIMARY">
+    <key id="512" parent="341" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <Primary>1</Primary>
       <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
-    <key id="464" parent="335" name="uk_name">
+    <key id="513" parent="341" name="uk_name">
       <UnderlyingIndexName>uk_name</UnderlyingIndexName>
+    </key>
+    <column id="514" parent="342" name="id">
+      <AutoIncrement>1</AutoIncrement>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>bigint unsigned|0s</StoredType>
+    </column>
+    <column id="515" parent="342" name="address">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StoredType>varchar(255)|0s</StoredType>
+    </column>
+    <column id="516" parent="342" name="phone">
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+      <StoredType>varchar(20)|0s</StoredType>
+    </column>
+    <column id="517" parent="342" name="name">
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+      <StoredType>varchar(100)|0s</StoredType>
+    </column>
+    <column id="518" parent="342" name="description">
+      <Position>5</Position>
+      <StoredType>text|0s</StoredType>
+    </column>
+    <column id="519" parent="342" name="creator">
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+      <StoredType>bigint unsigned|0s</StoredType>
+    </column>
+    <column id="520" parent="342" name="updater">
+      <NotNull>1</NotNull>
+      <Position>7</Position>
+      <StoredType>bigint unsigned|0s</StoredType>
+    </column>
+    <column id="521" parent="342" name="create_time">
+      <NotNull>1</NotNull>
+      <Position>8</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="522" parent="342" name="update_time">
+      <NotNull>1</NotNull>
+      <Position>9</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="523" parent="342" name="del_flag">
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>10</Position>
+      <StoredType>smallint|0s</StoredType>
+    </column>
+    <index id="524" parent="342" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="525" parent="342" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="526" parent="343" name="id">
+      <AutoIncrement>1</AutoIncrement>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>bigint unsigned|0s</StoredType>
+    </column>
+    <column id="527" parent="343" name="purchase_order_id">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StoredType>bigint unsigned|0s</StoredType>
+    </column>
+    <column id="528" parent="343" name="address_id">
+      <Comment>收回地址id</Comment>
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+      <StoredType>bigint unsigned|0s</StoredType>
+    </column>
+    <column id="529" parent="343" name="creator">
+      <Comment>创建者</Comment>
+      <Position>4</Position>
+      <StoredType>bigint unsigned|0s</StoredType>
+    </column>
+    <column id="530" parent="343" name="updater">
+      <Comment>更新者</Comment>
+      <Position>5</Position>
+      <StoredType>bigint unsigned|0s</StoredType>
+    </column>
+    <column id="531" parent="343" name="create_time">
+      <Comment>创建时间</Comment>
+      <Position>6</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="532" parent="343" name="update_time">
+      <Comment>更新时间</Comment>
+      <Position>7</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="533" parent="343" name="del_flag">
+      <Comment>是否删除，1是，0否</Comment>
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>8</Position>
+      <StoredType>smallint|0s</StoredType>
+    </column>
+    <index id="534" parent="343" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="535" parent="343" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
+    </key>
+    <column id="536" parent="344" name="id">
+      <AutoIncrement>1</AutoIncrement>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StoredType>bigint unsigned|0s</StoredType>
+    </column>
+    <column id="537" parent="344" name="order_no">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StoredType>varchar(255)|0s</StoredType>
+    </column>
+    <column id="538" parent="344" name="status">
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+      <StoredType>int|0s</StoredType>
+    </column>
+    <column id="539" parent="344" name="pay_status">
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+      <StoredType>int|0s</StoredType>
+    </column>
+    <column id="540" parent="344" name="receive_status">
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+      <StoredType>int|0s</StoredType>
+    </column>
+    <column id="541" parent="344" name="amount">
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+      <StoredType>decimal(10,2 digit)|0s</StoredType>
+    </column>
+    <column id="542" parent="344" name="pay_time">
+      <Position>7</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="543" parent="344" name="order_placement_time">
+      <Position>8</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="544" parent="344" name="sku_id">
+      <NotNull>1</NotNull>
+      <Position>9</Position>
+      <StoredType>bigint unsigned|0s</StoredType>
+    </column>
+    <column id="545" parent="344" name="pay_type">
+      <NotNull>1</NotNull>
+      <Position>10</Position>
+      <StoredType>int|0s</StoredType>
+    </column>
+    <column id="546" parent="344" name="delivery_fee">
+      <NotNull>1</NotNull>
+      <Position>11</Position>
+      <StoredType>bigint unsigned|0s</StoredType>
+    </column>
+    <column id="547" parent="344" name="delivery">
+      <Position>12</Position>
+      <StoredType>varchar(255)|0s</StoredType>
+    </column>
+    <column id="548" parent="344" name="pay_amount">
+      <NotNull>1</NotNull>
+      <Position>13</Position>
+      <StoredType>bigint unsigned|0s</StoredType>
+    </column>
+    <column id="549" parent="344" name="remark">
+      <Position>14</Position>
+      <StoredType>text|0s</StoredType>
+    </column>
+    <column id="550" parent="344" name="num">
+      <NotNull>1</NotNull>
+      <Position>15</Position>
+      <StoredType>int|0s</StoredType>
+    </column>
+    <column id="551" parent="344" name="creator">
+      <NotNull>1</NotNull>
+      <Position>16</Position>
+      <StoredType>bigint unsigned|0s</StoredType>
+    </column>
+    <column id="552" parent="344" name="updater">
+      <NotNull>1</NotNull>
+      <Position>17</Position>
+      <StoredType>bigint unsigned|0s</StoredType>
+    </column>
+    <column id="553" parent="344" name="create_time">
+      <NotNull>1</NotNull>
+      <Position>18</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="554" parent="344" name="update_time">
+      <NotNull>1</NotNull>
+      <Position>19</Position>
+      <StoredType>datetime|0s</StoredType>
+    </column>
+    <column id="555" parent="344" name="del_flag">
+      <DefaultExpression>0</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>20</Position>
+      <StoredType>smallint|0s</StoredType>
+    </column>
+    <index id="556" parent="344" name="PRIMARY">
+      <ColNames>id</ColNames>
+      <Type>btree</Type>
+      <Unique>1</Unique>
+    </index>
+    <key id="557" parent="344" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>PRIMARY</UnderlyingIndexName>
     </key>
   </database-model>
 </dataSource>

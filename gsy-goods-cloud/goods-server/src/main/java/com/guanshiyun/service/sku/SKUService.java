@@ -1,6 +1,7 @@
 package com.guanshiyun.service.sku;
 
 import com.guanshiyun.controller.sku.vo.SKUFindVO;
+import com.guanshiyun.controller.sku.vo.SKUSaveVO;
 import com.guanshiyun.controller.sku.vo.SKUVO;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public interface SKUService {
     //添加SKU
-    Mono<BigInteger> save(SKUVO skuVO);
+    Mono<BigInteger> save(SKUSaveVO skuVO);
 //删除SKU
     Mono<Void> deleteById(BigInteger id);
 //查询SKU

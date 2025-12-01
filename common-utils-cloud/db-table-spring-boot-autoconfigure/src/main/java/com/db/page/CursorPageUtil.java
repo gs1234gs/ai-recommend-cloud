@@ -6,11 +6,14 @@ import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.sqlenums.SortOrderEnum;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.reflect.Constructor;
 import java.math.BigInteger;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 public class CursorPageUtil {
-
+    private static final Map<Class<?>, Constructor<?>> CONSTRUCTOR_CACHE = new ConcurrentHashMap<>();
     /**
      * 对 RequestCursorPage 进行合法性校验，并填充默认值
      *
@@ -67,7 +70,17 @@ public class CursorPageUtil {
      * 创建 condition 实例
      */
     private static <T> T createConditionInstance(Class<T> clazz) throws Exception {
-        return clazz.getDeclaredConstructor().newInstance();
+        @SuppressWarnings("unchecked")
+        Constructor<T> constructor = (Constructor<T>) CONSTRUCTOR_CACHE.computeIfAbsent(clazz, cls -> {
+            try {
+                Constructor<?> c = cls.getDeclaredConstructor();
+                c.setAccessible(true); // 支持 private 构造函数
+                return c;
+            } catch (Exception e) {
+                throw new RuntimeException("无法获取无参构造器: " + cls.getName(), e);
+            }
+        });
+        return constructor.newInstance();
     }
 
     /**

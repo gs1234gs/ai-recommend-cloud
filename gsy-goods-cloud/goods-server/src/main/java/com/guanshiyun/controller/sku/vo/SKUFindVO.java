@@ -1,7 +1,11 @@
 package com.guanshiyun.controller.sku.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.*;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
@@ -10,7 +14,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SKUFindVO {
+public class SKUFindVO implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+    @JsonSerialize(using = ToStringSerializer.class)
     private BigInteger id;
     //商品id
 
@@ -21,9 +28,11 @@ public class SKUFindVO {
     private String skuCode;
 
     /** 销售价 */
+    @JsonSerialize(using = ToStringSerializer.class)
     private BigDecimal price;
 
     /** 成本价（可选） */
+    @JsonSerialize(using = ToStringSerializer.class)
     private BigDecimal costPrice;
 
     /** 库存数量 */
@@ -35,6 +44,7 @@ public class SKUFindVO {
     private short status;
 
     /** 权重（用于推荐、排序） */
+    @JsonSerialize(using = ToStringSerializer.class)
     private BigDecimal weight;
     //排序值
     private Integer sort;

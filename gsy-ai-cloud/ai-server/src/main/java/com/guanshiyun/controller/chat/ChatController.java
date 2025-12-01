@@ -1,14 +1,16 @@
 package com.guanshiyun.controller.chat;
 
 import com.guanshiyun.chat.ChatRecord;
-import com.guanshiyun.consts.code.HttpCodeConst;
+import com.guanshiyun.code.HttpCodeConst;
+import com.guanshiyun.controller.chat.vo.ChatRecordVO;
+import com.guanshiyun.jacksonBigNumberConfig.UseBigNumberSerialization;
 import com.guanshiyun.req.ReqChat;
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.responsepojo.ResultT;
-import com.guanshiyun.service.chat.ChatRecordService;
 import com.guanshiyun.service.chat.ChatService;
+import com.guanshiyun.service.chat.impl.ChatRecordServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +24,11 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/chat/")
+@UseBigNumberSerialization
 public class ChatController {
 
     private final ChatService chatService;
-    private final ChatRecordService chatRecordService;
+    private final ChatRecordServiceImpl chatRecordService;
 
 
     //一次性对话
@@ -86,11 +89,11 @@ public class ChatController {
     }
     //获取对话
     @PostMapping("findChat")
-    public Mono<ResultT<PageResultT<List<ChatRecord>>>> findChat(@RequestBody RequestPage<ChatRecord> requestPage){
+    public Mono<ResultT<PageResultT<List<ChatRecordVO>>>> findChat(@RequestBody RequestPage<ChatRecordVO> requestPage){
 
         return chatRecordService.findPageChat(requestPage)
                 .map(pageResultT ->{
-                    return ResultT.<PageResultT<List<ChatRecord>>>builder()
+                    return ResultT.<PageResultT<List<ChatRecordVO>>>builder()
                             .code(HttpCodeConst.OK)
                             .msg("获取成功")
                             .data(pageResultT)
@@ -98,7 +101,7 @@ public class ChatController {
                 })
                 .onErrorResume(throwable ->{
                     log.info("获取失败", throwable);
-                    return Mono.just(ResultT.<PageResultT<List<ChatRecord>>>builder()
+                    return Mono.just(ResultT.<PageResultT<List<ChatRecordVO>>>builder()
                             .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                             .msg("获取失败")
                             .build());

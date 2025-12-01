@@ -2,6 +2,7 @@ package com.guanshiyun;
 
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.chat.ChatRecord;
+import com.guanshiyun.controller.chat.vo.ChatRecordVO;
 import com.guanshiyun.mymongodb.ChatRecordContent;
 import com.guanshiyun.repository.chat.ChatRecordRepository;
 import com.guanshiyun.req.ReqChat;
@@ -16,6 +17,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.PromptChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.ollama.OllamaChatModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +27,7 @@ import reactor.util.context.Context;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+
 @Slf4j
 @SpringBootTest
 class AiAppApplicationTests {
@@ -203,10 +206,10 @@ class AiAppApplicationTests {
     @Test
     void Test5() {
         chatRecordService.findPageChat(
-                RequestPage.<ChatRecord>builder()
+                RequestPage.<ChatRecordVO>builder()
                         .pageNum(BigInteger.valueOf(1))
                         .pageSize(10)
-                        .condition(ChatRecord.builder()
+                        .condition(ChatRecordVO.builder()
                                 .title("二牛")
                                 .build())
                         .build()
@@ -282,5 +285,17 @@ class AiAppApplicationTests {
                 })
                 .expectNextCount(1) // 根据实际情况调整期望数量
                 .verifyComplete(); // 验证流正常结束
+    }
+
+    @Autowired
+    private EmbeddingModel embeddingModel;
+    @Test
+    void test119(){
+        System.out.println("======================================================");
+        String text = "我叫二牛,请问你是谁";
+        float[] embed = embeddingModel.embed(text);
+
+
+        System.out.println("向量维度: " + text);
     }
 }

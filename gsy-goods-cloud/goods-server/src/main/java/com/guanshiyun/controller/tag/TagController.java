@@ -1,6 +1,6 @@
 package com.guanshiyun.controller.tag;
 
-import com.guanshiyun.consts.code.HttpCodeConst;
+import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.tag.vo.TagSaveVO;
 import com.guanshiyun.controller.tag.vo.TagVO;
 import com.guanshiyun.requestpojo.RequestPage;

@@ -1,7 +1,7 @@
 package com.guanshiyun.controller.sysuser;
 
 import com.db.dbnumber.ConstNumber;
-import com.guanshiyun.consts.code.HttpCodeConst;
+import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.sysuser.vo.SysUserSaveVO;
 import com.guanshiyun.controller.sysuser.vo.SysUserVO;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -100,7 +100,7 @@ public class SysUserController {
                                 .data(null)
                                 .build()
                 );
-            BigInteger id = BigInteger.valueOf(contextView.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            BigInteger id = contextView.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
             return sysUserService.findById(id)
                     .map(sysUser ->
                             ResultT.<SysUserVO>builder()

@@ -1,7 +1,8 @@
 package com.guanshiyun.controller.sku;
 
-import com.guanshiyun.consts.code.HttpCodeConst;
+import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.sku.vo.SKUFindVO;
+import com.guanshiyun.controller.sku.vo.SKUSaveVO;
 import com.guanshiyun.controller.sku.vo.SKUVO;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
@@ -23,7 +24,7 @@ public class SKUController {
     private final SKUService skuService;
     //添加SKU
     @PostMapping("save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody SKUVO skuVO) {
+    public Mono<ResultT<BigInteger>> save(@RequestBody SKUSaveVO skuVO) {
         return skuService.save(skuVO)
                 .map(id->{
                     log.info("添加成功，id为{}",id);

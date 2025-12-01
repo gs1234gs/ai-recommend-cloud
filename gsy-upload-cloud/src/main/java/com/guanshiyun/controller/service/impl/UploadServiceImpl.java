@@ -1,7 +1,7 @@
 package com.guanshiyun.controller.service.impl;
 
 import com.aliyun.oss.AliOSSUtils;
-import com.guanshiyun.consts.code.HttpCodeConst;
+import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.service.UploadService;
 import com.guanshiyun.responsepojo.ResultT;
 import lombok.RequiredArgsConstructor;

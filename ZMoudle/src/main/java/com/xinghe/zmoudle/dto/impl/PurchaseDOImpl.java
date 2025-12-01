@@ -18,6 +18,9 @@ public class PurchaseDOImpl implements PurchaseDO{
     private static final List<Product> PRODUCT_DB = new ArrayList<>();
     //模拟用户数据库
     private static final List<SysUser> USER_DB = new ArrayList<>();
+
+    //关于商品维度的数据查询
+    public static final Map<Long,Map<Long,Integer>> PURCHASE_DB_PRODUCT = new HashMap<>();
     static {
         //初始化：mysql 模拟数据库；模拟用户、商品、用户购买记录
         USER_DB.add(SysUser.builder()
@@ -61,6 +64,14 @@ public class PurchaseDOImpl implements PurchaseDO{
         PURCHASE_DB.put(2L,Map.of(100L,1,102L,4));
         //zhaolusi 购买了 联想 i 9 1个,
         PURCHASE_DB.put(3L,Map.of(101L,2,102L,4));
+
+        //商品维度的
+        PURCHASE_DB_PRODUCT.forEach((userId,purchase)->{
+            purchase.forEach((productId,count)->{
+                PURCHASE_DB_PRODUCT.computeIfAbsent(productId,k->new HashMap<>())
+                        .put(userId,count);
+            });
+        });
     }
 
     @Override
@@ -76,5 +87,10 @@ public class PurchaseDOImpl implements PurchaseDO{
     @Override
     public List<Product> getAllProduct() {
         return PRODUCT_DB;
+    }
+
+    @Override
+    public Map<Long, Integer> getProductPurchaseRecord(Long productId) {
+        return PURCHASE_DB_PRODUCT.getOrDefault(productId,Map.of());
     }
 }

@@ -1,15 +1,14 @@
 package com.guanshiyun.responsepojo;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.math.BigInteger;
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 public class CursorPageResult<T> {
     //lastId
     private BigInteger cursor;
@@ -17,16 +16,4 @@ public class CursorPageResult<T> {
     private  T rows;
     //是否存在下一页
     private Boolean hasNext;
-    public CursorPageResult< T> setLastId(BigInteger cursor){
-        this.cursor = cursor;
-        return this;
-    }
-    public CursorPageResult< T> setRows( T rows){
-        this.rows = rows;
-        return this;
-    }
-    public CursorPageResult<T> setHasNext(Boolean hasNext){
-        this.hasNext = hasNext;
-        return this;
-    }
 }

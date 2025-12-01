@@ -1,6 +1,6 @@
 package com.guanshiyun.service.userrole.impl;
 
-import com.guanshiyun.consts.code.HttpCodeConst;
+import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.relation.SysRelationRequest;
 import com.guanshiyun.relationpojo.SysUserRole;
 import com.guanshiyun.repository.userrole.SysUserRoleRepository;

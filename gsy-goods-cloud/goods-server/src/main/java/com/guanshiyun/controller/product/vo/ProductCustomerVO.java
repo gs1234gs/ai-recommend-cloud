@@ -1,5 +1,7 @@
 package com.guanshiyun.controller.product.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,8 +20,10 @@ public class ProductCustomerVO {
     //商品名称
     private String name;
     //商品原价
+    @JsonSerialize(using = ToStringSerializer.class)
     private BigDecimal originalPrice;
     //商品优惠后价格
+    @JsonSerialize(using = ToStringSerializer.class)
     private BigDecimal discountPrice;
     //商品描述
     private String description;
@@ -50,5 +54,6 @@ public class ProductCustomerVO {
     //标签 id
     private BigInteger tagId;
     //sku id
+    @JsonSerialize(using = ToStringSerializer.class)
     private BigInteger skuId;
 }

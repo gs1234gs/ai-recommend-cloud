@@ -23,4 +23,7 @@ public interface WarehouseService {
     Mono<Long> saveAll(List<Warehouse> warehouseList);
 
     Mono<WarehouseVO> findById(BigInteger id);
+
+    Mono<List<WarehouseVO>> findAll();
+
 }

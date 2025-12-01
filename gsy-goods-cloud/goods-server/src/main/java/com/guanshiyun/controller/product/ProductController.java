@@ -1,6 +1,6 @@
 package com.guanshiyun.controller.product;
 
-import com.guanshiyun.consts.code.HttpCodeConst;
+import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.product.vo.ProductCustomerVO;
 import com.guanshiyun.controller.product.vo.ProductSaveVO;
 import com.guanshiyun.controller.product.vo.ProductVO;
@@ -12,6 +12,7 @@ import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -22,11 +23,12 @@ import java.util.List;
 @RequestMapping("/product")
 @RestController
 @RequiredArgsConstructor
+
 public class ProductController {
     private final ProductService productService;
     //添加商品
     @PostMapping("/save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody ProductSaveVO productSaveVO){
+    public Mono<ResultT<BigInteger>> save(@RequestBody  ProductSaveVO productSaveVO){
         return productService.save(productSaveVO)
                 .map(productId->
                 {
@@ -59,7 +61,7 @@ public class ProductController {
      * 删除商品
      * */
     @DeleteMapping("/deleteById/{id}")
-    public Mono<ResultT<Long>> deleteById(@PathVariable BigInteger id){
+    public Mono<ResultT<Long>> deleteById(@PathVariable @Validated BigInteger id){
         return productService.deleteById(id)
                 .map(deleteCount->{
                     log.info("删除商品成功，删除数量为：{}", deleteCount);
@@ -83,14 +85,14 @@ public class ProductController {
      * 分页查询，返回管理端端商品列表
      * */
    @PostMapping("/findPage")
-   public Mono<PageResultT<List<ProductVO>>> findPage(@RequestBody RequestPage<ProductVO> requestPage){
+   public Mono<PageResultT<List<ProductVO>>> findPage(@RequestBody (required = false) RequestPage<ProductVO> requestPage){
       return productService.findPage(requestPage);
    }
    /**
     * 游标查询，返回客户端
     * */
    @PostMapping("/findCursor")
-    public Mono<ResultT<CursorPageResult<List<ProductCustomerVO>>>>  findCursor(@RequestBody RequestCursorPage<ProductVO> requestCursorPage){
+    public Mono<ResultT<CursorPageResult<List<ProductCustomerVO>>>>  findCursor(@RequestBody (required = false) RequestCursorPage<ProductVO> requestCursorPage){
        return productService.findCursor(requestCursorPage)
                .map(cursorPageResult ->
                        ResultT.<CursorPageResult<List<ProductCustomerVO>>>builder()

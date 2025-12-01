@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.RequestPath;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -21,6 +22,7 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -32,13 +34,24 @@ public class GlobalFilterReactiveFlux implements WebFilter {
 
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+    public @NonNull Mono<Void> filter(ServerWebExchange exchange,@NonNull WebFilterChain chain) {
+        //获取用户信息
         RequestPath path = exchange.getRequest().getPath();
-        if(PublicEndpoints.PERMSSION_WHITE_LIST.contains(path.toString())){
-            log.info("这是白名单，放行：{}",path);
+        if (PublicEndpoints.PERMSSION_WHITE_LIST.contains(path.toString())) {
+            log.info("这是白名单，放行：{}", path);
             return chain.filter(exchange);
         }
+        //获取用户信息
         HttpHeaders headers = exchange.getRequest().getHeaders();
+        String traceId = headers.getFirst(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY);
+        String userIdStr = headers.getFirst(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+        if (
+                !StringUtil.isNullOrEmpty(traceId) && traceId.equals(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY)
+                || !StringUtil.isNullOrEmpty(userIdStr)
+        ) {
+            log.info("这是特殊请求，放行：{}", path);
+            return chain.filter(exchange);
+        }
 //        log.info("请求头：{}", headers);
         String userJson = headers.getFirst(ConstHeaderLocals.USER_INFO_KEY);
 //        if (StringUtil.isNullOrEmpty(userJson)) {
@@ -57,17 +70,23 @@ public class GlobalFilterReactiveFlux implements WebFilter {
 //                            )
 //            ));
 //        }
-        if(StringUtil.isNullOrEmpty(userJson)){
-            log.warn("用户信息为空：{}", userJson);
-            //放行，可能是游客，后续优化
-            return chain.filter(exchange);
-        }
+//        if(StringUtil.isNullOrEmpty(userJson)){
+//            log.warn("用户信息为空：{}", userJson);
+//            //放行，可能是游客，后续优化
+//            return chain.filter(exchange);
+//        }
         log.info("用户信息：{}", userJson);
-        Map userMap = JSONObject.parseObject(userJson, Map.class);
+        var userMap = JSONObject.parseObject(userJson, Map.class);
+        if (Objects.isNull(userMap)) {
+            log.warn("用户信息为空：{}", userJson);
+            //不放行
+            return Mono.error(new RuntimeException("用户信息为空"));
+        }
         BigInteger userId = myBigInteger.bigInteger(
                 userMap.get(
                         ConstMapClassNickName.MAP_USERID_KEY
                 ));
+        //设置用户id到链路中
         return chain.filter(exchange)
                 .contextWrite(ctx -> ctx.put(
                         ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY,

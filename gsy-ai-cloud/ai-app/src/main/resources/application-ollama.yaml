@@ -4,7 +4,10 @@ spring:
       base-url: http://localhost:11434
       chat:
         options:
-          model: gpt-oss:20b
+          model: gpt-oss:latest
+      embedding:
+        options:
+          model: dengcao/Qwen3-Embedding-8B:Q4_K_M
 #          model: gpt-oss:latest
 #          model: qwen3:latest
 ##        model: qwen3:8b

@@ -1,7 +1,5 @@
-com\guanshiyun\consts\code\HttpCodeConst.class
 com\guanshiyun\snowflake\SnowflakePermanent.class
 com\guanshiyun\bean\UtilsBean.class
-com\guanshiyun\threadcontext\ThreadSecurityLocalKey.class
 com\guanshiyun\print\start\SystemStartPrintln.class
 com\guanshiyun\utils\BeanConvertUtil.class
 com\guanshiyun\biginteger\MyBigInteger.class

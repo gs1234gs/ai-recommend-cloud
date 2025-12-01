@@ -54,7 +54,7 @@ public class UserBrowseServiceImpl implements UserBrowseService {
         return Mono.deferContextual(ctx -> {
             LocalDateTime now = LocalDateTime.now();
             BigInteger id = snowflakePermanent.nextId();
-            if(ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
+            if (ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                 BigInteger useId =
                         myBigInteger.bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
                 if (Objects.isNull(useId)) {
@@ -149,9 +149,8 @@ public class UserBrowseServiceImpl implements UserBrowseService {
     public Flux<UserBrowseVO> findAll(Integer rows) {
         //设置动态参数，获取做多浏览记录
         return Flux.deferContextual(ctx -> {
-           Integer row = Objects.isNull(rows) ? ConstNumber.INTEGER_TEN : rows;
-            if(ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
-
+            Integer row = Objects.isNull(rows) ? ConstNumber.INTEGER_TEN : rows;
+            if (ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                 BigInteger useId =
                         myBigInteger.bigIntegerOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
                 log.info("用户id为: {}", useId);
@@ -166,20 +165,18 @@ public class UserBrowseServiceImpl implements UserBrowseService {
                         .switchIfEmpty(Mono.empty())
                         .onErrorResume(e -> Mono.error(new RuntimeException("查询失败", e)));
             }
-            else{
-                log.info("用户id为 null");
-                return userBrowseRepository.findAll(row)
-                        .flatMap(userBrowse -> {
-                            return userBrowseMongodbRepository.findById(userBrowse.getId())
-                                    .map(userBrowseMongodb ->
-                                            BeanUtil.toBean(userBrowseMongodb, UserBrowseVO.class)
-                                    )
-                                    .onErrorResume(e -> Mono.error(new RuntimeException("mongodb查询失败", e)))
-                                    .switchIfEmpty(Mono.empty());
-                        })
-                        .switchIfEmpty(Mono.empty())
-                        .onErrorResume(e -> Mono.error(new RuntimeException("查询失败", e)));
-            }
+            log.info("用户id为 null");
+            return userBrowseRepository.findAll(row)
+                    .flatMap(userBrowse -> {
+                        return userBrowseMongodbRepository.findById(userBrowse.getId())
+                                .map(userBrowseMongodb ->
+                                        BeanUtil.toBean(userBrowseMongodb, UserBrowseVO.class)
+                                )
+                                .onErrorResume(e -> Mono.error(new RuntimeException("mongodb查询失败", e)))
+                                .switchIfEmpty(Mono.empty());
+                    })
+                    .switchIfEmpty(Mono.empty())
+                    .onErrorResume(e -> Mono.error(new RuntimeException("查询失败", e)));
         });
     }
 

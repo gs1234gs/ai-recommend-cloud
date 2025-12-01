@@ -3,6 +3,7 @@ package com.guanshiyun.responsepojo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 /**
  *
@@ -15,6 +16,7 @@ import lombok.*;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)// 表示序列化时，如果属性值为 null，则不进行序列化
 @JsonDeserialize(builder = PageResult.PageResultBuilder.class)  // 关键注解：告诉 Jackson 用 Builder 反序列
+@Accessors(chain = true)
 public class PageResult {
 
     //总数

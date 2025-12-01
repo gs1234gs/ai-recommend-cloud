@@ -15,6 +15,7 @@
         <module name="common-utils-spring-boot-starter" />
         <module name="db-table-spring-boot-starter" />
         <module name="ai-pojo" />
+        <module name="gorse-sdk-spring-boot-autoconfigure" />
         <module name="gsy-pay-cloud" />
         <module name="ai-server-api" />
         <module name="recommend-server" />
@@ -40,6 +41,7 @@
         <module name="recommend-app" />
         <module name="behavior-common-utils" />
         <module name="recommend-common-utils" />
+        <module name="gorse-sdk-spring-boot-starter" />
         <module name="gsy-hrms-cloud" />
         <module name="behavior-app" />
         <module name="microservice-security-spring-boot-autoconfigure" />
@@ -101,6 +103,8 @@
       <module name="goods-pojo" options="-parameters" />
       <module name="goods-server" options="-parameters" />
       <module name="goods-server-api" options="-parameters" />
+      <module name="gorse-sdk-spring-boot-autoconfigure" options="-parameters" />
+      <module name="gorse-sdk-spring-boot-starter" options="-parameters" />
       <module name="gsy-behavior-cloud" options="" />
       <module name="gsy-erp-cloud" options="-parameters" />
       <module name="gsy-hrms-cloud" options="-parameters" />

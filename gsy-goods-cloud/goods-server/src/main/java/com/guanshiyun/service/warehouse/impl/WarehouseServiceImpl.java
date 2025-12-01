@@ -13,6 +13,7 @@ import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.warehouse.WarehouseService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
+import com.guanshiyun.utils.BeanConvertUtil;
 import com.guanshiyun.warehouse.Warehouse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,10 +41,10 @@ public class WarehouseServiceImpl implements WarehouseService {
     public Mono<BigInteger> save(WarehouseSaveVO warehouseSaveVO) {
         Warehouse warehouse = BeanUtil.toBean(warehouseSaveVO, Warehouse.class);
         return Mono.deferContextual(ctx->{
+            if(ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
+                return Mono.error(new Exception("用户不存在"));
             BigInteger useId =
                     myBigInteger.bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
-            if(Objects.isNull(useId))
-                return Mono.error(new Exception("用户不存在"));
             if(Objects.isNull(warehouse.getId()))
               return warehouseRepository.save( warehouse)
                         .map(Warehouse::getId);
@@ -102,10 +103,10 @@ public Mono<PageResultT<List<WarehouseVO>>> findPage(RequestPage<WarehouseVO> re
             .pageSize(pageSize)
             .build();
     return Mono.deferContextual(ctx->{
+                if(ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
+                    return Mono.error(new Exception("用户不存在"));
                 BigInteger userId =
                         myBigInteger.bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
-                if(Objects.isNull(userId))
-                    return Mono.error(new Exception("用户不存在"));
                 return ReactivePageQuery.of(r2dbcEntityTemplate,
                         Warehouse.class,page)
                         .like(Warehouse.Fields.name, requestPage.getCondition().getName())
@@ -141,5 +142,12 @@ public Mono<PageResultT<List<WarehouseVO>>> findPage(RequestPage<WarehouseVO> re
     public Mono<WarehouseVO> findById(BigInteger id) {
         return warehouseRepository.findById(id)
                 .map(warehouse -> BeanUtil.toBean(warehouse, WarehouseVO.class));
+    }
+
+    @Override
+    public Mono<List<WarehouseVO>> findAll() {
+        return warehouseRepository.findAll()
+                .mapNotNull(item-> BeanConvertUtil.toBean(item,WarehouseVO.class))
+                .collectList();
     }
 }

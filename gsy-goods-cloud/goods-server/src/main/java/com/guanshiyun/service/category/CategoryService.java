@@ -19,4 +19,6 @@ public interface CategoryService {
     Mono<Category> fndById(BigInteger id);
 
     Mono<PageResultT<List<CategoryVO>>> findAllByPage( RequestPage<CategoryVO> requestPage);
+
+    Mono<List<CategoryVO>> findAll();
 }

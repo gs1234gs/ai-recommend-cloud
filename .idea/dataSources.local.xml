@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal" created-in="IU-241.19416.15">
+  <component name="dataSourceStorageLocal" created-in="IU-251.29188.11">
     <data-source name="@localhost" uuid="e14d2bcf-3aa7-4e1e-88ed-71ede8b3a40f">
       <database-info product="MySQL" version="8.4.3" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-j-8.2.0 (Revision: 06a1f724497fd81c6a659131fda822c9e5085b6c)" dbms="MYSQL" exact-version="8.4.3" exact-driver-version="8.2">
         <extra-name-characters>#@</extra-name-characters>
@@ -13,7 +13,9 @@
         <introspection-scope>
           <node kind="schema">
             <name qname="@" />
+            <name qname="gsy-ai-cloud" />
             <name qname="gsy-goods-cloud" />
+            <name qname="gsy-order-cloud" />
           </node>
         </introspection-scope>
       </schema-mapping>

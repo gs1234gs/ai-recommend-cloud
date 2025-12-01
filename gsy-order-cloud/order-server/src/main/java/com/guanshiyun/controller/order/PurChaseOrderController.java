@@ -1,8 +1,11 @@
 package com.guanshiyun.controller.order;
 
-import com.guanshiyun.consts.code.HttpCodeConst;
+import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.order.vo.PurChaseOrderSaveVO;
 import com.guanshiyun.controller.order.vo.PurChaseOrderVO;
+import com.guanshiyun.jacksonBigNumberConfig.UseBigNumberSerialization;
+import com.guanshiyun.requestpojo.RequestPage;
+import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.order.PurChaseOrderService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/purChaseOrder/")
 @RequiredArgsConstructor
+@UseBigNumberSerialization
 public class PurChaseOrderController {
     private final PurChaseOrderService purChaseOrderService;
 
@@ -34,7 +38,7 @@ public class PurChaseOrderController {
     }
 
     //修改订单
-    @PutMapping("update")
+    @PutMapping("updateById")
     public Mono<ResultT<BigInteger>> update(@RequestBody PurChaseOrderSaveVO purChaseOrderSaveVO) {
         return purChaseOrderService.updateById(purChaseOrderSaveVO)
                 .map(ResultT::success)
@@ -50,6 +54,16 @@ public class PurChaseOrderController {
             @RequestParam BigInteger userId,
             @RequestParam(required = false, defaultValue = "10") Integer rows) {
         return purChaseOrderService.findByUserId(userId, rows)
+                .map(ResultT::success)
+                .onErrorResume(throwable -> {
+                    log.error("查询订单失败", throwable);
+                    return Mono.just(ResultT.error(HttpCodeConst.INTERNAL_SERVER_ERROR, "查询订单失败"));
+                });
+    }
+    @PostMapping("findByUserIdPage")
+    public Mono<ResultT<PageResultT<List<PurChaseOrderVO>>>> findByUserIdPage(
+            @RequestBody RequestPage<PurChaseOrderVO> requestPage) {
+        return purChaseOrderService.findByUserIdPage(requestPage)
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
                     log.error("查询订单失败", throwable);
@@ -77,6 +91,18 @@ public class PurChaseOrderController {
                 .onErrorResume(throwable -> {
                     log.error("查询订单失败", throwable);
                     return Mono.just(ResultT.error(HttpCodeConst.INTERNAL_SERVER_ERROR, "查询订单失败"));
+                });
+    }
+    @PostMapping("findPage")
+    public Mono<ResultT<PageResultT<List<PurChaseOrderVO>>>> findByPage(@RequestBody RequestPage<PurChaseOrderVO> requestPage ) {
+        return purChaseOrderService.findByPage(requestPage)
+                .map(ResultT::success)
+                .onErrorResume(throwable -> {
+                    log.error("查询订单失败", throwable);
+                    return Mono.just(ResultT.error(
+                            HttpCodeConst.INTERNAL_SERVER_ERROR,
+                            "查询订单失败")
+                    );
                 });
     }
 }

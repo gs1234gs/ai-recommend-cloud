@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * Result 类用于表示操作的结果。
@@ -18,6 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)// 表示序列化时，如果属性值为 null，则不进行序列化
 @JsonDeserialize(builder = Result.ResultBuilder.class)  // 关键注解：告诉 Jackson 用 Builder 反序列
+@Accessors(chain = true)
 public class Result {
 
     /**

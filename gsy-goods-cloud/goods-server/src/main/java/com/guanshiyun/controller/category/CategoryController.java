@@ -1,7 +1,7 @@
 package com.guanshiyun.controller.category;
 
 import com.guanshiyun.category.Category;
-import com.guanshiyun.consts.code.HttpCodeConst;
+import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.category.vo.CategorySaveVO;
 import com.guanshiyun.controller.category.vo.CategoryVO;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -18,7 +18,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("category")
+@RequestMapping("/category/")
 @RestController
 public class CategoryController {
     private final CategoryService categoryService;
@@ -45,7 +45,7 @@ public class CategoryController {
                 });
     }
     //删除类型
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("deleteById/{id}")
     public Mono<ResultT<Void>> deleteById(@PathVariable BigInteger id) {
         return categoryService.deleteById(id)
                 .then(Mono.fromCallable(() -> {
@@ -88,7 +88,7 @@ public class CategoryController {
     }
     //查询类型
     @PostMapping("findPage")
-    public Mono<ResultT<PageResultT<List< CategoryVO>>>> findAllByPage(@RequestBody RequestPage<CategoryVO> requestPage) {
+    public Mono<ResultT<PageResultT<List< CategoryVO>>>> findAllByPage(@RequestBody (required = false) RequestPage<CategoryVO> requestPage) {
         return categoryService.findAllByPage(requestPage)
                 .map(pageResultT ->{
                     log.info("查询成功");
@@ -107,4 +107,26 @@ public class CategoryController {
                     );
                 });
     }
+
+    @GetMapping("findAll")
+    public Mono<ResultT<List<CategoryVO>>> findAll(){
+        return categoryService.findAll()
+                .map(category ->{
+                    log.info("查询成功");
+                    return ResultT.<List<CategoryVO>>builder()
+                            .code(HttpCodeConst.OK)
+                            .msg("查询成功")
+                            .data(category)
+                            .build();
+                }).onErrorResume(e->{
+                    log.error("查询失败", e);
+                    return Mono.just(
+                            ResultT.<List<CategoryVO>>builder()
+                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .msg("系统错误")
+                                    .build()
+                    );
+                });
+    }
+
 }

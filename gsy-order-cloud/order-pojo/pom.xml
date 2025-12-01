@@ -15,14 +15,5 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <snapshotName>0.0.1-SNAPSHOT</snapshotName>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.guanshiyun</groupId>
-            <artifactId>order-pojo</artifactId>
-            <version>${snapshotName}</version>
-        </dependency>
-    </dependencies>
 </project>

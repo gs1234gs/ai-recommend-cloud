@@ -1,13 +1,11 @@
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\bean\ClassBean.java
-D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\consts\ConstClassNickName.java
-D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\consts\ConstHeaderLocals.java
-D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\consts\ConstMapClassNickName.java
-D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\consts\ConstNumber.java
-D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\consts\PublicEndpoints.java
-D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\consts\RequestConst.java
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\cors\CorsFilter.java
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\exception\GlobalException.java
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\filter\GlobalFilterReactiveFlux.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\jacksonBigNumberConfig\BigNumberSerializationCondition.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\jacksonBigNumberConfig\ConditionalJacksonConfig.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\jacksonBigNumberConfig\ConditionalOnBigNumberSerialization.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\jacksonBigNumberConfig\UseBigNumberSerialization.java
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\pojo\signreqpojo\SignRequestUser.java
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\utils\DisableBusinessWebFilter.java
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\microservice-security-spring-boot-autoconfigure\src\main\java\com\guanshiyun\utils\OnDisableBusinessWebFilterCondition.java

@@ -1,4 +1,11 @@
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\base\BasePojo.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\code\HttpCodeConst.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\consts\ConstClassNickName.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\consts\ConstHeaderLocals.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\consts\ConstMapClassNickName.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\consts\ConstNumber.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\consts\PublicEndpoints.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\consts\RequestConst.java
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\json\KeyValue.java
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\requestpojo\RequestCursorPage.java
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\requestpojo\RequestPage.java
@@ -10,3 +17,4 @@ D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoco
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\signinpojo\SignSysUser.java
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\sqlenums\LikeType.java
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\sqlenums\SortOrderEnum.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\threadcontext\ThreadSecurityLocalKey.java

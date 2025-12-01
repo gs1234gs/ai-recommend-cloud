@@ -5,6 +5,7 @@ import com.db.cursorQuery.ReactivePageQuery;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.controller.sku.vo.SKUFindVO;
+import com.guanshiyun.controller.sku.vo.SKUSaveVO;
 import com.guanshiyun.controller.sku.vo.SKUVO;
 import com.guanshiyun.repository.sku.SKURepository;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -20,7 +21,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
-import java.nio.channels.FileChannel;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -34,7 +34,7 @@ public class SKUServiceImpl implements SKUService {
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
 
     @Override
-    public Mono<BigInteger> save(SKUVO skuVO) {
+    public Mono<BigInteger> save(SKUSaveVO skuVO) {
         SKU sku = BeanUtil.toBean(skuVO, SKU.class);
        return Mono.deferContextual(ctx->{
             if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))

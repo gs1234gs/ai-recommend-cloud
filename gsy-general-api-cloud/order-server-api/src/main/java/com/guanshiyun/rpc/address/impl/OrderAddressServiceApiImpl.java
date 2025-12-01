@@ -1,21 +1,19 @@
 package com.guanshiyun.rpc.address.impl;
 
-import com.guanshiyun.aienums.OrderPrefix;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.rpc.address.OrderAddressServiceApi;
 import com.guanshiyun.rpc.address.vo.OrderAddressVOApi;
+import com.guanshiyun.rpc.config.WebClientRpc;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
 
 @Service
+@RequiredArgsConstructor
 public class OrderAddressServiceApiImpl implements OrderAddressServiceApi {
-    private final WebClient.Builder webClientBuilder;
-    public OrderAddressServiceApiImpl ( WebClient.Builder webClientBuilder) {
-        this.webClientBuilder = webClientBuilder.baseUrl(OrderPrefix.BASE_URL);
-    }
+    private final WebClientRpc webClientRpc;
 
     /**
      * 根据订单id，或者订单号，获取订单配送地址信息

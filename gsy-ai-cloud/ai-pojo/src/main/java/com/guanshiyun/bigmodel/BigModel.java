@@ -1,6 +1,7 @@
 package com.guanshiyun.bigmodel;
 
 import lombok.*;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @FieldNameConstants
 @Builder
 @Table("big_model")
+@Accessors(chain = true)
 public class BigModel {
     //大模型id
     @Id

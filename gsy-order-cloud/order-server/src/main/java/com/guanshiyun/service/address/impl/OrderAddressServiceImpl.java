@@ -1,7 +1,9 @@
 package com.guanshiyun.service.address.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.db.cursorQuery.ReactivePageQuery;
 import com.db.dbnumber.ConstNumber;
+import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.address.OrderAddress;
@@ -10,10 +12,14 @@ import com.guanshiyun.controller.address.vo.OrderAddressSaveVO;
 import com.guanshiyun.controller.address.vo.OrderAddressVO;
 import com.guanshiyun.repository.address.OrderAddressRepository;
 import com.guanshiyun.repository.item.OrderItemRepository;
+import com.guanshiyun.requestpojo.RequestPage;
+import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.address.OrderAddressService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
+import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -31,6 +37,7 @@ public class OrderAddressServiceImpl implements OrderAddressService {
     private final MyBigInteger myBigInteger;
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
     private final OrderItemRepository orderItemRepository;
+    private final R2dbcEntityTemplate r2dbcEntityTemplate;
 
     /**
      * 添加更新地址
@@ -92,8 +99,8 @@ public class OrderAddressServiceImpl implements OrderAddressService {
     }
 
     @Override
-    public Mono<OrderAddressVO> findByOrderId(BigInteger orderId) {
-        return orderItemRepository.findByOrderId(orderId)
+    public Mono<OrderAddressVO> findByOrderId(Object orderId) {
+        return orderItemRepository.findByOrderId(myBigInteger.bigInteger(orderId))
                 .flatMap(id->orderAddressRepository.findById(id)
                         .map(orderAddress -> BeanUtil.toBean(orderAddress, OrderAddressVO.class)))
                 .onErrorResume(throwable -> {
@@ -162,5 +169,22 @@ public class OrderAddressServiceImpl implements OrderAddressService {
     public Mono<OrderAddressVO> findById(BigInteger id) {
         return orderAddressRepository.findById( id)
                 .map(orderAddress -> BeanUtil.toBean(orderAddress, OrderAddressVO.class));
+    }
+
+    @Override
+    public Mono<PageResultT<List<OrderAddressVO>>> findByPage(RequestPage<OrderAddressVO> requestPage) {
+        RequestPage<OrderAddressVO> orderAddressVORequestPage = PageUtils.pageValidation(requestPage, OrderAddressVO.class);
+        RequestPage<OrderAddress> page = BeanConvertUtil.toBean(orderAddressVORequestPage, OrderAddress.class);
+
+        return ReactivePageQuery.of(r2dbcEntityTemplate, OrderAddress.class, page)
+                .page()
+                .map(pageResultT -> PageResultT.<List<OrderAddressVO>>builder()
+                                    .pageNum(pageResultT.getPageNum())
+                                    .pageSize(pageResultT.getPageSize())
+                                    .total(pageResultT.getTotal())
+                                    .rows(BeanConvertUtil.toBeanList(pageResultT.getRows(), OrderAddressVO.class))
+                                    .build()
+
+                        );
     }
 }

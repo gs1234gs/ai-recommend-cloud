@@ -15,4 +15,7 @@ public interface ProductWarehouseRepository extends ReactiveCrudRepository<Produ
 
     @Query("delete from product_warehouse where product_id = :id")
     Mono<Void> deleteAllByProductId(@Param("id") BigInteger id);
+
+    @Query("select * from product_warehouse where product_id = :productId")
+    Flux<ProductWarehouse> findByProductId(BigInteger productId);
 }

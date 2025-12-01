@@ -9,18 +9,9 @@ spring:
       discovery:
         enabled: true
         namespace: dev
-    openfeign:
-      client:
-        default-config:
-      httpclient:
-        connection-timeout: 5000
-        ok-http:
-          read-timeout: 10000
-      circuitbreaker:
-        enabled: true
+gorse:
+  url: 127.0.0.1:8087
+  api-key: api-key
 
-logging:
-  level:
-    com.alibaba.nacos.client: DEBUG
 
 

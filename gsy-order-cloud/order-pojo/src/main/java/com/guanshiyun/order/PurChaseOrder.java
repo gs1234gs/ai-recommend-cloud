@@ -45,7 +45,7 @@ public class PurChaseOrder extends BasePojo implements Serializable {
     //商品id
     private BigInteger skuId;
     //付款方式，1-在线支付，2-货到付款，3-其他
-    private String payType;
+    private Integer payType;
     //配送费用
     private BigInteger deliveryFee;
     //配送方式

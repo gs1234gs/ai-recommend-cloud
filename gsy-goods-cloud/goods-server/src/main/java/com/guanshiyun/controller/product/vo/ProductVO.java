@@ -1,5 +1,7 @@
 package com.guanshiyun.controller.product.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.guanshiyun.product.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +23,7 @@ public class ProductVO {
     //商品名称
     private String name;
     //商品价格
+    @JsonSerialize(using = ToStringSerializer.class)
     private BigDecimal price;
     //商品描述
     private String description;
@@ -94,5 +97,25 @@ public class ProductVO {
                         .createTime(p.getCreateTime())
                         .updateTime(p.getUpdateTime())
                         .build();
+    }
+
+    public static Product fromEntities(ProductVO p) {
+        return  Product.builder()
+                .id(p.getId())
+                .name(p.getName())
+                .description(p.getDescription())
+                .image(p.getImage())
+                .video(p.getVideo())
+                .brand(p.getBrand())
+                .placeOfOrigin(p.getPlaceOfOrigin())
+                .level(p.getLevel())
+                .categoryId(p.getCategoryId())
+                .offlineTime(p.getOfflineTime())
+                .publishTime(p.getPublishTime())
+                .creator(p.getCreator())
+                .updater(p.getUpdater())
+                .createTime(p.getCreateTime())
+                .updateTime(p.getUpdateTime())
+                .build();
     }
 }

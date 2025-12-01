@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @ToString
-public class TagVO {private BigInteger id;
+public class TagVO {
+    private BigInteger id;
     /** 标签名称 */
     private String name;
 

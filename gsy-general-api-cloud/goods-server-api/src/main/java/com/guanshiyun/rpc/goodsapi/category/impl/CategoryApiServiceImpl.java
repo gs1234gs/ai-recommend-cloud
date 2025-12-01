@@ -1,0 +1,46 @@
+package com.guanshiyun.rpc.goodsapi.category.impl;
+
+import com.guanshiyun.goodsenum.GoodsApiUrl;
+import com.guanshiyun.responsepojo.ResultT;
+import com.guanshiyun.rpc.config.WebClientRpc;
+import com.guanshiyun.rpc.goodsapi.category.CategoryApiService;
+import com.guanshiyun.rpc.profile.CategoryApiVO;
+import com.guanshiyun.webutils.WebClientUtils;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
+
+import java.math.BigInteger;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class CategoryApiServiceImpl implements CategoryApiService {
+    private final WebClientRpc webClientRpc;
+
+    @Override
+    public Mono<ResultT<List<CategoryApiVO>>> findAll() {
+        return  webClientRpc
+                                .webClient()
+                                .get()
+                                .uri(builder -> builder
+                                        .path(GoodsApiUrl.CATEGORY_FIND_BY_ALL)
+                                        .build()
+                                )
+                                .retrieve()
+                                .bodyToMono(WebClientUtils.typeRef());
+    }
+
+    @Override
+    public Mono<ResultT<List<CategoryApiVO>>> findByProductId(BigInteger productId) {
+        return  webClientRpc
+                        .webClient()
+                        .get()
+                        .uri(builder -> builder
+                                .path(GoodsApiUrl.CATEGORY_FIND_BY_PRODUCT_ID)
+                                .build(productId)
+                        )
+                        .retrieve()
+                        .bodyToMono(WebClientUtils.typeRef());
+    }
+}

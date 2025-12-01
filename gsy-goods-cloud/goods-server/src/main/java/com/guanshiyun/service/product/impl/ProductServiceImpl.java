@@ -13,11 +13,13 @@ import com.guanshiyun.controller.product.vo.ProductCustomerVO;
 import com.guanshiyun.controller.product.vo.ProductSaveVO;
 import com.guanshiyun.controller.product.vo.ProductVO;
 import com.guanshiyun.product.Product;
+import com.guanshiyun.relationship.ProductCategory;
 import com.guanshiyun.relationship.ProductWarehouse;
-import com.guanshiyun.repository.sku.SKURepository;
 import com.guanshiyun.repository.product.ProductRepository;
+import com.guanshiyun.repository.relation.ProductCategoryRepository;
 import com.guanshiyun.repository.relation.ProductTagRepository;
 import com.guanshiyun.repository.relation.ProductWarehouseRepository;
+import com.guanshiyun.repository.sku.SKURepository;
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.CursorPageResult;
@@ -44,6 +46,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -58,13 +61,15 @@ public class ProductServiceImpl implements ProductService {
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
     private final TransactionalOperator transactionalOperator;
     private final SKURepository skuRepository;
+    private final ProductCategoryRepository productCategoryRepository;
 
     @Override
     public Mono<BigInteger> save(ProductSaveVO productSaveVO) {
         Product product = BeanUtil.toBean(productSaveVO, Product.class);
         List<BigInteger> warehouseIdList = productSaveVO.getWarehouseId();
         BigInteger tagId = productSaveVO.getTagId();
-        BigInteger categoryId = productSaveVO.getCategoryId();
+        LocalDateTime now = LocalDateTime.now();
+        List<BigInteger> categoryIds = productSaveVO.getCategoryId();
         return Mono.deferContextual(ctx -> {
                     BigInteger useId = myBigInteger.bigInteger(
                             ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
@@ -73,35 +78,49 @@ public class ProductServiceImpl implements ProductService {
                         return Mono.error(new RuntimeException("用户不存在"));
                     if (warehouseIdList.isEmpty())
                         return Mono.error(new RuntimeException("仓库不存在"));
-//                    if (Objects.isNull(tagId))
-//                        return Mono.error(new RuntimeException("标签不存在"));
-//                    if (Objects.isNull(categoryId))
-//                        return Mono.error(new RuntimeException("分类不存在"));
+                    if (Objects.isNull(tagId))
+                        return Mono.error(new RuntimeException("标签不存在"));
+                    if (Objects.isNull(categoryIds))
+                        return Mono.error(new RuntimeException("分类不存在"));
                     if (Objects.isNull(product.getId())) {
-                        product.setCreateTime(LocalDateTime.now());
+                        product.setCreateTime(now);
                         product.setCreator(useId);
                         //创建，同时创建仓库关系
                         return productRepository.save(product)
                                 .map(Product::getId)
-                                .flatMap(productId ->
-                                        productWarehouseRepository.saveAll(
-                                                        warehouseIdList.stream()
-                                                                .map(warehouseId ->
-                                                                        ProductWarehouse.builder()
-                                                                                .id(null)
-                                                                                .productId(productId)
-                                                                                .creator(useId)
-                                                                                .createTime(LocalDateTime.now())
-                                                                                .warehouseId(warehouseId)
-                                                                                .build()
-                                                                )
-                                                                .toList()
-                                                ).count()
-                                                .thenReturn(productId)
-                                                .onErrorResume(throwable -> {
-                                                    log.error("保存仓库关系失败：", throwable);
-                                                    return Mono.error(new Exception("保存仓库关系失败"));
-                                                })
+                                .flatMap(productId -> {
+                                            // 保存仓库关系
+                                            Flux<ProductWarehouse> productIdWarehouseFlux = productWarehouseRepository.saveAll(
+                                                    warehouseIdList.stream()
+                                                            .map(warehouseId -> ProductWarehouse.builder()
+                                                                    .productId(productId)
+                                                                    .creator(useId)
+                                                                    .createTime(now)
+                                                                    .warehouseId(warehouseId)
+                                                                    .build())
+                                                            .collect(Collectors.toList())
+                                            );
+
+                                            Flux<ProductCategory> productIdCategoryFlux = productCategoryRepository.saveAll(
+                                                    categoryIds.stream()
+                                                            .map(categoryId ->
+                                                                    ProductCategory.builder()
+                                                                            .id(null)
+                                                                            .productId(productId)
+                                                                            .creator(useId)
+                                                                            .createTime(now)
+                                                                            .categoryId(categoryId)
+                                                                            .build()
+                                                            )
+                                                            .collect(Collectors.toList())
+                                            );
+                                            return Flux.merge(productIdWarehouseFlux, productIdCategoryFlux)
+                                                    .then(Mono.just(productId))
+                                                    .onErrorResume(throwable -> {
+                                                        log.error("保存商品仓库关系失败：", throwable);
+                                                        return Mono.error(new Exception("保存商品仓库关系失败"));
+                                                    });
+                                        }
                                 )
                                 .onErrorResume(throwable -> {
                                     log.error("保存商品信息失败：", throwable);
@@ -109,27 +128,65 @@ public class ProductServiceImpl implements ProductService {
                                 });
                     }
                     product.setUpdater(useId);
-                    product.setUpdateTime(LocalDateTime.now());
+                    product.setUpdateTime(now);
                     return r2dbcUpdateHelper.updateIgnoreNull(
                                     EntityTableNameUtils.getName(Product.class),
                                     product,
                                     Product.Fields.id
                             )
-                            .flatMap(id ->
-                                    productWarehouseRepository.saveAll(
-                                                    warehouseIdList.stream()
-                                                            .map(warehouseId ->
-                                                                    ProductWarehouse.builder()
-                                                                            .id(null)
-                                                                            .productId(id)
-                                                                            .updater(useId)
-                                                                            .updateTime(LocalDateTime.now())
-                                                                            .warehouseId(warehouseId)
-                                                                            .build()
-                                                            )
-                                                            .toList()
-                                            ).count()
-                                            .thenReturn(product.getId())
+                            .flatMap(productId -> {
+                                        // --- 查询旧关系 ---
+                                        Mono<List<ProductWarehouse>> existingWarehouses = productWarehouseRepository.findByProductId(productId).collectList();
+                                        Mono<List<ProductCategory>> existingCategories = productCategoryRepository.findByProductId(productId).collectList();
+                                        return Mono.zip(existingWarehouses, existingCategories)
+                                                .flatMap(tuple -> {
+                                                    List<ProductWarehouse> oldWarehouseList = tuple.getT1();
+                                                    List<ProductCategory> oldCategoryList = tuple.getT2();
+                                                    // --- 计算新增和删除的仓库关系 ---
+                                                    List<BigInteger> oldWarehouseIds = oldWarehouseList.stream()
+                                                            .map(ProductWarehouse::getWarehouseId)
+                                                            .toList();
+                                                    List<ProductWarehouse> toAddWarehouse = warehouseIdList.stream()
+                                                            .filter(id -> !oldWarehouseIds.contains(id))
+                                                            .map(id -> ProductWarehouse.builder()
+                                                                    .productId(productId)
+                                                                    .creator(useId)
+                                                                    .createTime(now)
+                                                                    .warehouseId(id)
+                                                                    .build())
+                                                            .collect(Collectors.toList());
+                                                    List<ProductWarehouse> toDeleteWarehouse = oldWarehouseList.stream()
+                                                            .filter(pw -> !warehouseIdList.contains(pw.getWarehouseId()))
+                                                            .toList();
+                                                    Mono<Void> deleteWarehouseMono = productWarehouseRepository.deleteAll(toDeleteWarehouse).then();
+                                                    Flux<ProductWarehouse> insertWarehouseFlux = productWarehouseRepository.saveAll(toAddWarehouse);  // --- 计算新增和删除的分类关系 ---
+                                                    List<BigInteger> oldCategoryIds = oldCategoryList.stream()
+                                                            .map(ProductCategory::getCategoryId).toList();
+                                                    List<ProductCategory> toAddCategory = categoryIds.stream()
+                                                            .filter(id -> !oldCategoryIds.contains(id))
+                                                            .map(id -> ProductCategory.builder()
+                                                                    .productId(productId)
+                                                                    .creator(useId)
+                                                                    .createTime(now)
+                                                                    .categoryId(id)
+                                                                    .build())
+                                                            .collect(Collectors.toList());
+                                                    List<ProductCategory> toDeleteCategory = oldCategoryList.stream()
+                                                            .filter(pc -> !categoryIds.contains(pc.getCategoryId()))
+                                                            .toList();
+
+                                                    Mono<Void> deleteCategoryMono = productCategoryRepository.deleteAll(toDeleteCategory).then();
+                                                    Flux<ProductCategory> insertCategoryFlux = productCategoryRepository.saveAll(toAddCategory);
+
+                                                    // --- 合并执行所有关系更新 ---
+                                                    return Mono.when(
+                                                            deleteWarehouseMono, insertWarehouseFlux.then(),
+                                                            deleteCategoryMono, insertCategoryFlux.then()
+                                                    ).then(Mono.just(productId));
+                                                });
+
+                                    }
+
                             )
                             .map(savaProduct -> savaProduct);
                 })
@@ -296,66 +353,65 @@ public class ProductServiceImpl implements ProductService {
                                             })
                                     );
                         });
+            }
+            // 如果 tagId 为 null，只按 warehouseId 过滤
+            Mono<List<BigInteger>> productIdsMono;
+            if (Objects.nonNull(warehouseId)) {
+                productIdsMono = productWarehouseRepository.findByWarehouseId(warehouseId)
+                        .collectList();
             } else {
-                // 如果 tagId 为 null，只按 warehouseId 过滤
-                Mono<List<BigInteger>> productIdsMono;
-                if (Objects.nonNull(warehouseId)) {
-                    productIdsMono = productWarehouseRepository.findByWarehouseId(warehouseId)
-                            .collectList();
-                } else {
-                    productIdsMono = Mono.just(Collections.emptyList());
+                productIdsMono = Mono.just(Collections.emptyList());
+            }
+
+            return productIdsMono.flatMap(productIds -> {
+                Criteria criteria = Criteria.empty();
+                if (!productIds.isEmpty()) {
+                    criteria = criteria.and(Product.Fields.id).in(productIds);
+                }
+                if (Objects.nonNull(name)) {
+                    criteria = criteria.and(Product.Fields.name).like(SqlConst.PERCENT + name + SqlConst.PERCENT);
+                }
+                if (Objects.nonNull(categoryId)) {
+                    criteria = criteria.and(Product.Fields.categoryId).is(categoryId);
+                }
+                if (Objects.nonNull(offlineTime)) {
+                    criteria = criteria.and(Product.Fields.offlineTime).is(offlineTime);
+                }
+                if (Objects.nonNull(publishTime)) {
+                    criteria = criteria.and(Product.Fields.publishTime).is(publishTime);
+                }
+                if (Objects.nonNull(brand)) {
+                    criteria = criteria.and(Product.Fields.brand).like(SqlConst.PERCENT + brand + SqlConst.PERCENT);
+                }
+                if (Objects.nonNull(startTime)) {
+                    criteria = criteria.and(BasePojo.Fields.createTime).greaterThanOrEquals(startTime);
+                }
+                if (Objects.nonNull(endTime)) {
+                    criteria = criteria.and(BasePojo.Fields.createTime).lessThanOrEquals(endTime);
                 }
 
-                return productIdsMono.flatMap(productIds -> {
-                    Criteria criteria = Criteria.empty();
-                    if (!productIds.isEmpty()) {
-                        criteria = criteria.and(Product.Fields.id).in(productIds);
-                    }
-                    if (Objects.nonNull(name)) {
-                        criteria = criteria.and(Product.Fields.name).like(SqlConst.PERCENT + name + SqlConst.PERCENT);
-                    }
-                    if (Objects.nonNull(categoryId)) {
-                        criteria = criteria.and(Product.Fields.categoryId).is(categoryId);
-                    }
-                    if (Objects.nonNull(offlineTime)) {
-                        criteria = criteria.and(Product.Fields.offlineTime).is(offlineTime);
-                    }
-                    if (Objects.nonNull(publishTime)) {
-                        criteria = criteria.and(Product.Fields.publishTime).is(publishTime);
-                    }
-                    if (Objects.nonNull(brand)) {
-                        criteria = criteria.and(Product.Fields.brand).like(SqlConst.PERCENT + brand + SqlConst.PERCENT);
-                    }
-                    if (Objects.nonNull(startTime)) {
-                        criteria = criteria.and(BasePojo.Fields.createTime).greaterThanOrEquals(startTime);
-                    }
-                    if (Objects.nonNull(endTime)) {
-                        criteria = criteria.and(BasePojo.Fields.createTime).lessThanOrEquals(endTime);
-                    }
+                // 添加用户权限
+                criteria = criteria.and(BasePojo.Fields.creator).is(userId);
 
-                    // 添加用户权限
-                    criteria = criteria.and(BasePojo.Fields.creator).is(userId);
+                Query dataQuery = Query.query(criteria)
+                        .sort(Sort.by(Sort.Order.desc(BasePojo.Fields.createTime)))
+                        .offset(offset)
+                        .limit(pageSize);
+                Query countQuery = Query.query(criteria);
 
-                    Query dataQuery = Query.query(criteria)
-                            .sort(Sort.by(Sort.Order.desc(BasePojo.Fields.createTime)))
-                            .offset(offset)
-                            .limit(pageSize);
-                    Query countQuery = Query.query(criteria);
-
-                    return r2dbcEntityTemplate.select(countQuery, Product.class)
-                            .count()
-                            .flatMap(count -> r2dbcEntityTemplate.select(dataQuery, Product.class)
-                                    .collectList()
-                                    .map(products -> {
-                                        List<ProductVO> voList = ProductVO.fromEntities(products);
-                                        return PageResultT.<List<ProductVO>>builder()
-                                                .total(count)
-                                                .rows(voList)
-                                                .build();
-                                    })
-                            );
-                });
-            }
+                return r2dbcEntityTemplate.select(countQuery, Product.class)
+                        .count()
+                        .flatMap(count -> r2dbcEntityTemplate.select(dataQuery, Product.class)
+                                .collectList()
+                                .map(products -> {
+                                    List<ProductVO> voList = ProductVO.fromEntities(products);
+                                    return PageResultT.<List<ProductVO>>builder()
+                                            .total(count)
+                                            .rows(voList)
+                                            .build();
+                                })
+                        );
+            });
         });
     }
 
@@ -464,7 +520,7 @@ public class ProductServiceImpl implements ProductService {
                                                                         )
                                                                         .toList()
                                                         )
-                                                        .then(Mono.just( item))
+                                                        .then(Mono.just(item))
                                         )
                                 :
                                 r2dbcUpdateHelper.updateIgnoreNull(
@@ -474,16 +530,16 @@ public class ProductServiceImpl implements ProductService {
                                         )
                                         .flatMap(savaProduct ->
                                                 productWarehouseRepository.saveAll(
-                                                                warehouseIdList.stream()
-                                                                        .map(warehouseId ->
-                                                                                ProductWarehouse.builder()
-                                                                                        .id(null)
-                                                                                        .productId(product.getId())
-                                                                                        .warehouseId(warehouseId)
-                                                                                        .build()
-                                                                        )
-                                                                        .toList()
-                                                        ).then(Mono.just(savaProduct))
+                                                        warehouseIdList.stream()
+                                                                .map(warehouseId ->
+                                                                        ProductWarehouse.builder()
+                                                                                .id(null)
+                                                                                .productId(product.getId())
+                                                                                .warehouseId(warehouseId)
+                                                                                .build()
+                                                                )
+                                                                .toList()
+                                                ).then(Mono.just(savaProduct))
                                         );
 
                     })

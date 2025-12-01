@@ -1,6 +1,8 @@
 package com.guanshiyun.service.order.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.db.cursorQuery.ReactivePageQuery;
+import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.biginteger.MyBigInteger;
@@ -9,9 +11,12 @@ import com.guanshiyun.controller.order.vo.PurChaseOrderVO;
 import com.guanshiyun.order.PurChaseOrder;
 import com.guanshiyun.orderItem.OrderItem;
 import com.guanshiyun.repository.order.PurChaseOrderRepository;
+import com.guanshiyun.requestpojo.RequestPage;
+import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.order.PurChaseOrderService;
 import com.guanshiyun.snowflake.SnowflakePermanent;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
+import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
@@ -145,5 +150,48 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
                 .map(purChaseOrder ->
                         BeanUtil.toBean(purChaseOrder, PurChaseOrderVO.class)
                 );
+    }
+
+    @Override
+    public Mono<PageResultT<List<PurChaseOrderVO>>> findByPage(RequestPage<PurChaseOrderVO> requestPage) {
+        RequestPage<PurChaseOrderVO> purChaseOrderVORequestPage = PageUtils.pageValidation(requestPage, PurChaseOrderVO.class);
+        RequestPage<PurChaseOrder> orderRequestPage = BeanConvertUtil.toBean(purChaseOrderVORequestPage, PurChaseOrder.class);
+        return ReactivePageQuery.of(r2dbcEntityTemplate, PurChaseOrder.class, orderRequestPage)
+                .page()
+                .map(pageResultT ->
+                        PageResultT.<List<PurChaseOrderVO>>builder()
+                        .pageNum(pageResultT.getPageNum())
+                        .pageSize(pageResultT.getPageSize())
+                        .total(pageResultT.getTotal())
+                        .rows(BeanConvertUtil.toBeanList(pageResultT.getRows(), PurChaseOrderVO.class))
+                        .build()
+                        );
+    }
+
+    @Override
+    public Mono<PageResultT<List<PurChaseOrderVO>>> findByUserIdPage(RequestPage<PurChaseOrderVO> requestPage) {
+        RequestPage<PurChaseOrderVO> purChaseOrderVORequestPage = PageUtils.pageValidation(requestPage, PurChaseOrderVO.class);
+        return Mono.deferContextual(ctx -> {
+            if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
+                return Mono.error(new RuntimeException("用户未登录"));
+            }
+            BigInteger userId =myBigInteger.bigInteger(
+                    ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
+            );
+            RequestPage<PurChaseOrder> orderRequestPage =
+                    BeanConvertUtil.toBean(purChaseOrderVORequestPage,
+                    PurChaseOrder.class);
+            orderRequestPage.getCondition().setCreator(userId);
+            return ReactivePageQuery.of(r2dbcEntityTemplate, PurChaseOrder.class, orderRequestPage)
+                    .page()
+                    .map(pageResultT ->
+                            PageResultT.<List<PurChaseOrderVO>>builder()
+                            .pageNum(pageResultT.getPageNum())
+                            .pageSize(pageResultT.getPageSize())
+                            .total(pageResultT.getTotal())
+                            .rows(BeanConvertUtil.toBeanList(pageResultT.getRows(), PurChaseOrderVO.class))
+                            .build()
+                            );
+        });
     }
 }

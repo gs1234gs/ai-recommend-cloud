@@ -12,6 +12,9 @@ import java.util.*;
 public class CollaborativeFilteringServiceImpl implements CollaborativeFilteringService{
      PurchaseDO purchase  = new PurchaseDOImpl();
 
+     /**
+      * 基于用户的协同过滤算法
+      * */
     @Override
     public List<Product> recommendProducts(Long userId, int topN) {
         //1、获取所有的用户
@@ -61,6 +64,42 @@ public class CollaborativeFilteringServiceImpl implements CollaborativeFiltering
                 })
                 .toList();
     }
+
+    /**
+     * 基于物品的协同过滤算法
+     * 、*/
+    @Override
+    public List<Product> recommendProductsItemCF(Long userId, int topN) {
+        //获取用户的购买记录
+        Map<Long, Integer> currentUserPurchaseRecord = purchase.getUserPurchaseRecord(userId);
+        if(currentUserPurchaseRecord.isEmpty())
+            return List.of();
+        //计算商品之间的相似度
+        List<Product> allProduct = purchase.getAllProduct();
+        Map<Long, Double> similarityH = new HashMap<>();
+        //遍历购买过的商品记录，获取相似度的商品，累加推荐计算评分（相似度*用户次数）
+currentUserPurchaseRecord.keySet().forEach(productId->{
+    Map<Long, Double> similarity1 = similarity(productId, allProduct);
+    similarity1.forEach((sProductId, similarity) -> {
+        similarityH.merge(sProductId,
+                similarity * currentUserPurchaseRecord.get(productId),
+                Double::sum);
+    });
+});
+        Map<Long, Product> productById = new HashMap<>();
+        for (Product p : allProduct) {
+            productById.put(p.getId(), p);
+        }
+        //过滤排序,返回topN
+        List<Product> list = similarityH.entrySet().stream()
+                .filter(entry -> !currentUserPurchaseRecord.containsKey(entry.getKey()))
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .limit(topN)
+                .map(e -> productById.get(e.getKey())
+                ).filter(Objects::nonNull)
+                .toList();
+        return list;
+    }
     //
 
     /**
@@ -87,5 +126,19 @@ public class CollaborativeFilteringServiceImpl implements CollaborativeFiltering
         similarity = Math.max(-1.0, Math.min(1.0, similarity));
 
         return Double.isFinite(similarity) ? similarity : 0.0;
+    }
+
+    //计算相似度
+    public Map<Long, Double> similarity(Long productId,List<Product> allProduct) {
+        //相似度矩阵
+        Map<Long, Double> similarity = new HashMap<>();
+        allProduct.stream().filter(p->!p.getId().equals(productId))
+                .forEach(p->{
+                    double v = collaborativeFiltering(purchase.getProductPurchaseRecord(productId),
+                            purchase.getProductPurchaseRecord(p.getId()));
+                    similarity.put(p.getId(), v);
+
+                });
+        return similarity;
     }
 }

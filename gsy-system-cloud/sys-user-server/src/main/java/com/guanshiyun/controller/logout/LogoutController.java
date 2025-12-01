@@ -1,5 +1,6 @@
 package com.guanshiyun.controller.logout;
 
+import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.security.handler.RewriteLogoutSuccessHandler;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ public class LogoutController {
         return rewriteLogoutSuccessHandler.onLogoutSuccess()
                 .map(aLong ->
                         ResultT.<Long>builder()
-                                .code(200)
+                                .code(HttpCodeConst.OK)
                                 .msg("退出成功！")
                                 .data(aLong)
                                 .build()
@@ -29,7 +30,7 @@ public class LogoutController {
                 .onErrorResume(throwable ->{
                     log.error("退出失败！", throwable);
                     return Mono.just(ResultT.<Long>builder()
-                            .code(500)
+                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                             .msg("退出失败！")
                             .data(null)
                             .build());

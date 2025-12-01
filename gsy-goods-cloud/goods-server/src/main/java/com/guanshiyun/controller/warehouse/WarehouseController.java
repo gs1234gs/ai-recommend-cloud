@@ -1,6 +1,6 @@
 package com.guanshiyun.controller.warehouse;
 
-import com.guanshiyun.consts.code.HttpCodeConst;
+import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.warehouse.vo.WarehouseSaveVO;
 import com.guanshiyun.controller.warehouse.vo.WarehouseVO;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -67,7 +67,7 @@ public class WarehouseController {
     /**
      * 批量删除
      * */
-    @DeleteMapping("deleteAllById")
+    @DeleteMapping("deleteAllByIds")
     public Mono<ResultT<Long>> deleteByIds(@RequestBody Collection<BigInteger> ids){
         return warehouseService.deleteAllById(ids)
                 .map(deleteCount->ResultT.<Long>builder()
@@ -132,6 +132,27 @@ public class WarehouseController {
                     );
                 });
     }
-
+@GetMapping("findAll")
+    public Mono<ResultT<List<WarehouseVO>>> findAll(){
+        return warehouseService.findAll()
+                .map(warehouseVOList->
+                {
+                    log.info("查询仓库成功");
+                    return ResultT.<List<WarehouseVO>>builder()
+                            .code(HttpCodeConst.OK)
+                            .msg("查询成功")
+                            .data(warehouseVOList)
+                            .build();
+                })
+                .onErrorResume(e->{
+                    log.info("查询仓库失败", e);
+                    return Mono.just(
+                            ResultT.<List<WarehouseVO>>builder()
+                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .msg("查询失败")
+                                    .build()
+                    );
+                });
+    }
 
 }
