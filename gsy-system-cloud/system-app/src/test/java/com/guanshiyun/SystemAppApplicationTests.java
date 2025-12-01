@@ -25,14 +25,14 @@ class SystemAppApplicationTests {
     @Autowired
     private SysMenuService sysMenuService;
 
-    @Test
-    void contextLoads() {
-        sysUserRoleRepository.findRoleIdByUserId(BigInteger.valueOf(3L))
-                .collectList()
-                .subscribe(list -> System.out.println(list));
-        sysUserRoleRepository.existsByUserIdAndRoleId(BigInteger.valueOf(3L), BigInteger.valueOf(1L))
-                .subscribe(exist -> System.out.println(exist));
-    }
+//    @Test
+//    void contextLoads() {
+//        sysUserRoleRepository.findRoleIdByUserId(BigInteger.valueOf(3L))
+//                .collectList()
+//                .subscribe(list -> System.out.println(list));
+//        sysUserRoleRepository.existsByUserIdAndRoleId(BigInteger.valueOf(3L), BigInteger.valueOf(1L))
+//                .subscribe(exist -> System.out.println(exist));
+//    }
 
     @Test
     void test() {

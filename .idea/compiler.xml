@@ -19,8 +19,8 @@
         <module name="gsy-pay-cloud" />
         <module name="ai-server-api" />
         <module name="recommend-server" />
-        <module name="gsy-upload-cloud" />
         <module name="web-client-spring-boot-autoconfigure" />
+        <module name="gsy-upload-cloud" />
         <module name="behavior-server" />
         <module name="ai-app" />
         <module name="recommend-server-api" />

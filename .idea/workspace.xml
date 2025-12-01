@@ -7,296 +7,306 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="50bf314b-8bcd-417a-90fa-052ef7204d7a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/ZMoudle/src/main/java/com/xinghe/zmoudle/dto/impl/Items.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ZMoudle/src/main/java/com/xinghe/zmoudle/service/Test21.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/feedback/Feedback.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/goconfig/GorseConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/goconfig/GorseProperties.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/goser/GorseClient.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/items/Item.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/rowAffected/RowAffected.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/source/Score.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/user/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/resources/META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/target/classes/META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/target/maven-archiver/pom.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-starter/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-starter/target/maven-archiver/pom.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/jacksonBigNumberConfig/BigNumberSerializationCondition.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/jacksonBigNumberConfig/ConditionalJacksonConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/jacksonBigNumberConfig/ConditionalOnBigNumberSerialization.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/jacksonBigNumberConfig/UseBigNumberSerialization.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/src/main/java/com/guanshiyun/webclient/WebFluxNumberConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/controller/chat/vo/ChatRecordSaveVO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/controller/chat/vo/ChatRecordVO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/controller/hostproduct/HostProductController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/ai-server-api/src/main/java/com/guanshiyun/rpc/chatrecommend/AiChatClientRecommendServiceApi.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/ai-server-api/src/main/java/com/guanshiyun/rpc/chatrecommend/impl/AiChatClientRecommendServiceApiImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/ai-server-api/src/main/java/com/guanshiyun/rpc/chatrecommend/vo/AiChatClientRecommendApiVO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/ai-server-api/src/main/java/com/guanshiyun/rpc/config/WebClientRpc.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/rpc/config/WebClientRpc.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/config/WebClientRpc.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/category/CategoryApiService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/category/impl/CategoryApiServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/product/ProductApiService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/product/impl/ProductApiServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/sku/SkuApiService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/sku/impl/SkuApiServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/tag/TagApiService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/tag/impl/TagApiServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/warehouse/WarehouseApiService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/warehouse/impl/WarehouseApiServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/CategoryApiVO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/ProductApiVO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/SKUApiVO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/TagApiVO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/WarehouseApiVO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/src/main/java/com/guanshiyun/rpc/config/WebClientRpc.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/src/main/java/com/guanshiyun/relationship/ProductCategory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/sku/vo/SKUSaveVO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/repository/relation/ProductCategoryRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e14d2bcf-3aa7-4e1e-88ed-71ede8b3a40f.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e14d2bcf-3aa7-4e1e-88ed-71ede8b3a40f.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ZModuleTest/src/main/java/com/guanshiyun/dd/RabbitListenerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/ZModuleTest/src/main/java/com/guanshiyun/dd/RabbitListenerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ZModuleTest/target/classes/com/guanshiyun/dd/RabbitListenerTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/ZModuleTest/target/classes/com/guanshiyun/dd/RabbitListenerTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ZMoudle/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ZMoudle/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ZMoudle/src/main/java/com/xinghe/zmoudle/dto/PurchaseDO.java" beforeDir="false" afterPath="$PROJECT_DIR$/ZMoudle/src/main/java/com/xinghe/zmoudle/dto/PurchaseDO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ZMoudle/src/main/java/com/xinghe/zmoudle/dto/impl/PurchaseDOImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/ZMoudle/src/main/java/com/xinghe/zmoudle/dto/impl/PurchaseDOImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ZMoudle/src/main/java/com/xinghe/zmoudle/service/CollaborativeFilteringService.java" beforeDir="false" afterPath="$PROJECT_DIR$/ZMoudle/src/main/java/com/xinghe/zmoudle/service/CollaborativeFilteringService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ZMoudle/src/main/java/com/xinghe/zmoudle/service/CollaborativeFilteringServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/ZMoudle/src/main/java/com/xinghe/zmoudle/service/CollaborativeFilteringServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/aliyun-oss-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/aliyun-oss-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-starter/target/aliyun-oss-spring-boot-starter-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-starter/target/aliyun-oss-spring-boot-starter-0.0.1-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/src/main/java/com/guanshiyun/consts/code/HttpCodeConst.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/code/HttpCodeConst.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/src/main/java/com/guanshiyun/threadcontext/ThreadSecurityLocalKey.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/threadcontext/ThreadSecurityLocalKey.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/src/main/java/com/guanshiyun/utils/BeanConvertUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/src/main/java/com/guanshiyun/utils/BeanConvertUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/src/main/java/com/guanshiyun/utils/WebContextUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/src/main/java/com/guanshiyun/utils/WebContextUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/consts/code/HttpCodeConst.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/threadcontext/ThreadSecurityLocalKey.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/utils/BeanConvertUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/utils/BeanConvertUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/utils/WebContextUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/utils/WebContextUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/common-utils-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/common-utils-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-starter/target/common-utils-spring-boot-starter-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-starter/target/common-utils-spring-boot-starter-0.0.1-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/src/main/java/com/db/page/CursorPageUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/src/main/java/com/db/page/CursorPageUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/target/classes/com/db/page/CursorPageUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/target/classes/com/db/page/CursorPageUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/target/db-table-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/target/db-table-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-starter/target/db-table-spring-boot-starter-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-starter/target/db-table-spring-boot-starter-0.0.1-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/consts/ConstClassNickName.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/consts/ConstClassNickName.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/consts/ConstHeaderLocals.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/consts/ConstHeaderLocals.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/consts/ConstMapClassNickName.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/consts/ConstMapClassNickName.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/consts/ConstNumber.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/consts/ConstNumber.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/consts/PublicEndpoints.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/consts/PublicEndpoints.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/consts/RequestConst.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/consts/RequestConst.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/filter/GlobalFilterReactiveFlux.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/filter/GlobalFilterReactiveFlux.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/consts/ConstClassNickName.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/consts/ConstHeaderLocals.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/consts/ConstMapClassNickName.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/consts/ConstNumber.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/consts/PublicEndpoints.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/consts/RequestConst.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/filter/GlobalFilterReactiveFlux.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/filter/GlobalFilterReactiveFlux.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/microservice-security-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/microservice-security-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-starter/target/microservice-security-spring-boot-starter-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-starter/target/microservice-security-spring-boot-starter-0.0.1-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/base/BasePojo.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/base/BasePojo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/CursorPageResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/CursorPageResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/PageResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/PageResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/PageResultT.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/PageResultT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/Result.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/Result.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/ResultT.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/ResultT.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/signinpojo/SignSysUser.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/signinpojo/SignSysUser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/base/BasePojo$BasePojoBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/base/BasePojo$BasePojoBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/base/BasePojo$BasePojoBuilderImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/base/BasePojo$BasePojoBuilderImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/base/BasePojo$Fields.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/base/BasePojo$Fields.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/base/BasePojo.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/base/BasePojo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/CursorPageResult$CursorPageResultBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/CursorPageResult$CursorPageResultBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/CursorPageResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/CursorPageResult.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/PageResult$PageResultBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/PageResult$PageResultBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/PageResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/PageResult.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/PageResultT$PageResultTBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/PageResultT$PageResultTBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/PageResultT.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/PageResultT.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/Result$ResultBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/Result$ResultBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/Result.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/Result.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/ResultT$ResultTBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/ResultT$ResultTBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/ResultT.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/responsepojo/ResultT.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/signinpojo/SignSysUser$SignSysUserBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/signinpojo/SignSysUser$SignSysUserBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/signinpojo/SignSysUser.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/signinpojo/SignSysUser.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/public-pojo-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/public-pojo-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-starter/target/public-pojo-spring-boot-starter-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-starter/target/public-pojo-spring-boot-starter-0.0.1-SNAPSHOT.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/src/main/java/com/guanshiyun/webclient/WebClientLoadBalanced.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/src/main/java/com/guanshiyun/webclient/WebClientLoadBalanced.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/src/main/java/com/guanshiyun/webutils/WebClientUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/src/main/java/com/guanshiyun/webutils/WebClientUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/src/main/resources/META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/src/main/resources/META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/target/classes/META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/target/classes/META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/target/classes/com/guanshiyun/webclient/WebClientLoadBalanced.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/target/classes/com/guanshiyun/webclient/WebClientLoadBalanced.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/target/classes/com/guanshiyun/webutils/WebClientUtils$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/target/classes/com/guanshiyun/webutils/WebClientUtils$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/target/classes/com/guanshiyun/webutils/WebClientUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/target/classes/com/guanshiyun/webutils/WebClientUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/main/resources/application-ollama.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/main/resources/application-ollama.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/test/java/com/guanshiyun/AiAppApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/test/java/com/guanshiyun/AiAppApplicationTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/test/java/com/guanshiyun/ReReading.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/test/java/com/guanshiyun/ReReading.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/target/classes/application-data.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/target/classes/application-middleware.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/target/classes/application-ollama.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/target/classes/application.yaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/target/classes/banner.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/target/classes/com/guanshiyun/AiAppApplication.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/target/test-classes/com/guanshiyun/AiAppApplicationTests.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/target/test-classes/com/guanshiyun/ReReading.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/target/test-classes/com/guanshiyun/RedisMemory.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/target/classes/com/guanshiyun/cahetutil/SmartTitleExtractor.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/target/classes/com/guanshiyun/chathistory/FormatChatHistory.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/target/classes/com/guanshiyun/client/ModelChatClient.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/target/classes/com/guanshiyun/prefix/GlobalPrefixConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/target/classes/com/guanshiyun/reactiveredis/ReactiveRedisConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/target/classes/com/guanshiyun/reactiveredis/ReactiveRedisUtil.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/target/classes/com/guanshiyun/reactiveredis/RedisReactiveAutoConfiguration.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/target/classes/com/guanshiyun/reactiveredis/listenerConfig/ListenerConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/src/main/java/com/guanshiyun/bigmodel/BigModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/src/main/java/com/guanshiyun/bigmodel/BigModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/bigmodel/BigModel$BigModelBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/bigmodel/BigModel$Fields.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/bigmodel/BigModel.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/chat/ChatRecord$ChatRecordBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/chat/ChatRecord$Fields.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/chat/ChatRecord.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/content/ContentText$ContentTextBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/content/ContentText$Fields.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/content/ContentText.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/knowledge/KnowledgeRepository$Fields.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/knowledge/KnowledgeRepository$KnowledgeRepositoryBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/knowledge/KnowledgeRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/mymongodb/BigModelType$BigModelTypeBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/mymongodb/BigModelType$Fields.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/mymongodb/BigModelType.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/mymongodb/ChatRecordContent$ChatRecordContentBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/mymongodb/ChatRecordContent$Fields.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/mymongodb/ChatRecordContent.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/mymongodb/KnowledgeRepositoryContent$Fields.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/mymongodb/KnowledgeRepositoryContent$KnowledgeRepositoryContentBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/mymongodb/KnowledgeRepositoryContent.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/req/ReqChat$ReqChatBuilder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/target/classes/com/guanshiyun/req/ReqChat.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/controller/chat/ChatController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/controller/chat/ChatController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/controller/model/BigModelController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/controller/model/BigModelController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/service/chat/ChatRecordService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/service/chat/ChatRecordService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/service/chat/impl/ChatRecordServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/service/chat/impl/ChatRecordServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/target/classes/com/guanshiyun/controller/chat/ChatController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/target/classes/com/guanshiyun/controller/knowledge/KnowledgeController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/target/classes/com/guanshiyun/controller/model/BigModelController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/target/classes/com/guanshiyun/repository/chat/ChatRecordRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/target/classes/com/guanshiyun/repository/knowledge/KnowledgeRepositorySql.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/target/classes/com/guanshiyun/repository/model/BigModelRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/target/classes/com/guanshiyun/repositorymongodb/chat/ChatRecordContentMongodbRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/target/classes/com/guanshiyun/repositorymongodb/konwledge/KnowledgeRepositoryContentRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/target/classes/com/guanshiyun/service/chat/ChatRecordService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/target/classes/com/guanshiyun/service/chat/ChatService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/target/classes/com/guanshiyun/service/chat/impl/ChatRecordServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/target/classes/com/guanshiyun/service/chat/impl/ChatServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/target/classes/com/guanshiyun/service/knowledge/KnowledgeService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/target/classes/com/guanshiyun/service/knowledge/impl/KnowledgeServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/target/classes/com/guanshiyun/service/model/BigModelService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/target/classes/com/guanshiyun/service/model/impl/BigModelServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-app/src/main/resources/application-middleware.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-app/src/main/resources/application-middleware.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-app/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-app/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/src/main/java/com/guanshiyun/controller/browse/UserBrowseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/src/main/java/com/guanshiyun/controller/browse/UserBrowseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/src/main/java/com/guanshiyun/controller/click/UserClickController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/src/main/java/com/guanshiyun/controller/click/UserClickController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/src/main/java/com/guanshiyun/controller/collect/UserCollectController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/src/main/java/com/guanshiyun/controller/collect/UserCollectController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/src/main/java/com/guanshiyun/controller/search/UserSearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/src/main/java/com/guanshiyun/controller/search/UserSearchController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/src/main/java/com/guanshiyun/service/browse/impl/UserBrowseServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/src/main/java/com/guanshiyun/service/browse/impl/UserBrowseServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-behavior-cloud/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/rpc/behaviorapi/browse/UserBrowseServiceApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/rpc/behaviorapi/browse/UserBrowseServiceApi.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/rpc/behaviorapi/browse/apibehaviorimpl/UserBrowseServiceApiImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/rpc/behaviorapi/browse/apibehaviorimpl/UserBrowseServiceApiImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/rpc/behaviorapi/click/UserClickServiceApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/rpc/behaviorapi/click/UserClickServiceApi.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/rpc/behaviorapi/click/impl/UserClickServiceApiImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/rpc/behaviorapi/click/impl/UserClickServiceApiImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/rpc/behaviorapi/collect/impl/UserCollectServiceApiImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/rpc/behaviorapi/collect/impl/UserCollectServiceApiImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/rpc/behaviorapi/search/impl/UserSearchServiceApiImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/rpc/behaviorapi/search/impl/UserSearchServiceApiImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/browse/UserBrowseServiceApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/browse/UserBrowseServiceApi.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/browse/apibehaviorimpl/UserBrowseServiceApiImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/browse/apibehaviorimpl/UserBrowseServiceApiImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/click/impl/UserClickServiceApiImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/click/impl/UserClickServiceApiImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/collect/impl/UserCollectServiceApiImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/collect/impl/UserCollectServiceApiImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/search/impl/UserSearchServiceApiImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/search/impl/UserSearchServiceApiImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/goodsenum/GoodsApiUrl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/goodsenum/GoodsApiUrl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/src/main/java/com/guanshiyun/aienums/OrderParamKey.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/src/main/java/com/guanshiyun/aienums/OrderParamKey.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/src/main/java/com/guanshiyun/rpc/address/impl/OrderAddressServiceApiImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/src/main/java/com/guanshiyun/rpc/address/impl/OrderAddressServiceApiImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/src/main/java/com/guanshiyun/rpc/order/impl/PurchaseOrderServiceApiImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/src/main/java/com/guanshiyun/rpc/order/impl/PurchaseOrderServiceApiImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/target/classes/com/guanshiyun/aienums/OrderParamKey.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/target/classes/com/guanshiyun/aienums/OrderParamKey.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/target/classes/com/guanshiyun/rpc/address/impl/OrderAddressServiceApiImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/target/classes/com/guanshiyun/rpc/address/impl/OrderAddressServiceApiImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/target/classes/com/guanshiyun/rpc/order/impl/PurchaseOrderServiceApiImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/target/classes/com/guanshiyun/rpc/order/impl/PurchaseOrderServiceApiImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/category/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/category/CategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/product/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/product/ProductController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/product/vo/ProductCustomerVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/product/vo/ProductCustomerVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/product/vo/ProductSaveVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/product/vo/ProductSaveVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/product/vo/ProductVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/product/vo/ProductVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/sku/SKUController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/sku/SKUController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/sku/vo/SKUFindVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/sku/vo/SKUFindVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/sku/vo/SKUVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/sku/vo/SKUVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/tag/TagController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/tag/TagController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/tag/vo/TagSaveVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/tag/vo/TagSaveVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/tag/vo/TagVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/tag/vo/TagVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/warehouse/WarehouseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/warehouse/WarehouseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/repository/category/CategoryRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/repository/category/CategoryRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/repository/relation/ProductWarehouseRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/repository/relation/ProductWarehouseRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/category/CategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/category/CategoryService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/category/impl/CategoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/category/impl/CategoryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/product/impl/ProductServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/product/impl/ProductServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/sku/SKUService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/sku/SKUService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/sku/impl/SKUServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/sku/impl/SKUServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/warehouse/WarehouseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/warehouse/WarehouseService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/warehouse/impl/WarehouseServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/warehouse/impl/WarehouseServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/src/main/java/com/guanshiyun/order/PurChaseOrder.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/src/main/java/com/guanshiyun/order/PurChaseOrder.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/target/classes/com/guanshiyun/order/PurChaseOrder$PurChaseOrderBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/target/classes/com/guanshiyun/order/PurChaseOrder$PurChaseOrderBuilder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/target/classes/com/guanshiyun/order/PurChaseOrder.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/target/classes/com/guanshiyun/order/PurChaseOrder.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/src/main/java/com/guanshiyun/controller/address/OrderAddressController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-server/src/main/java/com/guanshiyun/controller/address/OrderAddressController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/src/main/java/com/guanshiyun/controller/order/PurChaseOrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-server/src/main/java/com/guanshiyun/controller/order/PurChaseOrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/src/main/java/com/guanshiyun/service/address/OrderAddressService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-server/src/main/java/com/guanshiyun/service/address/OrderAddressService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/src/main/java/com/guanshiyun/service/address/impl/OrderAddressServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-server/src/main/java/com/guanshiyun/service/address/impl/OrderAddressServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/src/main/java/com/guanshiyun/service/order/PurChaseOrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-server/src/main/java/com/guanshiyun/service/order/PurChaseOrderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/src/main/java/com/guanshiyun/service/order/impl/PurChaseOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-server/src/main/java/com/guanshiyun/service/order/impl/PurChaseOrderServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/address/OrderAddressController.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/address/OrderAddressController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/order/PurChaseOrderController.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/order/PurChaseOrderController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/service/address/OrderAddressService.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/service/address/OrderAddressService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/service/address/impl/OrderAddressServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/service/address/impl/OrderAddressServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/service/order/PurChaseOrderService.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/service/order/PurChaseOrderService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/service/order/impl/PurChaseOrderServiceImpl$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/service/order/impl/PurChaseOrderServiceImpl$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/service/order/impl/PurChaseOrderServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/service/order/impl/PurChaseOrderServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-recommend-cloud/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/src/main/resources/application-middleware.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/src/main/resources/application-middleware.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/target/classes/application-middleware.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/target/classes/application-middleware.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/target/classes/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/target/classes/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-common-utils/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-common-utils/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-server/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/controller/logout/LogoutController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/controller/logout/LogoutController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/controller/rolemenu/SysRoleMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/controller/rolemenu/SysRoleMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/controller/signinup/SignInUpController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/controller/signinup/SignInUpController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/controller/sysmenu/SysMenuController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/controller/sysmenu/SysMenuController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/controller/sysrole/SysRoleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/controller/sysrole/SysRoleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/controller/sysuser/SysUserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/controller/sysuser/SysUserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/controller/userrole/SysUserRoleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/controller/userrole/SysUserRoleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/handler/HandleException.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/handler/HandleException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/handler/RewriteLoginSuccessHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/handler/RewriteLoginSuccessHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/handler/RewriteLogoutSuccessHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/handler/RewriteLogoutSuccessHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/service/signin/SignInUpService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/service/signin/SignInUpService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/service/signin/impl/SignInUpServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/service/signin/impl/SignInUpServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/service/userrole/impl/SysUserRoleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/service/userrole/impl/SysUserRoleServiceImpl.java" afterDir="false" />
+    <list default="true" id="50bf314b-8bcd-417a-90fa-052ef7204d7a" name="Changes" comment="新增接口功能">
+      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-app/target/classes/application-dev.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-app/target/classes/application-middleware.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-app/target/classes/application.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-app/target/classes/banner.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-app/target/classes/com/guanshiyun/BehaviorAppApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-app/target/test-classes/com/guanshiyun/BehaviorAppApplicationTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-common-utils/target/classes/com/guanshiyun/config/ConfigBean.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-common-utils/target/classes/com/guanshiyun/prefix/GlobalPrefixConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/browse/UserBrowse$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/browse/UserBrowse$UserBrowseBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/browse/UserBrowse$UserBrowseBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/browse/UserBrowse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/browse/UserBrowseMongodb$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/browse/UserBrowseMongodb$UserBrowseMongodbBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/browse/UserBrowseMongodb$UserBrowseMongodbBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/browse/UserBrowseMongodb.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/click/UserClick$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/click/UserClick$UserClickBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/click/UserClick$UserClickBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/click/UserClick.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/click/UserClickMongodb$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/click/UserClickMongodb$UserClickMongodbBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/click/UserClickMongodb$UserClickMongodbBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/click/UserClickMongodb.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/collect/UserCollect$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/collect/UserCollect$UserCollectBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/collect/UserCollect$UserCollectBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/collect/UserCollect.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/collect/UserCollectMongodb$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/collect/UserCollectMongodb$UserCollectMongodbBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/collect/UserCollectMongodb$UserCollectMongodbBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/collect/UserCollectMongodb.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/profile/BrowseProfile$BrowseProfileBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/profile/BrowseProfile$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/profile/BrowseProfile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/profile/ClickProfile$ClickProfileBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/profile/ClickProfile$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/profile/ClickProfile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/profile/CollectProfile$CollectProfileBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/profile/CollectProfile$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/profile/CollectProfile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/profile/SearchContent$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/profile/SearchContent$SearchContentBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/profile/SearchContent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/search/UserSearch$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/search/UserSearch$UserSearchBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/search/UserSearch$UserSearchBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/search/UserSearch.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/search/UserSearchMongodb$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/search/UserSearchMongodb$UserSearchMongodbBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/search/UserSearchMongodb$UserSearchMongodbBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/target/classes/com/guanshiyun/search/UserSearchMongodb.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/controller/browse/UserBrowseController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/controller/browse/vo/UserBrowseVO$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/controller/browse/vo/UserBrowseVO$UserBrowseVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/controller/browse/vo/UserBrowseVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/controller/click/UserClickController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/controller/click/vo/UserClickVO$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/controller/click/vo/UserClickVO$UserClickVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/controller/click/vo/UserClickVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/controller/collect/UserCollectController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/controller/collect/vo/UserCollectVO$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/controller/collect/vo/UserCollectVO$UserCollectVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/controller/collect/vo/UserCollectVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/controller/search/UserSearchController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/controller/search/vo/UserSearchVO$UserSearchVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/controller/search/vo/UserSearchVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/repository/browse/UserBrowseMongodbRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/repository/browse/UserBrowseRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/repository/click/UserClickMongodbRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/repository/click/UserClickRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/repository/collect/UserCollectMongodbRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/repository/collect/UserCollectRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/repository/search/UserSearchMongodbRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/repository/search/UserSearchRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/service/browse/UserBrowseService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/service/browse/impl/UserBrowseServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/service/click/UserClickService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/service/click/impl/UserClickServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/service/collect/UserCollectService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/service/collect/impl/UserCollectServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/service/search/UserSearchService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/target/classes/com/guanshiyun/service/search/impl/UserSearchServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-erp-cloud/target/erp-server-cloud-0.0.1-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-erp-cloud/target/erp-server-cloud-0.0.1-SNAPSHOT.jar.original" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-erp-cloud/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/target/classes/application-app.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/target/classes/application-data.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/target/classes/application-middleware.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/target/classes/application.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/target/classes/banner.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/target/classes/com/guanshiyun/GatewayServerAppApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/target/classes/com/guanshiyun/filter/GatewayGlobalFilter.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/target/classes/com/guanshiyun/reactiveredis/ReactiveRedisConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/target/classes/com/guanshiyun/reactiveredis/ReactiveRedisUtil.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/target/classes/com/guanshiyun/reactiveredis/RedisReactiveAutoConfiguration.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/target/classes/com/guanshiyun/reactiveredis/listenerConfig/ListenerConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/behavior-server-api-0.0.1-SNAPSHOT.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/behaviorenums/BehaviorApiUrl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/behaviorenums/BehaviorParamKey.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/behaviorenums/BehaviorPrefix.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/browse/UserBrowseServiceApi.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/browse/apibehaviorimpl/UserBrowseServiceApiImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/browse/vo/UserBrowseVOApi$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/browse/vo/UserBrowseVOApi$UserBrowseVOApiBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/browse/vo/UserBrowseVOApi.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/click/UserClickServiceApi.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/click/impl/UserClickServiceApiImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/click/vo/UserClickVOApi$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/click/vo/UserClickVOApi$UserClickVOApiBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/click/vo/UserClickVOApi.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/collect/UserCollectServiceApi.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/collect/impl/UserCollectServiceApiImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/collect/vo/UserCollectVOApi$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/collect/vo/UserCollectVOApi$UserCollectVOApiBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/collect/vo/UserCollectVOApi.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/search/UserSearchServiceApi.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/search/impl/UserSearchServiceApiImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/search/vo/UserSearchVOApi$UserSearchVOApiBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/behaviorapi/search/vo/UserSearchVOApi.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/profile/BrowseProfileApi$BrowseProfileApiBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/profile/BrowseProfileApi$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/profile/BrowseProfileApi.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/profile/ClickProfileApi$ClickProfileApiBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/profile/ClickProfileApi$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/profile/ClickProfileApi.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/profile/CollectProfileApi$CollectProfileApiBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/profile/CollectProfileApi$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/profile/CollectProfileApi.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/profile/SearchContentApi$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/profile/SearchContentApi$SearchContentApiBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/classes/com/guanshiyun/rpc/profile/SearchContentApi.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/target/classes/com/guanshiyun/goodsenum/GoodsApiUrl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/target/classes/com/guanshiyun/goodsenum/GoodsParamKey.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/target/classes/com/guanshiyun/goodsenum/GoodsPrefix.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/recommend-server-api/target/classes/com/guanshiyun/enums/RecommendPrefix.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-app/target/classes/application-dev.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-app/target/classes/application-middleware.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-app/target/classes/application.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-app/target/classes/banner.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-app/target/classes/com/guanshiyun/GoodsAppApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-app/target/test-classes/com/guanshiyun/GoodsAppApplicationTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-app/target/test-classes/com/guanshiyun/WarehouseAppApplicationTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-common-utils/target/classes/com/guanshiyun/prefix/GlobalPrefixConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/category/Category$CategoryBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/category/Category$CategoryBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/category/Category$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/category/Category.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/product/Product$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/product/Product$ProductBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/product/Product$ProductBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/product/Product.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/recommendation/Recommendation$RecommendationBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/recommendation/Recommendation.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/relationship/ProductTag$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/relationship/ProductTag$ProductTagBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/relationship/ProductTag$ProductTagBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/relationship/ProductTag.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/relationship/ProductWarehouse$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/relationship/ProductWarehouse$ProductWarehouseBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/relationship/ProductWarehouse$ProductWarehouseBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/relationship/ProductWarehouse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/sku/SKU$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/sku/SKU$SKUBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/sku/SKU$SKUBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/sku/SKU.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/tag/Tag$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/tag/Tag$TagBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/tag/Tag$TagBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/tag/Tag.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/warehouse/Warehouse$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/warehouse/Warehouse$WarehouseBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/warehouse/Warehouse$WarehouseBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/target/classes/com/guanshiyun/warehouse/Warehouse.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/category/CategoryController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/category/vo/CategorySaveVO$CategorySaveVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/category/vo/CategorySaveVO$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/category/vo/CategorySaveVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/category/vo/CategoryVO$CategoryVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/category/vo/CategoryVO$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/category/vo/CategoryVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/product/ProductController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/product/vo/ProductCustomerVO$ProductCustomerVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/product/vo/ProductCustomerVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/product/vo/ProductSaveVO$ProductSaveVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/product/vo/ProductSaveVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/product/vo/ProductVO$ProductVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/product/vo/ProductVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/sku/SKUController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/sku/vo/SKUFindVO$SKUFindVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/sku/vo/SKUFindVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/sku/vo/SKUVO$SKUVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/sku/vo/SKUVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/tag/TagController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/tag/vo/TagSaveVO$TagSaveVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/tag/vo/TagSaveVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/tag/vo/TagVO$TagVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/tag/vo/TagVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/warehouse/WarehouseController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/warehouse/vo/WarehouseSaveVO$WarehouseSaveVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/warehouse/vo/WarehouseSaveVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/warehouse/vo/WarehouseVO$WarehouseVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/controller/warehouse/vo/WarehouseVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/repository/category/CategoryRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/repository/product/ProductRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/repository/relation/ProductTagRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/repository/relation/ProductWarehouseRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/repository/sku/SKURepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/repository/tag/TagRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/repository/warehouse/WarehouseRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/service/category/CategoryService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/service/category/impl/CategoryServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/service/product/ProductService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/service/product/impl/ProductServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/service/sku/SKUService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/service/sku/impl/SKUServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/service/tag/TagService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/service/tag/impl/TagServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/service/warehouse/WarehouseService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/target/classes/com/guanshiyun/service/warehouse/impl/WarehouseServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-app/target/classes/application-dev.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-app/target/classes/application-middleware.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-app/target/classes/application.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-app/target/classes/banner.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-app/target/classes/com/guanshiyun/OrderAppApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-common-utils/target/classes/com/guanshiyun/perfix/GlobalPrefixConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/target/classes/com/guanshiyun/address/OrderAddress$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/target/classes/com/guanshiyun/address/OrderAddress$OrderAddressBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/target/classes/com/guanshiyun/address/OrderAddress$OrderAddressBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/target/classes/com/guanshiyun/address/OrderAddress.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/target/classes/com/guanshiyun/order/PurChaseOrder$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/target/classes/com/guanshiyun/order/PurChaseOrder$PurChaseOrderBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/target/classes/com/guanshiyun/order/PurChaseOrder$PurChaseOrderBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/target/classes/com/guanshiyun/order/PurChaseOrder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/target/classes/com/guanshiyun/orderItem/OrderItem$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/target/classes/com/guanshiyun/orderItem/OrderItem$OrderItemBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/target/classes/com/guanshiyun/orderItem/OrderItem$OrderItemBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-pojo/target/classes/com/guanshiyun/orderItem/OrderItem.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/address/OrderAddressController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/address/vo/OrderAddressSaveVO$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/address/vo/OrderAddressSaveVO$OrderAddressSaveVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/address/vo/OrderAddressSaveVO$OrderAddressSaveVOBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/address/vo/OrderAddressSaveVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/address/vo/OrderAddressVO$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/address/vo/OrderAddressVO$OrderAddressVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/address/vo/OrderAddressVO$OrderAddressVOBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/address/vo/OrderAddressVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/order/PurChaseOrderController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/order/vo/PurChaseOrderSaveVO$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/order/vo/PurChaseOrderSaveVO$PurChaseOrderSaveVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/order/vo/PurChaseOrderSaveVO$PurChaseOrderSaveVOBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/order/vo/PurChaseOrderSaveVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/order/vo/PurChaseOrderVO$Fields.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/order/vo/PurChaseOrderVO$PurChaseOrderVOBuilder.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/order/vo/PurChaseOrderVO$PurChaseOrderVOBuilderImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/controller/order/vo/PurChaseOrderVO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/repository/address/OrderAddressRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/repository/item/OrderItemRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/repository/order/PurChaseOrderRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/service/address/OrderAddressService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/service/address/impl/OrderAddressServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/service/order/PurChaseOrderService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/service/order/impl/PurChaseOrderServiceImpl$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/target/classes/com/guanshiyun/service/order/impl/PurChaseOrderServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/target/classes/application-dev.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/target/classes/application-middleware.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/target/classes/application.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/target/classes/com/guanshiyun/RecommendAppApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/target/test-classes/com/guanshiyun/RecommendAppApplicationTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-common-utils/target/classes/com/guanshiyun/prefix/GlobalPrefixConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-server/target/classes/com/guanshiyun/controller/Test.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/controller/logout/LogoutController.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/controller/logout/LogoutController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/controller/rolemenu/SysRoleMenuController.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/controller/rolemenu/SysRoleMenuController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/controller/signinup/SignInUpController.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/controller/signinup/SignInUpController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/controller/sysmenu/SysMenuController.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/controller/sysmenu/SysMenuController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/controller/sysrole/SysRoleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/controller/sysrole/SysRoleController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/controller/sysuser/SysUserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/controller/sysuser/SysUserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/src/main/java/com/guanshiyun/controller/service/impl/UploadServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-upload-cloud/src/main/java/com/guanshiyun/controller/service/impl/UploadServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/controller/userrole/SysUserRoleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/controller/userrole/SysUserRoleController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/security/handler/HandleException.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/security/handler/HandleException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/security/handler/RewriteLoginSuccessHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/security/handler/RewriteLoginSuccessHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/security/handler/RewriteLogoutSuccessHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/security/handler/RewriteLogoutSuccessHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/service/signin/SignInUpService.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/service/signin/SignInUpService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/service/signin/impl/SignInUpServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/service/signin/impl/SignInUpServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/service/userrole/impl/SysUserRoleServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/service/userrole/impl/SysUserRoleServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/target/classes/application.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/target/classes/com/guanshiyun/UploadAppApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/target/classes/com/guanshiyun/controller/UploadController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/target/classes/com/guanshiyun/controller/service/UploadService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/target/classes/com/guanshiyun/controller/service/impl/UploadServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/target/classes/com/guanshiyun/prefix/GlobalPrefixConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/target/test-classes/com/guanshiyun/UploadAppApplicationTest$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/target/test-classes/com/guanshiyun/UploadAppApplicationTest$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/target/test-classes/com/guanshiyun/UploadAppApplicationTest$3$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/target/test-classes/com/guanshiyun/UploadAppApplicationTest$3$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/target/test-classes/com/guanshiyun/UploadAppApplicationTest$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/target/test-classes/com/guanshiyun/UploadAppApplicationTest.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -1088,7 +1098,7 @@
       <workItem from="1764309108117" duration="764000" />
       <workItem from="1764316051799" duration="3161000" />
       <workItem from="1764550785936" duration="8000" />
-      <workItem from="1764551198131" duration="6953000" />
+      <workItem from="1764551198131" duration="7712000" />
     </task>
     <task id="LOCAL-00001" summary="第一次推送">
       <option name="closed" value="true" />
@@ -1122,7 +1132,15 @@
       <option name="project" value="LOCAL" />
       <updated>1762868184689</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="新增接口功能">
+      <option name="closed" value="true" />
+      <created>1764558913095</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1764558913095</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1176,7 +1194,8 @@
     <MESSAGE value="修改pom文件" />
     <MESSAGE value="新建分支" />
     <MESSAGE value="pom文件修改" />
-    <option name="LAST_COMMIT_MESSAGE" value="pom文件修改" />
+    <MESSAGE value="新增接口功能" />
+    <option name="LAST_COMMIT_MESSAGE" value="新增接口功能" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
