@@ -57,7 +57,6 @@ public class Item implements Serializable {
      */
     @JsonProperty("Timestamp")
     private String timestamp;
-    io.gorse.gorse4j.Item
     /**
      * 商品的描述性文本（自由文本）。
      * 虽然 Gorse 本身不直接解析语义，但该字段常被用于：
