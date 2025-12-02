@@ -56,39 +56,12 @@
         <gareway.version>4.2.1</gareway.version>
         <hutool.version>5.8.39</hutool.version>
         <ai.version>1.0.0-M6</ai.version>
-        <memorey.version>1.0.0</memorey.version>
+        <memorey.version>1.0.1</memorey.version>
         <value.immutables.version>2.10.1</value.immutables.version>
         <gorse.version>0.4.0</gorse.version>
         <all.dash.version>2.22.2</all.dash.version>
-        <embding.version>1.1.0</embding.version>
-
+        <embding.version>1.0.1</embding.version>
     </properties>
-    <repositories>
-        <repository>
-            <id>spring-release</id>
-            <name>Spring Release Repository</name>
-            <url>https://repo.spring.io/release</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-release</id>
-            <name>Spring Release Plugin Repository</name>
-            <url>https://repo.spring.io/release</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-        </pluginRepository>
-    </pluginRepositories>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -96,13 +69,13 @@
                 <artifactId>dashscope-sdk-java</artifactId>
                 <version>${all.dash.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.springframework.ai</groupId>
-                <artifactId>spring-ai-bom</artifactId>
-                <version>1.1.0</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.ai</groupId>-->
+<!--                <artifactId>spring-ai-bom</artifactId>-->
+<!--                <version>${ai.version}</version>-->
+<!--                <type>pom</type>-->
+<!--                <scope>import</scope>-->
+<!--            </dependency>-->
             <!-- 编译期使用，运行时不需要 -->
             <dependency>
                 <groupId>org.immutables</groupId>

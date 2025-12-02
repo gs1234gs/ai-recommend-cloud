@@ -1,5 +1,6 @@
 package com.guanshiyun;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.ai.chat.memory.ChatMemoryRepository;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public class RedisMemory implements ChatMemoryRepository {
     private final String PREFIX = "chat:"; // Redis key 前缀
     private final String CONVERSATION_SET = "chat:conversations"; // 保存所有会话ID
 
+    @NotNull
     @Override
     public List<String> findConversationIds() {
         ReactiveSetOperations<String, Object> setOps = redisTemplate.opsForSet();
@@ -30,8 +32,9 @@ public class RedisMemory implements ChatMemoryRepository {
                 .block());
     }
 
+    @NotNull
     @Override
-    public List<Message> findByConversationId(String conversationId) {
+    public List<Message> findByConversationId(@NotNull String conversationId) {
         ReactiveListOperations<String, Object> listOps = redisTemplate.opsForList();
         Flux<Object> objects = listOps.range(PREFIX + conversationId, 0, -1);
         return Objects.requireNonNull(objects
@@ -41,12 +44,12 @@ public class RedisMemory implements ChatMemoryRepository {
     }
 
     @Override
-    public void saveAll(String conversationId, List<Message> messages) {
+    public void saveAll(@NotNull String conversationId, List<Message> messages) {
         ReactiveListOperations<String, Object> listOps = redisTemplate.opsForList();
         // 清空旧消息
-        redisTemplate.delete(PREFIX + conversationId);
+        redisTemplate.delete(PREFIX + conversationId).block();
         // 保存新消息
-        messages.forEach(msg -> listOps.rightPush(PREFIX + conversationId, msg));
+        messages.forEach(msg -> listOps.rightPush(PREFIX + conversationId, msg).block());
 
         // 保存会话ID到集合
         ReactiveSetOperations<String, Object> setOps = redisTemplate.opsForSet();
@@ -54,8 +57,8 @@ public class RedisMemory implements ChatMemoryRepository {
     }
 
     @Override
-    public void deleteByConversationId(String conversationId) {
-        redisTemplate.delete(PREFIX + conversationId);
-        redisTemplate.opsForSet().remove(CONVERSATION_SET, conversationId);
+    public void deleteByConversationId(@NotNull String conversationId) {
+        redisTemplate.delete(PREFIX + conversationId).block();
+        redisTemplate.opsForSet().remove(CONVERSATION_SET, conversationId).block();
     }
 }

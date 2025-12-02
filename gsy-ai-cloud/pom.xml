@@ -121,15 +121,18 @@
 
         <dependency>
             <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-autoconfigure-model-chat-client</artifactId>
+            <artifactId>spring-ai-spring-boot-autoconfigure</artifactId>
+            <version>${ai.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-autoconfigure-model-embedding-observation</artifactId>
+            <version>${embding.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-autoconfigure-model-chat-memory</artifactId>
+            <version>${memorey.version}</version>
         </dependency>
     </dependencies>
 

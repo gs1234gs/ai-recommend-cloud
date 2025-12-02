@@ -5,9 +5,10 @@ spring:
       chat:
         options:
           model: gpt-oss:latest
+          #          model: gpt-oss:latest
+          #          model: qwen3:latest
+          ##        model: qwen3:8b
       embedding:
         options:
-          model: dengcao/Qwen3-Embedding-8B:Q4_K_M
-#          model: gpt-oss:latest
-#          model: qwen3:latest
-##        model: qwen3:8b
+          model: dengcao/Qwen3-Embedding-4B:Q4_K_M
+#          model: dengcao/Qwen3-Embedding-8B:Q4_K_M
