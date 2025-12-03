@@ -3,7 +3,6 @@ package com.guanshiyun.controller.chat;
 import com.guanshiyun.chat.ChatRecord;
 import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.chat.vo.ChatRecordVO;
-import com.guanshiyun.jacksonBigNumberConfig.UseBigNumberSerialization;
 import com.guanshiyun.req.ReqChat;
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -11,6 +10,7 @@ import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.chat.ChatService;
 import com.guanshiyun.service.chat.impl.ChatRecordServiceImpl;
+import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/chat/")
-@UseBigNumberSerialization
 public class ChatController {
 
     private final ChatService chatService;
@@ -40,7 +39,8 @@ public class ChatController {
                         .code(HttpCodeConst.OK)
                         .msg("对话成功")
                         .data( content)
-                        .build())
+                        .build()
+                )
                 .onErrorResume(throwable ->
                     Mono.just(ResultT.<String>builder()
                             .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
@@ -69,9 +69,9 @@ public class ChatController {
 
     //删除对话
     @DeleteMapping("deleteById/{id}")
-    public Mono<ResultT<Long>> deleteChat(@PathVariable BigInteger id){
+    public Mono<ResultT<Long>> deleteChat(@PathVariable Object id){
 
-        return chatService.deleteChatById( id)
+        return chatService.deleteChatById(id)
                 .map(deleteCount ->{
                     return ResultT.<Long>builder()
                             .code(HttpCodeConst.OK)
@@ -123,7 +123,10 @@ public class ChatController {
      * 游标分页
      * */
     @PostMapping("findCursorChat")
-    public Flux<ChatRecord> chatCursor(@RequestBody RequestCursorPage<ChatRecord> requestCursorPage){
-        return chatRecordService.findCursorPageChat(requestCursorPage);
+    public Mono<ResultT<List<ChatRecordVO>>> chatCursor(@RequestBody RequestCursorPage<ChatRecord> requestCursorPage){
+        return chatRecordService.findCursorPageChat(requestCursorPage)
+                .mapNotNull(chatRecord -> BeanConvertUtil.toBean(chatRecord, ChatRecordVO.class))
+                .collectList()
+                .map(ResultT::success);
     }
 }

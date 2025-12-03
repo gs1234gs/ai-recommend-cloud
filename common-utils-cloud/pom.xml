@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.12</version>
+        <version>3.5.8</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <packaging>pom</packaging>
@@ -44,12 +44,12 @@
         <url/>
     </scm>
     <properties>
-        <java.version>21</java.version>
-        <project-version>2023.0.3.4</project-version>
-        <spring-cloud.version>2023.0.4</spring-cloud.version>
+        <java.version>25</java.version>
+        <project-version>2025.0.0.0</project-version>
+        <spring-cloud.version>2025.0.0</spring-cloud.version>
         <snapshotName>0.0.1-SNAPSHOT</snapshotName>
         <hutool.version>5.8.39</hutool.version>
-        <loadbalancer.version>4.2.1</loadbalancer.version>
+<!--        <loadbalancer.version>4.2.1</loadbalancer.version>-->
         <jackson.version>2.19.2</jackson.version>
         <gson.version>2.13.2</gson.version>
         <lang3.version>3.19.0</lang3.version>
@@ -65,6 +65,11 @@
     </properties>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
             <dependency>
                 <groupId>io.gorse</groupId>
                 <artifactId>gorse-client</artifactId>

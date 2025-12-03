@@ -3,7 +3,6 @@ package com.guanshiyun.controller.order;
 import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.order.vo.PurChaseOrderSaveVO;
 import com.guanshiyun.controller.order.vo.PurChaseOrderVO;
-import com.guanshiyun.jacksonBigNumberConfig.UseBigNumberSerialization;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.responsepojo.ResultT;
@@ -20,7 +19,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/purChaseOrder/")
 @RequiredArgsConstructor
-@UseBigNumberSerialization
+
 public class PurChaseOrderController {
     private final PurChaseOrderService purChaseOrderService;
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
+import lombok.experimental.FieldNameConstants;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,6 +17,7 @@ import java.io.Serializable;
 @JsonIgnoreProperties(
         ignoreUnknown = true
 )
+@FieldNameConstants
 @EqualsAndHashCode
 @Accessors(chain = true)
 public class Feedback implements Serializable {

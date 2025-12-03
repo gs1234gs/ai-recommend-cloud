@@ -1,5 +1,7 @@
 package com.guanshiyun.controller.chat.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,6 +25,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 public class ChatRecordVO {
     //聊天记录id
+    @JsonSerialize(using = ToStringSerializer.class)
     private BigInteger id;
     //标题
     private String title;

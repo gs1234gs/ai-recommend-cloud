@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+
 /**
  * Result 类用于表示操作的结果。
  * 该类包含操作的状态码、消息、返回的数据以及可能的令牌信息。

@@ -7,6 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="xxl-job-core" />
         <module name="public-pojo-spring-boot-starter" />
         <module name="hrms-server-api" />
         <module name="behavior-server-api" />
@@ -22,8 +23,10 @@
         <module name="web-client-spring-boot-autoconfigure" />
         <module name="gsy-upload-cloud" />
         <module name="behavior-server" />
+        <module name="xxl-job-admin" />
         <module name="ai-app" />
         <module name="recommend-server-api" />
+        <module name="xxl-job-executor-sample-springboot-ai" />
         <module name="goods-server-api" />
         <module name="recommend-pojo" />
         <module name="goods-app" />
@@ -47,11 +50,13 @@
         <module name="microservice-security-spring-boot-autoconfigure" />
         <module name="db-table-spring-boot-autoconfigure" />
         <module name="goods-common-utils" />
+        <module name="xxl-job-executor-sample-springboot" />
         <module name="order-server-api" />
         <module name="public-pojo-spring-boot-autoconfigure" />
         <module name="sys-pojo" />
         <module name="sys-common-utils" />
         <module name="erp-server-api" />
+        <module name="xxl-job-executor-sample-frameless" />
         <module name="microservice-security-spring-boot-starter" />
         <module name="order-server" />
         <module name="order-common-utils" />
@@ -67,13 +72,6 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="my-project" target="21" />
-      <module name="xxl-job" target="17" />
-      <module name="xxl-job-admin" target="17" />
-      <module name="xxl-job-core" target="17" />
-      <module name="xxl-job-executor-sample-frameless" target="17" />
-      <module name="xxl-job-executor-sample-springboot" target="17" />
-      <module name="xxl-job-executor-sample-springboot-ai" target="17" />
-      <module name="xxl-job-executor-samples" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -138,6 +136,13 @@
       <module name="system-app" options="-parameters" />
       <module name="web-client-spring-boot-autoconfigure" options="-parameters" />
       <module name="web-client-spring-boot-starter" options="-parameters" />
+      <module name="xxl-job" options="-parameters" />
+      <module name="xxl-job-admin" options="-parameters" />
+      <module name="xxl-job-core" options="-parameters" />
+      <module name="xxl-job-executor-sample-frameless" options="-parameters" />
+      <module name="xxl-job-executor-sample-springboot" options="-parameters" />
+      <module name="xxl-job-executor-sample-springboot-ai" options="-parameters" />
+      <module name="xxl-job-executor-samples" options="-parameters" />
     </option>
   </component>
 </project>

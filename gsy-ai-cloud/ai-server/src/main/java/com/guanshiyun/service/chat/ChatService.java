@@ -4,8 +4,6 @@ import com.guanshiyun.req.ReqChat;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
-
 public interface ChatService {
     //一次性返回对话
     Flux<String> chatAll(ReqChat reqChat);
@@ -13,5 +11,5 @@ public interface ChatService {
     Flux<String> chatFlux(ReqChat reqChat);
 
     //删除对话
-    Mono<Long> deleteChatById(BigInteger id);
+    Mono<Long> deleteChatById(Object id);
 }

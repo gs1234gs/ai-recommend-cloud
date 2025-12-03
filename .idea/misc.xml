@@ -72,17 +72,6 @@
         <option value="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-starter/pom.xml" />
       </list>
     </option>
-    <option name="ignoredFiles">
-      <set>
-        <option value="$PROJECT_DIR$/../job/xxl-job/pom.xml" />
-        <option value="$PROJECT_DIR$/../job/xxl-job/xxl-job-admin/pom.xml" />
-        <option value="$PROJECT_DIR$/../job/xxl-job/xxl-job-core/pom.xml" />
-        <option value="$PROJECT_DIR$/../job/xxl-job/xxl-job-executor-samples/pom.xml" />
-        <option value="$PROJECT_DIR$/../job/xxl-job/xxl-job-executor-samples/xxl-job-executor-sample-frameless/pom.xml" />
-        <option value="$PROJECT_DIR$/../job/xxl-job/xxl-job-executor-samples/xxl-job-executor-sample-springboot-ai/pom.xml" />
-        <option value="$PROJECT_DIR$/../job/xxl-job/xxl-job-executor-samples/xxl-job-executor-sample-springboot/pom.xml" />
-      </set>
-    </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="21" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_X" default="true" project-jdk-name="25" project-jdk-type="JavaSDK" />
 </project>

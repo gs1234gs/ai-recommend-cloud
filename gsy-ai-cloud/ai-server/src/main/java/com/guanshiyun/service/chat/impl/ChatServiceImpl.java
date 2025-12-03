@@ -337,9 +337,9 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Mono<Long> deleteChatById(BigInteger id) {
+    public Mono<Long> deleteChatById(Object id) {
         return databaseClient.sql("DELETE FROM chat_record WHERE id = :id")
-                .bind(ChatRecord.Fields.id, id)
+                .bind(ChatRecord.Fields.id, myBigInteger.bigInteger(id))
                 .fetch()
                 .rowsUpdated()
                 .onErrorResume(throwable -> Mono.just(ConstNumber.LONG_ZERO));

@@ -43,7 +43,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
-            <version>${gareway.version}</version>
+<!--            <version>${gareway.version}</version>-->
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

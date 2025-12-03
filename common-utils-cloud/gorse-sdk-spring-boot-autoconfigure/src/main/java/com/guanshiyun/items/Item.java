@@ -3,6 +3,7 @@ package com.guanshiyun.items;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
+import lombok.experimental.FieldNameConstants;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -17,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@FieldNameConstants
 @EqualsAndHashCode
 @Accessors(chain = true)
 public class Item implements Serializable {

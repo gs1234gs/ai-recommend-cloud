@@ -1,7 +1,10 @@
 package com.guanshiyun.controller.order.vo;
 
 import com.guanshiyun.controller.address.vo.OrderAddressVO;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 
@@ -35,11 +38,11 @@ public class PurChaseOrderVO {
     //付款方式，1-在线支付，2-货到付款，3-其他
     private String payType;
     //配送费用
-    private BigInteger deliveryFee;
+    private BigDecimal deliveryFee;
     //配送方式
     private String delivery;
     //实付金额
-    private BigInteger payAmount;
+    private BigDecimal payAmount;
     //订单备注
     private String remark;
     //商品数量

@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.12</version>
+        <version>3.5.8</version>
         <relativePath/>
         <!-- lookup parent from repository -->
     </parent>
@@ -45,19 +45,18 @@
         <url/>
     </scm>
     <properties>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <lombok.version>1.18.38</lombok.version>
-        <project-version>2023.0.3.4</project-version>
-        <spring-cloud.version>2023.0.4</spring-cloud.version>
+        <project-version>2025.0.0.0</project-version>
+        <spring-cloud.version>2025.0.0</spring-cloud.version>
         <fastjson.version>2.0.58</fastjson.version>
         <snapshotName>0.0.1-SNAPSHOT</snapshotName>
         <r2dbc.mysql.version>1.4.1</r2dbc.mysql.version>
         <junit.version>4.13.2</junit.version>
-        <gareway.version>4.2.1</gareway.version>
+        <gareway.version>4.3.2</gareway.version>
         <hutool.version>5.8.39</hutool.version>
         <ai.version>1.0.0-M6</ai.version>
         <memorey.version>1.0.1</memorey.version>
-        <value.immutables.version>2.10.1</value.immutables.version>
         <gorse.version>0.4.0</gorse.version>
         <all.dash.version>2.22.2</all.dash.version>
         <embding.version>1.0.1</embding.version>
@@ -78,11 +77,6 @@
 <!--            </dependency>-->
             <!-- 编译期使用，运行时不需要 -->
             <dependency>
-                <groupId>org.immutables</groupId>
-                <artifactId>value</artifactId>
-                <version>${value.immutables.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring-cloud.version}</version>
@@ -98,10 +92,6 @@
                 <artifactId>mysql-connector-j</artifactId>
                 <version>${mysql.version}</version>
             </dependency>
-            <!--      <dependency>-->
-            <!--        <groupId>com.fasterxml.jackson.core</groupId>-->
-            <!--        <artifactId>jackson-databind</artifactId>-->
-            <!--      </dependency>-->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>

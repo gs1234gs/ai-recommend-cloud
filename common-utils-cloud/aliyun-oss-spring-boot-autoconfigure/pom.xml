@@ -25,8 +25,6 @@
 		<url/>
 	</scm>
 	<properties>
-		<maven.compiler.source>21</maven.compiler.source>
-
 	</properties>
 	<dependencies>
 		<!--引入aliyun,jwt令牌依赖-->

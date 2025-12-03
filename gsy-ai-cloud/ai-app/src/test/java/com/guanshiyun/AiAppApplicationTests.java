@@ -304,14 +304,14 @@ class AiAppApplicationTests {
         // 模拟用户
         initializeItems();
         String userId = "user_123";
-        boolean isNewUser = true; // ← 改为 false 测试老用户
+        boolean isNewUser = false; // ← 改为 false 测试老用户
         String lastClickedItemId = isNewUser ? null : "1001";
 
         List<EmbeddingSimilarItem> finalRecs;
 
         if (isNewUser) {
-            // 🆕 新用户：直接让 Gorse 返回热门商品
-            log.info("\n🆕 检测到新用户，请求 Gorse 热门推荐...");
+            //  新用户：直接让 Gorse 返回热门商品
+            log.info("\n 检测到新用户，请求 Gorse 热门推荐...");
             Map<String, Object> gorseRequest = Map.of(
                     "user_id", userId,
                     "n", 3
@@ -358,7 +358,7 @@ class AiAppApplicationTests {
         }
 
         // 🖨️ 统一输出
-        log.info("\n🎯 最终推荐结果（用户 {}）：", userId);
+        log.info("\n 最终推荐结果（用户 {}）：", userId);
         for (EmbeddingSimilarItem rec : finalRecs) {
             String name = itemMetaMap.get(rec.itemId).get("name");
             if (rec.similarity > 0) {
@@ -436,7 +436,7 @@ class AiAppApplicationTests {
             float[] embedding = embeddingModel.embed(pseudoText);
             itemEmbeddingMap.put(id, embedding);
             itemMetaMap.put(id, item);
-            log.info("✅ 商品ID: {} | 向量维度: {}", id, embedding.length);
+            log.info("商品ID: {} | 向量维度: {}", id, embedding.length);
         }
     }
 }
