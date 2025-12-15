@@ -1,6 +1,7 @@
 package com.guanshiyun.filter;
 
-import com.alibaba.fastjson.JSONObject;
+
+import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.nacos.shaded.io.grpc.netty.shaded.io.netty.util.internal.StringUtil;
 import com.aliyun.oss.JwtUtils;
 import com.guanshiyun.biginteger.MyBigInteger;

@@ -44,7 +44,7 @@ public class Item implements Serializable {
      * 可包含品牌、属性、活动等信息，如：["Apple", "5G", "新品", "防水"]。
      */
     @JsonProperty("Labels")
-    private List<String> labels;
+    private Object labels;
     /**
      * 商品所属的类目路径（支持多级类目）。
      * 建议按从粗到细的顺序排列，用于类目内热门推荐或层级过滤。

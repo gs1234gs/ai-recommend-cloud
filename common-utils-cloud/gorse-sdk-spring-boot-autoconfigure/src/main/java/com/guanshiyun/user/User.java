@@ -7,7 +7,6 @@ import lombok.experimental.FieldNameConstants;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.List;
 
 @Data
 @Builder
@@ -23,5 +22,5 @@ public class User implements Serializable {
     @JsonProperty("UserId")
     private String userId;
     @JsonProperty("Labels")
-    private List<String> labels;
+    private Object labels;
 }

@@ -2,7 +2,6 @@ package com.guanshiyun.rpc.config;
 
 
 import com.guanshiyun.aienums.OrderPrefix;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -10,7 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientRpc {
     private final WebClient webClient;
     // 构造函数注入
-    public WebClientRpc(@LoadBalanced WebClient.Builder webClientBuilder) {
+    public WebClientRpc(WebClient.Builder webClientBuilder) {
 
         this.webClient = webClientBuilder
                 .clone()

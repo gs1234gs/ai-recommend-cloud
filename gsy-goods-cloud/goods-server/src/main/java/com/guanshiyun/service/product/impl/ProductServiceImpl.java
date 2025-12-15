@@ -27,6 +27,7 @@ import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.product.ProductService;
 import com.guanshiyun.sku.SKU;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
+import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -193,7 +194,7 @@ public class ProductServiceImpl implements ProductService {
                 .transform(transactionalOperator::transactional)
                 .onErrorResume(throwable -> {
                     log.error("保存失败：", throwable);
-                    return Mono.just(ConstNumber.BIG_INTEGER_ZERO);
+                    return Mono.error(new Exception("保存商品信息失败"));
                 });
         /**
          * 删除
@@ -429,7 +430,6 @@ public class ProductServiceImpl implements ProductService {
          * 这里需要使用协同过滤，大模型决策后规则来查询，暂时忽略
          * */
         return CursorQuery.of(r2dbcEntityTemplate, Product.class, cursorPage)
-
                 .list()
                 .collectList()
                 .map(products -> {
@@ -437,60 +437,65 @@ public class ProductServiceImpl implements ProductService {
                     boolean hasNext = products.size() > requestCursorPage.getPageSize();
                     // 截取真实需要的数据
                     List<Product> data = hasNext ? products.subList(0, requestCursorPage.getPageSize()) : products;
-
                     return Tuples.of(data, hasNext);
                 })
                 .flatMapMany(tupleT -> {
-                            List<Product> productList = tupleT.getT1();
-                            boolean hasNext = tupleT.getT2();
-                            //根据id获取最低价格sku产品返回
-                            return Flux.fromIterable(productList)
-                                    .flatMap(item -> {
-                                        Mono<SKU> skuByProductId = skuRepository.findSKUIDByProductId(item.getId());
-                                        Mono<Integer> salesByProductId = skuRepository.sumSalesByProductId(item.getId());
-                                        Mono<BigInteger> tagByProductId = productTagRepository.findTagByProductId(item.getId());
-                                        return Mono.zip(skuByProductId, salesByProductId, tagByProductId)
-                                                .map(tuple -> {
-                                                    SKU sku = tuple.getT1();
-                                                    Integer salesVolume = tuple.getT2();
-                                                    BigInteger tagId = tuple.getT3();
-                                                    return ProductCustomerVO
-                                                            .builder()
-                                                            .id(item.getId())
-                                                            .discountPrice(sku.getPrice())
-                                                            .originalPrice(sku.getCostPrice())
-                                                            .level(item.getLevel())
-                                                            .image(item.getImage())
-                                                            .brand(item.getBrand())
-                                                            .stock(sku.getStock())
-                                                            .video(item.getVideo())
-                                                            .description(item.getDescription())
-                                                            .salesVolume(salesVolume)
-                                                            .skuId(sku.getId())
-                                                            .status(sku.getStatus())
-                                                            .placeOfOrigin(item.getPlaceOfOrigin())
-                                                            .name(item.getName())
-                                                            .offlineTime(item.getOfflineTime())
-                                                            .publishTime(item.getPublishTime())
-                                                            .tagId(tagId)
-                                                            .build();
-                                                })
-                                                .onErrorResume(e -> {
-                                                    log.error("查询信息失败：", e);
-                                                    return Mono.error(new Exception("查询信息失败"));
-                                                });
-                                    })
-                                    .collectList()
-                                    .map(voList ->
-                                            CursorPageResult.<List<ProductCustomerVO>>builder()
-                                                    .hasNext(hasNext)
-                                                    .rows(voList)
-                                                    .cursor(!voList.isEmpty() ? voList.getLast().getId() : null)
-                                                    .build()
-                                    );
+                    List<Product> productList = tupleT.getT1();
+                    boolean hasNext = tupleT.getT2();
 
-                        }
-                ).next();
+                    // 基于商品ID获取最低价格sku产品返回等信息
+                    return Flux.fromIterable(productList)
+                            .flatMap(item -> {
+                                Mono<SKU> skuMono = skuRepository.findSKUIDByProductId(item.getId());
+                                Mono<Integer> salesMono = skuRepository.sumSalesByProductId(item.getId());
+                                Flux<BigInteger> tagsMono = productTagRepository.findTagByProductId(item.getId());
+
+                                // 同时查询 SKU、销量、标签
+                                return Mono.zip(skuMono, salesMono, tagsMono.collectList())
+                                        .map(tuple -> {
+                                            SKU sku = tuple.getT1();
+                                            Integer salesVolume = tuple.getT2();
+                                            List<BigInteger> tagIds = tuple.getT3();
+
+                                            // 假设只需要取第一个标签，如果你需要多个标签，可以进行进一步处理
+                                            BigInteger tagId = tagIds.isEmpty() ? null : tagIds.getFirst();
+
+                                            return ProductCustomerVO.builder()
+                                                    .id(item.getId())
+                                                    .discountPrice(sku.getPrice())
+                                                    .originalPrice(sku.getCostPrice())
+                                                    .level(item.getLevel())
+                                                    .image(item.getImage())
+                                                    .brand(item.getBrand())
+                                                    .stock(sku.getStock())
+                                                    .video(item.getVideo())
+                                                    .description(item.getDescription())
+                                                    .salesVolume(salesVolume)
+                                                    .skuId(sku.getId())
+                                                    .status(sku.getStatus())
+                                                    .placeOfOrigin(item.getPlaceOfOrigin())
+                                                    .name(item.getName())
+                                                    .offlineTime(item.getOfflineTime())
+                                                    .publishTime(item.getPublishTime())
+                                                    .tagId(tagId)  // 这里是一个标签ID，可能需要改为多个标签
+                                                    .build();
+                                        })
+                                        .onErrorResume(e -> {
+                                            log.error("查询商品信息失败，商品ID：{}，错误：{}", item.getId(), e.getMessage());
+                                            return Mono.error(new Exception("查询商品信息失败"));
+                                        });
+                            })
+                            .collectList()
+                            .map(voList ->
+                                    CursorPageResult.<List<ProductCustomerVO>>builder()
+                                            .hasNext(hasNext)
+                                            .rows(voList)
+                                            .cursor(!voList.isEmpty() ? voList.get(voList.size() - 1).getId() : null)
+                                            .build()
+                            );
+                })
+                .next();
+
     }
 
     //批量添加，批量更新
@@ -562,6 +567,32 @@ public class ProductServiceImpl implements ProductService {
     public Mono<ProductVO> findById(BigInteger id) {
         return productRepository.findById(id)
                 .map(product -> BeanUtil.toBean(product, ProductVO.class));
+    }
+
+    @Override
+    public Mono<CursorPageResult<List<ProductVO>>> findCursorListProductVO(RequestCursorPage<ProductVO> requestCursorPage) {
+        RequestCursorPage<Product> page = BeanConvertUtil.toBean(requestCursorPage, Product.class);
+        return CursorQuery.of(r2dbcEntityTemplate, Product.class,page )
+
+                .list()
+                .collectList()
+                .map(products -> {
+                    // 判断是否有下一页
+                    boolean hasNext = products.size() > requestCursorPage.getPageSize();
+                    // 截取真实需要的数据
+                    List<Product> data = hasNext ? products.subList(0, requestCursorPage.getPageSize()) : products;
+                    List<ProductVO> toListProductVO = BeanConvertUtil.toBeanList(data, ProductVO.class);
+                    BigInteger nextCursor = null;
+                    if (!data.isEmpty()) {
+                        Product lastProduct = data.getLast();
+                        nextCursor = lastProduct.getId(); // 假设 getId() 返回主键
+                    }
+                    return CursorPageResult.<List<ProductVO>>builder()
+                            .cursor(nextCursor)
+                            .rows(toListProductVO)
+                            .hasNext(hasNext)
+                            .build();
+                });
     }
 
 }

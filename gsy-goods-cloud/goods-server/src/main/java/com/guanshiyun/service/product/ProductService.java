@@ -26,4 +26,6 @@ public interface ProductService {
     Mono<Void> deleteAllById(List<BigInteger> ids);
 
     Mono<ProductVO> findById(BigInteger id);
+
+    Mono<CursorPageResult<List<ProductVO>>> findCursorListProductVO(RequestCursorPage<ProductVO> requestCursorPage);
 }

@@ -41,12 +41,6 @@ public class ProductApiVO {
     private short status;
     private LocalDateTime publishTime; // 上架时间
     private LocalDateTime offlineTime; // 下架时间
-    //仓库id
-    private BigInteger warehouseId;
-    //分类 id
-    private BigInteger categoryId;
-    //标签 id
-    private BigInteger tagId;
     //创建开始时间
     private LocalDateTime startTime;
     //创建结束时间

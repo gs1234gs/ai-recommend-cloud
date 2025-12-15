@@ -76,16 +76,20 @@ public class GorseClient implements Serializable {
                                         String url,
                                         Req request,
                                         Class<Res> responseType) throws NullPointerException{
+        WebClient webClient = WebClient.builder()
+                .defaultHeaders(headers -> {
+                    headers.add("X-API-Key", this.apiKey);
+                    headers.add("Content-Type", "application/json");
+                })
+                .build();
         if(Objects.isNull(request)){
-            return WebClient.builder()
-                    .build()
+            return webClient
                     .method(method)
                     .uri(url)
                     .retrieve()
                     .bodyToMono(responseType);
         }
-        return WebClient.builder()
-                .build()
+        return webClient
                 .method(method)
                 .uri(url)
                 .bodyValue(request)

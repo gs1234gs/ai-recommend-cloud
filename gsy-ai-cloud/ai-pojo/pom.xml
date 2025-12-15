@@ -24,10 +24,6 @@
         <tag/>
         <url/>
     </scm>
-    <properties>
-    </properties>
-    <dependencies>
-    </dependencies>
 
     <build>
         <plugins>

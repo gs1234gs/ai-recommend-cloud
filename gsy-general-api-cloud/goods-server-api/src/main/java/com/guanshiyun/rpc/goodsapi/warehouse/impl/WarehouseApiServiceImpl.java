@@ -3,7 +3,7 @@ package com.guanshiyun.rpc.goodsapi.warehouse.impl;
 import com.guanshiyun.goodsenum.GoodsApiUrl;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.ResultT;
-import com.guanshiyun.rpc.config.WebClientRpc;
+import com.guanshiyun.rpc.config.GoodsWebClientRpc;
 import com.guanshiyun.rpc.goodsapi.warehouse.WarehouseApiService;
 import com.guanshiyun.rpc.profile.WarehouseApiVO;
 import com.guanshiyun.webutils.WebClientUtils;
@@ -17,12 +17,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class WarehouseApiServiceImpl implements WarehouseApiService {
-    private final WebClientRpc webClientRpc;
+    private final GoodsWebClientRpc goodsWebClientRpc;
 
     //分页查询仓库列表
     @Override
     public Mono<ResultT<List<WarehouseApiVO>>> findByPage(RequestPage<WarehouseApiVO> requestPage) {
-        return webClientRpc
+        return goodsWebClientRpc
                 .webClient()
                 .post()
                 .uri(builder -> builder
@@ -37,7 +37,7 @@ public class WarehouseApiServiceImpl implements WarehouseApiService {
     //获取仓库列表
     @Override
     public Mono<ResultT<List<WarehouseApiVO>>> findByProductId(BigInteger productId) {
-        return webClientRpc
+        return goodsWebClientRpc
                 .webClient()
                 .get()
                 .uri(builder -> builder
@@ -51,7 +51,7 @@ public class WarehouseApiServiceImpl implements WarehouseApiService {
     //获取仓库列表
     @Override
     public Mono<ResultT<List<WarehouseApiVO>>> findAll() {
-        return webClientRpc
+        return goodsWebClientRpc
                 .webClient()
                 .get()
                 .uri(builder -> builder
@@ -64,7 +64,7 @@ public class WarehouseApiServiceImpl implements WarehouseApiService {
 
     @Override
     public Mono<ResultT<WarehouseApiVO>> findById(BigInteger warehouseId) {
-        return webClientRpc
+        return goodsWebClientRpc
                 .webClient()
                 .get()
                 .uri(builder -> builder

@@ -1,5 +1,7 @@
 package com.guanshiyun.webutils;
 
+
+import com.alibaba.fastjson2.TypeReference;
 import org.springframework.core.ParameterizedTypeReference;
 
 import java.math.BigInteger;
@@ -16,5 +18,8 @@ public class WebClientUtils {
             throw new RuntimeException("转换BigInteger异常", e);
         }
         return bigInteger;
+    }
+    public static <T> TypeReference<T> typeRefFastJson2() {
+        return new TypeReference<>() {};
     }
 }

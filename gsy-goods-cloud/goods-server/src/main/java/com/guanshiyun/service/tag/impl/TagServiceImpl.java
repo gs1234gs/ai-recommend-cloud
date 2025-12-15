@@ -7,6 +7,7 @@ import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.controller.tag.vo.TagSaveVO;
 import com.guanshiyun.controller.tag.vo.TagVO;
+import com.guanshiyun.repository.relation.ProductTagRepository;
 import com.guanshiyun.repository.tag.TagRepository;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
@@ -31,6 +32,7 @@ public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
+    private final ProductTagRepository productTagRepository;
     @Override
     public Mono<BigInteger> save(TagSaveVO tagSaveVO) {
         Tag tag = BeanUtil.toBean(tagSaveVO, Tag.class);
@@ -110,5 +112,18 @@ public class TagServiceImpl implements TagService {
     @Override
     public Mono<Void> deleteAllById(List<BigInteger> ids) {
         return tagRepository.deleteAllById(ids);
+    }
+
+    @Override
+    public Mono<List<TagVO>> findTagByProductId(BigInteger productId) {
+        return productTagRepository.findTagByProductId(productId)
+
+                .flatMap(tagRepository::findById)
+                .collectList()
+                .map(tags -> tags.stream()
+                        .map(tag -> BeanUtil.toBean(tag, TagVO.class))
+                        .toList()
+                );
+
     }
 }

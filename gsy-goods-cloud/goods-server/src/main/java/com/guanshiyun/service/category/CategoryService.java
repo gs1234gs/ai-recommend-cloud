@@ -5,6 +5,7 @@ import com.guanshiyun.controller.category.vo.CategorySaveVO;
 import com.guanshiyun.controller.category.vo.CategoryVO;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
@@ -21,4 +22,6 @@ public interface CategoryService {
     Mono<PageResultT<List<CategoryVO>>> findAllByPage( RequestPage<CategoryVO> requestPage);
 
     Mono<List<CategoryVO>> findAll();
+
+    Flux<CategoryVO> findByProductId(BigInteger productId);
 }

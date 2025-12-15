@@ -128,5 +128,26 @@ public class CategoryController {
                     );
                 });
     }
+    @GetMapping("findByProductId/{productId}")
+    public Mono<ResultT<List<CategoryVO>>> findByProductId(@PathVariable BigInteger productId){
+        return categoryService.findByProductId(productId)
+                .collectList()
+                .map(category ->{
+                    log.info("查询成功");
+                    return ResultT.<List<CategoryVO>>builder()
+                            .code(HttpCodeConst.OK)
+                            .msg("查询成功")
+                            .data(category)
+                            .build();
+                }).onErrorResume(e->{
+                    log.error("查询失败", e);
+                    return Mono.just(
+                            ResultT.<List<CategoryVO>>builder()
+                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .msg("系统错误")
+                                    .build()
+                    );
+                });
+    }
 
 }

@@ -16,8 +16,8 @@ public class OnDisableBusinessWebFilterCondition implements Condition {
         // 获取所有带有 @DisableBusinessWebFilter 注解的 Bean 名称
         String[] beanNames = Objects.requireNonNull(context.getBeanFactory())
                 .getBeanNamesForAnnotation(DisableBusinessWebFilter.class);
-        log.info("🔍 正在检查 @DisableBusinessWebFilter...");
-        log.info("📊 找到带 @DisableBusinessWebFilter 的 Bean 数量: " + beanNames.length);
+        log.info(" 正在检查 @DisableBusinessWebFilter...");
+        log.info(" 找到带 @DisableBusinessWebFilter 的 Bean 数量: " + beanNames.length);
         for (String name : beanNames) {
             assert beanFactory != null;
             log.info("  ➕ " + name + " (" + beanFactory.getType(name) + ")");

@@ -20,4 +20,6 @@ public interface TagService {
     Mono<PageResultT<List<TagVO>>> findAllByPage(RequestPage<TagVO> requestPage);
 
     Mono<Void> deleteAllById(List<BigInteger> ids);
+
+    Mono<List<TagVO>> findTagByProductId(BigInteger productId);
 }

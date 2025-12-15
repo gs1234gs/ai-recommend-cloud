@@ -1,8 +1,17 @@
 spring:
+#  qdrant:
+#    rest-api: http://127.0.0.1:6333  # Qdrant 服务的地址
+#    grpc-api: http://127.0.0.1:6334
+#    api-key: qdrant-api-key
   r2dbc:
-    url: r2dbc:mysql://localhost:3306/gsy-ai-cloud
-    username: root
-    password: 1234
+    mysql:
+      url: r2dbc:mysql://127.0.0.1:3306/gsy-ai-cloud
+      username: root
+      password: 1234
+    postgres:
+      url: r2dbc:postgresql://127.0.0.1:5432/gsy-embedding-cloud
+      username: postgres
+      password: 123456
   data:
     redis:
       host: 127.0.0.1
@@ -17,17 +26,22 @@ spring:
           min-idle: 0       # 最小空闲连接数
           max-wait: -1ms    # 获取连接的最大等待时间（-1 表示无限制）
     mongodb:
-      uri: mongodb://127.0.0.1:27017/gsy-ai-cloud
+      primary:
+        uri: mongodb://127.0.0.1:27017
+        database: gsy-ai-cloud
+      secondary:
+        uri: mongodb://127.0.0.1:27017
 #      username:
 #      password:
-      database: gsy-ai-cloud
+        database: gsy-embedding-cloud
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
     serialization:
       write-dates-as-timestamps: false
-  codec:
-    max-in-memory-size: 2048MB
+  webflux:
+    multipart:
+      max-in-memory-size: 1024MB
   output:
     ansi:
       enabled: ALWAYS

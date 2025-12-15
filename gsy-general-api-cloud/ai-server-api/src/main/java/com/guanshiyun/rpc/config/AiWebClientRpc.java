@@ -1,20 +1,19 @@
 package com.guanshiyun.rpc.config;
 
 
-import com.guanshiyun.goodsenum.GoodsPrefix;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
-public class WebClientRpc {
+public class AiWebClientRpc {
     private final WebClient webClient;
     // 构造函数注入
-    public WebClientRpc(@LoadBalanced WebClient.Builder webClientBuilder) {
+    public AiWebClientRpc(@Qualifier("aiWebClientBuilder") WebClient.Builder webClientBuilder) {
 
         this.webClient = webClientBuilder
                 .clone()
-                .baseUrl(GoodsPrefix.BASE_URL)
+//                .baseUrl(AiPrefix.BASE_URL)
                 .build();
     }
 

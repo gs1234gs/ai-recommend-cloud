@@ -1,3 +1,4 @@
+com\guanshiyun\rpcpojo\ProductRpc.class
 com\guanshiyun\base\BasePojo$BasePojoBuilderImpl.class
 com\guanshiyun\requestpojo\RequestPage.class
 com\guanshiyun\responsepojo\CursorPageResult.class
@@ -19,6 +20,7 @@ com\guanshiyun\base\BasePojo.class
 com\guanshiyun\consts\ConstMapClassNickName.class
 com\guanshiyun\requestpojo\RequestPage$RequestPageBuilder.class
 com\guanshiyun\consts\ConstNumber.class
+com\guanshiyun\rpcpojo\PurchaseOrderRpc.class
 com\guanshiyun\responsepojo\ResultT$ResultTBuilder.class
 com\guanshiyun\responsepojo\Result.class
 com\guanshiyun\signinpojo\SignSysUser.class

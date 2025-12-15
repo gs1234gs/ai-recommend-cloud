@@ -1,23 +1,28 @@
 package com.guanshiyun.rpc.goodsapi.tag.impl;
 
 import com.guanshiyun.goodsenum.GoodsApiUrl;
-import com.guanshiyun.rpc.config.WebClientRpc;
+import com.guanshiyun.responsepojo.ResultT;
+import com.guanshiyun.rpc.config.GoodsWebClientRpc;
 import com.guanshiyun.rpc.goodsapi.tag.TagApiService;
 import com.guanshiyun.rpc.profile.TagApiVO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
-
+import java.net.URI;
+import java.util.List;
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TagApiServiceImpl implements TagApiService {
-    private final WebClientRpc webClientRpc;
+    private final GoodsWebClientRpc goodsWebClientRpc;
 
     @Override
     public Mono<TagApiVO> findById(BigInteger id) {
-        return webClientRpc
+        return goodsWebClientRpc
                 .webClient()
                 .get()
                 .uri(builder -> builder
@@ -28,14 +33,19 @@ public class TagApiServiceImpl implements TagApiService {
     }
 
     @Override
-    public Mono<TagApiVO> findByProductId(BigInteger productId) {
-        return webClientRpc
+    public Mono<ResultT<List<TagApiVO>>> findByProductId(BigInteger productId) {
+        return goodsWebClientRpc
                 .webClient()
                 .get()
-                .uri(builder -> builder
-                        .path(GoodsApiUrl.TAG_FIND_BY_PRODUCT_ID)
-                        .build(productId))
+                .uri(builder -> {
+                    URI uri = builder
+                                    .path(GoodsApiUrl.TAG_FIND_BY_PRODUCT_ID)
+                                    .build(productId);
+                    return uri;
+                        }
+                )
+
                 .retrieve()
-                .bodyToMono(TagApiVO.class);
+                .bodyToMono(new ParameterizedTypeReference<ResultT<List<TagApiVO>>>() {});
     }
 }

@@ -24,10 +24,5 @@
             <artifactId>recommend-pojo</artifactId>
             <version>${snapshotName}</version>
         </dependency>
-        <dependency>
-            <groupId>com.guanshiyun</groupId>
-            <artifactId>recommend-pojo</artifactId>
-            <version>${snapshotName}</version>
-        </dependency>
     </dependencies>
 </project>

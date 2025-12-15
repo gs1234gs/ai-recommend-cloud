@@ -14,6 +14,8 @@ D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoco
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\responsepojo\PageResultT.java
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\responsepojo\Result.java
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\responsepojo\ResultT.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\rpcpojo\ProductRpc.java
+D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\rpcpojo\PurchaseOrderRpc.java
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\signinpojo\SignSysUser.java
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\sqlenums\LikeType.java
 D:\myai\end\ai-recommend-cloud\common-utils-cloud\public-pojo-spring-boot-autoconfigure\src\main\java\com\guanshiyun\sqlenums\SortOrderEnum.java

@@ -17,5 +17,5 @@ public interface ProductTagRepository extends ReactiveCrudRepository<ProductTag,
      Mono<Void> deleteAllByProductId(@Param("tagId") BigInteger tagId);
 
     @Query("select tag_id from product_tag where product_id = :productId")
-    Mono<BigInteger> findTagByProductId(BigInteger productId);
+    Flux<BigInteger> findTagByProductId(BigInteger productId);
 }

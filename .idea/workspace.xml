@@ -7,23 +7,55 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="50bf314b-8bcd-417a-90fa-052ef7204d7a" name="Changes" comment="更新">
-      <change afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/jsonconst/JsonFieldUtils.java" afterDir="false" />
+    <list default="true" id="50bf314b-8bcd-417a-90fa-052ef7204d7a" name="Changes" comment="升级spring boot版本到3.8，升级spring cloud版本到2025">
+      <change afterPath="$PROJECT_DIR$/ZModuleTest/src/main/java/com/guanshiyun/dd/dubbTest/DubboTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ZModuleTest/src/main/java/com/guanshiyun/dd/dubbTest/DubboTestService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ZMoudle/src/main/java/com/xinghe/zmoudle/TestDuboController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ZMoudle/src/test/java/com/xinghe/zmoudle/Test12.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/rpcpojo/ProductRpc.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/rpcpojo/PurchaseOrderRpc.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/src/main/java/com/guanshiyun/servername/ServerName.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/test/java/com/guanshiyun/EmbeddingTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/test/java/com/guanshiyun/SpeechRecognitionTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/src/main/java/com/guanshiyun/FeignClientTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/src/main/java/com/guanshiyun/aiutil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/src/main/java/com/guanshiyun/qdrant/QdrantConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/src/main/java/com/guanshiyun/r2dbc/R2dbcConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/src/main/java/com/guanshiyun/util/NumberToUUIDUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/src/main/java/com/guanshiyun/embedding/EmbeddingProduct.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/src/main/java/com/guanshiyun/embedding/EmbeddingProductEnum.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/controller/embedding/EmbeddingProductController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/service/embedding/product/EmbeddingProductService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/service/embedding/product/impl/EmbeddingProductServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gsy-general-api-cloud/ai-server-api/src/main/java/com/guanshiyun/embedding/ProductForEmbeddingApVO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-app/src/test/java/com/guanshiyun/TestGoods.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/rpc/ProductApiServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ZModuleTest/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ZModuleTest/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ZModuleTest/target/classes/application-dev.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ZModuleTest/target/classes/application.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ZModuleTest/target/classes/com/guanshiyun/ModuleTestApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ZModuleTest/target/classes/com/guanshiyun/dd/RabbitListenerTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ZModuleTest/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ZModuleTest/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/ZMoudle/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ZMoudle/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ZMoudle/src/main/java/com/xinghe/zmoudle/controller/TestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/ZMoudle/src/main/java/com/xinghe/zmoudle/controller/TestController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/aliyun-oss-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/aliyun-oss-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/classes/com/aliyun/oss/AliOSSProperties$AliOSSPropertiesBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/classes/com/aliyun/oss/AliOSSProperties$AliOSSPropertiesBuilder.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/classes/com/aliyun/oss/AliOSSProperties.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/classes/com/aliyun/oss/AliOSSProperties.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/classes/com/aliyun/oss/AliOSSUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/classes/com/aliyun/oss/AliOSSUtils.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/classes/com/aliyun/oss/AliyunOSSAutoConfiguration.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/classes/com/aliyun/oss/AliyunOSSAutoConfiguration.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/classes/com/aliyun/oss/JwtUtils$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/classes/com/aliyun/oss/JwtUtils$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/classes/com/aliyun/oss/JwtUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/classes/com/aliyun/oss/JwtUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-starter/target/aliyun-oss-spring-boot-starter-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-starter/target/aliyun-oss-spring-boot-starter-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/src/main/java/com/guanshiyun/utils/BeanConvertUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/src/main/java/com/guanshiyun/utils/BeanConvertUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/bean/UtilsBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/bean/UtilsBean.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/biginteger/MyBigInteger.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/biginteger/MyBigInteger.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/print/start/SystemStartPrintln.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/print/start/SystemStartPrintln.class" afterDir="false" />
@@ -31,18 +63,23 @@
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/tree/TreeUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/tree/TreeUtil.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/utils/BeanConvertUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/utils/BeanConvertUtil.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/utils/WebContextUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/utils/WebContextUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/common-utils-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/common-utils-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-starter/target/common-utils-spring-boot-starter-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-starter/target/common-utils-spring-boot-starter-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/src/main/java/com/db/cursorQuery/CursorQuery.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/src/main/java/com/db/cursorQuery/CursorQuery.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/target/classes/com/db/cursorQuery/CursorQuery.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/target/classes/com/db/cursorQuery/CursorQuery.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/target/db-table-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/target/db-table-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-starter/target/db-table-spring-boot-starter-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-starter/target/db-table-spring-boot-starter-0.0.1-SNAPSHOT.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/feedback/Feedback.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/feedback/Feedback.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/goconfig/GorseProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/goconfig/GorseProperties.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/goser/GorseClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/goser/GorseClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/items/Item.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/items/Item.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/rowAffected/RowAffected.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/rowAffected/RowAffected.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/source/Score.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/source/Score.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/user/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/jacksonBigNumberConfig/BigNumberSerializationCondition.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/jacksonBigNumberConfig/ConditionalJacksonConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/jacksonBigNumberConfig/ConditionalOnBigNumberSerialization.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/jacksonBigNumberConfig/UseBigNumberSerialization.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/exception/GlobalException.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/exception/GlobalException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/filter/GlobalFilterReactiveFlux.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/filter/GlobalFilterReactiveFlux.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/utils/OnDisableBusinessWebFilterCondition.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/src/main/java/com/guanshiyun/utils/OnDisableBusinessWebFilterCondition.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/bean/ClassBean.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/bean/ClassBean.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/cors/CorsFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/cors/CorsFilter.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/filter/GlobalFilterReactiveFlux.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/filter/GlobalFilterReactiveFlux.class" afterDir="false" />
@@ -50,9 +87,12 @@
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/pojo/signreqpojo/SignRequestUser.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/pojo/signreqpojo/SignRequestUser.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/utils/DisableBusinessWebFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/utils/DisableBusinessWebFilter.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/utils/OnDisableBusinessWebFilterCondition.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/classes/com/guanshiyun/utils/OnDisableBusinessWebFilterCondition.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/microservice-security-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-autoconfigure/target/microservice-security-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-starter/target/microservice-security-spring-boot-starter-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/microservice-security-spring-boot-starter/target/microservice-security-spring-boot-starter-0.0.1-SNAPSHOT.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/PageResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/PageResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/Result.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/Result.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/requestpojo/RequestCursorPage.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/requestpojo/RequestCursorPage.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/ResultT.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/ResultT.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/base/BasePojo$BasePojoBuilder.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/base/BasePojo$BasePojoBuilder.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/base/BasePojo$BasePojoBuilderImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/base/BasePojo$BasePojoBuilderImpl.class" afterDir="false" />
@@ -79,20 +119,91 @@
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/signinpojo/SignSysUser.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/signinpojo/SignSysUser.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/sqlenums/LikeType.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/sqlenums/LikeType.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/sqlenums/SortOrderEnum.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/classes/com/guanshiyun/sqlenums/SortOrderEnum.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/public-pojo-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/target/public-pojo-spring-boot-autoconfigure-0.0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-starter/target/public-pojo-spring-boot-starter-0.0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-starter/target/public-pojo-spring-boot-starter-0.0.1-SNAPSHOT.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/src/main/java/com/guanshiyun/webclient/WebClientLoadBalanced.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/src/main/java/com/guanshiyun/webclient/WebClientLoadBalanced.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/src/main/java/com/guanshiyun/webutils/WebClientUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/src/main/java/com/guanshiyun/webutils/WebClientUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/target/classes/com/guanshiyun/webclient/WebClientLoadBalanced.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/target/classes/com/guanshiyun/webclient/WebClientLoadBalanced.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/target/classes/com/guanshiyun/webutils/WebClientUtils$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/target/classes/com/guanshiyun/webutils/WebClientUtils$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/target/classes/com/guanshiyun/webutils/WebClientUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/web-client-spring-boot-autoconfigure/target/classes/com/guanshiyun/webutils/WebClientUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/main/resources/application-data.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/main/resources/application-data.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/main/resources/application-ollama.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/main/resources/application-ollama.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/main/resources/application.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/test/java/com/guanshiyun/AiAppApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/test/java/com/guanshiyun/AiAppApplicationTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/src/main/java/com/guanshiyun/req/ReqChat.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/src/main/java/com/guanshiyun/req/ReqChat.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/controller/chat/ChatController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/controller/chat/ChatController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/controller/chat/vo/ChatRecordVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/controller/chat/vo/ChatRecordVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/service/chat/ChatService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/service/chat/ChatService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/service/chat/impl/ChatServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/service/chat/impl/ChatServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/test/java/com/guanshiyun/ReReading.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/test/java/com/guanshiyun/RedisMemory.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-app/src/test/java/com/guanshiyun/RedisMemory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/src/main/java/com/guanshiyun/client/ModelChatClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/src/main/java/com/guanshiyun/client/ModelChatClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/src/main/java/com/guanshiyun/reactiveredis/ReactiveRedisUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/src/main/java/com/guanshiyun/reactiveredis/ReactiveRedisUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/controller/hostproduct/HostProductController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-app/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-app/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-common-utils/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-common-utils/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-pojo/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-behavior-cloud/behavior-server/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-behavior-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-behavior-cloud/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-erp-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-erp-cloud/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-erp-cloud/target/maven-archiver/pom.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/src/main/java/com/guanshiyun/filter/GatewayGlobalFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/src/main/java/com/guanshiyun/filter/GatewayGlobalFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/src/main/java/com/guanshiyun/reactiveredis/ReactiveRedisUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/src/main/java/com/guanshiyun/reactiveredis/ReactiveRedisUtil.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-gateway-cloud/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/ai-server-api/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/ai-server-api/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/ai-server-api/src/main/java/com/guanshiyun/aienums/AiPrefix.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/ai-server-api/src/main/java/com/guanshiyun/aienums/AiPrefix.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/ai-server-api/src/main/java/com/guanshiyun/rpc/chatrecommend/AiChatClientRecommendServiceApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/ai-server-api/src/main/java/com/guanshiyun/rpc/chatrecommend/AiChatClientRecommendServiceApi.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/src/main/java/com/guanshiyun/controller/order/PurChaseOrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-server/src/main/java/com/guanshiyun/controller/order/PurChaseOrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/order-server/src/main/java/com/guanshiyun/controller/order/vo/PurChaseOrderVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/order-server/src/main/java/com/guanshiyun/controller/order/vo/PurChaseOrderVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/ai-server-api/src/main/java/com/guanshiyun/rpc/chatrecommend/impl/AiChatClientRecommendServiceApiImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/ai-server-api/src/main/java/com/guanshiyun/rpc/chatrecommend/impl/AiChatClientRecommendServiceApiImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/ai-server-api/src/main/java/com/guanshiyun/rpc/config/WebClientRpc.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/ai-server-api/src/main/java/com/guanshiyun/rpc/config/AiWebClientRpc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/goodsenum/GoodsApiUrl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/goodsenum/GoodsApiUrl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/config/WebClientRpc.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/config/GoodsWebClientRpc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/category/impl/CategoryApiServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/category/impl/CategoryApiServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/product/ProductApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/product/ProductApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/product/impl/ProductApiServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/product/impl/ProductApiServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/sku/impl/SkuApiServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/sku/impl/SkuApiServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/tag/TagApiService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/tag/TagApiService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/tag/impl/TagApiServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/tag/impl/TagApiServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/warehouse/impl/WarehouseApiServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/goodsapi/warehouse/impl/WarehouseApiServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/ProductApiVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/ProductApiVO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/hrms-server-api/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/hrms-server-api/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/src/main/java/com/guanshiyun/rpc/config/WebClientRpc.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/src/main/java/com/guanshiyun/rpc/config/WebClientRpc.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/sys-server-api/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/sys-server-api/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-app/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-app/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-app/src/main/resources/application-dev.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-app/src/main/resources/application-dev.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-app/src/test/java/com/guanshiyun/GoodsAppApplicationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-app/src/test/java/com/guanshiyun/GoodsAppApplicationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-app/src/test/java/com/guanshiyun/WarehouseAppApplicationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-app/src/test/java/com/guanshiyun/WarehouseAppApplicationTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-common-utils/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-common-utils/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/category/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/category/CategoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/product/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/product/ProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/tag/TagController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/tag/TagController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/repository/relation/ProductTagRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/repository/relation/ProductTagRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/repository/tag/TagRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/repository/tag/TagRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/category/CategoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/category/CategoryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/category/impl/CategoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/category/impl/CategoryServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/product/ProductService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/product/ProductService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/product/impl/ProductServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/product/impl/ProductServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/tag/TagService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/tag/TagService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/tag/impl/TagServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/tag/impl/TagServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-order-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-order-cloud/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-recommend-cloud/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/src/main/resources/application-dev.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/src/main/resources/application-dev.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-app/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-common-utils/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-common-utils/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-server/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-recommend-cloud/recommend-server/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/service/signin/impl/SignInUpServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/service/signin/impl/SignInUpServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/service/signin/impl/SignInUpServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/service/signin/impl/SignInUpServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/system-app/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/system-app/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/system-app/src/main/resources/application-dev.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/system-app/src/main/resources/application-dev.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-upload-cloud/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-upload-cloud/src/main/resources/application.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../job/xxl-job/xxl-job-admin/src/main/resources/mapper/XxlJobGroupMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../job/xxl-job/xxl-job-admin/src/main/resources/mapper/EmbeddingProductService.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -126,10 +237,10 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Kotlin Class" />
-        <option value="Enum" />
         <option value="package-info" />
         <option value="AnnotationType" />
         <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
       </list>
     </option>
@@ -167,7 +278,7 @@
         <entry key="$PROJECT_DIR$/../job/xxl-job" value="ai-recommend-gsy" />
       </map>
     </option>
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../job/xxl-job" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="SYNC" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -220,11 +331,25 @@
       </RecentBranches>
     </option>
   </component>
+  <component name="GiteeDefaultAccount">
+    <option name="defaultAccountId" value="ffa13200-7048-4ccb-b77c-3b6ff8a70c14" />
+  </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/gs1234gs/ai-recommend-cloud.git&quot;,
     &quot;accountId&quot;: &quot;09b92d69-7d47-4d8c-8d6f-99092e3f9fb1&quot;
   }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$PROJECT_DIR$/../../../app/Java/apache-maven-3.9.11/conf/repository/io/gorse/gorse-client/0.5.0/gorse-client-0.5.0.jar!/io/gorse/gorse4j/Gorse.class" root0="SKIP_INSPECTION" />
+    <setting file="jar://$PROJECT_DIR$/../../../app/Java/apache-maven-3.9.11/conf/repository/io/gorse/gorse-client/0.5.0/gorse-client-0.5.0.jar!/io/gorse/gorse4j/Item.class" root0="SKIP_INSPECTION" />
+    <setting file="jar://$PROJECT_DIR$/../../../app/Java/apache-maven-3.9.11/conf/repository/io/gorse/gorse-client/0.5.0/gorse-client-0.5.0.jar!/io/gorse/gorse4j/RowAffected.class" root0="SKIP_INSPECTION" />
+    <setting file="jar://$PROJECT_DIR$/../../../app/Java/apache-maven-3.9.11/conf/repository/io/gorse/gorse-client/0.5.0/gorse-client-0.5.0.jar!/io/gorse/gorse4j/Score.class" root0="SKIP_INSPECTION" />
+    <setting file="jar://$PROJECT_DIR$/../../../app/Java/apache-maven-3.9.11/conf/repository/io/gorse/gorse-client/0.5.0/gorse-client-0.5.0.jar!/io/gorse/gorse4j/User.class" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
 }</component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -237,12 +362,12 @@
     </option>
     <option name="importingSettings">
       <MavenImportingSettings>
-        <option name="jdkForImporter" value="#JAVA_HOME" />
+        <option name="jdkForImporter" value="21" />
       </MavenImportingSettings>
     </option>
   </component>
   <component name="MavenRunner">
-    <option name="jreName" value="#JAVA_HOME" />
+    <option name="jreName" value="21" />
     <option name="skipTests" value="true" />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="D:\app\php\php.exe" />
@@ -268,17 +393,22 @@
     "Application.AiAppApplicationTests.executor": "Run",
     "Application.ConditionalJacksonConfig.executor": "Run",
     "Application.CustomReactiveAuthenticationManager.executor": "Run",
+    "Application.EmbeddingServiceImpl.executor": "Run",
+    "Application.EmbeddingTest.executor": "Run",
     "Application.GatewayServerAppApplication.executor": "Run",
     "Application.Main.executor": "Run",
     "Application.MainApplication.executor": "Run",
     "Application.MainTest.executor": "Run",
     "Application.MainTest1.executor": "Run",
     "Application.MyStringUtils.executor": "Run",
+    "Application.ProductApiServiceImpl.executor": "Run",
     "Application.PurChaseOrderServiceImpl.executor": "Run",
     "Application.ReReading.executor": "Run",
     "Application.ResultNumber.executor": "Run",
     "Application.SnowflakePermanent.executor": "Run",
+    "Application.SpeechRecognitionTest.executor": "Run",
     "Application.SystemAppApplication.executor": "Run",
+    "Application.Test.executor": "Run",
     "Application.Test1.executor": "Run",
     "Application.Test21.executor": "Run",
     "Application.TestController.executor": "Run",
@@ -299,6 +429,9 @@
     "JUnit.AiAppApplicationTests.testFindCursorPageChat_ShouldReturnRecords.executor": "Run",
     "JUnit.AiAppApplicationTests.testHybridRecommendation.executor": "Run",
     "JUnit.BehaviorAppApplicationTest.test.executor": "Run",
+    "JUnit.EmbeddingTest.test.executor": "Run",
+    "JUnit.EmbeddingTest.test1.executor": "Run",
+    "JUnit.EmbeddingTest.test2.executor": "Run",
     "JUnit.GatewayServerAppApplicationTest.contextLoads.executor": "Run",
     "JUnit.GoodsAppApplicationTest.test.executor": "Run",
     "JUnit.GoodsAppApplicationTest.test2.executor": "Run",
@@ -314,17 +447,22 @@
     "JUnit.SystemAppApplicationTests.contextLoads.executor": "Run",
     "JUnit.SystemAppApplicationTests.test.executor": "Run",
     "JUnit.SystemAppApplicationTests.test2.executor": "Run",
+    "JUnit.Test12.test.executor": "Run",
+    "JUnit.TestGoods.test.executor": "Run",
     "JUnit.UploadAppApplicationTest.contextLoads.executor": "Run",
     "JUnit.UploadAppApplicationTest.testUploadFileViaHttp.executor": "Run",
     "JUnit.WarehouseAppApplicationTest.test1Del.executor": "Run",
     "JUnit.WarehouseAppApplicationTest.test2.executor": "Run",
     "JUnit.WarehouseAppApplicationTest.test3.executor": "Run",
+    "JUnit.WarehouseAppApplicationTest.test56.executor": "Run",
     "JUnit.WarehouseAppApplicationTest.testCreateWarehouses.executor": "Run",
     "JUnit.ZMoudleApplicationTests.contextLoads.executor": "Run",
     "JUnit.ZMoudleApplicationTests.executor": "Run",
     "Maven. [org.apache.maven.plugins:maven-archetype-plugin:RELEASE:generate].executor": "Run",
     "Maven.ai-common-util [clean].executor": "Run",
     "Maven.ai-common-util [install].executor": "Run",
+    "Maven.aliyun-oss-spring-boot-autoconfigure [clean].executor": "Run",
+    "Maven.aliyun-oss-spring-boot-autoconfigure [install].executor": "Run",
     "Maven.aliyun-oss-spring-boot-autoconfigure [org.apache.maven.plugins:maven-clean-plugin:3.4.1:clean].executor": "Run",
     "Maven.aliyun-oss-spring-boot-autoconfigure [org.apache.maven.plugins:maven-install-plugin:3.1.4:help].executor": "Run",
     "Maven.aliyun-oss-spring-boot-starter [package].executor": "Run",
@@ -344,6 +482,8 @@
     "Maven.gateway-server-app [package].executor": "Run",
     "Maven.gsy-ai-cloud [clean].executor": "Run",
     "Maven.gsy-ai-cloud [install].executor": "Run",
+    "Maven.gsy-general-api-cloud [install].executor": "Run",
+    "Maven.gsy-goods-cloud [install].executor": "Run",
     "Maven.guanshiyun [clean].executor": "Run",
     "Maven.guanshiyun [install].executor": "Run",
     "Maven.guanshiyun [org.apache.maven.plugins:maven-clean-plugin:3.3.2:clean].executor": "Run",
@@ -386,7 +526,7 @@
     "Spring Boot.ZMoudleApplication.executor": "Run",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultAutoModeForALLUsers.v1": "true",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "ai-recommend-gsy",
     "ignore.virus.scanning.warn.message": "true",
     "jdk.selected.JAVA_MODULE": "21",
     "junie.onboarding.icon.badge.shown": "true",
@@ -399,14 +539,14 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Libraries",
+    "project.structure.last.edited": "Problems",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.29885057",
     "run.configurations.included.in.services": "true",
     "service.view.auto.scroll.from.source": "true",
     "service.view.auto.scroll.to.source": "true",
     "settings.build.tools.auto.reload": "SELECTIVE",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.importing",
+    "settings.editor.selected.configurable": "com.gitee.ui.GiteeSettingsConfigurable",
     "to.speed.mode.migration.done": "true",
     "ts.external.directory.path": "D:\\app\\idea\\IntelliJ IDEA 2024.1.7\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
     "two.files.diff.last.used.file": "D:/myai/end/ai-recommend-cloud/common-utils-cloud/public-pojo-spring-boot-autoconfigure/pom.xml",
@@ -454,10 +594,11 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="JUnit.AiAppApplicationTests.testHybridRecommendation">
-    <configuration name="AiAppApplicationTests" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.guanshiyun.AiAppApplicationTests" />
+  <component name="RunManager" selected="Application.EmbeddingTest">
+    <configuration name="EmbeddingTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.guanshiyun.EmbeddingTest" />
       <module name="ai-app" />
+      <shortenClasspath name="ARGS_FILE" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.guanshiyun.*" />
@@ -468,12 +609,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PurChaseOrderServiceImpl" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.guanshiyun.service.order.impl.PurChaseOrderServiceImpl" />
-      <module name="order-server" />
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.guanshiyun.servername.Test" />
+      <module name="web-client-spring-boot-autoconfigure" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="com.guanshiyun.service.order.impl.*" />
+          <option name="PATTERN" value="com.guanshiyun.servername.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -481,21 +622,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ReReading" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.guanshiyun.ReReading" />
-      <module name="ai-app" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.guanshiyun.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
+    <configuration default="true" type="Application" factoryName="Application">
+      <shortenClasspath name="ARGS_FILE" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AiAppApplicationTests.test119" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="EmbeddingTest.test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="ai-app" />
+      <shortenClasspath name="ARGS_FILE" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.guanshiyun.*" />
@@ -503,15 +638,16 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="com.guanshiyun" />
-      <option name="MAIN_CLASS_NAME" value="com.guanshiyun.AiAppApplicationTests" />
-      <option name="METHOD_NAME" value="test119" />
+      <option name="MAIN_CLASS_NAME" value="com.guanshiyun.EmbeddingTest" />
+      <option name="METHOD_NAME" value="test" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AiAppApplicationTests.testHybridRecommendation" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="EmbeddingTest.test1" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="ai-app" />
+      <shortenClasspath name="ARGS_FILE" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.guanshiyun.*" />
@@ -519,9 +655,33 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="com.guanshiyun" />
-      <option name="MAIN_CLASS_NAME" value="com.guanshiyun.AiAppApplicationTests" />
-      <option name="METHOD_NAME" value="testHybridRecommendation" />
+      <option name="MAIN_CLASS_NAME" value="com.guanshiyun.EmbeddingTest" />
+      <option name="METHOD_NAME" value="test1" />
       <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="EmbeddingTest.test2" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ai-app" />
+      <shortenClasspath name="ARGS_FILE" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.guanshiyun.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.guanshiyun" />
+      <option name="MAIN_CLASS_NAME" value="com.guanshiyun.EmbeddingTest" />
+      <option name="METHOD_NAME" value="test2" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <shortenClasspath name="ARGS_FILE" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -650,11 +810,11 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.AiAppApplicationTests" />
-      <item itemvalue="Application.ReReading" />
-      <item itemvalue="Application.PurChaseOrderServiceImpl" />
-      <item itemvalue="JUnit.AiAppApplicationTests.testHybridRecommendation" />
-      <item itemvalue="JUnit.AiAppApplicationTests.test119" />
+      <item itemvalue="Application.EmbeddingTest" />
+      <item itemvalue="Application.Test" />
+      <item itemvalue="JUnit.EmbeddingTest.test2" />
+      <item itemvalue="JUnit.EmbeddingTest.test1" />
+      <item itemvalue="JUnit.EmbeddingTest.test" />
       <item itemvalue="Maven.guanshiyun" />
       <item itemvalue="Spring Boot.AiAppApplication" />
       <item itemvalue="Spring Boot.BehaviorAppApplication" />
@@ -671,11 +831,11 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.AiAppApplicationTests.testHybridRecommendation" />
-        <item itemvalue="JUnit.AiAppApplicationTests.test119" />
-        <item itemvalue="Application.AiAppApplicationTests" />
-        <item itemvalue="Application.ReReading" />
-        <item itemvalue="Application.PurChaseOrderServiceImpl" />
+        <item itemvalue="Application.EmbeddingTest" />
+        <item itemvalue="JUnit.EmbeddingTest.test1" />
+        <item itemvalue="JUnit.EmbeddingTest.test2" />
+        <item itemvalue="JUnit.EmbeddingTest.test" />
+        <item itemvalue="Application.Test" />
       </list>
     </recent_temporary>
   </component>
@@ -896,7 +1056,24 @@
       <workItem from="1764726865582" duration="2429000" />
       <workItem from="1764730054915" duration="2396000" />
       <workItem from="1764736778654" duration="2141000" />
-      <workItem from="1764739975239" duration="6475000" />
+      <workItem from="1764739975239" duration="11533000" />
+      <workItem from="1764751849763" duration="1273000" />
+      <workItem from="1764753141055" duration="12391000" />
+      <workItem from="1764809972674" duration="8232000" />
+      <workItem from="1764900694611" duration="9717000" />
+      <workItem from="1765069684471" duration="72000" />
+      <workItem from="1765069788259" duration="15478000" />
+      <workItem from="1765098916636" duration="126000" />
+      <workItem from="1765099152503" duration="50000" />
+      <workItem from="1765099347264" duration="1743000" />
+      <workItem from="1765155507412" duration="8000" />
+      <workItem from="1765251912629" duration="23600000" />
+      <workItem from="1765328240645" duration="22974000" />
+      <workItem from="1765415012553" duration="26855000" />
+      <workItem from="1765501323895" duration="15505000" />
+      <workItem from="1765590015497" duration="15058000" />
+      <workItem from="1765612304257" duration="1281000" />
+      <workItem from="1765760806364" duration="9312000" />
     </task>
     <task id="LOCAL-00001" summary="第一次推送">
       <option name="closed" value="true" />
@@ -962,7 +1139,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764651786663</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="升级spring boot版本到3.8，升级spring cloud版本到2025">
+      <option name="closed" value="true" />
+      <created>1764746970014</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1764746970014</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1018,14 +1203,15 @@
     <MESSAGE value="pom文件修改" />
     <MESSAGE value="新增接口功能" />
     <MESSAGE value="更新" />
-    <option name="LAST_COMMIT_MESSAGE" value="更新" />
+    <MESSAGE value="升级spring boot版本到3.8，升级spring cloud版本到2025" />
+    <option name="LAST_COMMIT_MESSAGE" value="升级spring boot版本到3.8，升级spring cloud版本到2025" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/src/main/java/com/guanshiyun/filter/GatewayGlobalFilter.java</url>
-          <line>44</line>
+          <line>45</line>
           <option name="timeStamp" value="69" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
@@ -1090,6 +1276,41 @@
           <url>file://$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/service/sysrole/impl/SysRoleServiceImpl.java</url>
           <line>53</line>
           <option name="timeStamp" value="115" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/product/impl/ProductServiceImpl.java</url>
+          <line>580</line>
+          <option name="timeStamp" value="126" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/product/impl/ProductServiceImpl.java</url>
+          <line>582</line>
+          <option name="timeStamp" value="127" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/common-utils-cloud/public-pojo-spring-boot-autoconfigure/src/main/java/com/guanshiyun/responsepojo/ResultT.java</url>
+          <line>22</line>
+          <option name="timeStamp" value="129" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/src/main/java/com/guanshiyun/embedding/EmbeddingProduct.java</url>
+          <line>20</line>
+          <option name="timeStamp" value="130" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/ZMoudle/src/test/java/com/xinghe/zmoudle/Test12.java</url>
+          <line>24</line>
+          <option name="timeStamp" value="133" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/gsy-ai-cloud/ai-server/src/main/java/com/guanshiyun/repository/embedding/EmbeddingProductRepository.java</url>
+          <line>4</line>
+          <option name="timeStamp" value="137" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/gsy-ai-cloud/ai-common-util/src/main/java/com/guanshiyun/qdrant/QdrantConfig.java</url>
+          <line>28</line>
+          <option name="timeStamp" value="138" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

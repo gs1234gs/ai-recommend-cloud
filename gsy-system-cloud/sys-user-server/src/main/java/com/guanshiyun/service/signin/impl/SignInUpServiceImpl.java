@@ -1,9 +1,9 @@
 package com.guanshiyun.service.signin.impl;
 
 
-import com.alibaba.fastjson.JSON;
-import com.guanshiyun.consts.ConstClassNickName;
+import com.alibaba.fastjson2.JSON;
 import com.guanshiyun.code.HttpCodeConst;
+import com.guanshiyun.consts.ConstClassNickName;
 import com.guanshiyun.menupojo.SysMenu;
 import com.guanshiyun.repository.signin.SignInUpRepository;
 import com.guanshiyun.responsepojo.ResultT;

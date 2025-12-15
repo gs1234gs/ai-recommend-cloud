@@ -2,9 +2,10 @@ package com.xinghe.zmoudle.controller;
 
 import com.xinghe.zmoudle.pojo.Product;
 import com.xinghe.zmoudle.service.CollaborativeFilteringServiceImpl;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
+@RestController
 public class TestController {
     public static void main(String[] args) {
         CollaborativeFilteringServiceImpl cv = new CollaborativeFilteringServiceImpl();

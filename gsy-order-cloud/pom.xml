@@ -21,9 +21,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <snapshotName>0.0.1-SNAPSHOT</snapshotName>
-        <junit.version>4.13.2</junit.version>
-        <r2dbc.mysql.version>1.4.1</r2dbc.mysql.version>
     </properties>
 
     <dependencies>
@@ -65,7 +62,6 @@
         <dependency>
             <groupId>io.asyncer</groupId>
             <artifactId>r2dbc-mysql</artifactId>
-            <version>${r2dbc.mysql.version}</version>
         </dependency>
         <!-- H2 Database (for dev) -->
         <dependency>

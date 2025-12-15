@@ -10,6 +10,10 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class ModelChatClient {
     private final OllamaChatModel ollamaModel;
+    /**
+     * 创建一个ChatClient实例，并使用OllamaChatModel作为模型
+     * @return
+     */
     @Bean
     public ChatClient chatClient() {
        return ChatClient.builder(ollamaModel).build();

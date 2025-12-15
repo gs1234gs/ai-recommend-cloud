@@ -18,60 +18,51 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequestMapping("/product")
 @RestController
 @RequiredArgsConstructor
-
 public class ProductController {
     private final ProductService productService;
+
     //添加商品
     @PostMapping("/save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody  ProductSaveVO productSaveVO){
+    public Mono<ResultT<BigInteger>> save(@RequestBody ProductSaveVO productSaveVO) {
         return productService.save(productSaveVO)
-                .map(productId->
+                .map(productId ->
                 {
-                    log.info("保存商品成功，商品ID为：{}",productId);
+                    log.info("保存商品成功，商品ID为：{}", productId);
                     return ResultT.<BigInteger>builder()
                             .code(HttpCodeConst.OK)
                             .msg("保存成功")
                             .data(productId)
                             .build();
-                }).switchIfEmpty(
-                        Mono.fromCallable(()->
-                                {
-                                    log.info("保存商品失败");
-                                    return ResultT.<BigInteger>builder()
-                                            .code(HttpCodeConst.BAD_REQUEST)
-                                            .msg("保存失败")
-                                            .build();
-                                }
-                                )
-                )
-                .onErrorResume(throwable ->{
-                    log.info("保存商品失败", throwable);
-                    return Mono.just(ResultT.<BigInteger>builder()
-                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
-                            .msg("保存失败")
-                            .build());
-                });
+                })
+                .onErrorResume(throwable ->
+                        Mono.just(ResultT.<BigInteger>builder()
+                                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                .msg("保存失败")
+                                .build())
+                );
     }
+
     /**
      * 删除商品
-     * */
+     */
     @DeleteMapping("/deleteById/{id}")
-    public Mono<ResultT<Long>> deleteById(@PathVariable @Validated BigInteger id){
+    public Mono<ResultT<Long>> deleteById(@PathVariable @Validated BigInteger id) {
         return productService.deleteById(id)
-                .map(deleteCount->{
+                .map(deleteCount -> {
                     log.info("删除商品成功，删除数量为：{}", deleteCount);
-                  return   ResultT.<Long>builder()
+                    return ResultT.<Long>builder()
                             .code(HttpCodeConst.OK)
                             .msg("删除成功")
                             .data(deleteCount)
                             .build();
                 })
-                .onErrorResume(throwable ->{
+                .onErrorResume(throwable -> {
                     log.info("删除商品失败", throwable);
                     return Mono.just(
                             ResultT.<Long>builder()
@@ -81,49 +72,80 @@ public class ProductController {
                     );
                 });
     }
+
     /**
      * 分页查询，返回管理端端商品列表
-     * */
-   @PostMapping("/findPage")
-   public Mono<PageResultT<List<ProductVO>>> findPage(@RequestBody (required = false) RequestPage<ProductVO> requestPage){
-      return productService.findPage(requestPage);
-   }
-   /**
-    * 游标查询，返回客户端
-    * */
-   @PostMapping("/findCursor")
-    public Mono<ResultT<CursorPageResult<List<ProductCustomerVO>>>>  findCursor(@RequestBody (required = false) RequestCursorPage<ProductVO> requestCursorPage){
-       return productService.findCursor(requestCursorPage)
-               .map(cursorPageResult ->
-                       ResultT.<CursorPageResult<List<ProductCustomerVO>>>builder()
-                               .code(HttpCodeConst.OK)
-                               .msg("查询成功")
-                               .data(cursorPageResult)
-                               .build()
+     */
+    @PostMapping("/findPage")
+    public Mono<PageResultT<List<ProductVO>>> findPage(@RequestBody(required = false) RequestPage<ProductVO> requestPage) {
+        return productService.findPage(requestPage);
+    }
 
-                       )
-               .onErrorResume(throwable ->{
-                   log.info("查询失败", throwable);
-                   return Mono.just(
-                           ResultT.<CursorPageResult<List<ProductCustomerVO>>>builder()
-                                   .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
-                                   .msg("系统错误")
-                                   .build()
-                   );
-               });
-   }
-   //批量删除
+    /**
+     * 游标查询获取商品列表
+     */
+    @PostMapping("/findCursorList")
+    public Mono<ResultT<CursorPageResult<List<ProductVO>>>> findCursorList(@RequestBody(required = false) RequestCursorPage<ProductVO> requestCursorPage) {
+        return productService.findCursorListProductVO(requestCursorPage)
+                .map(productVOList ->{
+
+                       log.info("查询成功，商品列表为：{}", productVOList);
+                      return   ResultT.<CursorPageResult<List<ProductVO>>>builder()
+                                .code(HttpCodeConst.OK)
+                                .msg("查询成功")
+                                .data(productVOList)
+                                .build() ;
+                }
+                )
+                .onErrorResume(throwable -> {
+                            log.info("查询失败", throwable);
+                            return Mono.just(ResultT.<CursorPageResult<List<ProductVO>>>builder()
+                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .msg("系统错误")
+                                    .build()
+                            );
+                        }
+                );
+    }
+    @GetMapping("/test")
+    public Map<String, Object> test() {
+        return Map.of("big",BigInteger.valueOf(1L));
+    }
+    /**
+     * 游标查询，返回客户端
+     */
+    @PostMapping("/findCursor")
+    public Mono<ResultT<CursorPageResult<List<ProductCustomerVO>>>> findCursor(@RequestBody(required = false) RequestCursorPage<ProductVO> requestCursorPage) {
+        return productService.findCursor(requestCursorPage)
+                .map(cursorPageResult ->
+                        ResultT.<CursorPageResult<List<ProductCustomerVO>>>builder()
+                                .code(HttpCodeConst.OK)
+                                .msg("查询成功")
+                                .data(cursorPageResult)
+                                .build()
+
+                )
+                .onErrorResume(throwable ->
+                        Mono.just(ResultT.<CursorPageResult<List<ProductCustomerVO>>>builder()
+                                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                .msg("系统错误")
+                                .build()
+                        )
+                );
+    }
+
+    //批量删除
     @DeleteMapping("/deleteAllById")
-    public Mono<ResultT<Void>> deleteAllById(@RequestBody List<BigInteger> ids){
+    public Mono<ResultT<Void>> deleteAllById(@RequestBody List<BigInteger> ids) {
         return productService.deleteAllById(ids)
-                .map(deleteCount->
+                .map(deleteCount ->
                         ResultT.<Void>builder()
                                 .code(HttpCodeConst.OK)
                                 .msg("删除成功")
                                 .data(deleteCount)
                                 .build()
                 )
-                .onErrorResume(throwable ->{
+                .onErrorResume(throwable -> {
                     log.info("删除失败", throwable);
                     return Mono.just(
                             ResultT.<Void>builder()
@@ -133,24 +155,25 @@ public class ProductController {
                     );
                 });
     }
+
     @GetMapping("/findById/{id}")
-    public Mono<ResultT<ProductVO>> findById(@PathVariable BigInteger id){
-       return productService.findById(id)
-               .map(productVO ->
-                       ResultT.<ProductVO>builder()
-                               .code(HttpCodeConst.OK)
-                               .msg("查询成功")
-                               .data(productVO)
-                               .build()
-               )
-               .onErrorResume(throwable ->{
-                   log.info("查询失败", throwable);
-                   return Mono.just(
-                           ResultT.<ProductVO>builder()
-                                   .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
-                                   .msg("查询失败")
-                                   .build()
-                   );
-               });
+    public Mono<ResultT<ProductVO>> findById(@PathVariable BigInteger id) {
+        return productService.findById(id)
+                .map(productVO ->
+                        ResultT.<ProductVO>builder()
+                                .code(HttpCodeConst.OK)
+                                .msg("查询成功")
+                                .data(productVO)
+                                .build()
+                )
+                .onErrorResume(throwable -> {
+                    log.info("查询失败", throwable);
+                    return Mono.just(
+                            ResultT.<ProductVO>builder()
+                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .msg("查询失败")
+                                    .build()
+                    );
+                });
     }
 }

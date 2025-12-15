@@ -18,7 +18,7 @@ import java.io.Serializable;
         ignoreUnknown = true
 )
 @FieldNameConstants
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = "value")
 @Accessors(chain = true)
 public class Feedback implements Serializable {
     @Serial
@@ -29,6 +29,9 @@ public class Feedback implements Serializable {
     private String userId;
     @JsonProperty("ItemId")
     private String itemId;
+    @JsonProperty("Value")
+    private double value;
+
     @JsonProperty("Timestamp")
     private String timestamp;
 }

@@ -1,9 +1,12 @@
 package com.guanshiyun;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.guanshiyun.controller.product.vo.ProductVO;
 import com.guanshiyun.controller.warehouse.vo.WarehouseSaveVO;
 import com.guanshiyun.controller.warehouse.vo.WarehouseVO;
+import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.requestpojo.RequestPage;
+import com.guanshiyun.service.product.ProductService;
 import com.guanshiyun.service.warehouse.WarehouseService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.warehouse.Warehouse;
@@ -229,6 +232,15 @@ public class WarehouseAppApplicationTest {
                 .build());
 
         return warehouses;
+    }
+
+    @Autowired
+    private ProductService productService;
+    @Test
+    void test56(){
+        productService.findCursorListProductVO(RequestCursorPage.<ProductVO>builder().pageSize(10).build())
+                .doOnSuccess(productVOList -> System.out.println(productVOList))
+                .block();
     }
 
 }

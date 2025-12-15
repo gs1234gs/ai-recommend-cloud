@@ -23,10 +23,5 @@
             <artifactId>recommend-common-utils</artifactId>
             <version>${snapshotName}</version>
         </dependency>
-        <dependency>
-            <groupId>com.guanshiyun</groupId>
-            <artifactId>recommend-common-utils</artifactId>
-            <version>${snapshotName}</version>
-        </dependency>
     </dependencies>
 </project>

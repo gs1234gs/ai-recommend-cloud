@@ -13,18 +13,23 @@
     <name>goods-server</name>
     <url>http://maven.apache.org</url>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <snapshot.version>0.0.1-SNAPSHOT</snapshot.version>
-
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.guanshiyun</groupId>
             <artifactId>goods-common-utils</artifactId>
-            <version>${snapshot.version}</version>
+            <version>${snapshotName}</version>
         </dependency>
 
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.PromptChatMemoryAdvisor;
-import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.ollama.OllamaChatModel;
@@ -47,27 +46,11 @@ class AiAppApplicationTests {
     ) {
 
 //        System.out.println(ollamaModel.call("你好，你是谁?"));
-        ollamaModel.stream("你好，你是谁?")
+        ollamaModel.stream("今天是哪年哪月哪日，昨天昆明天气怎么样")
                 .doOnNext(System.out::print)   // 每一段响应流输出到控制台
                 .doOnError(Throwable::printStackTrace)
                 .doOnComplete(() -> System.out.println("\n流式结束"))
                 .blockLast();
-
-    }
-
-    @Test
-    void chatClientTest(@Autowired OllamaChatModel ollamaModel) {
-        ChatClient chatClient = ChatClient.builder(ollamaModel)
-                .defaultSystem("请以你是{name}的身份来回答，性别：{sex},年龄：{age}，").build();
-        String content = chatClient.prompt()
-                .user("关羽帅不帅?")
-                .advisors(new SimpleLoggerAdvisor(), new ReReading())
-                .system(p -> p.param("name", "小千")
-                        .param("sex", "女")
-                        .param("age", "18"))
-                .call()
-                .content();
-        System.out.println(content);
 
     }
 
@@ -273,7 +256,7 @@ class AiAppApplicationTests {
         StepVerifier.create(
                         chatRecordService.findCursorPageChat(
                                         RequestCursorPage.<ChatRecord>builder()
-                                                .lastId(BigInteger.valueOf(143200670353195008L)) // ✅ 用 long
+                                                .lastId(BigInteger.valueOf(143200670353195008L)) //  用 long
                                                 .pageSize(10)
                                                 .condition(ChatRecord.builder()
                                                         .title("二牛")
@@ -284,7 +267,7 @@ class AiAppApplicationTests {
                                 .collectList() // 收集成 List
                 )
                 .assertNext(list -> {
-                    System.out.println("✅ 查询成功，返回 " + list.size() + " 条数据");
+                    System.out.println(" 查询成功，返回 " + list.size() + " 条数据");
                     list.forEach(chat ->
                             System.out.println("📄 id=" + chat.getId() + ", title=" + chat.getTitle())
                     );

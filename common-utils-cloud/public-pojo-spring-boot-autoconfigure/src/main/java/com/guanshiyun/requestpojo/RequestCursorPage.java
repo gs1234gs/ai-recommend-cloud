@@ -16,7 +16,8 @@ import java.math.BigInteger;
 @NoArgsConstructor
 public class RequestCursorPage< T> {
     private BigInteger lastId;
-    private Integer pageSize;
+    @Builder.Default
+    private Integer pageSize = 10;
     @Builder.Default
     private String order = "DESC";
     private T condition;

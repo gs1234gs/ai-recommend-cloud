@@ -11,6 +11,7 @@ import com.guanshiyun.category.Category;
 import com.guanshiyun.controller.category.vo.CategorySaveVO;
 import com.guanshiyun.controller.category.vo.CategoryVO;
 import com.guanshiyun.repository.category.CategoryRepository;
+import com.guanshiyun.repository.relation.ProductCategoryRepository;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.category.CategoryService;
@@ -23,6 +24,7 @@ import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.data.relational.core.query.Query;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
@@ -38,6 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
     private final MyBigInteger myBigInteger;
+    private final ProductCategoryRepository productCategoryRepository;
 /**
  * 添加 类型
  * */
@@ -118,5 +121,12 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findAll()
                 .mapNotNull(item-> BeanConvertUtil.toBean(item,CategoryVO.class))
                 .collectList();
+    }
+
+    @Override
+    public Flux<CategoryVO> findByProductId(BigInteger productId) {
+        return productCategoryRepository.findByProductId(productId)
+                .flatMap(productCategory->categoryRepository.findById(productCategory.getCategoryId()))
+                .mapNotNull(item->BeanConvertUtil.toBean(item,CategoryVO.class));
     }
 }

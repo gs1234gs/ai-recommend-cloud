@@ -3,6 +3,9 @@ spring:
     name: ai-app
   profiles:
     active: data,middleware,ollama
+  webflux:
+    multipart:
+      max-in-memory-size: 100MB
 
 server:
   port: 1949

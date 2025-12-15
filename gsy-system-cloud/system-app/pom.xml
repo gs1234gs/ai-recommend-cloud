@@ -24,8 +24,6 @@
         <tag/>
         <url/>
     </scm>
-    <properties>
-    </properties>
 
     <dependencies>
         <dependency>

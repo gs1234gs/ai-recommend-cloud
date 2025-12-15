@@ -1,7 +1,9 @@
 package com.guanshiyun.utils;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.requestpojo.RequestPage;
+import com.guanshiyun.responsepojo.CursorPageResult;
 import com.guanshiyun.responsepojo.PageResultT;
 
 import java.lang.reflect.Field;
@@ -106,7 +108,7 @@ public class BeanConvertUtil {
 
         T convertedCondition = null;
         if (source.getCondition() != null) {
-            // ✅ 使用 Hutool 支持嵌套
+            //  使用 Hutool 支持嵌套
             convertedCondition = BeanUtil.toBean(source.getCondition(), targetConditionClass);
         }
 
@@ -136,6 +138,45 @@ public class BeanConvertUtil {
                 .pageSize(source.getPageSize())
                 .total(source.getTotal())
                 .rows(convertedRows)
+                .build();
+    }
+
+
+    public static <S, T> CursorPageResult<List<T>> toBean(
+            CursorPageResult<List<S>> source,
+            Class<T> elementTargetType) {
+
+        if (source == null) {
+            return null;
+        }
+
+        List<T> convertedRows = Collections.emptyList();
+        if (source.getRows() != null && !source.getRows().isEmpty()) {
+            // 修复：将结果赋值给 convertedRows
+            convertedRows = toBeanList(source.getRows(), elementTargetType);
+        }
+
+        return CursorPageResult.<List<T>>builder()
+                .cursor(source.getCursor())
+                .hasNext(source.getHasNext())
+                .rows(convertedRows)
+                .build();
+    }
+
+    public static <S, T> RequestCursorPage<T> toBean(RequestCursorPage<S> source, Class<T> targetConditionClass) {
+        if (source == null) return null;
+
+        T convertedCondition = null;
+        if (source.getCondition() != null) {
+            //  使用 Hutool 支持嵌套
+            convertedCondition = BeanUtil.toBean(source.getCondition(), targetConditionClass);
+        }
+
+        return RequestCursorPage.<T>builder()
+                .order(source.getOrder())
+                .condition(convertedCondition)
+                .lastId(source.getLastId())
+                .pageSize(source.getPageSize())
                 .build();
     }
 

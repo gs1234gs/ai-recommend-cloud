@@ -23,10 +23,5 @@
             <artifactId>recommend-server</artifactId>
             <version>${snapshotName}</version>
         </dependency>
-        <dependency>
-            <groupId>com.guanshiyun</groupId>
-            <artifactId>recommend-server</artifactId>
-            <version>${snapshotName}</version>
-        </dependency>
     </dependencies>
 </project>

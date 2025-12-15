@@ -69,11 +69,9 @@
 			<artifactId>aliyun-sdk-oss</artifactId>
 			<version>${sdk.oss.version}</version>
 		</dependency>
-
 		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>${fastjson.version}</version>
+			<groupId>com.alibaba.fastjson2</groupId>
+			<artifactId>fastjson2</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

@@ -29,7 +29,8 @@ public class RedisMemory implements ChatMemoryRepository {
         return Objects.requireNonNull(setOps.members(CONVERSATION_SET)
                 .map(Object::toString)
                 .collectList()
-                .block());
+                .block()
+        );
     }
 
     @NotNull

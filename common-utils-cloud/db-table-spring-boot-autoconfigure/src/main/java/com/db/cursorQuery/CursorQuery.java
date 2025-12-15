@@ -98,7 +98,7 @@ public class CursorQuery<T> {
      */
     public Flux<T> list() {
         BigInteger lastId = validatedPage.getLastId();         // 使用校验后的 lastId
-        Integer pageSize = validatedPage.getPageSize();         // 已经是合法值
+        int pageSize =  Integer.sum(validatedPage.getPageSize(), 1);         // 已经是合法值
         String orderStr = validatedPage.getOrder();             //  已转为大写 ASC/DESC
 
         // 添加游标条件：基于 lastId 和 order 方向

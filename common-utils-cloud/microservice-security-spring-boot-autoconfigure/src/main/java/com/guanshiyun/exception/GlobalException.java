@@ -16,7 +16,7 @@ public class GlobalException {
      * 捕获所有未处理的异常
      */
     @ExceptionHandler(Throwable.class)
-    public Mono<ResultT> handleAllException(Throwable e, ServerWebExchange exchange) {
+    public Mono<ResultT<Object>> handleAllException(Throwable e, ServerWebExchange exchange) {
         log.error("全局异常捕获：{}", e.getMessage(), e);
 
         return Mono.just(ResultT.builder()
