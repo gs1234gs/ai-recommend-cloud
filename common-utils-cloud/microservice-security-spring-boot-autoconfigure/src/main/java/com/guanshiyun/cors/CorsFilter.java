@@ -34,6 +34,8 @@ public class CorsFilter {
         config.addAllowedOrigin("http://127.0.0.1:9000");
         config.addAllowedOrigin("http://localhost:9000");
         config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("http://127.0.0.1:80");
+        config.addAllowedOrigin("http://localhost:80");
 
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");

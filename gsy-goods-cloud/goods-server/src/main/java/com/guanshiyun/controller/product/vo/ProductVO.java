@@ -2,22 +2,32 @@ package com.guanshiyun.controller.product.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.product.Product;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductVO {
+@Accessors(chain = true)
+public class ProductVO extends BasePojo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     //商品id
     private BigInteger id;
     //商品名称
@@ -46,17 +56,13 @@ public class ProductVO {
     //仓库id
     private BigInteger warehouseId;
     //分类 id
-    private BigInteger categoryId;
+    private List<BigInteger> categoryId;
     //标签 id
-    private BigInteger tagId;
+    private List<BigInteger> tagId;
     //创建开始时间
     private LocalDateTime startTime;
     //创建结束时间
     private LocalDateTime endTime;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
-    private BigInteger creator;
-    private BigInteger updater;
     // 在 ProductVO 中添加
     public static List<ProductVO> fromEntities(List<Product> products) {
         return products.stream()
@@ -69,7 +75,6 @@ public class ProductVO {
                         .brand(p.getBrand())
                         .placeOfOrigin(p.getPlaceOfOrigin())
                         .level(p.getLevel())
-                        .categoryId(p.getCategoryId())
                         .offlineTime(p.getOfflineTime())
                         .publishTime(p.getPublishTime())
                         .creator(p.getCreator())
@@ -77,45 +82,6 @@ public class ProductVO {
                         .createTime(p.getCreateTime())
                         .updateTime(p.getUpdateTime())
                         .build())
-                .toList();
-    }
-    public static ProductVO fromEntities(Product p) {
-        return  ProductVO.builder()
-                        .id(p.getId())
-                        .name(p.getName())
-                        .description(p.getDescription())
-                        .image(p.getImage())
-                        .video(p.getVideo())
-                        .brand(p.getBrand())
-                        .placeOfOrigin(p.getPlaceOfOrigin())
-                        .level(p.getLevel())
-                        .categoryId(p.getCategoryId())
-                        .offlineTime(p.getOfflineTime())
-                        .publishTime(p.getPublishTime())
-                        .creator(p.getCreator())
-                        .updater(p.getUpdater())
-                        .createTime(p.getCreateTime())
-                        .updateTime(p.getUpdateTime())
-                        .build();
-    }
-
-    public static Product fromEntities(ProductVO p) {
-        return  Product.builder()
-                .id(p.getId())
-                .name(p.getName())
-                .description(p.getDescription())
-                .image(p.getImage())
-                .video(p.getVideo())
-                .brand(p.getBrand())
-                .placeOfOrigin(p.getPlaceOfOrigin())
-                .level(p.getLevel())
-                .categoryId(p.getCategoryId())
-                .offlineTime(p.getOfflineTime())
-                .publishTime(p.getPublishTime())
-                .creator(p.getCreator())
-                .updater(p.getUpdater())
-                .createTime(p.getCreateTime())
-                .updateTime(p.getUpdateTime())
-                .build();
+                .collect(Collectors.toList());
     }
 }

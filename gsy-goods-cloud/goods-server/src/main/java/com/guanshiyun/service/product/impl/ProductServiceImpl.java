@@ -8,24 +8,29 @@ import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.biginteger.MyBigInteger;
+import com.guanshiyun.category.Category;
 import com.guanshiyun.consts.ConstNumber;
-import com.guanshiyun.controller.product.vo.ProductCustomerVO;
 import com.guanshiyun.controller.product.vo.ProductSaveVO;
 import com.guanshiyun.controller.product.vo.ProductVO;
+import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import com.guanshiyun.product.Product;
 import com.guanshiyun.relationship.ProductCategory;
 import com.guanshiyun.relationship.ProductWarehouse;
+import com.guanshiyun.repository.category.CategoryRepository;
 import com.guanshiyun.repository.product.ProductRepository;
 import com.guanshiyun.repository.relation.ProductCategoryRepository;
 import com.guanshiyun.repository.relation.ProductTagRepository;
 import com.guanshiyun.repository.relation.ProductWarehouseRepository;
 import com.guanshiyun.repository.sku.SKURepository;
+import com.guanshiyun.repository.tag.TagRepository;
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.CursorPageResult;
 import com.guanshiyun.responsepojo.PageResultT;
+import com.guanshiyun.rpc.chatrecommend.AiChatClientRecommendServiceApi;
 import com.guanshiyun.service.product.ProductService;
 import com.guanshiyun.sku.SKU;
+import com.guanshiyun.tag.Tag;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
@@ -34,12 +39,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.data.relational.core.query.Query;
+import org.springframework.lang.NonNull;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.util.function.Tuples;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -63,14 +68,18 @@ public class ProductServiceImpl implements ProductService {
     private final TransactionalOperator transactionalOperator;
     private final SKURepository skuRepository;
     private final ProductCategoryRepository productCategoryRepository;
+    private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
+    private final AiChatClientRecommendServiceApi aiChatClientRecommendServiceApi;
 
     @Override
     public Mono<BigInteger> save(ProductSaveVO productSaveVO) {
         Product product = BeanUtil.toBean(productSaveVO, Product.class);
         List<BigInteger> warehouseIdList = productSaveVO.getWarehouseId();
-        BigInteger tagId = productSaveVO.getTagId();
+        List<BigInteger> tagIds = productSaveVO.getTagId();
         LocalDateTime now = LocalDateTime.now();
         List<BigInteger> categoryIds = productSaveVO.getCategoryId();
+        List<BigInteger> skuList = productSaveVO.getSkuList();
         return Mono.deferContextual(ctx -> {
                     BigInteger useId = myBigInteger.bigInteger(
                             ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
@@ -79,13 +88,14 @@ public class ProductServiceImpl implements ProductService {
                         return Mono.error(new RuntimeException("用户不存在"));
                     if (warehouseIdList.isEmpty())
                         return Mono.error(new RuntimeException("仓库不存在"));
-                    if (Objects.isNull(tagId))
-                        return Mono.error(new RuntimeException("标签不存在"));
+//                    if (Objects.isNull(tagIds))
+//                        return Mono.error(new RuntimeException("标签不存在"));
                     if (Objects.isNull(categoryIds))
                         return Mono.error(new RuntimeException("分类不存在"));
                     if (Objects.isNull(product.getId())) {
                         product.setCreateTime(now);
                         product.setCreator(useId);
+                        //对插入的商品进行向量化
                         //创建，同时创建仓库关系
                         return productRepository.save(product)
                                 .map(Product::getId)
@@ -123,6 +133,7 @@ public class ProductServiceImpl implements ProductService {
                                                     });
                                         }
                                 )
+                                .flatMap(productId -> bigIntegerMono(productId, skuList, categoryIds, tagIds, product))
                                 .onErrorResume(throwable -> {
                                     log.error("保存商品信息失败：", throwable);
                                     return Mono.error(new Exception("保存商品信息失败"));
@@ -184,12 +195,14 @@ public class ProductServiceImpl implements ProductService {
                                                             deleteWarehouseMono, insertWarehouseFlux.then(),
                                                             deleteCategoryMono, insertCategoryFlux.then()
                                                     ).then(Mono.just(productId));
-                                                });
+                                                })
+                                                .flatMap(productIdSave -> bigIntegerMono(productIdSave, skuList, categoryIds, tagIds, product)
+                                                )
+                                                .onErrorResume(throwable -> Mono.error(new Exception("保存商品信息失败")));
 
                                     }
 
-                            )
-                            .map(savaProduct -> savaProduct);
+                            );
                 })
                 .transform(transactionalOperator::transactional)
                 .onErrorResume(throwable -> {
@@ -199,6 +212,58 @@ public class ProductServiceImpl implements ProductService {
         /**
          * 删除
          * */
+    }
+
+    @NonNull
+    private Mono<BigInteger> bigIntegerMono(BigInteger productIdSave, List<BigInteger> skuList, List<BigInteger> categoryIds, List<BigInteger> tagIds, Product product) {
+        log.info("更新商品信息成功：{}", productIdSave);
+        Mono<List<SKU>> skuFlux = Flux.fromIterable(skuList)
+                .flatMap(skuRepository::findById)
+                .collectList();
+        Mono<List<Category>> categoryFlux = Flux.fromIterable(categoryIds)
+                .flatMap(categoryRepository::findById)
+                .collectList();
+        Mono<List<Tag>> tagMono = tagRepository.findAllById(tagIds).collectList();
+        return Mono.zip(skuFlux, categoryFlux, tagMono)
+                .flatMap(tuple -> {
+                    List<SKU> t1 = tuple.getT1();
+                    List<Category> t2 = tuple.getT2();
+                    List<Tag> t3 = tuple.getT3();
+                    ProductForEmbeddingApVO productForEmbeddingApVO = ProductForEmbeddingApVO
+                            .builder()
+                            .id(productIdSave)
+                            .skuList(
+                                    t1.stream()
+                                            .map(sku ->
+                                                    ProductForEmbeddingApVO.SkuItem.builder()
+                                                            .id(sku.getId().toString())
+                                                            .name(sku.getName())
+                                                            .price(sku.getPrice().toString())
+                                                            .skuCode(sku.getSkuCode())
+                                                            .build()
+                                            )
+                                            .collect(Collectors.toList())
+                            )
+                            .title(product.getName())
+                            .tagNames(
+                                    t3.stream()
+                                            .map(Tag::getName)
+                                            .collect(Collectors.toList())
+                            )
+                            .placeOfOrigin(product.getPlaceOfOrigin())
+                            .categoryNames(
+                                    t2.stream()
+                                            .map(Category::getName)
+                                            .collect(Collectors.toList())
+                            )
+                            .brand(product.getBrand())
+                            .description(product.getDescription())
+                            .build();
+                    return aiChatClientRecommendServiceApi.embeddingProduct(
+                                    List.of(productForEmbeddingApVO)
+                            )
+                            .thenReturn(productIdSave);
+                });
     }
 
     @Override
@@ -243,9 +308,9 @@ public class ProductServiceImpl implements ProductService {
         //查询条件
         ProductVO condition = chatRecordRequestPage.getCondition();
         //分类id
-        BigInteger categoryId = condition.getCategoryId();
+        List<BigInteger>  categoryIds = condition.getCategoryId();
         //标签id
-        BigInteger tagId = condition.getTagId();
+        List<BigInteger> tagIds = condition.getTagId();
         //仓库id
         BigInteger warehouseId = condition.getWarehouseId();
         //名称
@@ -271,8 +336,8 @@ public class ProductServiceImpl implements ProductService {
                         .build());
 
             // 如果tagId不为 null，则添加条件
-            if (Objects.nonNull(tagId)) {
-                return productTagRepository.findByTagId(tagId)
+            if (Objects.nonNull(tagIds)) {
+                return productTagRepository.findByTagIds(tagIds)
                         .collectList()
                         .flatMap(productIds -> {
                             if (!productIds.isEmpty()) {
@@ -309,9 +374,9 @@ public class ProductServiceImpl implements ProductService {
                             if (Objects.nonNull(name)) {
                                 criteria = criteria.and(Product.Fields.name).like(SqlConst.PERCENT + name + SqlConst.PERCENT);
                             }
-                            if (Objects.nonNull(categoryId)) {
-                                criteria = criteria.and(Product.Fields.categoryId).is(categoryId);
-                            }
+//                            if (Objects.nonNull(categoryId)) {
+//                                criteria = criteria.and(Product.Fields.categoryId).is(categoryId);
+//                            }
                             if (Objects.nonNull(offlineTime)) {
                                 criteria = criteria.and(Product.Fields.offlineTime).is(offlineTime);
                             }
@@ -372,9 +437,9 @@ public class ProductServiceImpl implements ProductService {
                 if (Objects.nonNull(name)) {
                     criteria = criteria.and(Product.Fields.name).like(SqlConst.PERCENT + name + SqlConst.PERCENT);
                 }
-                if (Objects.nonNull(categoryId)) {
-                    criteria = criteria.and(Product.Fields.categoryId).is(categoryId);
-                }
+//                if (Objects.nonNull(categoryId)) {
+//                    criteria = criteria.and(Product.Fields.categoryId).is(categoryId);
+//                }
                 if (Objects.nonNull(offlineTime)) {
                     criteria = criteria.and(Product.Fields.offlineTime).is(offlineTime);
                 }
@@ -414,88 +479,6 @@ public class ProductServiceImpl implements ProductService {
                         );
             });
         });
-    }
-
-    @Override
-    public Mono<CursorPageResult<List<ProductCustomerVO>>> findCursor(RequestCursorPage<ProductVO> requestCursorPage) {
-        Product product = BeanUtil.toBean(requestCursorPage.getCondition(), Product.class);
-        RequestCursorPage<Product> cursorPage = RequestCursorPage.<Product>builder()
-                .lastId(requestCursorPage.getLastId())
-                .order(requestCursorPage.getOrder())
-                .pageSize(requestCursorPage.getPageSize())
-                .condition(product)
-                .build();
-        /**
-         *
-         * 这里需要使用协同过滤，大模型决策后规则来查询，暂时忽略
-         * */
-        return CursorQuery.of(r2dbcEntityTemplate, Product.class, cursorPage)
-                .list()
-                .collectList()
-                .map(products -> {
-                    // 判断是否有下一页
-                    boolean hasNext = products.size() > requestCursorPage.getPageSize();
-                    // 截取真实需要的数据
-                    List<Product> data = hasNext ? products.subList(0, requestCursorPage.getPageSize()) : products;
-                    return Tuples.of(data, hasNext);
-                })
-                .flatMapMany(tupleT -> {
-                    List<Product> productList = tupleT.getT1();
-                    boolean hasNext = tupleT.getT2();
-
-                    // 基于商品ID获取最低价格sku产品返回等信息
-                    return Flux.fromIterable(productList)
-                            .flatMap(item -> {
-                                Mono<SKU> skuMono = skuRepository.findSKUIDByProductId(item.getId());
-                                Mono<Integer> salesMono = skuRepository.sumSalesByProductId(item.getId());
-                                Flux<BigInteger> tagsMono = productTagRepository.findTagByProductId(item.getId());
-
-                                // 同时查询 SKU、销量、标签
-                                return Mono.zip(skuMono, salesMono, tagsMono.collectList())
-                                        .map(tuple -> {
-                                            SKU sku = tuple.getT1();
-                                            Integer salesVolume = tuple.getT2();
-                                            List<BigInteger> tagIds = tuple.getT3();
-
-                                            // 假设只需要取第一个标签，如果你需要多个标签，可以进行进一步处理
-                                            BigInteger tagId = tagIds.isEmpty() ? null : tagIds.getFirst();
-
-                                            return ProductCustomerVO.builder()
-                                                    .id(item.getId())
-                                                    .discountPrice(sku.getPrice())
-                                                    .originalPrice(sku.getCostPrice())
-                                                    .level(item.getLevel())
-                                                    .image(item.getImage())
-                                                    .brand(item.getBrand())
-                                                    .stock(sku.getStock())
-                                                    .video(item.getVideo())
-                                                    .description(item.getDescription())
-                                                    .salesVolume(salesVolume)
-                                                    .skuId(sku.getId())
-                                                    .status(sku.getStatus())
-                                                    .placeOfOrigin(item.getPlaceOfOrigin())
-                                                    .name(item.getName())
-                                                    .offlineTime(item.getOfflineTime())
-                                                    .publishTime(item.getPublishTime())
-                                                    .tagId(tagId)  // 这里是一个标签ID，可能需要改为多个标签
-                                                    .build();
-                                        })
-                                        .onErrorResume(e -> {
-                                            log.error("查询商品信息失败，商品ID：{}，错误：{}", item.getId(), e.getMessage());
-                                            return Mono.error(new Exception("查询商品信息失败"));
-                                        });
-                            })
-                            .collectList()
-                            .map(voList ->
-                                    CursorPageResult.<List<ProductCustomerVO>>builder()
-                                            .hasNext(hasNext)
-                                            .rows(voList)
-                                            .cursor(!voList.isEmpty() ? voList.get(voList.size() - 1).getId() : null)
-                                            .build()
-                            );
-                })
-                .next();
-
     }
 
     //批量添加，批量更新
@@ -572,7 +555,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Mono<CursorPageResult<List<ProductVO>>> findCursorListProductVO(RequestCursorPage<ProductVO> requestCursorPage) {
         RequestCursorPage<Product> page = BeanConvertUtil.toBean(requestCursorPage, Product.class);
-        return CursorQuery.of(r2dbcEntityTemplate, Product.class,page )
+        return CursorQuery.of(r2dbcEntityTemplate, Product.class, page)
 
                 .list()
                 .collectList()

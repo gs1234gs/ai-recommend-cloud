@@ -1,13 +1,14 @@
 package com.guanshiyun.rpc.behaviorapi.click.impl;
 
-import com.guanshiyun.behaviorenums.BehaviorApiUrl;
+import com.guanshiyun.behaviorenums.BehaviorClickApiUrlEnum;
 import com.guanshiyun.behaviorenums.BehaviorParamKey;
 import com.guanshiyun.responsepojo.ResultT;
-import com.guanshiyun.rpc.behaviorapi.browse.vo.UserBrowseVOApi;
+import com.guanshiyun.rpc.apisave.UserClickSaveApiVO;
 import com.guanshiyun.rpc.behaviorapi.click.UserClickServiceApi;
-import com.guanshiyun.rpc.config.WebClientRpc;
-import com.guanshiyun.webutils.WebClientUtils;
+import com.guanshiyun.rpc.config.BehaviorWebClientRpc;
+import com.guanshiyun.rpc.profile.ClickProfileApi;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -17,40 +18,29 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserClickServiceApiImpl implements UserClickServiceApi {
-    private final WebClientRpc webClientRpc;
+    private final BehaviorWebClientRpc behaviorWebClientRpc;
 
     @Override
-    public Mono<ResultT<List<UserBrowseVOApi>>> findUserBrowseRecord(Integer rows) {
+    public Mono<ResultT<List<ClickProfileApi>>> findUserClickRecord(Integer rows) {
 
-        return webClientRpc
+        return behaviorWebClientRpc
                 .webClient()
                 .get()
 
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(BehaviorApiUrl.CLICK_FIND_BY_ROWS)
-                                .queryParam(BehaviorParamKey.ROWS, 10)// 参数2
+                                .path(BehaviorClickApiUrlEnum.CLICK_FIND_BY_ROWS.getValue())
+                                .queryParam(BehaviorParamKey.ROWS, rows)// 参数
                                 .build()
                 )
                 .retrieve()
-                .bodyToMono(WebClientUtils.typeRef())
-                ;
+                .bodyToMono(new ParameterizedTypeReference<ResultT<List<ClickProfileApi>>>() {});
 
     }
 
     @Override
-    public Mono<ResultT<List<UserBrowseVOApi>>> findUserBrowseRecord(Integer rows, BigInteger userId) {
-        return webClientRpc
-                .webClient()
-                .get()
-
-                .uri(uriBuilder ->
-                        uriBuilder
-                                .path(BehaviorApiUrl.CLICK_FIND_BY_ROWS)
-                                .queryParam(BehaviorParamKey.ROWS, rows, userId)// 参数2
-                                .build()
-                )
-                .retrieve()
-                .bodyToMono(WebClientUtils.typeRef());
+    public Mono<ResultT<BigInteger>> saveUserClickRecord(UserClickSaveApiVO userClickSaveApiVO) {
+        return null;
     }
+
 }

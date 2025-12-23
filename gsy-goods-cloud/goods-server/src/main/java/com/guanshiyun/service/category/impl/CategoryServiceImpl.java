@@ -1,11 +1,10 @@
 package com.guanshiyun.service.category.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.db.constsql.SqlConst;
+import com.db.cursorQuery.ReactivePageQuery;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
-import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.category.Category;
 import com.guanshiyun.controller.category.vo.CategorySaveVO;
@@ -19,10 +18,7 @@ import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
-import org.springframework.data.relational.core.query.Criteria;
-import org.springframework.data.relational.core.query.Query;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -81,40 +77,49 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findById(id);
     }
 
-    @Override
-    public Mono<PageResultT<List<CategoryVO>>> findAllByPage( RequestPage<CategoryVO> requestPage) {
-        RequestPage<CategoryVO> categoryRequestPage = PageUtils.pageValidation(requestPage, CategoryVO.class);
-        Integer pageSize = categoryRequestPage.getPageSize();
-        BigInteger pageNum = categoryRequestPage.getPageNum();
-        CategoryVO conditionVO = categoryRequestPage.getCondition();
-        Category condition = BeanUtil.toBean(conditionVO, Category.class);
-        String name = condition.getName();// 添加用户权限
-        // 计算 offset
-        long offset = pageNum.subtract(BigInteger.ONE)
-                .multiply(BigInteger.valueOf(pageSize))
-                .longValue();
-        Criteria criteria = Criteria.empty();
-        criteria= criteria.and(Category.Fields.name).like( SqlConst.PERCENT+name+SqlConst.PERCENT);
-        Query dataQuery = Query.query(criteria)
-                .sort(Sort.by(Sort.Order.desc(BasePojo.Fields.createTime)))
-                .offset(offset)
-                .limit(pageSize);
-        Query countQuery = Query.query(criteria);
-
-        return r2dbcEntityTemplate.select(countQuery,Category.class)
-                .count()
-                .flatMap(count ->
-                        r2dbcEntityTemplate.select(dataQuery,Category.class)
-                                .map(item->BeanUtil.toBean(item,CategoryVO.class))
-                                .collectList()
-                                .map(rows -> PageResultT.<List<CategoryVO>>builder()
-                                        .total(count)
-                                        .rows( rows)
-                                        .build()
-                                )
-
-                );
-    }
+//    @Override
+//    public Mono<PageResultT<List<CategoryVO>>> findAllByPage( RequestPage<CategoryVO> requestPage) {
+//        RequestPage<CategoryVO> categoryRequestPage = PageUtils.pageValidation(requestPage, CategoryVO.class);
+//        Integer pageSize = categoryRequestPage.getPageSize();
+//        BigInteger pageNum = categoryRequestPage.getPageNum();
+//        CategoryVO conditionVO = categoryRequestPage.getCondition();
+//        Category condition = BeanUtil.toBean(conditionVO, Category.class);
+//        String name = condition.getName();// 添加用户权限
+//        // 计算 offset
+//        long offset = pageNum.subtract(BigInteger.ONE)
+//                .multiply(BigInteger.valueOf(pageSize))
+//                .longValue();
+//        Criteria criteria = Criteria.empty();
+//        criteria= criteria.and(Category.Fields.name).like( SqlConst.PERCENT+name+SqlConst.PERCENT);
+//        Query dataQuery = Query.query(criteria)
+//                .sort(Sort.by(Sort.Order.desc(BasePojo.Fields.createTime)))
+//                .offset(offset)
+//                .limit(pageSize);
+//        Query countQuery = Query.query(criteria);
+//
+//        return r2dbcEntityTemplate.select(countQuery,Category.class)
+//                .count()
+//                .flatMap(count ->
+//                        r2dbcEntityTemplate.select(dataQuery,Category.class)
+//                                .map(item->BeanUtil.toBean(item,CategoryVO.class))
+//                                .collectList()
+//                                .map(rows -> PageResultT.<List<CategoryVO>>builder()
+//                                        .total(count)
+//                                        .rows( rows)
+//                                        .build()
+//                                )
+//
+//                );
+//    }
+@Override
+public Mono<PageResultT<List<CategoryVO>>> findAllByPage( RequestPage<CategoryVO> requestPage) {
+    RequestPage<CategoryVO> categoryRequestPage = PageUtils.pageValidation(requestPage, CategoryVO.class);
+    RequestPage<Category> page = BeanConvertUtil.toBean(requestPage, Category.class);
+    return ReactivePageQuery.of(r2dbcEntityTemplate, Category.class, page)
+            .page()
+            .map(pageResultT ->
+                    BeanConvertUtil.toBean(pageResultT, CategoryVO.class));
+}
 
     @Override
     public Mono<List<CategoryVO>> findAll() {

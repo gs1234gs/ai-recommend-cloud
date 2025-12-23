@@ -1,7 +1,14 @@
 package com.guanshiyun.rpc.profile;
 
+import com.guanshiyun.base.BasePojo;
+import com.guanshiyun.publicbehaviorvo.CategoryApiVO;
+import com.guanshiyun.publicbehaviorvo.ProductApiVO;
+import com.guanshiyun.publicbehaviorvo.SKUApiVO;
+import com.guanshiyun.publicbehaviorvo.TagApiVO;
 import lombok.*;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,22 +19,29 @@ import java.util.List;
 /**
  * 用户画像（兴趣、偏好、地理位置等）
  * */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldNameConstants
-@Builder
-@ToString(callSuper = true)
-public class BrowseProfileApi implements Serializable {
+@SuperBuilder
+@Accessors(chain = true)
+public class BrowseProfileApi extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     /** 主键ID */
     private BigInteger id;
     //sku id
-    List<BigInteger> skuId;
+    private List<ProductApiVO> product;
     //浏览开始时间
     private LocalDateTime browseStartTime;
     //浏览结束时间
     private LocalDateTime browseEndTime;
+    //分类
+    private List<CategoryApiVO> categoryList;
+    //sku列表
+    private List<SKUApiVO> skuList;
+    //标签
+    private List<TagApiVO> tagList;
 
 }

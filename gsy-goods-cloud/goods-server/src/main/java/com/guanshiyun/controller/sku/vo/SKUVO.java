@@ -2,19 +2,23 @@ package com.guanshiyun.controller.sku.vo;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.guanshiyun.base.BasePojo;
 import lombok.*;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-@ToString
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class SKUVO implements Serializable {
+@SuperBuilder
+public class SKUVO extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @JsonSerialize(using = ToStringSerializer.class)

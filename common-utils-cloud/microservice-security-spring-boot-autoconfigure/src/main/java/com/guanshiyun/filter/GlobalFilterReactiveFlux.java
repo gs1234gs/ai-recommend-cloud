@@ -56,7 +56,7 @@ public class GlobalFilterReactiveFlux implements WebFilter {
             log.info("这是特殊请求，放行：{}", path);
             return chain.filter(exchange);
         }
-        log.info("请求头：{}", headers);
+//        log.info("请求头：{}", headers);
         String userJson = headers.getFirst(ConstHeaderLocals.USER_INFO_KEY);
         if (StringUtil.isNullOrEmpty(userJson)) {
             log.warn("用户信息为空：{}", userJson);

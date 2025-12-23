@@ -70,7 +70,14 @@
         <option value="$PROJECT_DIR$/gsy-general-api-cloud/order-server-api/pom.xml" />
         <option value="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/pom.xml" />
         <option value="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-starter/pom.xml" />
+        <option value="$PROJECT_DIR$/gsy-general-api-cloud/pojo-server-api/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/gsy-general-api-cloud/pojo-server-api/pom.xml" />
+        <option value="$PROJECT_DIR$/gsy-hrms-cloud/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="21" project-jdk-type="JavaSDK" />

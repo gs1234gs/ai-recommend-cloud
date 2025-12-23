@@ -18,7 +18,6 @@
     <modules>
         <module>gsy-ai-cloud</module>
         <module>gsy-erp-cloud</module>
-        <module>gsy-hrms-cloud</module>
         <module>gsy-recommend-cloud</module>
         <module>gsy-statistical-cloud</module>
         <module>gsy-system-cloud</module>
@@ -58,19 +57,28 @@
         <spring-ai.version>1.1.2</spring-ai.version>
 <!--        <mcp.version>0.17.0</mcp.version>-->
 <!--        <mcp.webflux.version>0.8.0</mcp.webflux.version>-->
-<!--        <memorey.version>1.0.1</memorey.version>-->
-<!--        <embedding.version>1.0.1</embedding.version>-->
-<!--        <spring-ai.version>1.0.1</spring-ai.version>-->
         <aliyun.core.version>4.7.6</aliyun.core.version>
-
         <gorse.version>0.5.0</gorse.version>
         <all.dash.version>2.22.2</all.dash.version>
         <common.version>2.1</common.version>
         <reactive.feign.version>4.2.1</reactive.feign.version>
         <jaxb.api.version>2.3.1</jaxb.api.version>
+        <powerjob.version>5.1.2</powerjob.version>
     </properties>
     <dependencyManagement>
         <dependencies>
+            <!-- https://mvnrepository.com/artifact/io.qdrant/client -->
+<!--            <dependency>-->
+<!--                <groupId>io.qdrant</groupId>-->
+<!--                <artifactId>client</artifactId>-->
+<!--                <version>${qdrant.version}</version>-->
+<!--            </dependency>-->
+            <!-- https://mvnrepository.com/artifact/tech.powerjob/powerjob-worker-spring-boot-starter -->
+            <dependency>
+                <groupId>tech.powerjob</groupId>
+                <artifactId>powerjob-worker-spring-boot-starter</artifactId>
+                <version>${powerjob.version}</version>
+            </dependency>
             <dependency>
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>

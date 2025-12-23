@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
 public class TagSaveVO {
     private BigInteger id;
     /** 标签名称 */

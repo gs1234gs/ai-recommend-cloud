@@ -1,16 +1,24 @@
 package com.guanshiyun.controller.category.vo;
 
+import com.guanshiyun.base.BasePojo;
 import lombok.*;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigInteger;
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldNameConstants
-@ToString
-public class CategoryVO {
+@Accessors(chain = true)
+public class CategoryVO extends BasePojo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     /** 分类主键ID */
     private BigInteger id;
 

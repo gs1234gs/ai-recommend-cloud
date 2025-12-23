@@ -7,6 +7,7 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.List;
 
 public interface PurChaseOrderRepository extends ReactiveCrudRepository<PurChaseOrder, BigInteger> {
@@ -20,4 +21,7 @@ public interface PurChaseOrderRepository extends ReactiveCrudRepository<PurChase
     Flux<PurChaseOrder> findAllByUserIds(
             @Param("userIds") List<BigInteger> userIds,
             @Param("rows") Integer rows);
+
+    @Query("SELECT address_id FROM pur_chase_order WHERE id IN (:orderIds)")
+    Flux<BigInteger> findAllAddressById(Collection<BigInteger> orderIds);
 }

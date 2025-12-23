@@ -104,4 +104,16 @@ public class PurChaseOrderController {
                     );
                 });
     }
+
+    @GetMapping("findByRows")
+    public Mono<ResultT<List<PurChaseOrderVO>>> findByRows(
+            @RequestParam(required = false, defaultValue = "10") Integer rows) {
+        return purChaseOrderService.findByRows(rows)
+                .map(ResultT::success)
+                .onErrorResume(throwable -> {
+                    log.error("查询订单失败", throwable);
+                    return Mono.just(ResultT.error(HttpCodeConst.INTERNAL_SERVER_ERROR, "查询订单失败"));
+                });
+            }
+
 }

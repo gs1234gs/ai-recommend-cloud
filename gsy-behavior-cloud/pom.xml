@@ -82,6 +82,11 @@
             <version>${snapshotName}</version>
         </dependency>
         <dependency>
+            <groupId>com.guanshiyun</groupId>
+            <artifactId>goods-server-api</artifactId>
+            <version>${snapshotName}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb-reactive</artifactId>
         </dependency>

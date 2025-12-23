@@ -47,6 +47,8 @@ public class ProductSaveVO {
     //分类 id
     private List<BigInteger> categoryId;
     //标签 id
-    private BigInteger tagId;
+    private List<BigInteger> tagId;
+    //sku列表
+    private List<BigInteger> skuList;
 
 }

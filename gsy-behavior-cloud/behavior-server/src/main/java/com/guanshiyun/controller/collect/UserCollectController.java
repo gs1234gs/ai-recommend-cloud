@@ -1,6 +1,7 @@
 package com.guanshiyun.controller.collect;
 
 import com.guanshiyun.code.HttpCodeConst;
+import com.guanshiyun.controller.collect.vo.UserCollectSaveVO;
 import com.guanshiyun.controller.collect.vo.UserCollectVO;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.collect.UserCollectService;
@@ -20,8 +21,8 @@ public class UserCollectController {
     private final UserCollectService userCollectService;
 
     @PostMapping("save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody UserCollectVO userCollectVO) {
-        return userCollectService.save(userCollectVO)
+    public Mono<ResultT<BigInteger>> save(@RequestBody UserCollectSaveVO userCollectSaveVO) {
+        return userCollectService.save(userCollectSaveVO)
                 .map(ResultT::success)
                 .onErrorReturn(
                         ResultT.<BigInteger>builder()

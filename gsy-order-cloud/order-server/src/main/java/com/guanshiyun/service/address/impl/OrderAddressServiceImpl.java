@@ -11,7 +11,7 @@ import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.controller.address.vo.OrderAddressSaveVO;
 import com.guanshiyun.controller.address.vo.OrderAddressVO;
 import com.guanshiyun.repository.address.OrderAddressRepository;
-import com.guanshiyun.repository.item.OrderItemRepository;
+import com.guanshiyun.repository.order.PurChaseOrderRepository;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.address.OrderAddressService;
@@ -36,8 +36,8 @@ public class OrderAddressServiceImpl implements OrderAddressService {
     private final OrderAddressRepository orderAddressRepository;
     private final MyBigInteger myBigInteger;
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
-    private final OrderItemRepository orderItemRepository;
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
+    private final PurChaseOrderRepository purChaseOrderRepository;
 
     /**
      * 添加更新地址
@@ -73,7 +73,7 @@ public class OrderAddressServiceImpl implements OrderAddressService {
 
     /**
      * 这里进行的是逻辑删除
-     * */
+     */
     @Override
     public Mono<Void> deleteById(BigInteger id) {
         return Mono.deferContextual(ctx -> {
@@ -82,14 +82,14 @@ public class OrderAddressServiceImpl implements OrderAddressService {
             BigInteger userId =
                     myBigInteger.bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
             return r2dbcUpdateHelper.updateIgnoreNull(
-                    EntityTableNameUtils.getName(OrderAddress.class),
-                    OrderAddress.builder()
-                            .id(id)
-                            .updater(userId)
-                            .updateTime(LocalDateTime.now())
-                            .delFlag(ConstNumber.SHORT_ONE)
-                            .build(),
-                    OrderAddress.Fields.id)
+                            EntityTableNameUtils.getName(OrderAddress.class),
+                            OrderAddress.builder()
+                                    .id(id)
+                                    .updater(userId)
+                                    .updateTime(LocalDateTime.now())
+                                    .delFlag(ConstNumber.SHORT_ONE)
+                                    .build(),
+                            OrderAddress.Fields.id)
                     .then()
                     .onErrorResume(throwable -> {
                         log.error("删除地址失败：", throwable);
@@ -100,8 +100,8 @@ public class OrderAddressServiceImpl implements OrderAddressService {
 
     @Override
     public Mono<OrderAddressVO> findByOrderId(Object orderId) {
-        return orderItemRepository.findByOrderId(myBigInteger.bigInteger(orderId))
-                .flatMap(id->orderAddressRepository.findById(id)
+        return purChaseOrderRepository.findById(myBigInteger.bigInteger(orderId))
+                .flatMap(purChaseOrder -> orderAddressRepository.findById(purChaseOrder.getAddressId())
                         .map(orderAddress -> BeanUtil.toBean(orderAddress, OrderAddressVO.class)))
                 .onErrorResume(throwable -> {
                     log.error("查询地址失败：", throwable);
@@ -113,14 +113,10 @@ public class OrderAddressServiceImpl implements OrderAddressService {
 
     @Override
     public Mono<List<OrderAddressVO>> findByUserId(BigInteger userId) {
-        return orderItemRepository.findByUserId(userId)
+        return orderAddressRepository.findByUserId(userId)
+                .map(orderAddress ->
+                        BeanUtil.toBean(orderAddress, OrderAddressVO.class))
                 .collectList()
-                .flatMap(item->
-                        orderAddressRepository.findByOrderIds(item)
-                                .map(orderAddress ->
-                                        BeanUtil.toBean(orderAddress, OrderAddressVO.class))
-                                .collectList()
-                )
                 .onErrorResume(throwable -> {
                     log.error("查询地址失败：", throwable);
                     return Mono.error(new Exception("查询地址失败"));
@@ -135,14 +131,11 @@ public class OrderAddressServiceImpl implements OrderAddressService {
             BigInteger userId =
                     myBigInteger.bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
-            return orderItemRepository.findByUserId(userId)
+            return orderAddressRepository.findByUserId(userId)
+                    .map(orderAddress ->
+                            BeanUtil.toBean(orderAddress, OrderAddressVO.class))
                     .collectList()
-                    .flatMap(item->
-                            orderAddressRepository.findByOrderIds(item)
-                                    .map(orderAddress ->
-                                            BeanUtil.toBean(orderAddress, OrderAddressVO.class))
-                                    .collectList()
-                    )
+
                     .onErrorResume(throwable -> {
                         log.error("查询地址失败：", throwable);
                         return Mono.error(new Exception("查询地址失败"));
@@ -152,9 +145,9 @@ public class OrderAddressServiceImpl implements OrderAddressService {
 
     @Override
     public Mono<List<OrderAddressVO>> findByOrderIds(Collection<BigInteger> orderIds) {
-        return orderItemRepository.findByOrderIds(orderIds)
+        return purChaseOrderRepository.findAllAddressById(orderIds)
                 .collectList()
-                .flatMap(addressListId->
+                .flatMap(addressListId ->
                         orderAddressRepository.findByOrderIds(addressListId)
                                 .map(orderAddress -> BeanUtil.toBean(orderAddress, OrderAddressVO.class))
                                 .collectList()
@@ -167,7 +160,7 @@ public class OrderAddressServiceImpl implements OrderAddressService {
 
     @Override
     public Mono<OrderAddressVO> findById(BigInteger id) {
-        return orderAddressRepository.findById( id)
+        return orderAddressRepository.findById(id)
                 .map(orderAddress -> BeanUtil.toBean(orderAddress, OrderAddressVO.class));
     }
 
@@ -179,12 +172,12 @@ public class OrderAddressServiceImpl implements OrderAddressService {
         return ReactivePageQuery.of(r2dbcEntityTemplate, OrderAddress.class, page)
                 .page()
                 .map(pageResultT -> PageResultT.<List<OrderAddressVO>>builder()
-                                    .pageNum(pageResultT.getPageNum())
-                                    .pageSize(pageResultT.getPageSize())
-                                    .total(pageResultT.getTotal())
-                                    .rows(BeanConvertUtil.toBeanList(pageResultT.getRows(), OrderAddressVO.class))
-                                    .build()
+                        .pageNum(pageResultT.getPageNum())
+                        .pageSize(pageResultT.getPageSize())
+                        .total(pageResultT.getTotal())
+                        .rows(BeanConvertUtil.toBeanList(pageResultT.getRows(), OrderAddressVO.class))
+                        .build()
 
-                        );
+                );
     }
 }

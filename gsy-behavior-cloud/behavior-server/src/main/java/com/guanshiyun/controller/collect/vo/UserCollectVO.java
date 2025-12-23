@@ -1,20 +1,44 @@
 package com.guanshiyun.controller.collect.vo;
 
-import com.guanshiyun.profile.CollectProfile;
-import lombok.*;
+import com.guanshiyun.base.BasePojo;
+import com.guanshiyun.rpc.profile.CategoryApiVO;
+import com.guanshiyun.rpc.profile.ProductApiVO;
+import com.guanshiyun.rpc.profile.SKUApiVO;
+import com.guanshiyun.rpc.profile.TagApiVO;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.List;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(callSuper = true)
 @FieldNameConstants
-public class UserCollectVO {
-    //会话 id
+@Accessors(chain = true)
+public class UserCollectVO extends BasePojo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+    //id
     private BigInteger id;
-    //会话内容
-    private List<CollectProfile> collectContent;
+    //商品id
+    private ProductApiVO product;
+    //收藏时间
+    private LocalDateTime collectTime;
+    //分类
+    private List<CategoryApiVO> categoryList;
+    //sku列表
+    private List<SKUApiVO> skuList;
+    //标签
+    private List<TagApiVO> tagList;
 }

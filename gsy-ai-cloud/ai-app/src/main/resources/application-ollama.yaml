@@ -13,7 +13,7 @@ spring:
 #          model: dengcao/Qwen3-Embedding-8B:Q4_K_M
     vectorstore:
       qdrant:
-        host: http://127.0.0.1
+        host: 127.0.0.1
         port: 6334
         api-key: qdrant-api-key
         collection-name: gsy-embedding-cloud

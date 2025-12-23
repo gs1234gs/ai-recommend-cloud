@@ -1,16 +1,24 @@
 package com.guanshiyun.controller.tag.vo;
 
+import com.guanshiyun.base.BasePojo;
 import lombok.*;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@ToString
-public class TagVO {
+@SuperBuilder
+@Accessors(chain = true)
+public class TagVO extends BasePojo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private BigInteger id;
     /** 标签名称 */
     private String name;

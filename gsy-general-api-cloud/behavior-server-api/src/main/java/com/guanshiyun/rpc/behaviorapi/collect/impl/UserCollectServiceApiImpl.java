@@ -1,12 +1,11 @@
 package com.guanshiyun.rpc.behaviorapi.collect.impl;
 
-import com.guanshiyun.behaviorenums.BehaviorApiUrl;
+import com.guanshiyun.behaviorenums.BehaviorColleckApiUrlEnum;
 import com.guanshiyun.behaviorenums.BehaviorParamKey;
 import com.guanshiyun.responsepojo.ResultT;
-import com.guanshiyun.rpc.behaviorapi.browse.vo.UserBrowseVOApi;
 import com.guanshiyun.rpc.behaviorapi.collect.UserCollectServiceApi;
-import com.guanshiyun.rpc.config.WebClientRpc;
-import com.guanshiyun.utils.WebContextUtils;
+import com.guanshiyun.rpc.config.BehaviorWebClientRpc;
+import com.guanshiyun.rpc.profile.CollectProfileApi;
 import com.guanshiyun.webutils.WebClientUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,16 +16,15 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UserCollectServiceApiImpl implements UserCollectServiceApi {
-    private final WebClientRpc webClientRpc;
-    private final WebContextUtils webContextUtils;
+    private final BehaviorWebClientRpc behaviorWebClientRpc;
     @Override
-    public Mono<ResultT<List<UserBrowseVOApi>>> findUserBrowseRecord(Integer rows) {
-        return webClientRpc
+    public Mono<ResultT<List<CollectProfileApi>>> findUserCollectRecord(Integer rows) {
+        return behaviorWebClientRpc
                 .webClient()
                 .get()
                 .uri(uriBuilder ->
                         uriBuilder
-                                .path(BehaviorApiUrl.COLLECT_FIND_BY_ROWS)
+                                .path(BehaviorColleckApiUrlEnum.COLLECT_FIND_BY_ROWS.getValue())
                                 .queryParam(BehaviorParamKey.ROWS, rows)// 参数2
                                 .build())
                 .retrieve()

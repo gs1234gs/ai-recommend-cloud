@@ -2,20 +2,31 @@ package com.guanshiyun.rpc.profile;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.guanshiyun.base.BasePojo;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
+@FieldNameConstants
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductApiVO {
+@Accessors(chain = true)
+public class ProductApiVO extends BasePojo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     //商品id
     private BigInteger id;
     //商品名称
@@ -45,8 +56,4 @@ public class ProductApiVO {
     private LocalDateTime startTime;
     //创建结束时间
     private LocalDateTime endTime;
-    private LocalDateTime createTime;
-    private LocalDateTime updateTime;
-    private BigInteger creator;
-    private BigInteger updater;
 }

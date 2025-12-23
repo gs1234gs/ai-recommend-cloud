@@ -15,6 +15,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  *
@@ -65,5 +66,7 @@ public class SKU extends BasePojo implements Serializable {
     private LocalDateTime offlineTime;
     // 商品详情
     private String detailContent;
+    //图片
+    private List<String> picList;
 
 }

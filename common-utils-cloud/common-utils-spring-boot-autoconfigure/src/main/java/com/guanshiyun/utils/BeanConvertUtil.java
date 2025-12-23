@@ -17,7 +17,7 @@ public class BeanConvertUtil {
      * 将 source 转换成 targetClass 类型的 Bean
      */
     public static <T> T toBean(Object source, Class<T> targetClass) {
-        if (Objects.isNull(source)) return null;
+        if (Objects.isNull(source)) return BeanUtil.toBean(source, targetClass);
         try {
             T target = targetClass.getDeclaredConstructor().newInstance();
             copyProperties(source, target);

@@ -6,14 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 public class ProductCustomerVO {
     //商品id
     private BigInteger id;
@@ -56,4 +59,11 @@ public class ProductCustomerVO {
     //sku id
     @JsonSerialize(using = ToStringSerializer.class)
     private BigInteger skuId;
+    //最低价格
+    @JsonSerialize(using = ToStringSerializer.class)
+    private BigDecimal minPrice;
+    //最高价格
+    @JsonSerialize(using = ToStringSerializer.class)
+    private BigDecimal maxPrice;
+
 }

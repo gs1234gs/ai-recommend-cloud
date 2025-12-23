@@ -1,5 +1,6 @@
 package com.guanshiyun.controller.browse;
 
+import com.guanshiyun.controller.browse.vo.UserBrowseSaveVO;
 import com.guanshiyun.controller.browse.vo.UserBrowseVO;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.browse.UserBrowseService;
@@ -20,7 +21,7 @@ public class UserBrowseController {
     //添加浏览记录
 
     @PostMapping("save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody UserBrowseVO userBrowseVO) {
+    public Mono<ResultT<List<BigInteger>>> save(@RequestBody List<UserBrowseSaveVO> userBrowseVO) {
         return userBrowseService.save(userBrowseVO)
                 .map(ResultT::success)
                 .onErrorReturn(ResultT.error());

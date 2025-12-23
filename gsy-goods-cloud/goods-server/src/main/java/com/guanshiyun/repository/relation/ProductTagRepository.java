@@ -8,6 +8,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
+import java.util.List;
 
 public interface ProductTagRepository extends ReactiveCrudRepository<ProductTag, BigInteger> {
     @Query("select product_id from product_tag where tag_id = :tagId")
@@ -18,4 +19,7 @@ public interface ProductTagRepository extends ReactiveCrudRepository<ProductTag,
 
     @Query("select tag_id from product_tag where product_id = :productId")
     Flux<BigInteger> findTagByProductId(BigInteger productId);
+
+   @Query("select product_id from product_tag where tag_id in (:tagIds)")
+    Flux<BigInteger> findByTagIds(List<BigInteger> tagIds);
 }

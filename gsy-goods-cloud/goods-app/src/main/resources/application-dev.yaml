@@ -26,3 +26,23 @@ spring:
   webflux:
     multipart:
       max-in-memory-size: 100MB
+      ########### powerjob-worker 配置 ###########
+
+powerjob:
+  worker:
+    # akka 工作端口，可选，默认 27777
+    port: 27777
+    # 接入应用名称，用于分组隔离，推荐填写 本 Java 项目名称
+    app-name: gsy-goods-cloud
+    # 调度服务器地址，IP:Port 或 域名，多值逗号分隔
+    server-address: 127.0.0.1:7700
+    # 持久化方式，可选，默认 disk
+    store-strategy: disk
+    # 任务返回结果信息的最大长度，超过这个长度的信息会被截断，默认 8192
+    max-result-length: 8192
+    # 单个任务追加的工作流上下文最大长度，超过这个长度的会被直接丢弃，默认 8192
+    max-appended-wf-context-length: 8192
+    #开发环境置为false
+    enabled: false
+    # 是否开启任务日志，默认 false
+#    tag: true

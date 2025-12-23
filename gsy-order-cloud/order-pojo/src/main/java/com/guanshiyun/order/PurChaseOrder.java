@@ -2,6 +2,7 @@ package com.guanshiyun.order;
 
 import com.guanshiyun.base.BasePojo;
 import lombok.*;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
@@ -20,7 +21,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @EqualsAndHashCode(callSuper = true)
 @FieldNameConstants
-@ToString(callSuper = true)
+@Accessors(chain = true)
 @Table("purchase_order")
 public class PurChaseOrder extends BasePojo implements Serializable {
     @Serial
@@ -56,4 +57,6 @@ public class PurChaseOrder extends BasePojo implements Serializable {
     private String remark;
     //商品数量
     private Integer num;
+    //收获地址id
+    private BigInteger addressId;
 }

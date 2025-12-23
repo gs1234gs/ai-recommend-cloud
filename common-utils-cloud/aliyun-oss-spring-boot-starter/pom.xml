@@ -27,7 +27,10 @@
 	<properties>
 	</properties>
 	<dependencies>
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>com.guanshiyun</groupId>
 			<artifactId>aliyun-oss-spring-boot-autoconfigure</artifactId>

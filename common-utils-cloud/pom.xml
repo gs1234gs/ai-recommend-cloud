@@ -56,8 +56,8 @@
         <databind.version>2.19.2</databind.version>
         <maven.compiler.target>21</maven.compiler.target>
         <jjwt-impl.version>0.12.6</jjwt-impl.version>
-        <sdk.oss.version>3.18.1</sdk.oss.version>
-        <fastjson.version>2.0.58</fastjson.version>
+        <sdk.oss.version>3.18.3</sdk.oss.version>
+        <fastjson.version>2.0.60</fastjson.version>
         <jaxbr.version>2.3.9</jaxbr.version>
         <jaxbapi.version>2.3.1</jaxbapi.version>
         <jafx.version>1.1.1</jafx.version>
@@ -84,6 +84,11 @@
                 <groupId>com.alibaba.fastjson2</groupId>
                 <artifactId>fastjson2</artifactId>
                 <version>${fastjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.gorse</groupId>
@@ -114,6 +119,11 @@
                 <version>1.0.0</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>${sdk.oss.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -88,7 +88,7 @@ public class CategoryController {
     }
     //查询类型
     @PostMapping("findPage")
-    public Mono<ResultT<PageResultT<List< CategoryVO>>>> findAllByPage(@RequestBody (required = false) RequestPage<CategoryVO> requestPage) {
+    public Mono<ResultT<PageResultT<List<CategoryVO>>>> findAllByPage(@RequestBody (required = false) RequestPage<CategoryVO> requestPage) {
         return categoryService.findAllByPage(requestPage)
                 .map(pageResultT ->{
                     log.info("查询成功");

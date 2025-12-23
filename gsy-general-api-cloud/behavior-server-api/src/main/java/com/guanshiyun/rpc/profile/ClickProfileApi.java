@@ -1,27 +1,41 @@
 package com.guanshiyun.rpc.profile;
 
+import com.guanshiyun.base.BasePojo;
+import com.guanshiyun.publicbehaviorvo.CategoryApiVO;
+import com.guanshiyun.publicbehaviorvo.ProductApiVO;
+import com.guanshiyun.publicbehaviorvo.SKUApiVO;
+import com.guanshiyun.publicbehaviorvo.TagApiVO;
 import lombok.*;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-@ToString(callSuper = true)
+@SuperBuilder
 @FieldNameConstants
-public class ClickProfileApi implements Serializable {
+@Accessors(chain = true)
+public class ClickProfileApi extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     //用户点击画像
     private BigInteger id;
     //点击时间
     private LocalDateTime clickTime;
-    //点击标签id
-    private BigInteger tagId;
     //点击skuId
-    private BigInteger skuId;
+    private ProductApiVO product;
+    //分类
+    private List<CategoryApiVO> categoryList;
+    //sku列表
+    private List<SKUApiVO> skuList;
+    //标签
+    private List<TagApiVO> tagList;
 }

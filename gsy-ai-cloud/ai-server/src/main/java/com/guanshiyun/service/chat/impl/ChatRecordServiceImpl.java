@@ -30,7 +30,15 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
+/**
+ * ChatRecordServiceImpl
+ *
+ * 类功能：
+ * - 管理用户聊天记录（ChatRecord）的增删改查
+ * - 提供分页查询、游标分页查询、保存记录等功能
+ * - 使用 R2DBC 异步非阻塞操作 + Reactor 响应式编程
+ * - 支持上下文用户识别，游客或未登录用户限制访问
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -38,7 +46,19 @@ public class ChatRecordServiceImpl implements ChatRecordService {
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
     private final ChatRecordRepository chatRecordRepository;
     private final MyBigInteger myBigInteger;
-
+    /**
+     * 分页查询用户聊天记录
+     *
+     * @param requestPage 前端请求分页参数，包括页码、每页数量、查询条件
+     * @return Mono<PageResultT<List<ChatRecordVO>>> 分页结果（总数 + 数据列表）
+     *
+     * 核心逻辑：
+     * - 校验分页参数
+     * - 获取当前用户 ID（上下文）
+     * - 构造查询条件（支持 title 模糊匹配）
+     * - 查询总数 + 分页数据
+     * - 异常返回空结果
+     */
     @Override
     public Mono<PageResultT<List<ChatRecordVO>>> findPageChat(RequestPage<ChatRecordVO> requestPage) {
         //校验参数
@@ -53,23 +73,17 @@ public class ChatRecordServiceImpl implements ChatRecordService {
         String title = condition.getTitle();
 
         return Mono.deferContextual(ctx -> {
+                    // 未登录或游客，返回空分页
             if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
                 return Mono.just(PageResultT.<List<ChatRecordVO>>builder()
                         .total(0L)
                         .rows(Collections.emptyList())
                         .build());
             }
+                    // 获取用户 ID
                     BigInteger userId = myBigInteger.bigInteger(
                             ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
                     );
-
-                    // 用户未登录，返回空结果
-                    if (userId == null) {
-                        return Mono.just(PageResultT.<List<ChatRecordVO>>builder()
-                                .total(0L)
-                                .rows(Collections.emptyList())
-                                .build());
-                    }
                     //构建查询条件
                     Criteria criteria = Criteria.empty();
                     if (!StrUtil.isBlank(title)) {
@@ -96,6 +110,7 @@ public class ChatRecordServiceImpl implements ChatRecordService {
                     // 总数查询
                     Query countQuery = Query.query(criteria);
 
+                    // 查询总数 + 数据
                     return r2dbcEntityTemplate.select(countQuery, ChatRecord.class)
                             .count()
                             .flatMap(count -> r2dbcEntityTemplate.select(dataQuery, ChatRecord.class)
@@ -117,7 +132,18 @@ public class ChatRecordServiceImpl implements ChatRecordService {
                             .build());
                 });
     }
-
+    /**
+     * 保存聊天记录
+     *
+     * @param chatRecord 聊天记录实体
+     * @return Mono<BigInteger> 返回保存成功的记录 ID
+     *
+     * 核心逻辑：
+     * - 设置更新时间
+     * - 获取当前用户 ID，游客返回 0
+     * - 保存记录到数据库
+     * - 异常返回 0
+     */
     @Override
     public Mono<BigInteger> save(ChatRecord chatRecord) {
         chatRecord.setUpdateTime(LocalDateTime.now());
@@ -136,6 +162,18 @@ public class ChatRecordServiceImpl implements ChatRecordService {
                     });
         });
     }
+
+    /**
+     * 游标分页查询聊天记录（支持大数据量）
+     *
+     * @param requestCursorPage 游标分页请求
+     * @return Flux<ChatRecord> 返回符合条件的聊天记录流
+     *
+     * 核心逻辑：
+     * - 获取用户 ID
+     * - 构建游标分页查询
+     * - 支持 title 模糊匹配 + 用户过滤
+     */
     @Override
     public Flux<ChatRecord> findCursorPageChat(RequestCursorPage<ChatRecord> requestCursorPage) {
         return Flux.deferContextual(ctx -> {

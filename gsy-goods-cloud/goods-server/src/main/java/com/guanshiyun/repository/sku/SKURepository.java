@@ -36,7 +36,7 @@ public interface SKURepository extends ReactiveCrudRepository<SKU, BigInteger> {
     @Query("""
             SELECT * FROM sku WHERE product_id = :productId
             """)
-    Flux<List<SKU>> findAllByProductId(BigInteger productId);
+    Flux<SKU> findAllByProductId(BigInteger productId);
 //根据id减库存
     @Query("UPDATE product SET stock = stock - :count WHERE id = :id AND stock >= :count")
     Mono<Integer> reduceStockById(@Param("id") BigInteger id,@Param("count") Integer count);
@@ -44,4 +44,9 @@ public interface SKURepository extends ReactiveCrudRepository<SKU, BigInteger> {
     //添加库存
     @Query("UPDATE product SET stock = stock + :count WHERE id = :id")
     Mono<Integer> addStockById( @Param("id")BigInteger id,@Param("count") Integer count);
+
+    @Query("""
+            SELECT * FROM sku WHERE product_id IN (:allProductIds)
+            """)
+    Flux<SKU> findAllByProductId(List<BigInteger> allProductIds);
 }

@@ -1,6 +1,5 @@
 package com.guanshiyun.service.product;
 
-import com.guanshiyun.controller.product.vo.ProductCustomerVO;
 import com.guanshiyun.controller.product.vo.ProductSaveVO;
 import com.guanshiyun.controller.product.vo.ProductVO;
 import com.guanshiyun.requestpojo.RequestCursorPage;
@@ -18,8 +17,6 @@ public interface ProductService {
     Mono<Long> deleteById(BigInteger id);
 
     Mono<PageResultT<List<ProductVO>>> findPage(RequestPage<ProductVO> requestPage);
-
-    Mono<CursorPageResult<List<ProductCustomerVO>>> findCursor(RequestCursorPage<ProductVO> requestCursorPage);
 
     Mono<Long> save(List<ProductSaveVO> productSaveVOList);
 

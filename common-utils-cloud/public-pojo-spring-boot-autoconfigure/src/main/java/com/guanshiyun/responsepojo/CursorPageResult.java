@@ -16,4 +16,12 @@ public class CursorPageResult<T> {
     private  T rows;
     //是否存在下一页
     private Boolean hasNext;
+
+    public static <T> CursorPageResult<T> of(BigInteger cursor, T rows, Boolean hasNext) {
+        return CursorPageResult.<T>builder()
+                .cursor(cursor)
+                .rows(rows)
+                .hasNext(hasNext)
+                .build();
+    }
 }

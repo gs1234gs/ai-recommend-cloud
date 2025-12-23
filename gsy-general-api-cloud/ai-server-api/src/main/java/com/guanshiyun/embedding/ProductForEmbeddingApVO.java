@@ -7,10 +7,13 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
 
-import java.math.BigDecimal;
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
@@ -18,7 +21,9 @@ import java.util.Map;
 @Builder
 @FieldNameConstants
 @Accessors(chain = true)
-public class ProductForEmbeddingApVO {
+public class ProductForEmbeddingApVO implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private BigInteger id;           // 商品ID
     private String title;            // 商品标题
     private String description;      // 商品描述（不进 embedding）
@@ -27,8 +32,7 @@ public class ProductForEmbeddingApVO {
     private List<String> categoryNames;
     private List<String> tagNames;
 
-    private List<SkuItem> skuList;   // SKU 信息（不进 embedding）
-    private BigDecimal price;        // 当前价格（不进 embedding）
+    private List<SkuItem> skuList;   // SKU 信息（不进 embedding）// 当前价格（不进 embedding）
     //权重分数
     private double score;
 
@@ -59,15 +63,21 @@ public class ProductForEmbeddingApVO {
      * 用于 VectorStore / Qdrant 的 metadata
      */
     public Map<String, Object> metadata() {
-        return Map.of(
-                Fields.brand, brand,
-                Fields.categoryNames, categoryNames,
-                Fields.tagNames, tagNames,
-                Fields.price, price,
-                Fields.score, score
-        );
+        Map<String,Object> metadata = new HashMap<>();
+        putIfNotNull(metadata, Fields.id, id.toString());
+        putIfNotNull(metadata, Fields.title, title);
+        putIfNotNull(metadata, Fields.brand, brand);
+        putIfNotNull(metadata, Fields.categoryNames, categoryNames);
+        putIfNotNull(metadata, Fields.tagNames, tagNames);
+        putIfNotNull(metadata, Fields.skuList, skuList);
+        putIfNotNull(metadata, Fields.score, score);
+        return metadata;
     }
-
+    private void putIfNotNull(Map<String, Object> map, String key, Object value) {
+        if (Objects.nonNull( value)) {
+            map.put(key, value);
+        }
+    }
     // ================== SKU ==================
 
     @Data
@@ -76,10 +86,10 @@ public class ProductForEmbeddingApVO {
     @Builder
     @Accessors(chain = true)
     public static class SkuItem {
-        private BigInteger id;
+        private String id;
         private String name;
         private String skuCode;
-        private BigDecimal price;
+        private String price;
     }
 
 

@@ -33,7 +33,15 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-
+/**
+ * ChatServiceImpl
+ *
+ * 类功能：
+ * - 提供聊天接口服务，支持一次性返回和流式返回聊天结果
+ * - 自动创建会话（第一次聊天）并保存聊天记录到 MySQL 与 MongoDB
+ * - 对已存在会话，追加聊天内容并更新元信息
+ * - 集成 AI 聊天客户端（ChatClient）生成聊天回复
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -49,7 +57,10 @@ public class ChatServiceImpl implements ChatService {
     private final ReactiveMongoTemplate reactiveMongoTemplate;
 
     /**
-     * 一次性返回聊天记录
+     * 一次性返回完整聊天记录
+     *
+     * @param reqChat 聊天请求对象，包含 conversationId 和用户输入内容
+     * @return Flux<String> 返回 AI 回复文本流
      */
     @Override
     public Flux<String> chatAll(ReqChat reqChat) {
@@ -91,6 +102,7 @@ public class ChatServiceImpl implements ChatService {
 //                        .bind(ChatRecord.Fields.delFlag, chatRecord.getDelFlag())
                         .fetch()
                         .rowsUpdated()
+                        // 调用 AI 客户端生成聊天回复，并保存到 MongoDB
                         .thenMany(Flux.defer(() ->
                                 chatClient.prompt()
                                         .user(content)
@@ -132,6 +144,7 @@ public class ChatServiceImpl implements ChatService {
             });
         }
         //如果不是第一次对话，就从数据库中获取会话记录
+        // 已存在会话，追加内容
         return Flux.deferContextual(ctx -> {
                     BigInteger userId = myBigInteger.bigInteger(
                             ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
@@ -182,7 +195,10 @@ public class ChatServiceImpl implements ChatService {
     }
 
     /**
-     * 流式返回
+     * 流式返回聊天内容
+     *
+     * @param reqChat 聊天请求对象
+     * @return Flux<String> AI 回复内容流
      */
     @Override
     public Flux<String> chatFlux(ReqChat reqChat) {
@@ -335,7 +351,12 @@ public class ChatServiceImpl implements ChatService {
                     });
         });
     }
-
+    /**
+     * 删除会话记录
+     *
+     * @param id 会话 ID
+     * @return Mono<Long> 删除影响的行数
+     */
     @Override
     public Mono<Long> deleteChatById(Object id) {
         return databaseClient.sql("DELETE FROM chat_record WHERE id = :id")

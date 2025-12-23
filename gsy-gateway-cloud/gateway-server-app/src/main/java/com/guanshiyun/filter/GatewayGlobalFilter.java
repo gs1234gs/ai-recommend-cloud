@@ -18,7 +18,6 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
-import org.springframework.core.env.Environment;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.server.ServerWebExchange;
@@ -35,7 +34,6 @@ import java.util.Map;
 @Configuration
 @RequiredArgsConstructor
 public class GatewayGlobalFilter implements GlobalFilter, Ordered {
-    private final Environment environment;
     private final ReactiveRedisUtil reactiveRedisUtil;
     private final MyBigInteger myBigInteger;
 

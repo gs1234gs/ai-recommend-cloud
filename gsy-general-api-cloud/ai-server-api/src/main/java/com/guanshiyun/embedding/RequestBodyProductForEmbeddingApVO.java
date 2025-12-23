@@ -1,0 +1,24 @@
+package com.guanshiyun.embedding;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import lombok.experimental.FieldNameConstants;
+
+import java.io.Serial;
+import java.io.Serializable;
+
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Accessors(chain = true)
+@FieldNameConstants
+public class RequestBodyProductForEmbeddingApVO<T> implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+    private Integer topK;
+    private T data;
+}

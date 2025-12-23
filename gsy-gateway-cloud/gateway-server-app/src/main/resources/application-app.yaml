@@ -9,36 +9,38 @@ spring:
 #            allowedMethods: "*"
 #      default-filters:
 #        - StripPrefix=1 # 去掉前缀 /gateway-api
-      routes:
-#      系统模块
-        - id: system-app
-          uri: lb://system-app
-          predicates:
-            - Path=/sys-api/**
+      server:
+        webflux:
+          routes:
+    #      系统模块
+            - id: system-app
+              uri: lb://system-app
+              predicates:
+                - Path=/sys-api/**
 
-#ai模块
-        - id: ai-app
-          uri: lb://ai-app
-          predicates:
-            - Path=/ai-api/**
+    #ai模块
+            - id: ai-app
+              uri: lb://ai-app
+              predicates:
+                - Path=/ai-api/**
 
-#商品模块
-        - id: goods-app
-          uri: lb://goods-app
-          predicates:
-            - Path=/goods-api/**
-#行为模块
-        - id: behavior-app
-          uri: lb://behavior-app
-          predicates:
-            - Path=/behavior-api/**
-#推荐模块
-        - id: recommend-app
-          uri: lb://recommend-app
-          predicates:
-            - Path=/recommend-api/**
-#订单模块
-        - id: order-app
-          uri: lb://order-app
-          predicates:
-            - Path=/order-api/**
+    #商品模块
+            - id: goods-app
+              uri: lb://goods-app
+              predicates:
+                - Path=/goods-api/**
+    #行为模块
+            - id: behavior-app
+              uri: lb://behavior-app
+              predicates:
+                - Path=/behavior-api/**
+    #推荐模块
+            - id: recommend-app
+              uri: lb://recommend-app
+              predicates:
+                - Path=/recommend-api/**
+    #订单模块
+            - id: order-app
+              uri: lb://order-app
+              predicates:
+                - Path=/order-api/**

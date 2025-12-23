@@ -48,6 +48,44 @@ public class WebClientLoadBalanced {
                 ));
     }
 
+    @Bean
+    @LoadBalanced
+    @Qualifier("behaviorWebClientBuilder")
+    public WebClient.Builder behaviorWebClientBuilder() {
+        return WebClient.builder()
+                .baseUrl(ServerName.BEHAVIOR_APP.getValue())
+                .filter(ExchangeFilterFunction.ofRequestProcessor(clientRequest ->
+                        Mono.deferContextual(ctx ->
+                                Mono.just(clientRequest(ctx, clientRequest))
+                        )
+                ));
+    }
+    @Bean
+    @LoadBalanced
+    @Qualifier("systemWebClientBuilder")
+    public WebClient.Builder systemWebClientBuilder() {
+        return WebClient.builder()
+                .baseUrl(ServerName.SYSTEM_APP.getValue())
+                .filter(ExchangeFilterFunction.ofRequestProcessor(clientRequest ->
+                        Mono.deferContextual(ctx ->
+                                Mono.just(clientRequest(ctx, clientRequest))
+                        )
+                ));
+    }
+
+    @Bean
+    @LoadBalanced
+    @Qualifier("orderWebClientBuilder")
+    public WebClient.Builder orderWebClientBuilder() {
+        return WebClient.builder()
+                .baseUrl(ServerName.ORDER_APP.getValue())
+                .filter(ExchangeFilterFunction.ofRequestProcessor(clientRequest ->
+                        Mono.deferContextual(ctx ->
+                                Mono.just(clientRequest(ctx, clientRequest))
+                        )
+                ));
+    }
+
     public ClientRequest clientRequest(ContextView ctx, ClientRequest clientRequest) {
         // 从 Reactor Context 中取 userId
         String userId = ctx.getOrDefault(

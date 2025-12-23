@@ -10,4 +10,6 @@ import java.util.List;
 public interface PurchaseOrderServiceApi {
     //根据用户od获取购买记录
     Mono<ResultT<List<PurchaseOrderVOApi>>> findByUserId(BigInteger userId);
+    //根据当前用户id获取购买记录
+    Mono<ResultT<List<PurchaseOrderVOApi>>> findByRows(Integer row);
 }

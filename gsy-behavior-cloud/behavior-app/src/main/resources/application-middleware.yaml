@@ -6,6 +6,8 @@ spring:
       password: nacos
       discovery:
         namespace: dev
-
+gorse:
+  url: 127.0.0.1:8087
+  api-key: api-key
 
 

@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @SuperBuilder
 @FieldNameConstants
-@ToString(callSuper = true)
 public class PurChaseOrderSaveVO {
     private BigInteger id;
     //订单编号

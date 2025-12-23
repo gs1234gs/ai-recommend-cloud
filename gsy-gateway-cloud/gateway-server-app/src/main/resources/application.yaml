@@ -3,12 +3,12 @@ spring:
     name: gateway-server-app
   profiles:
     active: data,middleware,app
-  debug: true
+
 server:
   port: 1921
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
     org.springframework.web.reactive.function.client.ExchangeFunctions: DEBUG
-
+#debug: true
 

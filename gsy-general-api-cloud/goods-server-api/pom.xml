@@ -28,7 +28,16 @@
 
     </properties>
     <dependencies>
-
+        <dependency>
+            <groupId>com.guanshiyun</groupId>
+            <artifactId>gorse-sdk-spring-boot-starter</artifactId>
+            <version>${snapshotName}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.guanshiyun</groupId>
+            <artifactId>common-utils-spring-boot-starter</artifactId>
+            <version>${snapshotName}</version>
+        </dependency>
     </dependencies>
 
     <build>

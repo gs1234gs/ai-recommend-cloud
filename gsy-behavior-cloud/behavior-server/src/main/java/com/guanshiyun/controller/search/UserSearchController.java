@@ -1,6 +1,7 @@
 package com.guanshiyun.controller.search;
 
 import com.guanshiyun.code.HttpCodeConst;
+import com.guanshiyun.controller.search.vo.UserSearchSaveVO;
 import com.guanshiyun.controller.search.vo.UserSearchVO;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.search.UserSearchService;
@@ -20,7 +21,7 @@ public class UserSearchController {
     private final UserSearchService userSearchService;
 
     @PostMapping("save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody UserSearchVO userSearchVO) {
+    public Mono<ResultT<BigInteger>> save(@RequestBody UserSearchSaveVO userSearchVO) {
         return userSearchService.save(userSearchVO)
                 .map(ResultT::success)
                 .onErrorResume(e -> Mono.just(ResultT

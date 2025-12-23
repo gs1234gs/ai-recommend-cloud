@@ -10,6 +10,9 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.io.Serial;
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
@@ -23,7 +26,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldNameConstants
 @Table("product")
-public class Product extends BasePojo {
+public class Product extends BasePojo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     //商品id
     @Id
     private BigInteger id;
@@ -41,12 +46,16 @@ public class Product extends BasePojo {
     private String placeOfOrigin;
     //商品等级，
     private short level;
-    //分类
-    private BigInteger categoryId;
     // 上架时间
     private LocalDateTime publishTime;
     // 下架时间
     private LocalDateTime offlineTime;
+    //状态，0-下架，1-上架，2-审核中，3-审核未通过
+    private short status;
+    //最低价
+    private BigDecimal minPrice;
+    //最高价
+    private BigDecimal maxPrice;
 }
 /**
  * 实体商品，仓库；

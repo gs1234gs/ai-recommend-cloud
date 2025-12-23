@@ -14,7 +14,6 @@ import java.math.BigInteger;
 @NoArgsConstructor
 @SuperBuilder
 @FieldNameConstants
-@ToString(callSuper = true)
 public class OrderAddressVO extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

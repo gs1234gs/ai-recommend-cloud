@@ -1,16 +1,22 @@
 package com.guanshiyun.controller.warehouse.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.guanshiyun.base.BasePojo;
+import lombok.*;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigInteger;
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class WarehouseVO {
+@SuperBuilder
+@Accessors(chain = true)
+public class WarehouseVO extends BasePojo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private BigInteger id;
     /** 仓库名称 */
     private String name;

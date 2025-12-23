@@ -1,5 +1,6 @@
 package com.guanshiyun.controller.click;
 
+import com.guanshiyun.controller.click.vo.UserClickSaveVO;
 import com.guanshiyun.controller.click.vo.UserClickVO;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.click.UserClickService;
@@ -19,7 +20,7 @@ public class UserClickController {
     private final UserClickService userClickService;
     //保存点击记录
     @RequestMapping("save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody UserClickVO userClickVO){
+    public Mono<ResultT<BigInteger>> save(@RequestBody UserClickSaveVO userClickVO){
         return userClickService.save(userClickVO)
                 .map(ResultT::success)
                 .onErrorReturn(ResultT.error());

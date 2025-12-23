@@ -1,23 +1,27 @@
 package com.guanshiyun.controller.order.vo;
 
+import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.address.vo.OrderAddressVO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
 @FieldNameConstants
-@ToString(callSuper = true)
-public class PurChaseOrderVO {
+@Accessors(chain = true)
+public class PurChaseOrderVO extends BasePojo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private BigInteger id;
     //订单编号
     private String orderNo;

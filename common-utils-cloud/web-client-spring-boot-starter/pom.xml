@@ -26,6 +26,10 @@
     </scm>
     <dependencies>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.guanshiyun</groupId>
             <artifactId>web-client-spring-boot-autoconfigure</artifactId>
             <version>${snapshotName}</version>

@@ -1,13 +1,16 @@
 package com.guanshiyun.rpc.behaviorapi.click;
 
 import com.guanshiyun.responsepojo.ResultT;
-import com.guanshiyun.rpc.behaviorapi.browse.vo.UserBrowseVOApi;
+import com.guanshiyun.rpc.apisave.UserClickSaveApiVO;
+import com.guanshiyun.rpc.profile.ClickProfileApi;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
 import java.util.List;
 
 public interface UserClickServiceApi {
-    Mono<ResultT<List<UserBrowseVOApi>>> findUserBrowseRecord(Integer rows);
-    Mono<ResultT<List<UserBrowseVOApi>>> findUserBrowseRecord(Integer rows, BigInteger userId);
+    // 获取用户点击记录
+    Mono<ResultT<List<ClickProfileApi>>> findUserClickRecord(Integer rows);
+    //保存用户点击记录
+    Mono<ResultT<BigInteger>> saveUserClickRecord(UserClickSaveApiVO userClickSaveApiVO);
 }

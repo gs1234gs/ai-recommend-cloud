@@ -31,6 +31,8 @@ public class ConstNumber {
     public static final BigInteger BIG_INTEGER_TEN = BigInteger.TEN;
     //int
     public static final int INT_ONE = 1;
+    //-1
+    public static final int INT_MINUS_ONE = -1;
     public static final int INT_ZERO = 0;
     public static final int INT_TWO = 2;
     public static final int INT_THREE = 3;
@@ -42,4 +44,6 @@ public class ConstNumber {
     public static final int INT_NINE = 9;
     public static final int INT_TEN = 10;
     public static final int INT_HUNDRED = 100;
+    //double
+    public static final double DOUBLE_ONE = 1.0;
 }

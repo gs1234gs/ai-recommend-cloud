@@ -28,4 +28,7 @@ public interface PurChaseOrderService {
     Mono<PageResultT<List<PurChaseOrderVO>>> findByPage(RequestPage<PurChaseOrderVO> requestPage);
 
     Mono<PageResultT<List<PurChaseOrderVO>>> findByUserIdPage(RequestPage<PurChaseOrderVO> requestPage);
+
+    //获取指定条数的用户订单
+    Mono<List<PurChaseOrderVO>> findByRows(Integer rows);
 }

@@ -1,7 +1,6 @@
 package com.guanshiyun.controller.product;
 
 import com.guanshiyun.code.HttpCodeConst;
-import com.guanshiyun.controller.product.vo.ProductCustomerVO;
 import com.guanshiyun.controller.product.vo.ProductSaveVO;
 import com.guanshiyun.controller.product.vo.ProductVO;
 import com.guanshiyun.requestpojo.RequestCursorPage;
@@ -114,25 +113,25 @@ public class ProductController {
     /**
      * 游标查询，返回客户端
      */
-    @PostMapping("/findCursor")
-    public Mono<ResultT<CursorPageResult<List<ProductCustomerVO>>>> findCursor(@RequestBody(required = false) RequestCursorPage<ProductVO> requestCursorPage) {
-        return productService.findCursor(requestCursorPage)
-                .map(cursorPageResult ->
-                        ResultT.<CursorPageResult<List<ProductCustomerVO>>>builder()
-                                .code(HttpCodeConst.OK)
-                                .msg("查询成功")
-                                .data(cursorPageResult)
-                                .build()
-
-                )
-                .onErrorResume(throwable ->
-                        Mono.just(ResultT.<CursorPageResult<List<ProductCustomerVO>>>builder()
-                                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
-                                .msg("系统错误")
-                                .build()
-                        )
-                );
-    }
+//    @PostMapping("/findCursor")
+//    public Mono<ResultT<CursorPageResult<List<ProductCustomerVO>>>> findCursor(@RequestBody RequestCursorPage<ProductSearchVO> requestCursorPage) {
+//        return productService.findCursor(requestCursorPage)
+//                .map(cursorPageResult ->
+//                        ResultT.<CursorPageResult<List<ProductCustomerVO>>>builder()
+//                                .code(HttpCodeConst.OK)
+//                                .msg("查询成功")
+//                                .data(cursorPageResult)
+//                                .build()
+//
+//                )
+//                .onErrorResume(throwable ->
+//                        Mono.just(ResultT.<CursorPageResult<List<ProductCustomerVO>>>builder()
+//                                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+//                                .msg("系统错误")
+//                                .build()
+//                        )
+//                );
+//    }
 
     //批量删除
     @DeleteMapping("/deleteAllById")

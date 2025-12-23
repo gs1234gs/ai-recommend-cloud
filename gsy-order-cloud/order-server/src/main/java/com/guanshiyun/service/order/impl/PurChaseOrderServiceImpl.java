@@ -6,10 +6,11 @@ import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.biginteger.MyBigInteger;
+import com.guanshiyun.controller.address.vo.OrderAddressVO;
 import com.guanshiyun.controller.order.vo.PurChaseOrderSaveVO;
 import com.guanshiyun.controller.order.vo.PurChaseOrderVO;
 import com.guanshiyun.order.PurChaseOrder;
-import com.guanshiyun.orderItem.OrderItem;
+import com.guanshiyun.repository.address.OrderAddressRepository;
 import com.guanshiyun.repository.order.PurChaseOrderRepository;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
@@ -27,7 +28,9 @@ import reactor.core.publisher.Mono;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -39,6 +42,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
     private final TransactionalOperator transactionalOperator;
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
+    private final OrderAddressRepository orderAddressRepository;
 
     /**
      * 保存订单
@@ -46,8 +50,9 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
     @Override
     public Mono<BigInteger> save(PurChaseOrderSaveVO purChaseOrderSaveVO) {
         return Mono.deferContextual(ctx -> {
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
+            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
                 return Mono.error(new RuntimeException("用户未登录"));
+            }
 
             BigInteger userId =
                     myBigInteger.bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
@@ -55,74 +60,42 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
             //订单
             PurChaseOrder purChaseOrder =
                     BeanUtil.toBean(purChaseOrderSaveVO, PurChaseOrder.class);
-            //关联地址和用户
-            OrderItem orderItem = OrderItem.builder()
-                    .id(null)
-                    .addressId(purChaseOrderSaveVO.getAddressId())
-                    .creator(userId)
-                    .createTime(LocalDateTime.now())
-                    .purchaseOrderId(id)
-                    .build();
-            return Mono.defer(() -> {
-                        Mono<PurChaseOrder> purChaseOrderMono = r2dbcEntityTemplate.insert(purChaseOrder);
-                        Mono<OrderItem> orderItemMono = r2dbcEntityTemplate.insert(orderItem);
-                        return Mono.zip(purChaseOrderMono, orderItemMono)
-                                .map(tuple -> {
-                                    PurChaseOrder t1 = tuple.getT1();
-                                    OrderItem t2 = tuple.getT2();
-                                    //成功，扣减库存，使用消息队列，但是这里直接掉api完成，加速开发速度
-                                    return t1.getId();
-                                });
-
-                    })
-                    .as(new Function<Mono<BigInteger>, Mono<BigInteger>>() {
-                            @Override
-                            public Mono<BigInteger> apply(Mono<BigInteger> bigIntegerMono) {
-                                return transactionalOperator.transactional(bigIntegerMono);
-                            }
-                        }
-                    );
+            purChaseOrder
+                    .setId(id)
+                    .setCreator(userId)
+                    .setCreateTime(LocalDateTime.now());
+            return r2dbcEntityTemplate.insert(purChaseOrder)
+                    .map(PurChaseOrder::getId)
+                    .transform(transactionalOperator::transactional);
         });
     }
 
     /**
      * 修改订单
-     * */
+     */
     @Override
     public Mono<BigInteger> updateById(PurChaseOrderSaveVO purChaseOrderSaveVO) {
-        BigInteger addressId = purChaseOrderSaveVO.getAddressId();
         Integer status = purChaseOrderSaveVO.getStatus();
-
         return Mono.deferContextual(ctx -> {
-            if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
+            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
             BigInteger userId = myBigInteger.bigInteger(
                     ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
             );
             return r2dbcUpdateHelper.updateIgnoreNull(
-                    EntityTableNameUtils.getName(PurChaseOrder.class),
-                    PurChaseOrder.builder()
-                            .id(purChaseOrderSaveVO.getId())
-                            .updater(userId)
-                            .updateTime(LocalDateTime.now())
-                            .status(status)
-                            .build(),
-                    PurChaseOrder.Fields.id)
-                    .flatMap(orId ->
-                    r2dbcUpdateHelper.updateIgnoreNull(
-                            EntityTableNameUtils.getName(OrderItem.class),
-                            OrderItem.builder()
+                            EntityTableNameUtils.getName(PurChaseOrder.class),
+                            PurChaseOrder.builder()
                                     .id(purChaseOrderSaveVO.getId())
-                                    .addressId(addressId)
                                     .updater(userId)
                                     .updateTime(LocalDateTime.now())
+                                    .status(status)
+                                    .addressId(purChaseOrderSaveVO.getAddressId())
                                     .build(),
-                            OrderItem.Fields.id)
-                    )
+                            PurChaseOrder.Fields.id)
                     .transform(transactionalOperator::transactional)
-                    .onErrorResume(throwable ->{
-                        log.error("修改订单失败：",throwable);
+                    .onErrorResume(throwable -> {
+                        log.error("修改订单失败：", throwable);
                         return Mono.error(new Exception("修改订单失败"));
                     });
         });
@@ -136,7 +109,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
     }
 
     @Override
-    public  Mono<List<PurChaseOrderVO>> findByUserIds(List<BigInteger> userIds, Integer rows) {
+    public Mono<List<PurChaseOrderVO>> findByUserIds(List<BigInteger> userIds, Integer rows) {
         return purChaseOrderRepository.findAllByUserIds(userIds, rows)
                 .map(purChaseOrder ->
                         BeanUtil.toBean(purChaseOrder, PurChaseOrderVO.class)
@@ -160,38 +133,83 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
                 .page()
                 .map(pageResultT ->
                         PageResultT.<List<PurChaseOrderVO>>builder()
-                        .pageNum(pageResultT.getPageNum())
-                        .pageSize(pageResultT.getPageSize())
-                        .total(pageResultT.getTotal())
-                        .rows(BeanConvertUtil.toBeanList(pageResultT.getRows(), PurChaseOrderVO.class))
-                        .build()
-                        );
+                                .pageNum(pageResultT.getPageNum())
+                                .pageSize(pageResultT.getPageSize())
+                                .total(pageResultT.getTotal())
+                                .rows(BeanConvertUtil.toBeanList(pageResultT.getRows(), PurChaseOrderVO.class))
+                                .build()
+                );
     }
 
     @Override
     public Mono<PageResultT<List<PurChaseOrderVO>>> findByUserIdPage(RequestPage<PurChaseOrderVO> requestPage) {
         RequestPage<PurChaseOrderVO> purChaseOrderVORequestPage = PageUtils.pageValidation(requestPage, PurChaseOrderVO.class);
         return Mono.deferContextual(ctx -> {
-            if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
+            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
-            BigInteger userId =myBigInteger.bigInteger(
+            BigInteger userId = myBigInteger.bigInteger(
                     ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
             );
             RequestPage<PurChaseOrder> orderRequestPage =
                     BeanConvertUtil.toBean(purChaseOrderVORequestPage,
-                    PurChaseOrder.class);
+                            PurChaseOrder.class);
             orderRequestPage.getCondition().setCreator(userId);
             return ReactivePageQuery.of(r2dbcEntityTemplate, PurChaseOrder.class, orderRequestPage)
                     .page()
                     .map(pageResultT ->
                             PageResultT.<List<PurChaseOrderVO>>builder()
-                            .pageNum(pageResultT.getPageNum())
-                            .pageSize(pageResultT.getPageSize())
-                            .total(pageResultT.getTotal())
-                            .rows(BeanConvertUtil.toBeanList(pageResultT.getRows(), PurChaseOrderVO.class))
-                            .build()
-                            );
+                                    .pageNum(pageResultT.getPageNum())
+                                    .pageSize(pageResultT.getPageSize())
+                                    .total(pageResultT.getTotal())
+                                    .rows(BeanConvertUtil.toBeanList(pageResultT.getRows(), PurChaseOrderVO.class))
+                                    .build()
+                    );
+        });
+    }
+
+    @Override
+    public Mono<List<PurChaseOrderVO>> findByRows(Integer rows) {
+        return Mono.deferContextual(ctx -> {
+            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+                return Mono.error(new RuntimeException("用户未登录"));
+            }
+            BigInteger userId = myBigInteger.bigInteger(
+                    ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
+            );
+            return purChaseOrderRepository.findAllByUserId(userId, rows)
+                    .collectList()
+                    .flatMap(purChaseOrderVOS ->
+                            orderAddressRepository.findAllById(purChaseOrderVOS
+                                            .stream()
+                                            .map(PurChaseOrder::getAddressId)
+                                            .toList())
+                                    .collectList()
+                                    .map(orderAddress -> {
+                                        Map<BigInteger, List<PurChaseOrder>> orderGroupByAddressId =
+                                                purChaseOrderVOS
+                                                        .stream()
+                                                        .collect(Collectors.groupingBy(PurChaseOrder::getAddressId));
+                                        Map<BigInteger, OrderAddressVO> addressGroupById =
+                                                BeanConvertUtil.toBeanList(orderAddress, OrderAddressVO.class)
+                                                        .stream()
+                                                        .collect(Collectors
+                                                                .toMap((OrderAddressVO::getId),Function.identity()));
+                                       return orderAddress.stream()
+                                                .flatMap(item ->
+                                                    orderGroupByAddressId.getOrDefault(item.getId(), List.of())
+                                                            .stream()
+                                                            .map(purChaseOrder ->
+                                                                    BeanConvertUtil.toBean(purChaseOrder, PurChaseOrderVO.class)
+                                                                            .setOrderAddressVO(addressGroupById.getOrDefault(item.getId(),
+                                                                                    OrderAddressVO.builder().build()))
+                                                            )
+                                                )
+                                                .toList();
+                                    })
+
+                    );
+
         });
     }
 }
