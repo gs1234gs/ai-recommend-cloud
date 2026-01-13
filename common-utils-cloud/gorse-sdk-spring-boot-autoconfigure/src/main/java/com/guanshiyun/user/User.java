@@ -62,4 +62,6 @@ public class User implements Serializable {
      */
     @JsonProperty("Labels")
     private Object labels;
+    @JsonProperty("Comment")
+    private String comment;
 }

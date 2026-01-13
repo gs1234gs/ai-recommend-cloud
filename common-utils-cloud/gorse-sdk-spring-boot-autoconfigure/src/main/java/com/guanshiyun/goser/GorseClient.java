@@ -11,6 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -84,6 +85,13 @@ public class GorseClient implements Serializable {
                 this.url + "/api/feedback",
                 feedbacks,
                 RowAffected.class
+        );
+    }
+    public Mono<RowAffected> deleteFeedback(String feedbackType, String userId, String itemId) throws IOException {
+        return this.request(HttpMethod.DELETE,
+                this.url + "/api/feedback/" +
+                        feedbackType + "/" + userId + "/" + itemId,
+                null, RowAffected.class
         );
     }
 //

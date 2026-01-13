@@ -7,65 +7,10 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="50bf314b-8bcd-417a-90fa-052ef7204d7a" name="Changes" comment="chore(deps): 更新Spring Boot版本并移除HRMS模块&#10;&#10;- 将Spring Boot父版本从3.5.8升级到3.5.9&#10;- 从gsy-general-api-cloud项目中移除hrms-server-api模块&#10;- 删除了hrms-server-api的POM配置文件">
-      <change afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/product/vo/ProductCountVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="50bf314b-8bcd-417a-90fa-052ef7204d7a" name="Changes" comment="refactor(goods): 统一状态字段含义和异步优化商品保存逻辑&#10;&#10;- 统一各实体类及API状态字段，调整为“0=启用/上架，1=禁用/下架”含义&#10;- 修改Token生成器Issuer字段为“guanshiyun”&#10;- 重命名SnowflakePermanent.id生成方法以符合命名规范&#10;- 添加常量INT_THOUSAND&#10;- 调整网关端口号及增加order-api上传服务路由配置&#10;- Category实体及相关VO添加链式调用支持（@Accessors(chain = true)）&#10;- 新增ProductCountVO，用于商品统计数据传输&#10;- 修改商品分页接口返回格式，增加异常捕获及错误返回&#10;- SKU相关VO新增商品ID字段，状态字段值统一调整&#10;- SKUController添加分页查询接口，完善异常日志&#10;- 修改CategoryService save方法，新增雪花ID生成code字段&#10;- 商品保存逻辑优化为异步调用部分更新操作，提升性能&#10;- 商品分页查询改用ReactivePageQuery，重构查询条件及分页逻辑&#10;- 清理无用import及代码格式调整，统一日志打印内容和格式">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/src/main/java/com/aliyun/oss/JwtUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/src/main/java/com/aliyun/oss/JwtUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/classes/com/aliyun/oss/JwtUtils$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/classes/com/aliyun/oss/JwtUtils$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/classes/com/aliyun/oss/JwtUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/aliyun-oss-spring-boot-autoconfigure/target/classes/com/aliyun/oss/JwtUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/src/main/java/com/guanshiyun/snowflake/SnowflakePermanent.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/src/main/java/com/guanshiyun/snowflake/SnowflakePermanent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/snowflake/SnowflakePermanent.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/common-utils-spring-boot-autoconfigure/target/classes/com/guanshiyun/snowflake/SnowflakePermanent.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/src/main/java/com/db/dbnumber/ConstNumber.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/src/main/java/com/db/dbnumber/ConstNumber.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/target/classes/com/db/dbnumber/ConstNumber.class" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/db-table-spring-boot-autoconfigure/target/classes/com/db/dbnumber/ConstNumber.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/src/main/java/com/guanshiyun/bigmodel/BigModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-ai-cloud/ai-pojo/src/main/java/com/guanshiyun/bigmodel/BigModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/src/main/resources/application-app.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/src/main/resources/application-app.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-gateway-cloud/gateway-server-app/src/main/resources/application.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/publicbehaviorvo/CategoryApiVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/publicbehaviorvo/CategoryApiVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/publicbehaviorvo/ProductApiVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/publicbehaviorvo/ProductApiVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/publicbehaviorvo/SKUApiVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/publicbehaviorvo/SKUApiVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/publicbehaviorvo/TagApiVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/publicbehaviorvo/TagApiVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/publicbehaviorvo/WarehouseApiVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/behavior-server-api/src/main/java/com/guanshiyun/publicbehaviorvo/WarehouseApiVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/CategoryApiVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/CategoryApiVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/ProductApiVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/ProductApiVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/SKUApiVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/SKUApiVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/TagApiVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/TagApiVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/WarehouseApiVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-general-api-cloud/goods-server-api/src/main/java/com/guanshiyun/rpc/profile/WarehouseApiVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/src/main/java/com/guanshiyun/category/Category.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/src/main/java/com/guanshiyun/category/Category.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/src/main/java/com/guanshiyun/sku/SKU.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/src/main/java/com/guanshiyun/sku/SKU.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/src/main/java/com/guanshiyun/tag/Tag.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/src/main/java/com/guanshiyun/tag/Tag.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/src/main/java/com/guanshiyun/warehouse/Warehouse.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-pojo/src/main/java/com/guanshiyun/warehouse/Warehouse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/category/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/category/CategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/category/vo/CategorySaveVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/category/vo/CategorySaveVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/category/vo/CategoryVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/category/vo/CategoryVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/product/ProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/product/ProductController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/sku/SKUController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/sku/SKUController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/sku/vo/SKUFindVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/sku/vo/SKUFindVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/sku/vo/SKUSaveVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/sku/vo/SKUSaveVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/sku/vo/SKUVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/sku/vo/SKUVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/tag/vo/TagSaveVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/tag/vo/TagSaveVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/tag/vo/TagVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/tag/vo/TagVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/warehouse/vo/WarehouseSaveVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/warehouse/vo/WarehouseSaveVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/warehouse/vo/WarehouseVO.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/controller/warehouse/vo/WarehouseVO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/category/impl/CategoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/category/impl/CategoryServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/product/impl/ProductServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/product/impl/ProductServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/sku/impl/SKUServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-goods-cloud/goods-server/src/main/java/com/guanshiyun/service/sku/impl/SKUServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-common-utils/src/main/java/com/guanshiyun/configutil/ConfigSysUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-common-utils/src/main/java/com/guanshiyun/configutil/ConfigSysUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/handler/RewriteLoginSuccessHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/handler/RewriteLoginSuccessHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/jwt/AssistantJwtUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/jwt/AssistantJwtUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/jwt/JwtUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/jwt/JwtUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/redisConfig/ReactiveRedisUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/redisConfig/ReactiveRedisUtil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/reponse/CustomReactiveAuthenticationManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/src/main/java/com/guanshiyun/security/reponse/CustomReactiveAuthenticationManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/security/handler/RewriteLoginSuccessHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/security/handler/RewriteLoginSuccessHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/security/jwt/AssistantJwtUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/security/jwt/AssistantJwtUtils.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/security/jwt/JwtUtils$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/security/jwt/JwtUtils.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/security/redisConfig/ReactiveRedisUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/security/redisConfig/ReactiveRedisUtil.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/security/reponse/CustomReactiveAuthenticationManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/sys-user-server/target/classes/com/guanshiyun/security/reponse/CustomReactiveAuthenticationManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-system-cloud/system-app/src/main/java/com/guanshiyun/SystemAppApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-system-cloud/system-app/src/main/java/com/guanshiyun/SystemAppApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-upload-cloud/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gsy-upload-cloud/src/main/resources/application.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/gsy-upload-cloud/src/main/resources/application.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/goser/GorseClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/goser/GorseClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-utils-cloud/gorse-sdk-spring-boot-autoconfigure/src/main/java/com/guanshiyun/user/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -946,6 +891,8 @@
       <workItem from="1766975561555" duration="3974000" />
       <workItem from="1768125624234" duration="698000" />
       <workItem from="1768126759842" duration="4334000" />
+      <workItem from="1768312533058" duration="324000" />
+      <workItem from="1768312900763" duration="2785000" />
     </task>
     <task id="LOCAL-00001" summary="第一次推送">
       <option name="closed" value="true" />
@@ -1043,7 +990,15 @@
       <option name="project" value="LOCAL" />
       <updated>1766480522810</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="refactor(goods): 统一状态字段含义和异步优化商品保存逻辑&#10;&#10;- 统一各实体类及API状态字段，调整为“0=启用/上架，1=禁用/下架”含义&#10;- 修改Token生成器Issuer字段为“guanshiyun”&#10;- 重命名SnowflakePermanent.id生成方法以符合命名规范&#10;- 添加常量INT_THOUSAND&#10;- 调整网关端口号及增加order-api上传服务路由配置&#10;- Category实体及相关VO添加链式调用支持（@Accessors(chain = true)）&#10;- 新增ProductCountVO，用于商品统计数据传输&#10;- 修改商品分页接口返回格式，增加异常捕获及错误返回&#10;- SKU相关VO新增商品ID字段，状态字段值统一调整&#10;- SKUController添加分页查询接口，完善异常日志&#10;- 修改CategoryService save方法，新增雪花ID生成code字段&#10;- 商品保存逻辑优化为异步调用部分更新操作，提升性能&#10;- 商品分页查询改用ReactivePageQuery，重构查询条件及分页逻辑&#10;- 清理无用import及代码格式调整，统一日志打印内容和格式">
+      <option name="closed" value="true" />
+      <created>1768312837274</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1768312837274</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1059,18 +1014,8 @@
     <option featureType="dependencySupport" implementationName="java:org.projectlombok:lombok" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
-    <option name="OPEN_GENERIC_TABS">
-      <map>
-        <entry key="60a68dba-4ecb-403d-a9b1-afc17574e1a7" value="TOOL_WINDOW" />
-      </map>
-    </option>
     <option name="TAB_STATES">
       <map>
-        <entry key="60a68dba-4ecb-403d-a9b1-afc17574e1a7">
-          <value>
-            <State />
-          </value>
-        </entry>
         <entry key="MAIN">
           <value>
             <State>
@@ -1079,7 +1024,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="master" />
+                        <option value="origin/ai-recommend-gsy" />
                       </list>
                     </value>
                   </entry>
@@ -1103,7 +1048,8 @@
     <MESSAGE value="feat(ai-app): 配置多数据源支持及向量存储集成&#10;&#10;- 增加 MySQL 和 PostgreSQL 的 R2DBC 配置支持&#10;- 配置 MongoDB 主从数据库连接&#10;- 添加 Qdrant 向量存储配置及初始化逻辑&#10;- 调整文件上传内存大小限制以适应大文件处理&#10;- 更新 Ollama 模型配置，指定使用 gpt-oss:20b 模型&#10;- 完善 Redis 序列化工具类，提升 JSON 处理性能&#10;- 新增商品嵌入服务实现，支持批量保存与实时推荐功能&#10;- 提供语音识别测试案例及相关工具类&#10;- 移除无用的聊天记忆组件 SimpleLoggerAdvisor&#10;- 优化测试代码结构并增强嵌入测试功能完整性" />
     <MESSAGE value="feat(embedding): 实现商品向量化存储和推荐功能&#10;&#10;- 配置Qdrant向量数据库连接，移除HTTP协议前缀&#10;- 创建商品向量化的API端点，支持批量保存和删除&#10;- 实现基于用户历史行为的实时商品推荐算法&#10;- 添加Gorse推荐系统作为冷启动和新用户推荐补充&#10;- 重构向量存储服务，使用UUID生成向量ID并优化批量操作&#10;- 在API层暴露向量化和推荐相关接口，支持推荐数量配置&#10;- 添加详细的代码注释说明各模块功能和实现逻辑&#10;- 优化测试用例，替换硬编码推荐测试数据&#10;- 实现游客用户推荐处理和向量检索fallback机制" />
     <MESSAGE value="chore(deps): 更新Spring Boot版本并移除HRMS模块&#10;&#10;- 将Spring Boot父版本从3.5.8升级到3.5.9&#10;- 从gsy-general-api-cloud项目中移除hrms-server-api模块&#10;- 删除了hrms-server-api的POM配置文件" />
-    <option name="LAST_COMMIT_MESSAGE" value="chore(deps): 更新Spring Boot版本并移除HRMS模块&#10;&#10;- 将Spring Boot父版本从3.5.8升级到3.5.9&#10;- 从gsy-general-api-cloud项目中移除hrms-server-api模块&#10;- 删除了hrms-server-api的POM配置文件" />
+    <MESSAGE value="refactor(goods): 统一状态字段含义和异步优化商品保存逻辑&#10;&#10;- 统一各实体类及API状态字段，调整为“0=启用/上架，1=禁用/下架”含义&#10;- 修改Token生成器Issuer字段为“guanshiyun”&#10;- 重命名SnowflakePermanent.id生成方法以符合命名规范&#10;- 添加常量INT_THOUSAND&#10;- 调整网关端口号及增加order-api上传服务路由配置&#10;- Category实体及相关VO添加链式调用支持（@Accessors(chain = true)）&#10;- 新增ProductCountVO，用于商品统计数据传输&#10;- 修改商品分页接口返回格式，增加异常捕获及错误返回&#10;- SKU相关VO新增商品ID字段，状态字段值统一调整&#10;- SKUController添加分页查询接口，完善异常日志&#10;- 修改CategoryService save方法，新增雪花ID生成code字段&#10;- 商品保存逻辑优化为异步调用部分更新操作，提升性能&#10;- 商品分页查询改用ReactivePageQuery，重构查询条件及分页逻辑&#10;- 清理无用import及代码格式调整，统一日志打印内容和格式" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor(goods): 统一状态字段含义和异步优化商品保存逻辑&#10;&#10;- 统一各实体类及API状态字段，调整为“0=启用/上架，1=禁用/下架”含义&#10;- 修改Token生成器Issuer字段为“guanshiyun”&#10;- 重命名SnowflakePermanent.id生成方法以符合命名规范&#10;- 添加常量INT_THOUSAND&#10;- 调整网关端口号及增加order-api上传服务路由配置&#10;- Category实体及相关VO添加链式调用支持（@Accessors(chain = true)）&#10;- 新增ProductCountVO，用于商品统计数据传输&#10;- 修改商品分页接口返回格式，增加异常捕获及错误返回&#10;- SKU相关VO新增商品ID字段，状态字段值统一调整&#10;- SKUController添加分页查询接口，完善异常日志&#10;- 修改CategoryService save方法，新增雪花ID生成code字段&#10;- 商品保存逻辑优化为异步调用部分更新操作，提升性能&#10;- 商品分页查询改用ReactivePageQuery，重构查询条件及分页逻辑&#10;- 清理无用import及代码格式调整，统一日志打印内容和格式" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
