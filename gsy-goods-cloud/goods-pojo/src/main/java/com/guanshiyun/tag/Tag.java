@@ -39,7 +39,7 @@ public class Tag extends BasePojo {
     /** 标签颜色（用于前端展示，例如 #FF9900） */
     private String color;
 
-    /** 状态（1=启用，0=禁用） */
+    /** 状态,是否禁用（0=启用，1=禁用） */
     private short status;
 
     /** 标签权重（用于推荐优先级或排序） */

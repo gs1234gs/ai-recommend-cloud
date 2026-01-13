@@ -133,7 +133,7 @@ public class SnowflakePermanent {
         }
         return ts;
     }
-    public  String StringNextId(){
+    public  String stringNextId(){
         return nextId().toString();
     }
 

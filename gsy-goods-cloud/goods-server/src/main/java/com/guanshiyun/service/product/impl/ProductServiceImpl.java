@@ -1,12 +1,11 @@
 package com.guanshiyun.service.product.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.db.constsql.SqlConst;
 import com.db.cursorQuery.CursorQuery;
+import com.db.cursorQuery.ReactivePageQuery;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
-import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.category.Category;
 import com.guanshiyun.consts.ConstNumber;
@@ -35,18 +34,15 @@ import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
-import org.springframework.data.relational.core.query.Criteria;
-import org.springframework.data.relational.core.query.Query;
 import org.springframework.lang.NonNull;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -133,7 +129,15 @@ public class ProductServiceImpl implements ProductService {
                                                     });
                                         }
                                 )
-                                .flatMap(productId -> bigIntegerMono(productId, skuList, categoryIds, tagIds, product))
+                                .publishOn(Schedulers.boundedElastic())
+                                .doOnSuccess(productId -> {
+                                    // 异步调用 bigIntegerMono，但不阻塞主链
+                                    bigIntegerMono(productId, skuList, categoryIds, tagIds, product)
+                                            .subscribe(
+                                                    ignored -> log.info("异步处理完成: {}", productId),
+                                                    error -> log.error("异步处理失败: {}", productId, error)
+                                            );
+                                })
                                 .onErrorResume(throwable -> {
                                     log.error("保存商品信息失败：", throwable);
                                     return Mono.error(new Exception("保存商品信息失败"));
@@ -196,8 +200,15 @@ public class ProductServiceImpl implements ProductService {
                                                             deleteCategoryMono, insertCategoryFlux.then()
                                                     ).then(Mono.just(productId));
                                                 })
-                                                .flatMap(productIdSave -> bigIntegerMono(productIdSave, skuList, categoryIds, tagIds, product)
-                                                )
+                                                .publishOn(Schedulers.boundedElastic())
+                                                .doOnSuccess(OK -> {
+                                                    // 异步调用 bigIntegerMono，但不阻塞主链
+                                                    bigIntegerMono(productId, skuList, categoryIds, tagIds, product)
+                                                            .subscribe(
+                                                                    ignored -> log.info("异步处理完成: {}", productId),
+                                                                    error -> log.error("异步处理失败: {}", productId, error)
+                                                            );
+                                                })
                                                 .onErrorResume(throwable -> Mono.error(new Exception("保存商品信息失败")));
 
                                     }
@@ -217,10 +228,10 @@ public class ProductServiceImpl implements ProductService {
     @NonNull
     private Mono<BigInteger> bigIntegerMono(BigInteger productIdSave, List<BigInteger> skuList, List<BigInteger> categoryIds, List<BigInteger> tagIds, Product product) {
         log.info("更新商品信息成功：{}", productIdSave);
-        Mono<List<SKU>> skuFlux = Flux.fromIterable(skuList)
+        Mono<List<SKU>> skuFlux = Flux.fromIterable(Objects.requireNonNullElse(skuList, Collections.emptyList()))
                 .flatMap(skuRepository::findById)
                 .collectList();
-        Mono<List<Category>> categoryFlux = Flux.fromIterable(categoryIds)
+        Mono<List<Category>> categoryFlux = Flux.fromIterable(Objects.requireNonNullElse(categoryIds, Collections.emptyList()))
                 .flatMap(categoryRepository::findById)
                 .collectList();
         Mono<List<Tag>> tagMono = tagRepository.findAllById(tagIds).collectList();
@@ -288,44 +299,15 @@ public class ProductServiceImpl implements ProductService {
                 )
                 //事务
                 .transform(transactionalOperator::transactional);
-//            .as(transactional ->
-//                    transactional.as(new Function<Mono<Long>, Mono<Long>>() {
-//                        @Override
-//                        public Mono<Long> apply(Mono<Long> source) {
-//                            return transactionalOperator.transactional(source);
-//                        }
-//                    }));
     }
 
     @Override
     public Mono<PageResultT<List<ProductVO>>> findPage(RequestPage<ProductVO> requestPage) {
         //校验参数
-        RequestPage<ProductVO> chatRecordRequestPage = PageUtils.pageValidation(requestPage, ProductVO.class);
-        //起始页码
-        BigInteger pageNum = chatRecordRequestPage.getPageNum();
-        //每页数量
-        Integer pageSize = PageUtils.pageSize(chatRecordRequestPage.getPageSize());
-        //查询条件
-        ProductVO condition = chatRecordRequestPage.getCondition();
-        //分类id
-        List<BigInteger>  categoryIds = condition.getCategoryId();
-        //标签id
-        List<BigInteger> tagIds = condition.getTagId();
-        //仓库id
-        BigInteger warehouseId = condition.getWarehouseId();
-        //名称
-        String name = condition.getName();
-        LocalDateTime offlineTime = condition.getOfflineTime();
-        LocalDateTime publishTime = condition.getPublishTime();
-        BigDecimal price = condition.getPrice();
-        String brand = condition.getBrand();
-        LocalDateTime startTime = condition.getStartTime();
-        LocalDateTime endTime = condition.getEndTime();
-        // 计算 offset
-        long offset = pageNum.subtract(BigInteger.ONE)
-                .multiply(BigInteger.valueOf(pageSize))
-                .longValue();
-
+        RequestPage<ProductVO> recordRequestPage = PageUtils.pageValidation(requestPage, ProductVO.class);
+        ProductVO condition = recordRequestPage.getCondition();
+        RequestPage<Product> productRequestPage = BeanConvertUtil.toBean(recordRequestPage, Product.class);
+        List<BigInteger> categoryIds = condition.getCategoryId();
         return Mono.deferContextual(ctx -> {
             BigInteger userId = myBigInteger
                     .bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
@@ -334,150 +316,27 @@ public class ProductServiceImpl implements ProductService {
                         .total(ConstNumber.INT_ZERO)
                         .rows(Collections.emptyList())
                         .build());
-
-            // 如果tagId不为 null，则添加条件
-            if (Objects.nonNull(tagIds)) {
-                return productTagRepository.findByTagIds(tagIds)
+            if (Objects.nonNull(categoryIds) && !categoryIds.isEmpty()) {
+                return productCategoryRepository.findByCategoryId(categoryIds.getFirst())
+                        .map(ProductCategory::getProductId)
                         .collectList()
-                        .flatMap(productIds -> {
-                            if (!productIds.isEmpty()) {
-                                // 再继续用仓库id过滤
-                                return productWarehouseRepository.findByWarehouseId(warehouseId)
-                                        .collectList()
-                                        .flatMap(productIdsList -> {
-                                            // 不为空，取交集
-                                            List<BigInteger> productIdList;
-                                            if (!productIdsList.isEmpty()) {
-                                                productIdList = productIds.stream()
-                                                        .filter(productIdsList::contains)
-                                                        .toList();
-                                            } else {
-                                                // 为空，则返回所有 tag 匹配的
-                                                productIdList = productIds;
-                                            }
-                                            return Mono.just(productIdList);
-                                        });
-                            } else {
-                                // tagIds 为空，直接查 warehouse
-                                return productWarehouseRepository.findByWarehouseId(warehouseId)
-                                        .collectList();
-                            }
-                        })
-                        .flatMap(productIds -> {
-                            // 使用 Criteria 拼接条件
-                            Criteria criteria = Criteria.empty();
-                            if (!productIds.isEmpty()) {
-                                criteria = criteria.and(Product.Fields.id).in(productIds);
-                            } else {
-                                criteria = criteria.and(Product.Fields.id).isNull(); // 无匹配数据
-                            }
-                            if (Objects.nonNull(name)) {
-                                criteria = criteria.and(Product.Fields.name).like(SqlConst.PERCENT + name + SqlConst.PERCENT);
-                            }
-//                            if (Objects.nonNull(categoryId)) {
-//                                criteria = criteria.and(Product.Fields.categoryId).is(categoryId);
-//                            }
-                            if (Objects.nonNull(offlineTime)) {
-                                criteria = criteria.and(Product.Fields.offlineTime).is(offlineTime);
-                            }
-                            if (Objects.nonNull(publishTime)) {
-                                criteria = criteria.and(Product.Fields.publishTime).is(publishTime);
-                            }
-                            if (Objects.nonNull(brand)) {
-                                criteria = criteria.and(Product.Fields.brand).like(SqlConst.PERCENT + brand + SqlConst.PERCENT);
-                            }
-                            if (Objects.nonNull(startTime)) {
-                                criteria = criteria.and(BasePojo.Fields.createTime).greaterThanOrEquals(startTime);
-                            }
-                            if (Objects.nonNull(endTime)) {
-                                criteria = criteria.and(BasePojo.Fields.createTime).lessThanOrEquals(endTime);
-                            }
-
-                            // 添加用户权限
-                            criteria = criteria.and(BasePojo.Fields.creator).is(userId);
-
-                            // 构建查询（分页）
-                            Query dataQuery = Query.query(criteria)
-                                    .sort(Sort.by(Sort.Order.desc(BasePojo.Fields.createTime)))
-                                    .offset(offset)
-                                    .limit(pageSize);
-
-                            Query countQuery = Query.query(criteria);
-
-                            // 执行查询
-                            return r2dbcEntityTemplate.select(countQuery, Product.class)
-                                    .count()
-                                    .flatMap(count -> r2dbcEntityTemplate.select(dataQuery, Product.class)
-                                            .collectList()
-                                            .map(products -> {
-                                                // 假设你有方法将 Product 转为 ProductVO
-                                                List<ProductVO> voList = ProductVO.fromEntities(products);
-                                                return PageResultT.<List<ProductVO>>builder()
-                                                        .total(count)
-                                                        .rows(voList)
-                                                        .build();
-                                            })
-                                    );
-                        });
-            }
-            // 如果 tagId 为 null，只按 warehouseId 过滤
-            Mono<List<BigInteger>> productIdsMono;
-            if (Objects.nonNull(warehouseId)) {
-                productIdsMono = productWarehouseRepository.findByWarehouseId(warehouseId)
-                        .collectList();
-            } else {
-                productIdsMono = Mono.just(Collections.emptyList());
-            }
-
-            return productIdsMono.flatMap(productIds -> {
-                Criteria criteria = Criteria.empty();
-                if (!productIds.isEmpty()) {
-                    criteria = criteria.and(Product.Fields.id).in(productIds);
-                }
-                if (Objects.nonNull(name)) {
-                    criteria = criteria.and(Product.Fields.name).like(SqlConst.PERCENT + name + SqlConst.PERCENT);
-                }
-//                if (Objects.nonNull(categoryId)) {
-//                    criteria = criteria.and(Product.Fields.categoryId).is(categoryId);
-//                }
-                if (Objects.nonNull(offlineTime)) {
-                    criteria = criteria.and(Product.Fields.offlineTime).is(offlineTime);
-                }
-                if (Objects.nonNull(publishTime)) {
-                    criteria = criteria.and(Product.Fields.publishTime).is(publishTime);
-                }
-                if (Objects.nonNull(brand)) {
-                    criteria = criteria.and(Product.Fields.brand).like(SqlConst.PERCENT + brand + SqlConst.PERCENT);
-                }
-                if (Objects.nonNull(startTime)) {
-                    criteria = criteria.and(BasePojo.Fields.createTime).greaterThanOrEquals(startTime);
-                }
-                if (Objects.nonNull(endTime)) {
-                    criteria = criteria.and(BasePojo.Fields.createTime).lessThanOrEquals(endTime);
-                }
-
-                // 添加用户权限
-                criteria = criteria.and(BasePojo.Fields.creator).is(userId);
-
-                Query dataQuery = Query.query(criteria)
-                        .sort(Sort.by(Sort.Order.desc(BasePojo.Fields.createTime)))
-                        .offset(offset)
-                        .limit(pageSize);
-                Query countQuery = Query.query(criteria);
-
-                return r2dbcEntityTemplate.select(countQuery, Product.class)
-                        .count()
-                        .flatMap(count -> r2dbcEntityTemplate.select(dataQuery, Product.class)
-                                .collectList()
-                                .map(products -> {
-                                    List<ProductVO> voList = ProductVO.fromEntities(products);
-                                    return PageResultT.<List<ProductVO>>builder()
-                                            .total(count)
-                                            .rows(voList)
-                                            .build();
-                                })
+                        .flatMap(productIds -> ReactivePageQuery
+                                .of(r2dbcEntityTemplate, Product.class, productRequestPage)
+                                .like(Product.Fields.name, condition.getName())
+                                .in(Product.Fields.id, productIds)
+                                .page()
+                                .map(pageResultT ->
+                                        BeanConvertUtil.toBean(pageResultT, ProductVO.class)
+                                )
                         );
-            });
+            }
+            return ReactivePageQuery
+                    .of(r2dbcEntityTemplate, Product.class, productRequestPage)
+                    .like(Product.Fields.name, condition.getName())
+                    .page()
+                    .map(pageResultT ->
+                            BeanConvertUtil.toBean(pageResultT, ProductVO.class)
+                    );
         });
     }
 

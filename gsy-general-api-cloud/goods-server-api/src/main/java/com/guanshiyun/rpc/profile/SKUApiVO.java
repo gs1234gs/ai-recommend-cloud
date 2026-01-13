@@ -49,7 +49,7 @@ public class SKUApiVO extends BasePojo implements Serializable {
     /** 销售量 */
     private Integer salesVolume;
 
-    /** 状态（0=下架，1=上架） */
+    /** 状态（1=下架，0=上架） */
     private short status;
 
     /** 权重（用于推荐、排序） */
@@ -63,4 +63,6 @@ public class SKUApiVO extends BasePojo implements Serializable {
     private LocalDateTime offlineTime;
     // 商品详情
     private String detailContent;
+    //商品id
+    private BigInteger productId;
 }

@@ -35,7 +35,7 @@ public class SKUController {
                             .build();
                 })
                 .onErrorResume(e->{
-                    log.error("添加失败", e);
+                    log.error("添加sku失败", e);
                     return Mono.just(
                             ResultT.<BigInteger>builder()
                                     .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
@@ -83,6 +83,7 @@ public class SKUController {
                     );
                 });
     }
+
     @PostMapping("findPage")
     public Mono<ResultT<PageResultT<List<SKUFindVO>>>> findAllByPage(@RequestBody RequestPage<SKUFindVO> requestPage) {
         return skuService.findAllByPage(requestPage)

@@ -27,15 +27,15 @@ public class CategoryController {
     public Mono<ResultT<BigInteger>> save(@RequestBody CategorySaveVO categorySaveVO) {
         return categoryService.save(categorySaveVO)
                 .map(id->{
-                    log.info("添加成功，id为{}",id);
+                    log.info("保存成功，id为{}",id);
                     return ResultT.<BigInteger>builder()
                             .code(HttpCodeConst.OK)
-                            .msg("添加成功")
+                            .msg("保存成功")
                             .data(id)
                             .build();
                 })
                 .onErrorResume(throwable ->{
-                    log.error("添加失败", throwable);
+                    log.error("保存失败", throwable);
                     return Mono.just(
                             ResultT.<BigInteger>builder()
                                     .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
@@ -91,7 +91,7 @@ public class CategoryController {
     public Mono<ResultT<PageResultT<List<CategoryVO>>>> findAllByPage(@RequestBody (required = false) RequestPage<CategoryVO> requestPage) {
         return categoryService.findAllByPage(requestPage)
                 .map(pageResultT ->{
-                    log.info("查询成功");
+//                    log.info("查询成功 : {}",pageResultT);
                     return ResultT.<PageResultT<List<CategoryVO>>>builder()
                             .code(HttpCodeConst.OK)
                             .msg("查询成功")

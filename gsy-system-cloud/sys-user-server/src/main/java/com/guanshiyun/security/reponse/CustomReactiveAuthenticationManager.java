@@ -63,7 +63,6 @@ public class CustomReactiveAuthenticationManager implements ReactiveAuthenticati
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         System.out.println(bCryptPasswordEncoder.encode("123456"));
         System.out.println(bCryptPasswordEncoder.matches(
-
                 "123456",
                 "$2a$10$HeOf0/bbu3etDUEjwTs6Eu.rR/NX.lYjir66sGhxB5E8m4GoXMDCi"
         ));

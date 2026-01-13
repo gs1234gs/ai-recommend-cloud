@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
@@ -22,6 +23,7 @@ import java.math.BigInteger;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldNameConstants
+@Accessors(chain = true)
 @Table("category")
 public class Category extends BasePojo {
     /** 分类主键ID */
@@ -46,7 +48,7 @@ public class Category extends BasePojo {
     /** 分类图标（URL） */
     private String iconUrl;
 
-    /** 状态,是否启用（1=启用，0=禁用） */
+    /** 状态,是否禁用（0=启用，1=禁用） */
     private short status;
 
     /** 是否为推荐分类（如首页展示）,(0 = 否，1表示是) */

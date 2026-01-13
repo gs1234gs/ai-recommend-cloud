@@ -37,7 +37,7 @@ public class ProductApiVO {
     private short level;
     private Integer stock;            // 库存
     private Integer salesVolume;      // 销量
-    //商品状态，0=下架，1=上架
+    //商品状态，1=下架，0=上架
     private short status;
     private LocalDateTime publishTime; // 上架时间
     private LocalDateTime offlineTime; // 下架时间

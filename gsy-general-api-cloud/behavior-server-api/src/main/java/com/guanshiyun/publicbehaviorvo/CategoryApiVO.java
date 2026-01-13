@@ -34,7 +34,7 @@ public class CategoryApiVO {
     /** 分类图标（URL） */
     private String iconUrl;
 
-    /** 状态,是否启用（1=启用，0=禁用） */
+    /** 状态,是否禁用（0=启用，1=禁用） */
     private short status;
 
     /** 是否为推荐分类（如首页展示）,(0 = 否，1表示是) */

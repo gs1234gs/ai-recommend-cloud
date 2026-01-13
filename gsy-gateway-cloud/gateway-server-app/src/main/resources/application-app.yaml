@@ -44,3 +44,8 @@ spring:
               uri: lb://order-app
               predicates:
                 - Path=/order-api/**
+            #订单模块
+            - id: upload-app
+              uri: lb://upload-app
+              predicates:
+                - Path=/upload-api/**

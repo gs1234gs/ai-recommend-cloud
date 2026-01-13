@@ -18,7 +18,7 @@ public class WarehouseApiVO {
     private String address;
     /** 仓库容量（单位：件） */
     private Integer capacity;
-    /** 仓库状态（0=禁用，1=启用） */
+    /** 状态,是否禁用（0=启用，1=禁用） */
     private short status;
     /** 仓库管理员ID */
     private BigInteger adminId;

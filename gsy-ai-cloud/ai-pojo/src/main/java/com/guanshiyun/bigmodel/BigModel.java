@@ -27,7 +27,7 @@ public class BigModel {
     private String name;
     //大模型类型
     private Integer type;
-    //大模型状态，0-未启用，1-启用
+    /** 状态,是否禁用（0=启用，1=禁用） */
     private short status;
     //大模型描述
     private String description;

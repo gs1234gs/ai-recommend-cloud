@@ -76,8 +76,18 @@ public class ProductController {
      * 分页查询，返回管理端端商品列表
      */
     @PostMapping("/findPage")
-    public Mono<PageResultT<List<ProductVO>>> findPage(@RequestBody(required = false) RequestPage<ProductVO> requestPage) {
-        return productService.findPage(requestPage);
+    public Mono<ResultT<PageResultT<List<ProductVO>>>> findPage(@RequestBody(required = false) RequestPage<ProductVO> requestPage) {
+        return productService.findPage(requestPage)
+                .map(ResultT::success)
+                .onErrorResume(throwable ->{
+                    log.info("查询失败", throwable);
+                    return Mono.just(
+                            ResultT.<PageResultT<List<ProductVO>>>builder()
+                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .msg("系统错误")
+                                    .build()
+                    );
+                });
     }
 
     /**

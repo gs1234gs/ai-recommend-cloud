@@ -2,7 +2,6 @@ package com.guanshiyun.service.category.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.ReactivePageQuery;
-import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.biginteger.MyBigInteger;
@@ -14,6 +13,7 @@ import com.guanshiyun.repository.relation.ProductCategoryRepository;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.category.CategoryService;
+import com.guanshiyun.snowflake.SnowflakePermanent;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
@@ -37,12 +37,14 @@ public class CategoryServiceImpl implements CategoryService {
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
     private final MyBigInteger myBigInteger;
     private final ProductCategoryRepository productCategoryRepository;
-/**
+    private final SnowflakePermanent snowflakePermanent;
+
+    /**
  * 添加 类型
  * */
     @Override
     public Mono<BigInteger> save(CategorySaveVO categorySaveVO) {
-        Category category = BeanUtil.toBean(categorySaveVO, Category.class);
+        Category category = BeanUtil.toBean(categorySaveVO, Category.class).setCode(snowflakePermanent.stringNextId());
         return Mono.deferContextual(ctx->{
             if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
                 return Mono.error(new RuntimeException("用户未登录"));
@@ -61,7 +63,7 @@ public class CategoryServiceImpl implements CategoryService {
            return categoryRepository.save(category)
                     .flatMap(save->Mono.just(save.getId()))
                     .onErrorResume(e->{
-                        log.error("添加类型失败：{}",e.getMessage());
+                        log.error("添加类型失败：",e);
                         return Mono.error(new RuntimeException("添加类型失败"));
                     });
         });
@@ -113,9 +115,9 @@ public class CategoryServiceImpl implements CategoryService {
 //    }
 @Override
 public Mono<PageResultT<List<CategoryVO>>> findAllByPage( RequestPage<CategoryVO> requestPage) {
-    RequestPage<CategoryVO> categoryRequestPage = PageUtils.pageValidation(requestPage, CategoryVO.class);
     RequestPage<Category> page = BeanConvertUtil.toBean(requestPage, Category.class);
     return ReactivePageQuery.of(r2dbcEntityTemplate, Category.class, page)
+            .like(Category.Fields.name, requestPage.getCondition().getName())
             .page()
             .map(pageResultT ->
                     BeanConvertUtil.toBean(pageResultT, CategoryVO.class));

@@ -5,7 +5,7 @@ spring:
     active: data,middleware,app
 
 server:
-  port: 1921
+  port: 9528
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG

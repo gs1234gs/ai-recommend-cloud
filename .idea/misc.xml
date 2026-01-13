@@ -75,6 +75,7 @@
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/gsy-general-api-cloud/hrms-server-api/pom.xml" />
         <option value="$PROJECT_DIR$/gsy-general-api-cloud/pojo-server-api/pom.xml" />
         <option value="$PROJECT_DIR$/gsy-hrms-cloud/pom.xml" />
       </set>

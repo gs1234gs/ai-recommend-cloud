@@ -53,7 +53,7 @@ public class SKU extends BasePojo implements Serializable {
     /** 销售量 */
     private Integer salesVolume;
 
-    /** 状态（0=下架，1=上架） */
+    /** 是否下架（0=否，1=是） */
     private short status;
 
     /** 权重（用于推荐、排序） */
@@ -68,5 +68,7 @@ public class SKU extends BasePojo implements Serializable {
     private String detailContent;
     //图片
     private List<String> picList;
+    //商品id
+    private BigInteger productId;
 
 }

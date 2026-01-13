@@ -8,7 +8,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="public-pojo-spring-boot-starter" />
-        <module name="hrms-server-api" />
         <module name="behavior-server-api" />
         <module name="gsy-shopping-card-cloud" />
         <module name="common-utils-spring-boot-autoconfigure" />
@@ -66,6 +65,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="gsy-hrms-cloud" target="21" />
+      <module name="hrms-server-api" target="21" />
       <module name="my-project" target="21" />
       <module name="pojo-server-api" target="21" />
       <module name="xxl-job" target="17" />

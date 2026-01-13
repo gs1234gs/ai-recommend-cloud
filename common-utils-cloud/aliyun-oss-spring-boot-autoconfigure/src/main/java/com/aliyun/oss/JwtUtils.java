@@ -137,7 +137,6 @@ import io.jsonwebtoken.security.SecurityException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -175,13 +174,13 @@ public class JwtUtils {
     /**
      * 生成Token
      */
-    public static String genToken(Map<String, Object> map, BigInteger id) throws IOException {
+    public static String genToken(Map<String, Object> map, Object id) throws IOException {
         SecretKey key = getSecretKey(); // 从文件获取密钥
         String userMap = objectMapper.writeValueAsString(map);
 
         return Jwts.builder()
                 .subject(String.valueOf(id))
-                .issuer("CITD")
+                .issuer("guanshiyun")
                 .claim("token", userMap)
                 .signWith(key)
                 .expiration(new Date(System.currentTimeMillis() + 3600 * 10000 * 2))

@@ -1,19 +1,21 @@
 package com.guanshiyun.security.jwt;
 
 
+import com.aliyun.oss.JwtUtils;
 import com.guanshiyun.consts.ConstMapClassNickName;
 import com.guanshiyun.signinpojo.SignUser;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import reactor.core.publisher.Mono;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 public class AssistantJwtUtils {
-    public static Mono<Map<String, Object>> createJwt(Authentication authentication) throws IOException {
+    @SneakyThrows
+    public static Mono<Map<String, Object>> createJwt(Authentication authentication) {
         // 提取用户信息（UserDetailsReWrite）
         Object principal = authentication.getPrincipal();
         // 判断 principal 是否为 UserDetailsReWrite

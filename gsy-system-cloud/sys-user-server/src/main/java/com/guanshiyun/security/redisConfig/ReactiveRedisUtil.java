@@ -1,6 +1,7 @@
 package com.guanshiyun.security.redisConfig;
 
 
+import com.db.dbnumber.ConstNumber;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
@@ -54,7 +55,7 @@ public class ReactiveRedisUtil {
      * 设置过期时间
      */
     public Mono<Boolean> expire(String key, long timeoutSeconds) {
-        timeoutSeconds  *= 60;
+        timeoutSeconds  *= ConstNumber.INT_HUNDRED;
         return reactiveRedisTemplate.expire(key, Duration.ofSeconds(timeoutSeconds));
     }
 

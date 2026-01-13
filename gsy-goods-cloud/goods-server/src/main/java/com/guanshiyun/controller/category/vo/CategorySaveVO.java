@@ -1,6 +1,10 @@
 package com.guanshiyun.controller.category.vo;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 
 import java.math.BigInteger;
@@ -10,7 +14,7 @@ import java.math.BigInteger;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldNameConstants
-@ToString
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CategorySaveVO {
     /** 分类主键ID */
     private BigInteger id;
@@ -33,7 +37,7 @@ public class CategorySaveVO {
     /** 分类图标（URL） */
     private String iconUrl;
 
-    /** 状态,是否启用（1=启用，0=禁用） */
+    /** 状态,是否禁用（0=启用，1=禁用） */
     private short status;
 
     /** 是否为推荐分类（如首页展示）,(0 = 否，1表示是) */

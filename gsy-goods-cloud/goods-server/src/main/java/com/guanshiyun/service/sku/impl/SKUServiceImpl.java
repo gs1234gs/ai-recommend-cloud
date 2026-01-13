@@ -75,7 +75,6 @@ public class SKUServiceImpl implements SKUService {
     @Override
     public Mono<PageResultT<List<SKUFindVO>>> findAllByPage(RequestPage<SKUFindVO> requestPage) {
         SKU sku = BeanUtil.toBean(requestPage.getCondition(), SKU.class);
-        ;
         return ReactivePageQuery.of(r2dbcEntityTemplate,
                 SKU.class,
                 RequestPage.<SKU>builder()

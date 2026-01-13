@@ -44,6 +44,7 @@ public class ConstNumber {
     public static final int INT_NINE = 9;
     public static final int INT_TEN = 10;
     public static final int INT_HUNDRED = 100;
+    public static final int INT_THOUSAND = 1000;
     //double
     public static final double DOUBLE_ONE = 1.0;
 }
