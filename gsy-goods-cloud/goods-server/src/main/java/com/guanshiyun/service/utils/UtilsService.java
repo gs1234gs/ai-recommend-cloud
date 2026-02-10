@@ -20,8 +20,7 @@ public class UtilsService {
     private final ProductTagRepository productTagRepository;
     private final ProductRepository productRepository;
     public Mono<List<TagVO>> findTagByProductId(BigInteger productId) {
-        return productTagRepository.findTagByProductId(productId)
-
+        return productTagRepository.findTagIdByProductId(productId)
                 .flatMap(tagRepository::findById)
                 .collectList()
                 .map(tags -> tags.stream()

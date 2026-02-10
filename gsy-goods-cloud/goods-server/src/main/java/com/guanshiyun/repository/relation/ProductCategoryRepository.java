@@ -4,6 +4,7 @@ import com.guanshiyun.relationship.ProductCategory;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -18,4 +19,7 @@ public interface ProductCategoryRepository extends R2dbcRepository<ProductCatego
 
     @Query("select * from product_category where category_id = :categoryId")
     Flux<ProductCategory> findByCategoryId(BigInteger categoryId);
+
+    @Query("select * from product_category where product_id in (:productList)")
+    Mono<Void> deleteAllByProductIds(List<BigInteger> productList);
 }

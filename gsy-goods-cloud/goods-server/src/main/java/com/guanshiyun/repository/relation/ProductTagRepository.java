@@ -14,12 +14,15 @@ public interface ProductTagRepository extends ReactiveCrudRepository<ProductTag,
     @Query("select product_id from product_tag where tag_id = :tagId")
     Flux<BigInteger> findByTagId(@Param("tagId")BigInteger tagId);
 
-    @Query("delete from product_tag where product_id = :tagId")
-     Mono<Void> deleteAllByProductId(@Param("tagId") BigInteger tagId);
+    @Query("delete from product_tag where product_id = :productId")
+     Mono<Void> deleteAllByProductId(@Param("productId") BigInteger productId);
 
     @Query("select tag_id from product_tag where product_id = :productId")
-    Flux<BigInteger> findTagByProductId(BigInteger productId);
+    Flux<BigInteger> findTagIdByProductId(BigInteger productId);
 
    @Query("select product_id from product_tag where tag_id in (:tagIds)")
     Flux<BigInteger> findByTagIds(List<BigInteger> tagIds);
+   //根据商品tagIds删除
+    @Query("delete from product_tag where tag_id in (:tagIds)")
+    Mono<Void> deleteAllByTagIds(@Param("tagIds") List<BigInteger> tagIds);
 }

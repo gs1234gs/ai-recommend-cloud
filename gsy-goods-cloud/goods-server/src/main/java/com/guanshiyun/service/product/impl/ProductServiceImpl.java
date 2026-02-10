@@ -16,6 +16,7 @@ import com.guanshiyun.goser.GorseClient;
 import com.guanshiyun.items.Item;
 import com.guanshiyun.product.Product;
 import com.guanshiyun.relationship.ProductCategory;
+import com.guanshiyun.relationship.ProductTag;
 import com.guanshiyun.repository.category.CategoryRepository;
 import com.guanshiyun.repository.product.ProductRepository;
 import com.guanshiyun.repository.relation.ProductCategoryRepository;
@@ -45,9 +46,7 @@ import reactor.core.scheduler.Schedulers;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -67,7 +66,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
     private final AiChatClientRecommendServiceApi aiChatClientRecommendServiceApi;
-    private final GorseClient  gorseClient;
+    private final GorseClient gorseClient;
 
     @Override
     public Mono<BigInteger> save(ProductSaveVO productSaveVO) {
@@ -89,8 +88,6 @@ public class ProductServiceImpl implements ProductService {
                     if (Objects.isNull(product.getId())) {
                         product.setCreateTime(now);
                         product.setCreator(userId);
-                        //对插入的商品进行向量化
-                        //创建，同时创建仓库关系
                         return productRepository.save(product)
                                 .map(Product::getId)
                                 .flatMap(productId -> {
@@ -107,7 +104,20 @@ public class ProductServiceImpl implements ProductService {
                                                             )
                                                             .collect(Collectors.toList())
                                             );
-                                            return Flux.merge(productIdCategoryFlux)
+                                            Flux<ProductTag> fluxTag = productTagRepository.saveAll(
+                                                    tagIds.stream()
+                                                            .map(tagId ->
+                                                                    ProductTag.builder()
+                                                                            .id(null)
+                                                                            .productId(productId)
+                                                                            .creator(userId)
+                                                                            .createTime(now)
+                                                                            .tagId(tagId)
+                                                                            .build()
+                                                            )
+                                                            .collect(Collectors.toList())
+                                            );
+                                            return Flux.merge(productIdCategoryFlux, fluxTag)
                                                     .then(Mono.just(productId))
                                                     .onErrorResume(throwable -> {
                                                         log.error("保存商品仓库关系失败：", throwable);
@@ -119,7 +129,7 @@ public class ProductServiceImpl implements ProductService {
                                 .doOnSuccess(productId -> {
                                     // 异步调用 bigIntegerMono，但不阻塞主链
                                     bigIntegerMono(productId, categoryIds, tagIds, product)
-                                            .contextWrite(ctxb->ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
+                                            .contextWrite(ctxb -> ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
                                             .subscribe(
                                                     ignored -> log.info("异步处理完成: {}", productId),
                                                     error -> log.error("异步处理失败: {}", productId, error)
@@ -167,7 +177,7 @@ public class ProductServiceImpl implements ProductService {
                                                 .doOnSuccess(OK -> {
                                                     // 异步调用 bigIntegerMono，但不阻塞主链
                                                     bigIntegerMono(productId, categoryIds, tagIds, product)
-                                                            .contextWrite(ctxb->ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
+                                                            .contextWrite(ctxb -> ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
                                                             .subscribe(
                                                                     ignored -> log.info("异步处理完成: {}", productId),
                                                                     error -> log.error("异步处理失败: {}", productId, error)
@@ -208,7 +218,7 @@ public class ProductServiceImpl implements ProductService {
                     if (Objects.isNull(userId)) {
                         return Mono.error(new RuntimeException("用户不存在"));
                     }
-                //如果id为null则保存
+                    //如果id为null则保存
                     if (Objects.isNull(product.getId())) {
                         // 新增商品
                         product.setCreateTime(now);
@@ -229,19 +239,32 @@ public class ProductServiceImpl implements ProductService {
                                                     )
                                                     .collect(Collectors.toList())
                                     );
-
-                                    return categoryFlux
+                                    Flux<ProductTag> fluxTag = productTagRepository.saveAll(
+                                            tagIds.stream()
+                                                    .map(tagId ->
+                                                            ProductTag.builder()
+                                                                    .id(null)
+                                                                    .productId(productId)
+                                                                    .creator(userId)
+                                                                    .createTime(now)
+                                                                    .tagId(tagId)
+                                                                    .build()
+                                                    )
+                                                    .collect(Collectors.toList())
+                                    );
+                                    return Flux.merge(categoryFlux, fluxTag)
                                             .then(Mono.just(productId))
                                             .onErrorResume(throwable -> {
                                                 log.error("保存商品分类关系失败：", throwable);
                                                 return Mono.error(new Exception("保存商品分类关系失败"));
                                             });
                                 })
+                                .transform(transactionalOperator::transactional)
                                 .publishOn(Schedulers.boundedElastic())
                                 .doOnSuccess(productId -> {
                                     // 异步向量化处理（不阻塞主流程）
                                     bigIntegerMono(productId, categoryIds, tagIds, product)
-                                            .contextWrite(ctxb->ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
+                                            .contextWrite(ctxb -> ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
                                             .subscribe(
                                                     ignored -> log.info("异步处理完成: {}", productId),
                                                     error -> log.error("异步处理失败: {}", productId, error)
@@ -262,40 +285,73 @@ public class ProductServiceImpl implements ProductService {
                                 )
                                 .flatMap(productId -> {
                                     // 查询旧的分类关系
-                                    return productCategoryRepository.findByProductId(productId)
-                                            .collectList()
-                                            .flatMap(oldCategories -> {
-                                                List<BigInteger> oldCategoryIds = oldCategories.stream()
-                                                        .map(ProductCategory::getCategoryId)
-                                                        .toList();
+                                    Mono<List<BigInteger>> tagIdsMono = productTagRepository.findTagIdByProductId(productId).collectList();
+                                    Mono<List<BigInteger>> categoryIdsMono = productCategoryRepository.findByProductId(productId)
+                                            .map(ProductCategory::getCategoryId)
+                                            .collectList();
+                                    return Mono.zip(tagIdsMono, categoryIdsMono)
+                                            .flatMap(tuple -> {
+                                                List<BigInteger> oldCategoryIds = tuple.getT2();
+                                                List<BigInteger> oldTagIds = tuple.getT1();
+                                                Set<BigInteger> oldCategorySet = new HashSet<>(oldCategoryIds);
+                                                Set<BigInteger> oldTagSet = new HashSet<>(oldTagIds);
 
-                                                // 新增的分类
-                                                List<ProductCategory> toAdd = categoryIds.stream()
-                                                        .filter(id -> !oldCategoryIds.contains(id))
+                                                //  新增的分类：新ID中不在旧ID里的
+                                                List<ProductCategory> toAddCategories = categoryIds.stream()
+                                                        .filter(id -> !oldCategorySet.contains(id))
                                                         .map(id -> ProductCategory.builder()
                                                                 .productId(productId)
-                                                                .creator(userId)
-                                                                .createTime(now)
                                                                 .categoryId(id)
+                                                                .creator(userId)
+                                                                .updater(userId)
+                                                                .createTime(now)
+                                                                .build())
+                                                        .collect(Collectors.toList());
+                                                // 新增的标签：新ID中不在旧ID里的
+                                                List<ProductTag> toAddTags = tagIds.stream()
+                                                        .filter(id -> !oldTagSet.contains(id))
+                                                        .map(id -> ProductTag.builder()
+                                                                .productId(productId)
+                                                                .tagId(id)
+                                                                .creator(userId)
+                                                                .updater(userId)
+                                                                .createTime(now)
                                                                 .build())
                                                         .collect(Collectors.toList());
 
-                                                // 删除的分类
-                                                List<ProductCategory> toDelete = oldCategories.stream()
-                                                        .filter(pc -> !categoryIds.contains(pc.getCategoryId()))
+                                                // 删除的分类：旧ID中不在新ID里的
+                                                Set<BigInteger> newCategorySet = new HashSet<>(categoryIds);
+                                                List<BigInteger> toDeleteCategories = oldCategoryIds.stream()
+                                                        .filter(id -> !newCategorySet.contains(id))
                                                         .toList();
+                                                // 删除的标签：旧ID中不在新ID里的
+                                                Set<BigInteger> newTagSet = new HashSet<>(tagIds);
+                                                List<BigInteger> toDeleteTags = oldTagIds.stream()
+                                                        .filter(id -> !newTagSet.contains(id))
+                                                        .toList();
+                                                Mono<Void> deleteCategories = toDeleteCategories.isEmpty()
+                                                        ? Mono.empty()
+                                                        : productCategoryRepository.deleteAllByProductIds(toDeleteCategories);
 
-                                                Mono<Void> deleteMono = productCategoryRepository.deleteAll(toDelete).then();
-                                                Flux<ProductCategory> insertFlux = productCategoryRepository.saveAll(toAdd);
+                                                Mono<Void> deleteTags = toDeleteTags.isEmpty()
+                                                        ? Mono.empty()
+                                                        : productTagRepository.deleteAllByTagIds(toDeleteTags);
+                                                Flux<ProductCategory> insertCategories = productCategoryRepository.saveAll(toAddCategories);
+                                                Flux<ProductTag> insertTags = productTagRepository.saveAll(toAddTags);
 
-                                                return Mono.when(deleteMono, insertFlux.then())
-                                                        .then(Mono.just(productId));
+                                                return Mono.when(
+                                                        deleteCategories,
+                                                        deleteTags,
+                                                        insertCategories.then(),
+                                                        insertTags.then()
+                                                ).thenReturn(productId);
                                             });
                                 })
+                                .transform(transactionalOperator::transactional)
                                 .publishOn(Schedulers.boundedElastic())
                                 .doOnSuccess(productId -> {
                                     bigIntegerMono(productId, categoryIds, tagIds, product)
-                                            .contextWrite(ctxb->ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
+                                            .contextWrite(ctxb -> ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
                                             .subscribe(
                                                     ignored -> log.info("异步处理完成: {}", productId),
                                                     error -> log.error("异步处理失败: {}", productId, error)
@@ -307,7 +363,6 @@ public class ProductServiceImpl implements ProductService {
                                 });
                     }
                 })
-                .transform(transactionalOperator::transactional)
                 .onErrorResume(throwable -> {
                     log.error("保存商品整体失败：", throwable);
                     return Mono.error(new Exception("保存商品失败"));
@@ -350,8 +405,8 @@ public class ProductServiceImpl implements ProductService {
                             .build();
 
                     return aiChatClientRecommendServiceApi.embeddingProduct(List.of(productForEmbeddingApVO))
-                            .flatMap(em ->{
-                                // 拼接 comment：用于调试或外部 embedding
+                            .flatMap(em -> {
+                                // 拼接 comment：用于调外部 embedding
                                 String comment = Stream.of(
                                                 product.getName(),
                                                 product.getBrand(),
@@ -400,13 +455,13 @@ public class ProductServiceImpl implements ProductService {
                         skuRepository.deleteAllByProductId(id)
                                 .thenReturn(deleteCount)
                 )
-                .flatMap(count->{
+                .flatMap(count -> {
                     //删除ai
                     return aiChatClientRecommendServiceApi.
-                    embeddingDeleteProduct(id)
+                            embeddingDeleteProduct(id)
                             .thenReturn(count);
                 })
-                .flatMap(count-> gorseClient.deleteItem(id.toString())
+                .flatMap(count -> gorseClient.deleteItem(id.toString())
                         .thenReturn(count))
                 //事务
                 .transform(transactionalOperator::transactional);
@@ -491,24 +546,34 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Mono<ProductVO> findById(BigInteger id) {
         return productRepository.findById(id)
-                .flatMap(product-> productCategoryRepository.findByProductId(id)
+                .flatMap(product -> productCategoryRepository.findByProductId(id)
                         .map(ProductCategory::getCategoryId)
                         .collectList()
-                        .flatMap(categoryIdList-> categoryRepository.findAllById(categoryIdList)
-                                .collectList()
-                                .map(categoryList ->{
-                                    ProductVO productVO = BeanConvertUtil.toBean(product, ProductVO.class);
-                                    if(!categoryList.isEmpty()){
+                        .flatMap(categoryIdList -> {
+                            Mono<List<Tag>> tagNameMono = productTagRepository.findTagIdByProductId(id)
+                                    .collectList()
+                                    .flatMap(tadIds -> tagRepository.findAllById(tadIds)
+                                            .collectList());
+                            Mono<List<String>> categoryNameMono = categoryRepository.findAllById(categoryIdList)
+                                    .map(Category::getName)
+                                    .collectList();
+                            return Mono.zip(tagNameMono, categoryNameMono)
+                                    .map(tuple -> {
+                                        List<Tag> tags = tuple.getT1();
+                                        List<String> categoryNames = tuple.getT2();
+                                        List<String> tagNames =
+                                                tags.stream().map(Tag::getName)
+                                                        .collect(Collectors.toList());
+                                        List<BigInteger> tagIds = tags.stream().map(Tag::getId)
+                                                .toList();
+                                        ProductVO productVO = BeanConvertUtil.toBean(product, ProductVO.class);
                                         productVO.setCategoryId(categoryIdList)
-                                                .setCategoryName(categoryList
-                                                        .stream()
-                                                        .map(Category::getName)
-                                                        .toList()
-                                                );
-                                    }
-                                    return productVO;
-                                })
-                        ));
+                                                .setTagId(tagIds)
+                                                .setCategoryName(categoryNames)
+                                                .setTagNames(tagNames);
+                                        return productVO;
+                                    });
+                        }));
     }
 
     @Override

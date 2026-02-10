@@ -69,6 +69,8 @@ public class ProductVO extends BasePojo implements Serializable {
     private BigDecimal maxPrice;
     //分类名称
     private List<String> categoryName;
+    //标签名称
+    private List<String> tagNames;
     // 在 ProductVO 中添加
     public static List<ProductVO> fromEntities(List<Product> products) {
         return products.stream()
