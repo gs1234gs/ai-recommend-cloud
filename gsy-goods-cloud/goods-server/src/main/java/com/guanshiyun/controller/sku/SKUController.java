@@ -2,6 +2,7 @@ package com.guanshiyun.controller.sku;
 
 import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.sku.vo.SKUFindVO;
+import com.guanshiyun.controller.sku.vo.SKUGroupByProductIdVO;
 import com.guanshiyun.controller.sku.vo.SKUSaveVO;
 import com.guanshiyun.controller.sku.vo.SKUVO;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -64,10 +65,10 @@ public class SKUController {
                 });
     }
     @GetMapping("findById/{id}")
-    public Mono<ResultT<SKUFindVO>> findById(@PathVariable BigInteger id) {
+    public Mono<ResultT<SKUVO>> findById(@PathVariable BigInteger id) {
         return skuService.findById(id)
                 .map(sku ->
-                        ResultT.<SKUFindVO>builder()
+                        ResultT.<SKUVO>builder()
                                 .code(HttpCodeConst.OK)
                                 .msg("查询成功")
                                 .data(sku)
@@ -76,7 +77,7 @@ public class SKUController {
                 .onErrorResume(throwable ->{
                     log.error("查询失败", throwable);
                     return Mono.just(
-                            ResultT.<SKUFindVO>builder()
+                            ResultT.<SKUVO>builder()
                                     .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                                     .msg("查询失败")
                                     .build()
@@ -85,11 +86,11 @@ public class SKUController {
     }
 
     @PostMapping("findPage")
-    public Mono<ResultT<PageResultT<List<SKUFindVO>>>> findAllByPage(@RequestBody RequestPage<SKUFindVO> requestPage) {
+    public Mono<ResultT<PageResultT<List<SKUGroupByProductIdVO>>>> findAllByPage(@RequestBody RequestPage<SKUFindVO> requestPage) {
         return skuService.findAllByPage(requestPage)
                 .map(pageResultT ->{
                     log.info("查询成功");
-                    return ResultT.<PageResultT<List<SKUFindVO>>>builder()
+                    return ResultT.<PageResultT<List<SKUGroupByProductIdVO>>>builder()
                             .code(HttpCodeConst.OK)
                             .msg("查询成功")
                             .data(pageResultT)
@@ -98,7 +99,7 @@ public class SKUController {
                 .onErrorResume(throwable ->{
                     log.error("查询失败", throwable);
                     return Mono.just(
-                            ResultT.<PageResultT<List<SKUFindVO>>>builder()
+                            ResultT.<PageResultT<List<SKUGroupByProductIdVO>>>builder()
                                     .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                                     .msg("查询失败")
                                     .build()
@@ -180,5 +181,13 @@ public class SKUController {
                                     .build()
                     );
                 });
+    }
+
+    //根据ids获取SKU
+    @GetMapping("findBySkuIds")
+    public Mono<ResultT<List<SKUVO>>> findBySkuIds(@RequestParam List<BigInteger> skuIds) {
+       return skuService.findAllByIds(skuIds)
+               .map(ResultT::success)
+               .onErrorResume(e->Mono.just(ResultT.error()));
     }
 }

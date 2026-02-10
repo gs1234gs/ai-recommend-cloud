@@ -9,7 +9,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @FieldNameConstants
 @Accessors(chain = true)
 @ConfigurationProperties(prefix = "gorse")

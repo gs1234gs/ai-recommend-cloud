@@ -1,8 +1,9 @@
 package com.guanshiyun.controller.order.vo;
 
-import lombok.*;
-import lombok.experimental.FieldNameConstants;
-import lombok.experimental.SuperBuilder;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -10,8 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
-@FieldNameConstants
+@Builder(toBuilder = true)
 public class PurChaseOrderSaveVO {
     private BigInteger id;
     //订单编号
@@ -33,15 +33,17 @@ public class PurChaseOrderSaveVO {
     //付款方式，1-在线支付，2-货到付款，3-其他
     private String payType;
     //配送费用
-    private BigInteger deliveryFee;
+    private BigDecimal deliveryFee;
     //配送方式
     private String delivery;
     //实付金额
-    private BigInteger payAmount;
+    private BigDecimal payAmount;
     //订单备注
     private String remark;
     //商品数量
     private Integer num;
     //地址 id
     private BigInteger addressId;
+    //商品id
+    private BigInteger productId;
 }

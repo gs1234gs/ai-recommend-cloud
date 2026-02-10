@@ -8,7 +8,7 @@ spring:
       max-in-memory-size: 100MB
 
 server:
-  port: 1949
+  port: 9531
   shutdown: graceful
 
 

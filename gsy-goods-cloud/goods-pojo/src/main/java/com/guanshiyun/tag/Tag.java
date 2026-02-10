@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldNameConstants
 @Table("tag")
+@Accessors(chain = true)
 public class Tag extends BasePojo {
     /** 标签主键ID */
     @Id

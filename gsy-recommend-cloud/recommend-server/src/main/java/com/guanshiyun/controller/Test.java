@@ -2,7 +2,7 @@ package com.guanshiyun.controller;
 
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.rpc.behaviorapi.browse.UserBrowseServiceApi;
-import com.guanshiyun.rpc.behaviorapi.browse.vo.UserBrowseVOApi;
+import com.guanshiyun.rpc.profile.BrowseProfileApi;
 import com.guanshiyun.utils.WebContextUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +20,7 @@ public class Test {
     private final WebContextUtils webContextUtils;
 
     @GetMapping("/test")
-    public Mono<ResultT<List<UserBrowseVOApi>>> test() {
+    public Mono<ResultT<List<BrowseProfileApi>>> test() {
         return webContextUtils.withUserContextMono(() ->
                 userBrowseServiceApi.findUserBrowseRecord(10)
         );

@@ -12,6 +12,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 @Data
@@ -60,6 +62,8 @@ public class SKUVO extends BasePojo implements Serializable {
     private LocalDateTime offlineTime;
     // 商品详情
     private String detailContent;
+    //图片
+    private List<String> picList;
     //商品id
     private BigInteger productId;
 }

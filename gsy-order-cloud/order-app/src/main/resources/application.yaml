@@ -7,7 +7,7 @@ spring:
     ansi:
       enabled: ALWAYS
 server:
-  port: 9528
+  port: 9532
 
 logging:
   level:

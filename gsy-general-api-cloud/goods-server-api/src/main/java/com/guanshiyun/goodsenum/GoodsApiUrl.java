@@ -5,8 +5,13 @@ public class GoodsApiUrl {
     public static final String CATEGORY_FIND_BY_ALL = "/category/findAll";
     // 获取产品列表
     public static final String PRODUCT_FIND_CURSOR = "/product/findCursorList";
+    public static final String PRODUCT_FIND_BY_ID = "/product/findById/{id}";
     //获取sku列表
     public static final String SKU_FIND_PAGE = "/sku/findPage";
+    //根据id获取sku
+    public static final String SKU_FIND_BY_SKU_IDS = "/sku/findBySkuIds";
+
+    public static final String SKU_FIND_BY_ID = "/sku/findById/{id}";
     //获取属性列表
     public static final String SKU_FIND_PRODUCT = "/sku/findByProductId/{productId}";
     //获取标签列表
@@ -17,6 +22,7 @@ public class GoodsApiUrl {
     public static final String TAG_FIND_BY_ID = "/tag/findById";
     //根据商品id获取标签
     public static final String TAG_FIND_BY_PRODUCT_ID = "/tag/findByProductId/{productId}";
+    public static final String TAG_FIND_BY_PRODUCT_IDS = "/tag/findByProductIds";
     //根据id获取仓库
     public static final String WAREHOUSE_FIND_BY_ID = "/warehouse/findById";
     //根据商品id获取仓库

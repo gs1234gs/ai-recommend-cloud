@@ -51,4 +51,6 @@ public interface RecommendProductService {
      * @return 商品详情视图对象 {@link ProductCustomerDetailVO}
      */
     Mono<ProductCustomerDetailVO> detail(BigInteger id);
+
+    Mono<List<ProductCustomerVO>> findByIds(List<BigInteger> ids);
 }

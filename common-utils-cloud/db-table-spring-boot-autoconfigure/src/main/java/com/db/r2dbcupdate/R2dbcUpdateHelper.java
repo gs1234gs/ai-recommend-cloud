@@ -7,10 +7,10 @@ import org.springframework.r2dbc.core.DatabaseClient;
 import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.math.BigInteger;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Function;
 
 @Slf4j
@@ -35,6 +35,9 @@ public class R2dbcUpdateHelper {
         // 遍历实体字段
         Field[] fields = entity.getClass().getDeclaredFields();
         for (Field field : fields) {
+            if (Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
+                continue;
+            }
             field.setAccessible(true);
             try {
                 Object value = field.get(entity);

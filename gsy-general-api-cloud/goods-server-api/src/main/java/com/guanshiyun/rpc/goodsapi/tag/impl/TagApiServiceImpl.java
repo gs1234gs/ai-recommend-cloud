@@ -21,7 +21,7 @@ public class TagApiServiceImpl implements TagApiService {
     private final GoodsWebClientRpc goodsWebClientRpc;
 
     @Override
-    public Mono<TagApiVO> findById(BigInteger id) {
+    public Mono<ResultT<TagApiVO>> findById(BigInteger id) {
         return goodsWebClientRpc
                 .webClient()
                 .get()
@@ -29,7 +29,7 @@ public class TagApiServiceImpl implements TagApiService {
                         .path(GoodsApiUrl.TAG_FIND_BY_ID)
                         .build(id))
                 .retrieve()
-                .bodyToMono(TagApiVO.class);
+                .bodyToMono(new ParameterizedTypeReference<ResultT<TagApiVO>>() {});
     }
 
     @Override
@@ -42,6 +42,24 @@ public class TagApiServiceImpl implements TagApiService {
                                     .path(GoodsApiUrl.TAG_FIND_BY_PRODUCT_ID)
                                     .build(productId);
                     return uri;
+                        }
+                )
+
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ResultT<List<TagApiVO>>>() {});
+    }
+
+    @Override
+    public Mono<ResultT<List<TagApiVO>>> findByProductId(List<BigInteger> productIds) {
+        return goodsWebClientRpc
+                .webClient()
+                .get()
+                .uri(builder -> {
+                            URI uri = builder
+                                    .path(GoodsApiUrl.TAG_FIND_BY_PRODUCT_IDS)
+                                    .queryParam("productIds", productIds)
+                                    .build();
+                            return uri;
                         }
                 )
 

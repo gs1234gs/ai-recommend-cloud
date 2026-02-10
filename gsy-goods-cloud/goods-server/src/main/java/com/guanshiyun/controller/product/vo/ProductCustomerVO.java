@@ -54,11 +54,8 @@ public class ProductCustomerVO {
      * 下架时间
      */
     private LocalDateTime offlineTime;
-    //标签 id
-    private BigInteger tagId;
-    //sku id
-    @JsonSerialize(using = ToStringSerializer.class)
-    private BigInteger skuId;
+    //标签名称
+    private String tagName;
     //最低价格
     @JsonSerialize(using = ToStringSerializer.class)
     private BigDecimal minPrice;

@@ -25,5 +25,9 @@
       <auth-provider>no-auth</auth-provider>
       <schema-mapping />
     </data-source>
+    <data-source name="mongodb://localhost/test [DEBUG]" uuid="40b930da-e6f6-46e5-8f16-8b07fd04af9c">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MONGO" />
+      <schema-mapping />
+    </data-source>
   </component>
 </project>

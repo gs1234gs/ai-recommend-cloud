@@ -14,6 +14,7 @@ import org.springframework.data.relational.core.query.Query;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
@@ -243,8 +244,26 @@ public class CursorQuery<T> {
     public static <T> CursorQuery<T> of(R2dbcEntityTemplate r2dbcEntityTemplate,
                                         Class<T> entityClass,
                                         RequestCursorPage<T> page) {
-        return new CursorQuery<>(r2dbcEntityTemplate, entityClass, page); // 自动触发 validate
+        return new CursorQuery<>(r2dbcEntityTemplate, entityClass, page)// 自动触发 validate
+                .delFlagQuery(entityClass); // 自动触发 软删除
     }
+    private CursorQuery<T> delFlagQuery(Class<?> entityClass) {
+        Class<?> clazz = entityClass;
 
+        // 递归遍历当前类及其所有父类（直到 Object）
+        while (clazz != null && clazz != Object.class) {
+            for (Field field : clazz.getDeclaredFields()) {
+                if ("delFlag".equals(field.getName())) {
+                    // 找到 delFlag 字段 → 添加 del_flag = 0 条件
+                    this.criteria = this.criteria.and("del_flag").is((short) 0);
+                    return this;
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+
+        // 没找到 delFlag 字段 → 不加条件，安全返回
+        return this;
+    }
 
 }

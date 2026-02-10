@@ -12,7 +12,6 @@ public class GoodsWebClientRpc {
     public GoodsWebClientRpc(@Qualifier("goodsWebClientBuilder") WebClient.Builder webClientBuilder) {
 
         this.webClient = webClientBuilder
-                .clone()
 //                .baseUrl(GoodsPrefix.BASE_URL)
                 .build();
     }

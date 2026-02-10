@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serial;
@@ -28,6 +29,7 @@ import java.time.LocalDateTime;
 @Table("product")
 public class Product extends BasePojo implements Serializable {
     @Serial
+    @Transient
     private static final long serialVersionUID = 1L;
     //商品id
     @Id

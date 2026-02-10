@@ -6,7 +6,6 @@ import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.CursorPageResult;
 import com.guanshiyun.responsepojo.PageResultT;
 
-import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -19,49 +18,11 @@ public class BeanConvertUtil {
     public static <T> T toBean(Object source, Class<T> targetClass) {
         if (Objects.isNull(source)) return BeanUtil.toBean(source, targetClass);
         try {
-            T target = targetClass.getDeclaredConstructor().newInstance();
-            copyProperties(source, target);
-            return target;
+            return BeanUtil.toBean(source, targetClass);
         } catch (Exception e) {
             throw new RuntimeException("Bean conversion failed", e);
         }
     }
-
-    /**
-     * 将 source 的非空字段覆盖到已有 target Bean
-     */
-    public static void copyNonNullToTarget(Object source, Object target) {
-        if (Objects.isNull(source) || Objects.isNull(target)) return;
-        try {
-            copyProperties(source, target);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("Copy properties failed", e);
-        }
-    }
-
-    /**
-     * 根据字段名匹配，把 source 的值拷贝到 target（非空才覆盖，浅拷贝）
-     */
-    private static void copyProperties(Object source, Object target) throws IllegalAccessException {
-        Field[] sourceFields = source.getClass().getDeclaredFields();
-        Field[] targetFields = target.getClass().getDeclaredFields();
-
-        for (Field targetField : targetFields) {
-            targetField.setAccessible(true);
-            for (Field sourceField : sourceFields) {
-                sourceField.setAccessible(true);
-                if (sourceField.getName().equals(targetField.getName())
-                        && sourceField.getType().equals(targetField.getType())) {
-                    Object value = sourceField.get(source);
-                    if (Objects.nonNull(value)) {
-                        targetField.set(target, value);
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
 
     // ========== 以下方法使用 Hutool，支持嵌套转换 ==========
 

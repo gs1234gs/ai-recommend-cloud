@@ -11,7 +11,6 @@ public class OrderWebClientRpc {
     // 构造函数注入
     public OrderWebClientRpc( @Qualifier("orderWebClientBuilder") WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder
-                .clone()
                 .build();
     }
 

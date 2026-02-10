@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RequestMapping("/product")
@@ -29,7 +28,7 @@ public class ProductController {
     //添加商品
     @PostMapping("/save")
     public Mono<ResultT<BigInteger>> save(@RequestBody ProductSaveVO productSaveVO) {
-        return productService.save(productSaveVO)
+        return productService.saveProduct(productSaveVO)
                 .map(productId ->
                 {
                     log.info("保存商品成功，商品ID为：{}", productId);
@@ -116,32 +115,6 @@ public class ProductController {
                         }
                 );
     }
-    @GetMapping("/test")
-    public Map<String, Object> test() {
-        return Map.of("big",BigInteger.valueOf(1L));
-    }
-    /**
-     * 游标查询，返回客户端
-     */
-//    @PostMapping("/findCursor")
-//    public Mono<ResultT<CursorPageResult<List<ProductCustomerVO>>>> findCursor(@RequestBody RequestCursorPage<ProductSearchVO> requestCursorPage) {
-//        return productService.findCursor(requestCursorPage)
-//                .map(cursorPageResult ->
-//                        ResultT.<CursorPageResult<List<ProductCustomerVO>>>builder()
-//                                .code(HttpCodeConst.OK)
-//                                .msg("查询成功")
-//                                .data(cursorPageResult)
-//                                .build()
-//
-//                )
-//                .onErrorResume(throwable ->
-//                        Mono.just(ResultT.<CursorPageResult<List<ProductCustomerVO>>>builder()
-//                                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
-//                                .msg("系统错误")
-//                                .build()
-//                        )
-//                );
-//    }
 
     //批量删除
     @DeleteMapping("/deleteAllById")

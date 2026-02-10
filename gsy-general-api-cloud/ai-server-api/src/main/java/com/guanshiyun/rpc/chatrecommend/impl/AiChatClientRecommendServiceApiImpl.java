@@ -39,12 +39,24 @@ public class AiChatClientRecommendServiceApiImpl implements AiChatClientRecommen
     }
 
     @Override
-    public Mono<ResultT<Void>> embeddingDeleteProduct(List<BigInteger> productId) {
+    public Mono<ResultT<Void>> embeddingDeleteProduct(BigInteger productId) {
         return aiWebClientRpc.webClient()
                 .delete()
                 .uri(AiApiUrl.EMBEDDING_PRODUCT_DELETE_BY_PRODUCT_ID, productId)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<ResultT<Void>>() {});
+    }
+
+    @Override
+    public Mono<ResultT<List<BigInteger>>> searchByKeyword(String keyWard, Integer topK) {
+        return aiWebClientRpc.webClient()
+                .get()
+                .uri(build->build.path(AiApiUrl.EMBEDDING_PRODUCT_RECOMMEND_BY_KEY_WARD)
+                        .queryParam("keyWard",keyWard)
+                        .queryParam("topK",topK)
+                        .build())
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ResultT<List<BigInteger>>>() {});
     }
 //    private final WebClientRpc webClientRpc;
 //    @Override

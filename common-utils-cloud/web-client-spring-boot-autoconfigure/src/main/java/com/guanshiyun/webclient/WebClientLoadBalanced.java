@@ -14,6 +14,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.util.context.ContextView;
 
+import java.util.Objects;
+
 @Configuration
 public class WebClientLoadBalanced {
     @Bean
@@ -88,13 +90,18 @@ public class WebClientLoadBalanced {
 
     public ClientRequest clientRequest(ContextView ctx, ClientRequest clientRequest) {
         // 从 Reactor Context 中取 userId
-        String userId = ctx.getOrDefault(
-                ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY,
-                ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY   // 默认值（你也可以换成 traceId）
-        );
+        Object userIdObj = ctx.getOrDefault(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, "");
+        String userId = Objects.nonNull(userIdObj) ? userIdObj.toString() : "";
 
+        // 从 Reactor Context 中取 traceId
+        Object traceIdObj = ctx.getOrDefault(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY, "");
+        String traceId = Objects.nonNull(traceIdObj) ? traceIdObj.toString() : "";
+
+        // 构建新的 ClientRequest 并设置两个 header
         return ClientRequest.from(clientRequest)
                 .header(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId)
+                .header(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY, traceId)
                 .build();
     }
+
 }

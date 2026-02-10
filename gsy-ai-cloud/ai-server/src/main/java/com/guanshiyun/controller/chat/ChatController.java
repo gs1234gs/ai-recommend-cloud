@@ -1,8 +1,11 @@
 package com.guanshiyun.controller.chat;
 
+import com.alibaba.fastjson2.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guanshiyun.chat.ChatRecord;
 import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.chat.vo.ChatRecordVO;
+import com.guanshiyun.req.AllReqChat;
 import com.guanshiyun.req.ReqChat;
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -13,9 +16,12 @@ import com.guanshiyun.service.chat.impl.ChatRecordServiceImpl;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -28,6 +34,7 @@ public class ChatController {
 
     private final ChatService chatService;
     private final ChatRecordServiceImpl chatRecordService;
+     ObjectMapper mapper = new ObjectMapper();
 
 
     //一次性对话
@@ -48,24 +55,41 @@ public class ChatController {
                             .build())
                 );
     }
-    //流式对话
     @PostMapping("fluxChat")
-    public Flux<ResultT<String>> fluxChat(@RequestBody ReqChat reqChat){
-
+    public Flux<String> fluxChat(@RequestBody ReqChat reqChat, ServerHttpResponse response) {
         return chatService.chatFlux(reqChat)
-                .map(content-> ResultT.<String>builder()
-                        .code(HttpCodeConst.OK)
-                        .msg("对话成功")
-                        .data( content)
-                        .build()
-                )
+                .doOnNext(tuple -> {
+                    // 在流开始前设置响应头（只执行一次）
+                    response.getHeaders().set("X-Conversation-ID", tuple.getT2().toString());
+                    response.getHeaders().setContentType(MediaType.TEXT_EVENT_STREAM); // 或 text/plain
+                })
+                .flatMapMany(Tuple2::getT1) // 展开 Flux<String>
+                .map(token -> "data: " + token + "\n\n") // 转为标准 SSE 格式（可选）
+                .onErrorResume(throwable -> {
+                    log.error("对话失败", throwable);
+                    // 返回一个错误事件，前端可监听
+                    String errorEvent = "event: error\ndata: " +
+                            JSON.toJSONString(ResultT.<String>builder()
+                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .msg("对话失败: " + throwable.getMessage())
+                                    .build()) + "\n\n";
+                    return Mono.just(errorEvent);
+                });
+    }
+
+    @PostMapping("recommendChat")
+    public Mono<ResultT<AllReqChat>> recommendChat(@RequestBody ReqChat reqChat) {
+
+        return chatService.recommend(reqChat)
+                .map(ResultT::success)
                 .onErrorResume(throwable ->{
-                    return Mono.just(ResultT.<String>builder()
-                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
-                            .msg("对话失败")
+                    log.error("",throwable);
+                    return Mono.just(ResultT.<AllReqChat>builder().code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                            .msg("服务器错误")
                             .build());
                 });
     }
+
 
     //删除对话
     @DeleteMapping("deleteById/{id}")

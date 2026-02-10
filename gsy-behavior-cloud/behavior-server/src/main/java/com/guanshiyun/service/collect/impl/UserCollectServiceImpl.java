@@ -3,6 +3,7 @@ package com.guanshiyun.service.collect.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.base.BasePojo;
+import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.collect.UserCollectMongodb;
 import com.guanshiyun.controller.collect.vo.UserCollectSaveVO;
 import com.guanshiyun.controller.collect.vo.UserCollectVO;
@@ -50,6 +51,7 @@ public class UserCollectServiceImpl implements UserCollectService {
     private final CategoryApiService categoryApiService;
     private final SkuApiService skuApiService;
     private final TagApiService tagApiService;
+    private final MyBigInteger myBigInteger;
 
     /**
      *
@@ -128,7 +130,10 @@ public class UserCollectServiceImpl implements UserCollectService {
             }
 
             int limit = (Objects.isNull( rows) || rows <= ConstNumber.INT_ZERO) ? ConstNumber.INTEGER_TEN : rows;
-            BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+            BigInteger userId =
+                    myBigInteger
+                            .bigIntegerOrNull(
+                                    ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
             Query query = new Query()
                     .with(Sort.by(Sort.Order.desc(UserCollectMongodb.Fields.collectTime))) // 最近记录在前
@@ -139,6 +144,11 @@ public class UserCollectServiceImpl implements UserCollectService {
                     .map(item -> BeanConvertUtil.toBean(item, UserCollectVO.class))
                     .onErrorResume(e -> Flux.error(new RuntimeException("查询失败", e)));
         });
+    }
+
+    @Override
+    public Mono<Void> deleteById(BigInteger id) {
+        return userCollectMongodbRepository.deleteById(id);
     }
 
 }

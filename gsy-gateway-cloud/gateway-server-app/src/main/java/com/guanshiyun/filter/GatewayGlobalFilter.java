@@ -11,6 +11,7 @@ import com.guanshiyun.consts.ConstMapClassNickName;
 import com.guanshiyun.consts.PublicEndpoints;
 import com.guanshiyun.reactiveredis.ReactiveRedisUtil;
 import com.guanshiyun.responsepojo.Result;
+import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
@@ -46,7 +48,14 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
             log.info("白名单：{}", path);
             return chain.filter(exchange);
         }
-        //        //不是白名单，拦截
+        //不是白名单，拦截
+        // ===== 特殊请求直通 =====
+        String traceId = request.getHeaders().getFirst(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY);
+        String userIdStr = request.getHeaders().getFirst(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+        if (StringUtils.hasText(traceId) || StringUtils.hasText(userIdStr)) {
+            log.info("网关检测到特殊请求，放行：{}", path);
+            return chain.filter(exchange);
+        }
         log.info("黑名单：{}", path);
         String token = extractToken(request);
         if (StringUtil.isNullOrEmpty(token)) {

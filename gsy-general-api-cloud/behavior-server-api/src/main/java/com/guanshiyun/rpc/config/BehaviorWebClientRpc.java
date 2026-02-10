@@ -12,7 +12,6 @@ public class BehaviorWebClientRpc {
     public BehaviorWebClientRpc(@Qualifier("behaviorWebClientBuilder") WebClient.Builder webClientBuilder) {
 
         this.webClient = webClientBuilder
-                .clone()
 //                .baseUrl(BehaviorPrefix.BASE_URL)
                 .build();
     }

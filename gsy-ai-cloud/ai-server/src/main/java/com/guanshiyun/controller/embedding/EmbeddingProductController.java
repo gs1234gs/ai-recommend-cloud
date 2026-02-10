@@ -52,6 +52,17 @@ public class EmbeddingProductController {
             @RequestBody RequestBodyProductForEmbeddingApVO<List<ProductForEmbeddingApVO>> recentProducts){
         return embeddingProductService.recommendForUser(recentProducts.getData(), recentProducts.getTopK())
                 .map(ResultT::success)
+                .doOnSuccess(ok->log.info("推荐商品列表： {}",ok.getData()))
+                .onErrorResume(throwable -> Mono.just(ResultT.error()));
+    }
+    /**
+     * 给根关键字检索
+     * */
+    @GetMapping("/searchKeyWard")
+    public Mono<ResultT<List<BigInteger>>> embeddingKeyWard(@RequestParam String keyWard,
+                                                            @RequestParam(required = false,defaultValue = "10") Integer topK){
+        return embeddingProductService.searchByKeyword(keyWard,topK)
+                .map(ResultT::success)
                 .onErrorResume(throwable -> Mono.just(ResultT.error()));
     }
 }

@@ -3,6 +3,7 @@ package com.guanshiyun.service.click.impl;
 import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.behaviorenums.GuestEnum;
+import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.click.UserClickMongodb;
 import com.guanshiyun.controller.click.vo.UserClickSaveVO;
 import com.guanshiyun.controller.click.vo.UserClickVO;
@@ -63,6 +64,7 @@ public class UserClickServiceImpl implements UserClickService {
     private final SnowflakePermanent snowflakePermanent;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
     private final GorseClient gorseClient;
+    private final MyBigInteger  myBigInteger;
 
 
     /**
@@ -209,7 +211,7 @@ public class UserClickServiceImpl implements UserClickService {
 
             // 获取用户 ID
             BigInteger userId =
-                    ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+                    myBigInteger.bigIntegerOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
             // 构造 MongoDB 查询
             Query query = new Query()
@@ -218,8 +220,13 @@ public class UserClickServiceImpl implements UserClickService {
                     .addCriteria(Criteria.where(BasePojo.Fields.creator).is(userId)); // 仅查询该用户记录
             // 仅查询该用户记录
             return reactiveMongoTemplate.find(query, UserClickMongodb.class)
-                    .map(item->BeanConvertUtil.toBean( item, UserClickVO.class))
+                    .map(item->
+                            BeanConvertUtil.toBean( item, UserClickVO.class))
                     .onErrorResume(e -> Flux.error(new RuntimeException("查询失败", e)));
-        });
+        })
+                .onErrorResume(e->{
+                    log.error("查询click ： ",e);
+                    return Mono.empty();
+                });
     }
 }

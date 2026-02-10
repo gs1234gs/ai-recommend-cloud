@@ -1,6 +1,6 @@
 package com.guanshiyun.service.product.impl;
 
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.bean.BeanUtil;
 import com.db.dbnumber.ConstNumber;
 import com.db.page.CursorPageUtil;
 import com.db.query.SafeCriteria;
@@ -42,6 +42,8 @@ import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.data.relational.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
@@ -52,6 +54,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
 /**
  * 商品推荐服务实现类。
  * <p>
@@ -90,84 +93,221 @@ public class RecommendProductServiceImpl implements RecommendProductService {
      * @since 2025-12-20 10:13
      */
     @Override
-    public Mono<CursorPageResult<List<ProductCustomerVO>>> findCursor(RequestCursorPage<ProductSearchSaveVO> requestCursorPage) {
+    public Mono<CursorPageResult<List<ProductCustomerVO>>> findCursor(
+            RequestCursorPage<ProductSearchSaveVO> requestCursorPage) {
+
         RequestCursorPage<ProductSearchSaveVO> validate = CursorPageUtil.validate(requestCursorPage, ProductSearchSaveVO.class);
         ProductSearchSaveVO condition = validate.getCondition();
-        // 最后id
-        BigInteger lastId = validate.getLastId();
-        //每页数量
-        Integer pageSize = validate.getPageSize();
-        //排序参数
-        String order = validate.getOrder();
-        //商品最高价格
-        BigDecimal maxPrice = condition.getMaxPrice();
-        //商品最低价格
-        BigDecimal minPrice = condition.getMinPrice();
-        //搜索内容
         String searchContent = condition.getSearchContent();
-        /**
-         *
-         * 这里需要使用协同过滤，大模型决策后规则来查询，暂时忽略
-         * */
-        return Mono.deferContextual(ctx -> {
-            //没有登陆
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
-                //暂时返回空
-                return Mono.empty();
-            }
-            //已经登陆
-            BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
-            SafeCriteria safeCriteria = SafeCriteria.safeCriteria();
-            //暂时支持商品名称匹配，放弃分类并行，后面采用ElasticSearch引擎解决
-            Criteria criteria = safeCriteria
-                    .likeIfNotEmpty(Product.Fields.name, searchContent)
-                    .geIfNotNull(Product.Fields.minPrice, minPrice)
-                    .leIfNotNull(Product.Fields.minPrice, maxPrice)
-                    .gtIfNotNull(Product.Fields.id, lastId)
-                    .criteria();
-            Query query = Query.query(criteria)
-                    .limit(pageSize)
-                    .sort(Sort.by(Sort.Order.asc(Product.Fields.id)));
-            //查询商品，调用行为服务记录搜索记录，
-            return r2dbcEntityTemplate
-                    .select(Product.class)
-                    .matching(query)
-                    .all()
-                    .map(p -> ProductCustomerVO
-                            .builder()
-                            .image(p.getImage())
-                            .video(p.getVideo())
-                            .status(p.getStatus())
-                            .description(p.getDescription())
-                            .publishTime(p.getPublishTime())
-                            .brand(p.getBrand())
-                            .id(p.getId())
-                            .name(p.getName())
-                            .level(p.getLevel())
-                            .placeOfOrigin(p.getPlaceOfOrigin())
-                            .minPrice(p.getMinPrice())
-                            .maxPrice(p.getMaxPrice())
-                            .placeOfOrigin(p.getPlaceOfOrigin())
-                            .build()
-                    )
-                    .collectList()
-                    .map(productCustomerVOS ->
-                            CursorPageResult.<List<ProductCustomerVO>>builder()
-                                    .rows(productCustomerVOS)
-                                    .cursor(productCustomerVOS.getLast().getId())
-                                    .hasNext(productCustomerVOS.size() > pageSize)
-                                    .build()
-                    )
-                    .publishOn(Schedulers.boundedElastic())
-                    .doOnSuccess(cursorPageResult ->
-                            userSearchServiceApi.saveUserSearchRecord(
-                                    BeanConvertUtil.toBean(condition, SearchContentApi.class)
-                                            .setSearchTime(LocalDateTime.now())
-                            ).subscribe()
-                    );
 
+        // 如果没有搜索内容，直接走传统查询（AI 不适用）
+        if (!StringUtils.hasText(searchContent)) {
+            return executeTraditionalQuery(validate, condition);
+        }
+
+        return Mono.deferContextual(ctx -> {
+
+            // 登录校验
+            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+                return Mono.just(
+                        CursorPageResult.<List<ProductCustomerVO>>builder()
+                                .rows(Collections.emptyList())
+                                .cursor(BigInteger.ZERO)
+                                .hasNext(false)
+                                .build()
+                );
+            }
+            BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+            // 优先使用 AI 推荐的商品 ID 列表
+            return aiChatClientRecommendServiceApi
+                    .searchByKeyword(searchContent.trim(), 20) // 获取最多 20 个候选 ID
+                    .map(ResultT::getData)
+                    .filter(Objects::nonNull)
+                    .flatMapMany(Flux::fromIterable)
+                    .filter(Objects::nonNull)
+                    .distinct()
+                    .collectList()
+                    .onErrorResume(e -> {
+                        log.warn("AI 搜索服务异常，回退到传统数据库查询。关键词: {}", searchContent, e);
+                        return Mono.empty(); // 触发 switchIfEmpty
+                    })
+                    .flatMap(aiProductIds -> {
+                        if (aiProductIds.isEmpty()) {
+                            return executeTraditionalQuery(validate, condition);
+                        }
+                        return buildResultFromAiProductIds(aiProductIds, validate, condition);
+                    })
+                    .switchIfEmpty(Mono.defer(() -> executeTraditionalQuery(validate, condition)))
+                    .doOnSuccess(result -> {
+                        // 异步记录搜索行为（无论 AI 还是传统）
+                        if (StringUtils.hasText(searchContent)) {
+                            userSearchServiceApi.saveUserSearchRecord(
+                                            BeanConvertUtil.toBean(condition, SearchContentApi.class)
+                                                    .setSearchTime(LocalDateTime.now())
+                                    )
+                                    .contextWrite(ctxs->ctxs.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
+                                    .subscribeOn(Schedulers.boundedElastic()).subscribe();
+                        }
+                    });
         });
     }
+
+// ------------------ 辅助方法 ------------------
+
+    /**
+     * 执行传统数据库查询（基于 name 模糊 + 价格区间 + 游标分页）
+     */
+    private Mono<CursorPageResult<List<ProductCustomerVO>>> executeTraditionalQuery(
+            RequestCursorPage<ProductSearchSaveVO> validate,
+            ProductSearchSaveVO condition) {
+
+        BigInteger lastId = validate.getLastId();
+        Integer pageSize = validate.getPageSize();
+        BigDecimal maxPrice = condition.getMaxPrice();
+        BigDecimal minPrice = condition.getMinPrice();
+        String searchContent = condition.getSearchContent();
+
+        SafeCriteria safeCriteria = SafeCriteria.safeCriteria();
+        Criteria criteria = safeCriteria
+                .likeIfNotEmpty(Product.Fields.name, searchContent)
+                .geIfNotNull(Product.Fields.maxPrice, minPrice)
+                .leIfNotNull(Product.Fields.minPrice, maxPrice)
+                .gtIfNotNull(Product.Fields.id, lastId)
+                .criteria();
+
+        Query query = Query.query(criteria)
+                .limit(pageSize + 1) // 多查一条判断 hasNext
+                .sort(Sort.by(Sort.Order.asc(Product.Fields.id)));
+
+        return r2dbcEntityTemplate
+                .select(Product.class)
+                .matching(query)
+                .all()
+                .map(p -> ProductCustomerVO.builder()
+                        .id(p.getId())
+                        .name(p.getName())
+                        .image(p.getImage())
+                        .video(p.getVideo())
+                        .status(p.getStatus())
+                        .description(p.getDescription())
+                        .publishTime(p.getPublishTime())
+                        .brand(p.getBrand())
+                        .level(p.getLevel())
+                        .placeOfOrigin(p.getPlaceOfOrigin())
+                        .minPrice(p.getMinPrice())
+                        .maxPrice(p.getMaxPrice())
+                        .originalPrice(p.getMinPrice())
+                        .discountPrice(Optional.ofNullable(p.getMinPrice())
+                                .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                .orElse(BigDecimal.ZERO))
+                        .build())
+                .collectList()
+                .map(list -> {
+                    boolean hasNext = list.size() > pageSize;
+                    List<ProductCustomerVO> rows = hasNext ? list.subList(0, pageSize) : list;
+                    BigInteger cursor = rows.isEmpty() ? BigInteger.ZERO : rows.get(rows.size() - 1).getId();
+                    return CursorPageResult.<List<ProductCustomerVO>>builder()
+                            .rows(rows)
+                            .cursor(cursor)
+                            .hasNext(hasNext)
+                            .build();
+                });
+    }
+
+    /**
+     * 根据 AI 返回的商品 ID 列表 + 游标分页参数，构建最终结果
+     */
+    private Mono<CursorPageResult<List<ProductCustomerVO>>> buildResultFromAiProductIds(
+            List<BigInteger> aiProductIds,
+            RequestCursorPage<ProductSearchSaveVO> validate,
+            ProductSearchSaveVO condition) {
+
+        if (aiProductIds.isEmpty()) {
+            return Mono.just(
+                    CursorPageResult.<List<ProductCustomerVO>>builder()
+                            .rows(Collections.emptyList())
+                            .cursor(BigInteger.ZERO)
+                            .hasNext(false)
+                            .build()
+            );
+        }
+
+        BigInteger lastId = validate.getLastId();
+        Integer pageSize = validate.getPageSize();
+        BigDecimal maxPrice = condition.getMaxPrice();
+        BigDecimal minPrice = condition.getMinPrice();
+
+        // 过滤掉 <= lastId 的 ID（游标分页要求）
+        List<BigInteger> filteredIds = aiProductIds.stream()
+                .filter(id -> lastId == null || id.compareTo(lastId) > 0)
+                .sorted() // 保证顺序（AI 可能无序）
+                .limit(pageSize + 1L)
+                .toList();
+
+        if (filteredIds.isEmpty()) {
+            return Mono.just(
+                    CursorPageResult.<List<ProductCustomerVO>>builder()
+                            .rows(Collections.emptyList())
+                            .cursor(BigInteger.ZERO)
+                            .hasNext(false)
+                            .build()
+            );
+        }
+
+        // 查询这些 ID 对应的商品详情（带价格过滤）
+        SafeCriteria safeCriteria = SafeCriteria.safeCriteria();
+        Criteria criteria = safeCriteria
+                .in(Product.Fields.id, filteredIds)
+                .geIfNotNull(Product.Fields.maxPrice, minPrice)
+                .leIfNotNull(Product.Fields.minPrice, maxPrice)
+                .criteria();
+
+        Query query = Query.query(criteria)
+                .sort(Sort.by(Sort.Order.asc(Product.Fields.id)));
+
+        return r2dbcEntityTemplate
+                .select(Product.class)
+                .matching(query)
+                .all()
+                .map(p -> ProductCustomerVO.builder()
+                        .id(p.getId())
+                        .name(p.getName())
+                        .image(p.getImage())
+                        .video(p.getVideo())
+                        .status(p.getStatus())
+                        .description(p.getDescription())
+                        .publishTime(p.getPublishTime())
+                        .brand(p.getBrand())
+                        .level(p.getLevel())
+                        .placeOfOrigin(p.getPlaceOfOrigin())
+                        .minPrice(p.getMinPrice())
+                        .maxPrice(p.getMaxPrice())
+                        .originalPrice(p.getMinPrice())
+                        .discountPrice(Optional.ofNullable(p.getMinPrice())
+                                .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                .orElse(BigDecimal.ZERO))
+                        .build())
+                .collectList()
+                .map(list -> {
+                    // 按 filteredIds 顺序排序（保持 AI 推荐顺序）
+                    Map<BigInteger, ProductCustomerVO> map = list.stream()
+                            .collect(Collectors.toMap(ProductCustomerVO::getId, Function.identity()));
+                    List<ProductCustomerVO> ordered = filteredIds.stream()
+                            .map(map::get)
+                            .filter(Objects::nonNull)
+                            .toList();
+
+                    boolean hasNext = ordered.size() > pageSize;
+                    List<ProductCustomerVO> rows = hasNext ? ordered.subList(0, pageSize) : ordered;
+                    BigInteger cursor = rows.isEmpty() ? BigInteger.ZERO : rows.get(rows.size() - 1).getId();
+                    return CursorPageResult.<List<ProductCustomerVO>>builder()
+                            .rows(rows)
+                            .cursor(cursor)
+                            .hasNext(hasNext)
+                            .build();
+                });
+    }
+
     /**
      * 基于用户近期行为（点击、收藏、搜索）生成个性化商品推荐。
      * <p>
@@ -194,7 +334,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 )
                 .flatMap(tuple -> {
                     //处理搜索记录，按时间倒序
-                    List<SearchContentApi> searchContentApiList =  Optional.ofNullable(tuple.getT3().getData())
+                    List<SearchContentApi> searchContentApiList = Optional.ofNullable(tuple.getT3().getData())
                             .orElse(List.of())
                             .stream()
                             .filter(Objects::nonNull)
@@ -208,13 +348,14 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                     // === 合并点击与收藏的商品 ID 列表 ===
                     List<BigInteger> productIdList =
                             Stream.concat(
-                                    clickProfileApiList.stream()
+                                    Optional.ofNullable(clickProfileApiList).orElse(List.of()).stream()
                                             .map(c -> c.getProduct().getId()),
-                                    collectProfileApiList.stream()
+                                    Optional.ofNullable(collectProfileApiList).orElse(List.of()).stream()
                                             .map(c -> c.getProduct().getId())
                             ).toList();
+
                     int totalProductId = productIdList.size();
-                  final int  totalIds = totalProductId == ConstNumber.INT_ZERO ? ConstNumber.INT_ONE : totalProductId;
+                    final int totalIds = totalProductId == ConstNumber.INT_ZERO ? ConstNumber.INT_ONE : totalProductId;
                     //  计算每个商品 ID 的占比
                     Map<BigInteger, Double> productRatioMap =
                             productIdList.stream()
@@ -247,7 +388,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                     List<ProductForEmbeddingApVO> productForEmbeddingApVOList = new ArrayList<>();
                     // === 将最新3条搜索内容转为虚拟商品（仅含关键词） ===
                     Optional.of(searchContentApiList)
-                            .orElseThrow()
+                            .orElse(List.of())
                             .stream()
                             .limit(ConstNumber.INT_THREE)
                             .filter(Objects::nonNull)
@@ -270,8 +411,8 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                                     .build())
                             );
                     // === 将 Top3 点击商品转为结构化推荐输入 ===
-                    Optional.of(clickProfileApiList)
-                            .orElseThrow()
+                    Optional.ofNullable(clickProfileApiList)
+                            .orElse(List.of())
                             .stream()
                             .filter(Objects::nonNull)
                             .filter(clickProfileApi -> top3ProductIdSet.contains(clickProfileApi.getProduct().getId()))
@@ -312,8 +453,8 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                                     .build()
                                     ));
                     // === 将 Top3 收藏商品转为结构化推荐输入（去重逻辑由大模型处理）===
-                    Optional.of(collectProfileApiList)
-                            .orElseThrow()
+                    Optional.ofNullable(collectProfileApiList)
+                            .orElse(List.of())
                             .stream()
                             .filter(Objects::nonNull)
                             .filter(collect -> top3ProductIdSet.contains(collect.getProduct().getId()))
@@ -360,11 +501,13 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                     .data(productForEmbeddingApVOList)
                                     .build();
                     return aiChatClientRecommendServiceApi.recommendProduct(requestBodyProductForEmbeddingApVO)
-                            .flatMap(recommendProductIds ->
-                                    productRepository.findAllById(recommendProductIds.getData())
-                                            .map(p ->
-                                                    ProductCustomerVO
-                                                            .builder()
+                            .flatMap(recommendProductIds -> {
+                                        if (Objects.isNull(recommendProductIds)
+                                                || Objects.isNull(recommendProductIds.getData())
+                                                || recommendProductIds.getData().isEmpty()) {
+                                            //默认返回最新加的5条
+                                            return productRepository.findAll().take(5)
+                                                    .map(p -> ProductCustomerVO.builder()
                                                             .image(p.getImage())
                                                             .video(p.getVideo())
                                                             .status(p.getStatus())
@@ -377,14 +520,54 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                                             .placeOfOrigin(p.getPlaceOfOrigin())
                                                             .minPrice(p.getMinPrice())
                                                             .maxPrice(p.getMaxPrice())
+                                                            .originalPrice(p.getMinPrice())
+                                                            .discountPrice(
+                                                                    Optional.ofNullable(p.getMinPrice())
+                                                                            .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                                                            .orElse(BigDecimal.ZERO)
+                                                            )
                                                             .placeOfOrigin(p.getPlaceOfOrigin())
                                                             .build()
+                                                    ).collectList();
+                                        }
+                                        return productRepository.findAllById(recommendProductIds.getData())
+                                                .map(p ->
+                                                        ProductCustomerVO
+                                                                .builder()
+                                                                .image(p.getImage())
+                                                                .video(p.getVideo())
+                                                                .status(p.getStatus())
+                                                                .description(p.getDescription())
+                                                                .publishTime(p.getPublishTime())
+                                                                .brand(p.getBrand())
+                                                                .id(p.getId())
+                                                                .name(p.getName())
+                                                                .level(p.getLevel())
+                                                                .placeOfOrigin(p.getPlaceOfOrigin())
+                                                                .minPrice(p.getMinPrice())
+                                                                .maxPrice(p.getMaxPrice())
+                                                                .originalPrice(p.getMinPrice())
+                                                                .discountPrice(
+                                                                        Optional.ofNullable(p.getMinPrice())
+                                                                                .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                                                                .orElse(BigDecimal.ZERO)
+                                                                )
+                                                                .placeOfOrigin(p.getPlaceOfOrigin())
+                                                                .build()
 
-                                            )
-                                            .collectList()
-                            );
+                                                )
+                                                .collectList();
+                                    }
+
+                            )
+                            .onErrorResume(Mono::error);
+                })
+                .onErrorResume(e -> {
+                    log.error("获取推荐商品失败", e);
+                    return Mono.empty();
                 });
     }
+
     /**
      * 基于 Gorse 协同过滤引擎获取用户喜欢的商品推荐。
      * <p>
@@ -403,11 +586,41 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 return Mono.error(new Exception("请先登陆"));
             }
             BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
-            return gorseClient.getRecommend(userId.toString(), 100)
+            return gorseClient.getRecommend(userId.toString(), 10)
                     .flatMap(productIds -> {
-                        List<BigInteger> productIdList = productIds.stream().filter(StrUtil::isNotBlank)
+                        List<BigInteger> productIdList = productIds
+                                .stream()
+                                .filter(id -> StringUtils.hasText(id) && id.matches("\\d+"))
                                 .map(myBigInteger::bigInteger)
                                 .toList();
+                        if (productIdList.isEmpty()) {
+                            //默认从数据查出5条
+                            return productRepository.findAll().take(5)
+                                    .map(p ->
+                                            ProductCustomerVO
+                                                    .builder()
+                                                    .image(p.getImage())
+                                                    .video(p.getVideo())
+                                                    .status(p.getStatus())
+                                                    .description(p.getDescription())
+                                                    .publishTime(p.getPublishTime())
+                                                    .brand(p.getBrand())
+                                                    .id(p.getId())
+                                                    .name(p.getName())
+                                                    .level(p.getLevel())
+                                                    .placeOfOrigin(p.getPlaceOfOrigin())
+                                                    .minPrice(p.getMinPrice())
+                                                    .maxPrice(p.getMaxPrice())
+                                                    .originalPrice(p.getMinPrice())
+                                                    .discountPrice(
+                                                            Optional.ofNullable(p.getMinPrice())
+                                                                    .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                                                    .orElse(BigDecimal.ZERO)
+                                                    )
+                                                    .build()
+                                    )
+                                    .collectList();
+                        }
                         return productRepository.findAllById(productIdList)
                                 .map(p ->
                                         ProductCustomerVO
@@ -424,13 +637,47 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                                 .placeOfOrigin(p.getPlaceOfOrigin())
                                                 .minPrice(p.getMinPrice())
                                                 .maxPrice(p.getMaxPrice())
+                                                .originalPrice(p.getMinPrice())
+                                                .discountPrice(Optional.ofNullable(p.getMinPrice())
+                                                        .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                                        .orElse(BigDecimal.ZERO))
                                                 .placeOfOrigin(p.getPlaceOfOrigin())
                                                 .build()
                                 )
-                                .collectList();
-                    });
+                                .collectList()
+                                .flatMap(pList -> {
+                                    if (pList.isEmpty()) {
+                                        return productRepository.findAll().take(5)
+                                                .map(p -> ProductCustomerVO.builder()
+                                                        .image(p.getImage())
+                                                        .video(p.getVideo())
+                                                        .status(p.getStatus())
+                                                        .description(p.getDescription())
+                                                        .publishTime(p.getPublishTime())
+                                                        .brand(p.getBrand())
+                                                        .id(p.getId())
+                                                        .name(p.getName())
+                                                        .level(p.getLevel())
+                                                        .placeOfOrigin(p.getPlaceOfOrigin())
+                                                        .minPrice(p.getMinPrice())
+                                                        .maxPrice(p.getMaxPrice())
+                                                        .originalPrice(p.getMinPrice())
+                                                        .discountPrice(
+                                                                Optional.ofNullable(p.getMinPrice())
+                                                                        .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                                                        .orElse(BigDecimal.ZERO)
+                                                        )
+                                                        .placeOfOrigin(p.getPlaceOfOrigin())
+                                                        .build()
+                                                ).collectList();
+                                    }
+                                    return Mono.just(pList);
+                                });
+                    })
+                    .onErrorResume(Mono::error);
         });
     }
+
     /**
      * 获取商品详情，包括关联的标签和 SKU 列表。
      * <p>
@@ -444,40 +691,74 @@ public class RecommendProductServiceImpl implements RecommendProductService {
      */
     @Override
     public Mono<ProductCustomerDetailVO> detail(BigInteger id) {
+       return Mono.deferContextual(ctx->{
         Mono<Product> productMono = productRepository.findById(id);
         Mono<List<TagVO>> tagListMono = utilsService.findTagByProductId(id);
         Mono<List<SKU>> skuListMono = sKURepository.findAllByProductId(id).collectList();
-        return Mono.zip(productMono, tagListMono,skuListMono)
+        BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+        return Mono.zip(productMono, tagListMono, skuListMono)
                 .flatMap(tuple -> {
                     Product product = tuple.getT1();
                     List<TagVO> tagList = tuple.getT2();
                     List<SKU> skuList = tuple.getT3();
                     return Mono.just(
-                            ProductCustomerDetailVO.builder()
-                                    .id(product.getId())
-                                    .level(product.getLevel())
-                                    .name(product.getName())
-                                    .maxPrice(product.getMaxPrice())
-                                    .minPrice(product.getMinPrice())
-                                    .offlineTime(product.getOfflineTime())
-                                    .placeOfOrigin(product.getPlaceOfOrigin())
-                                    .publishTime(product.getPublishTime())
-                                    .brand(product.getBrand())
-                                    .status(product.getStatus())
-                                    .tagList(tagList)
-                                    .skuList(BeanConvertUtil.toBeanList(skuList, SKUVO.class))
-                                    .build()
-                    )
+                                    ProductCustomerDetailVO.builder()
+                                            .id(product.getId())
+                                            .level(product.getLevel())
+                                            .name(product.getName())
+                                            .maxPrice(product.getMaxPrice())
+                                            .minPrice(product.getMinPrice())
+                                            .offlineTime(product.getOfflineTime())
+                                            .placeOfOrigin(product.getPlaceOfOrigin())
+                                            .publishTime(product.getPublishTime())
+                                            .brand(product.getBrand())
+                                            .status(product.getStatus())
+                                            .tagList(tagList)
+                                            .originalPrice(product.getMinPrice())
+                                            .discountPrice(
+                                                    Optional.ofNullable(product.getMinPrice())
+                                                            .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                                            .orElse(BigDecimal.ZERO)
+                                            )
+                                            .skuList(BeanConvertUtil.toBeanList(skuList, SKUVO.class))
+                                            .build()
+                            )
                             .publishOn(Schedulers.boundedElastic())
-                            .doOnSuccess(ok->{
+                            .doOnSuccess(ok -> {
                                 // 异步记录点击行为
                                 userClickServiceApi.saveUserClickRecord(UserClickSaveApiVO
-                                        .builder()
-                                        .product(BeanConvertUtil.toBean(product, ProductApiVO.class))
-                                        .clickTime(LocalDateTime.now())
-                                        .build())
-                                        .subscribe();
+                                                .builder()
+                                                .product(BeanConvertUtil.toBean(product, ProductApiVO.class))
+                                                .clickTime(LocalDateTime.now())
+                                                .build())
+                                        .contextWrite(ctxs -> ctxs.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY,userId))
+                                        .subscribe(
+                                                o -> log.info("记录用户点击行为成功"),
+                                                e -> log.error("记录用户点击行为失败", e)
+                                        );
+                            })
+                            .onErrorResume(e -> {
+                                log.error("获取商品详情失败", e);
+                                return Mono.error(e);
                             });
+                })
+                .onErrorResume(e -> {
+                    log.error("获取商品详情失败", e);
+                    return Mono.error(e);
                 });
+        });
+    }
+
+    @Override
+    public Mono<List<ProductCustomerVO>> findByIds(List<BigInteger> ids) {
+        return productRepository.findAllById(ids)
+                .mapNotNull(item -> BeanUtil.toBean(item, ProductCustomerVO.class)
+                        .setOriginalPrice(item.getMinPrice())
+                        .setDiscountPrice(
+                                Optional.ofNullable(item.getMinPrice())
+                                        .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                        .orElse(BigDecimal.ZERO)
+                        ))
+                .collectList();
     }
 }

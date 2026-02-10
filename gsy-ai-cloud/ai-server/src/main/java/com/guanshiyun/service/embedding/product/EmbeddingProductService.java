@@ -66,5 +66,10 @@ public interface EmbeddingProductService {
       * @return Mono<List<String>> 用户历史商品向量列表（未实现）
       */
      Mono<List<String>> vectorizeUserHistory(List<ProductForEmbeddingApVO> recentProducts);
+     /**
+      * 根据关键词搜索商品
+      * */
+     Mono<List<BigInteger>> searchByKeyword(String keyword, int topK);
+     List<BigInteger> searchKeyword(String keyword, int topK);
 
 }

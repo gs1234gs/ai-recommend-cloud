@@ -142,4 +142,26 @@ public class TagController {
                     );
                 });
     }
+
+    @GetMapping("findByProductIds")
+    public Mono<ResultT<List<TagVO>>> findTagByProductIds(@RequestParam List<BigInteger> productIds) {
+        return tagService.findTagByProductId(productIds)
+                .map(tag ->{
+                    log.info("通过商品id查询成功Tag，id为{}", tag);
+                    return ResultT.<List<TagVO>>builder()
+                            .code(HttpCodeConst.OK)
+                            .msg("查询成功")
+                            .data(tag)
+                            .build();
+                })
+                .onErrorResume(throwable ->{
+                    log.error("查询失败", throwable);
+                    return Mono.just(
+                            ResultT.<List<TagVO>>builder()
+                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .msg("查询失败")
+                                    .build()
+                    );
+                });
+    }
 }

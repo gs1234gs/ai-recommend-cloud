@@ -1,6 +1,7 @@
 package com.guanshiyun.service.sku;
 
 import com.guanshiyun.controller.sku.vo.SKUFindVO;
+import com.guanshiyun.controller.sku.vo.SKUGroupByProductIdVO;
 import com.guanshiyun.controller.sku.vo.SKUSaveVO;
 import com.guanshiyun.controller.sku.vo.SKUVO;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -17,9 +18,9 @@ public interface SKUService {
 //删除SKU
     Mono<Void> deleteById(BigInteger id);
 //查询SKU
-    Mono<SKUFindVO> findById(BigInteger id);
+    Mono<SKUVO> findById(BigInteger id);
 //分页查询SKU
-        Mono<PageResultT<List<SKUFindVO>>> findAllByPage(RequestPage<SKUFindVO> requestPage);
+Mono<PageResultT<List<SKUGroupByProductIdVO>>> findAllByPage(RequestPage<SKUFindVO> requestPage);
 //根据商品id获取SKU列表
     Flux<SKUVO> findByProductId(BigInteger productId);
 //批量删除
@@ -30,4 +31,6 @@ public interface SKUService {
 
     //根据id加库存
     Mono<Boolean> addStockById(BigInteger id, Integer count);
+
+    Mono<List<SKUVO>> findAllByIds(List<BigInteger> skuIds);
 }

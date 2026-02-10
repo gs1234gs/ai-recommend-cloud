@@ -1,12 +1,12 @@
 package com.guanshiyun.rpc.goodsapi.sku.impl;
 
 import com.guanshiyun.goodsenum.GoodsApiUrl;
+import com.guanshiyun.publicvo.SKUGroupByProductIdApiVO;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.rpc.config.GoodsWebClientRpc;
 import com.guanshiyun.rpc.goodsapi.sku.SkuApiService;
 import com.guanshiyun.rpc.profile.SKUApiVO;
-import com.guanshiyun.webutils.WebClientUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
@@ -33,9 +33,9 @@ public class SkuApiServiceImpl implements SkuApiService {
                 .bodyToMono(new ParameterizedTypeReference<ResultT<List<SKUApiVO>>>() {});
     }
 
-    //分页查询SKU列表
+    //分页查询SKU列表按商品分组
     @Override
-    public Mono<ResultT<List<SKUApiVO>>> findByPage(RequestPage<SKUApiVO> requestPage) {
+    public Mono<ResultT<List<SKUGroupByProductIdApiVO>>> findByPage(RequestPage<SKUApiVO> requestPage) {
         return goodsWebClientRpc
                 .webClient()
                 .post()
@@ -45,6 +45,29 @@ public class SkuApiServiceImpl implements SkuApiService {
                 )
                 .bodyValue(requestPage)
                 .retrieve()
-                .bodyToMono(WebClientUtils.typeRef());
+                .bodyToMono(new ParameterizedTypeReference<ResultT<List<SKUGroupByProductIdApiVO>>>() {});
+    }
+
+    @Override
+    public Mono<ResultT<List<SKUApiVO>>> findBySkuIds(List<BigInteger> skuIds) {
+        return goodsWebClientRpc.webClient()
+                .get()
+                .uri(builder-> builder.path(GoodsApiUrl.SKU_FIND_BY_SKU_IDS)
+                        .queryParam("skuIds",skuIds)
+                        .build())
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ResultT<List<SKUApiVO>>>() {
+                });
+    }
+
+    @Override
+    public Mono<ResultT<SKUApiVO>> findBySkuId(BigInteger skuId) {
+        return goodsWebClientRpc.webClient()
+                .get()
+                .uri(builder-> builder.path(GoodsApiUrl.SKU_FIND_BY_ID)
+                        .build(skuId))
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ResultT<SKUApiVO>>() {
+                });
     }
 }

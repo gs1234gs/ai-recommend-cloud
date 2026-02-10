@@ -3,6 +3,8 @@ package com.guanshiyun.controller.order;
 import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.order.vo.PurChaseOrderSaveVO;
 import com.guanshiyun.controller.order.vo.PurChaseOrderVO;
+import com.guanshiyun.controller.order.vo.PurchaseOrderDetailVO;
+import com.guanshiyun.controller.order.vo.PurchaseOrderSearchVO;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.responsepojo.ResultT;
@@ -61,7 +63,7 @@ public class PurChaseOrderController {
     }
     @PostMapping("findByUserIdPage")
     public Mono<ResultT<PageResultT<List<PurChaseOrderVO>>>> findByUserIdPage(
-            @RequestBody RequestPage<PurChaseOrderVO> requestPage) {
+            @RequestBody RequestPage<PurchaseOrderSearchVO> requestPage) {
         return purChaseOrderService.findByUserIdPage(requestPage)
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
@@ -84,7 +86,7 @@ public class PurChaseOrderController {
     }
     //根据订单id查询订单
     @GetMapping("findById/{id}")
-    public Mono<ResultT<PurChaseOrderVO>> findById(@PathVariable BigInteger id) {
+    public Mono<ResultT<PurchaseOrderDetailVO>> findById(@PathVariable BigInteger id) {
         return purChaseOrderService.findById(id)
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
@@ -93,7 +95,7 @@ public class PurChaseOrderController {
                 });
     }
     @PostMapping("findPage")
-    public Mono<ResultT<PageResultT<List<PurChaseOrderVO>>>> findByPage(@RequestBody RequestPage<PurChaseOrderVO> requestPage ) {
+    public Mono<ResultT<PageResultT<List<PurChaseOrderVO>>>> findByPage(@RequestBody RequestPage<PurchaseOrderSearchVO> requestPage ) {
         return purChaseOrderService.findByPage(requestPage)
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
@@ -115,5 +117,11 @@ public class PurChaseOrderController {
                     return Mono.just(ResultT.error(HttpCodeConst.INTERNAL_SERVER_ERROR, "查询订单失败"));
                 });
             }
-
+    //根据删除订单
+    @DeleteMapping("/deletedById/{id}")
+    public Mono<ResultT<Boolean>> deleteById(@PathVariable BigInteger id){
+        return purChaseOrderService.deleteById(id)
+                .map(ResultT::success)
+                .onErrorResume(e->Mono.just(ResultT.error()));
+    }
 }

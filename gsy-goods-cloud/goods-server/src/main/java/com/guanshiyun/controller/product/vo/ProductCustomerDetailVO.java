@@ -41,6 +41,8 @@ public class ProductCustomerDetailVO implements Serializable {
     private Integer salesVolume;
     //商品状态，0=下架，1=上架,2=预发布
     private short status;
+    private BigDecimal discountPrice;
+    private BigDecimal originalPrice;
     /**
      * 上架时间
      */

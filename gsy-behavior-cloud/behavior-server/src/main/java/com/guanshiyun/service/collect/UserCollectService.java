@@ -12,4 +12,6 @@ public interface UserCollectService {
     Mono<BigInteger> save(UserCollectSaveVO userCollectSaveVO);
     //查询收藏记录
     Flux<UserCollectVO> findAll(Integer rows);
+
+    Mono<Void> deleteById(BigInteger id);
 }

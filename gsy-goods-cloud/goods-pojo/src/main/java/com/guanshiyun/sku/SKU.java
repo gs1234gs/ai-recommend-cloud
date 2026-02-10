@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
@@ -15,7 +16,6 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  *
@@ -23,11 +23,12 @@ import java.util.List;
  * */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @FieldNameConstants
 @AllArgsConstructor
 @NoArgsConstructor
 @Table("sku")
+@Accessors(chain = true)
 public class SKU extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -67,7 +68,7 @@ public class SKU extends BasePojo implements Serializable {
     // 商品详情
     private String detailContent;
     //图片
-    private List<String> picList;
+    private Object picList;
     //商品id
     private BigInteger productId;
 

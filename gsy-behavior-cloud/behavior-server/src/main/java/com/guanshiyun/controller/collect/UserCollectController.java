@@ -32,8 +32,8 @@ public class UserCollectController {
                 );
     }
 
-    @GetMapping("findByRaws")
-    public Mono<ResultT<List<UserCollectVO>>> findByRaws(@RequestParam(required = false) Integer rows) {
+    @GetMapping("findByRows")
+    public Mono<ResultT<List<UserCollectVO>>> findByRows(@RequestParam(required = false) Integer rows) {
         return userCollectService.findAll(rows)
                 .collectList()
                 .map(ResultT::success)
@@ -42,5 +42,15 @@ public class UserCollectController {
                                 .msg("查询失败")
                                 .build()
                 );
+    }
+    @DeleteMapping("deleteById/{id}")
+    public Mono<ResultT<Boolean>> deleteById(@PathVariable BigInteger id) {
+        try {
+            return userCollectService.deleteById(id)
+                    .then(Mono.fromCallable(() -> ResultT.success(Boolean.TRUE)));
+        } catch (Exception e) {
+            log.error("删除收藏记录失败", e);
+            return Mono.just(ResultT.error("删除失败", Boolean.FALSE));
+        }
     }
 }

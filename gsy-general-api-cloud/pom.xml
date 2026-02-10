@@ -17,6 +17,7 @@
         <module>sys-server-api</module>
         <module>goods-server-api</module>
         <module>behavior-server-api</module>
+        <module>order-server-api</module>
     </modules>
     <artifactId>gsy-general-api-cloud</artifactId>
     <name>gsy-general-api-cloud</name>

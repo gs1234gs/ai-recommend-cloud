@@ -6,8 +6,8 @@ import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.rpc.behaviorapi.collect.UserCollectServiceApi;
 import com.guanshiyun.rpc.config.BehaviorWebClientRpc;
 import com.guanshiyun.rpc.profile.CollectProfileApi;
-import com.guanshiyun.webutils.WebClientUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -28,7 +28,7 @@ public class UserCollectServiceApiImpl implements UserCollectServiceApi {
                                 .queryParam(BehaviorParamKey.ROWS, rows)// 参数2
                                 .build())
                 .retrieve()
-                .bodyToMono(WebClientUtils.typeRef());
+                .bodyToMono(new ParameterizedTypeReference<ResultT<List<CollectProfileApi>>>() {});
 
     }
 }

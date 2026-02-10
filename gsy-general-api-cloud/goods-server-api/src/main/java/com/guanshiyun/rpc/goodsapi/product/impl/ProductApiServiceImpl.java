@@ -13,6 +13,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+import java.math.BigInteger;
 import java.util.List;
 @Slf4j
 @Service
@@ -30,6 +31,19 @@ public class ProductApiServiceImpl implements ProductApiService {
                                 )
                                 .bodyValue(requestCursorPage)
                                 .retrieve()
-                                .bodyToMono(new ParameterizedTypeReference<>() {});
+                                .bodyToMono(new ParameterizedTypeReference<ResultT<CursorPageResult<List<ProductApiVO>>>>() {
+                                });
+    }
+
+    @Override
+    public Mono<ResultT<ProductApiVO>> findProductById(BigInteger id) {
+        return goodsWebClientRpc.webClient()
+                .post()
+                .uri(builder -> builder
+                        .path(GoodsApiUrl.PRODUCT_FIND_BY_ID)
+                        .build(id)
+                )
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ResultT<ProductApiVO>>() {});
     }
 }

@@ -143,7 +143,7 @@ class AiAppApplicationTests {
         System.out.println( name1);
 
         System.out.println("======================================================");
-        chatService.chatFlux(
+        chatService.chatAll(
                         ReqChat.builder()
                                 .content("我是谁")
                                 .conversationId(BigInteger.valueOf(176485086349230080L))
@@ -422,4 +422,6 @@ class AiAppApplicationTests {
             log.info("商品ID: {} | 向量维度: {}", id, embedding.length);
         }
     }
+
+
 }

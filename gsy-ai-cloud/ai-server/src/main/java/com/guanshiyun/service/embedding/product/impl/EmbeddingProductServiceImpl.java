@@ -64,7 +64,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
         return Flux.fromIterable(products)
                 .map(product ->
                         Document.builder()
-                                .id(UUID.nameUUIDFromBytes(product.getId().toString().getBytes(StandardCharsets.UTF_8)).toString())
+                                .id(generateVectorId(product.getId()))
                                 .text(product.recommendEmbeddingText())   // 只放语义
                                 .metadata(product.metadata())             // 非语义信息
                                 .build()
@@ -87,16 +87,13 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
      */
     @Override
     public Mono<Void> deleteById(List<BigInteger> idList) {
+        List<String> vectorIds = idList.stream()
+                .map(this::generateVectorId) // 使用统一生成逻辑
+                .toList();
         return Mono.fromCallable(() -> {
-                    vectorStore.delete(
-                            idList
-                                    .stream()
-                                    .map(BigInteger::toString)
-                                    .toList()
-                    );
+                    vectorStore.delete(vectorIds);
                     return true;
                 })
-                // 阻塞操作放到 boundedElastic
                 .subscribeOn(Schedulers.boundedElastic())
                 .then();
     }
@@ -118,12 +115,14 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
     public Mono<List<BigInteger>> recommendForUser(List<ProductForEmbeddingApVO> recentProducts, int topK) {
         //有行为，优先大模型推荐，解决商品冷启动，新商品需要语义检索推荐
         return Mono.deferContextual(ctx -> {
+            boolean hasKey =
+                    ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
             // ================== 游客处理 ==================
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+            if (!hasKey) {
                 return gorseClient(GuestEnum.GUEST_USER_ID.getValue(), topK);
             }
+            BigInteger userId = myBigInteger.bigIntegerOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
-            BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
 
             // ================== 无行为：直接走 Gorse ==================
             if (Objects.isNull(recentProducts) || recentProducts.isEmpty()) {
@@ -241,4 +240,33 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
         return null;
     }
 
+    @Override
+    public Mono<List<BigInteger>> searchByKeyword(String keyword, int topK) {
+        SearchRequest request = SearchRequest.builder()
+                .query(keyword)
+                .topK(topK)
+                .build();
+        return Flux.fromIterable(vectorStore.similaritySearch(request))
+                .map(document -> myBigInteger.bigInteger(document.getMetadata().get(ProductForEmbeddingApVO.Fields.id)))
+                .collectList();
+
+
+    }
+
+    @Override
+    public List<BigInteger> searchKeyword(String keyword, int topK) {
+        SearchRequest request = SearchRequest.builder()
+                .query(keyword)
+                .topK(topK)
+                .build();
+        return vectorStore.similaritySearch(request)
+                .stream()
+                .map(document -> myBigInteger.bigInteger(document.getMetadata().get(ProductForEmbeddingApVO.Fields.id)))
+                .collect(Collectors.toList());
+
+
+    }
+    private String generateVectorId(BigInteger productId) {
+        return UUID.nameUUIDFromBytes(productId.toString().getBytes(StandardCharsets.UTF_8)).toString();
+    }
 }

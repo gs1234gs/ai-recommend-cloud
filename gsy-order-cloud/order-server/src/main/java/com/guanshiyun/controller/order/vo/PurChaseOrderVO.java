@@ -2,9 +2,12 @@ package com.guanshiyun.controller.order.vo;
 
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.address.vo.OrderAddressVO;
-import lombok.*;
+import com.guanshiyun.rpc.profile.TagApiVO;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
@@ -12,12 +15,13 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
-@FieldNameConstants
+@SuperBuilder(toBuilder = true)
 @Accessors(chain = true)
 public class PurChaseOrderVO extends BasePojo implements Serializable {
     @Serial
@@ -53,4 +57,10 @@ public class PurChaseOrderVO extends BasePojo implements Serializable {
     private Integer num;
     //收获地址信息
     private OrderAddressVO orderAddressVO;
+    //订单名称
+    private String name;
+    //标签
+    private List<TagApiVO> tags;
+    //图片
+    private String image;
 }

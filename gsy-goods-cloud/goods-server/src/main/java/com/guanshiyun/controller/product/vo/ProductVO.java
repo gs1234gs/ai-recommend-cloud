@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
@@ -63,6 +63,12 @@ public class ProductVO extends BasePojo implements Serializable {
     private LocalDateTime startTime;
     //创建结束时间
     private LocalDateTime endTime;
+    //最低价格
+    private BigDecimal minPrice;
+    //最高价格
+    private BigDecimal maxPrice;
+    //分类名称
+    private List<String> categoryName;
     // 在 ProductVO 中添加
     public static List<ProductVO> fromEntities(List<Product> products) {
         return products.stream()

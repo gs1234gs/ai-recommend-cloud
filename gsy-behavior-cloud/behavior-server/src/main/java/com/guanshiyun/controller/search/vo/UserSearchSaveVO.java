@@ -4,6 +4,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -22,5 +23,5 @@ public class UserSearchSaveVO {
     //品牌id等
     private BigInteger brandId;
     //搜索时间
-    private BigInteger searchTime;
+    private LocalDateTime searchTime;
 }

@@ -235,7 +235,7 @@ public class UserBrowseServiceImpl implements UserBrowseService {
                 return Flux.empty();
             }
 
-            BigInteger userId = myBigInteger.bigInteger(
+            BigInteger userId = myBigInteger.bigIntegerOrNull(
                     ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
             // ===== 构造查询条件 =====
@@ -250,7 +250,12 @@ public class UserBrowseServiceImpl implements UserBrowseService {
 
             return reactiveMongoTemplate.find(query, UserBrowseMongodb.class)
                     .mapNotNull(item -> BeanConvertUtil.toBean(item, UserBrowseVO.class));
-        });
+        })
+                .onErrorResume(e->{
+                    log.error("查询click ： ",e);
+                    return Mono.empty();
+                });
+
     }
 
 

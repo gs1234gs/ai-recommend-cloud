@@ -12,6 +12,7 @@ import com.guanshiyun.repository.tag.TagRepository;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.tag.TagService;
+import com.guanshiyun.snowflake.SnowflakePermanent;
 import com.guanshiyun.tag.Tag;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import lombok.RequiredArgsConstructor;
@@ -33,25 +34,29 @@ public class TagServiceImpl implements TagService {
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
     private final ProductTagRepository productTagRepository;
+    private final SnowflakePermanent snowflakePermanent;
+
     @Override
     public Mono<BigInteger> save(TagSaveVO tagSaveVO) {
         Tag tag = BeanUtil.toBean(tagSaveVO, Tag.class);
         LocalDateTime now = LocalDateTime.now();
         return Mono.deferContextual(ctx -> {
-            if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
+            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
                 return Mono.error(new Throwable("用户未登录"));
-            BigInteger userId =  ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
-           if(Objects.isNull(tag.getId())){
-               tag.setCreator(userId);
-               tag.setUpdateTime(now);
-               return tagRepository.save(tag)
-                       .map(Tag::getId);
-           }
-           tag.setUpdater(userId);
-           tag.setUpdateTime(now);
+            BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+            if (Objects.isNull(tag.getId())) {
+                String code = snowflakePermanent.stringNextId();
+                tag.setCode(tagSaveVO.getCode() + code)
+                        .setCreator(userId)
+                        .setUpdateTime(now);
+                return tagRepository.save(tag)
+                        .map(Tag::getId);
+            }
+            tag.setUpdater(userId);
+            tag.setUpdateTime(now);
             return r2dbcUpdateHelper.updateIgnoreNull(
                     EntityTableNameUtils.getName(Tag.class),
-                     tag,
+                    tag,
                     Tag.Fields.id
             );
         });
@@ -60,7 +65,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public Mono<Void> deleteById(BigInteger id) {
         return tagRepository.deleteById(id)
-                .onErrorResume(e->{
+                .onErrorResume(e -> {
                     log.error("删除失败", e);
                     return Mono.error(new Exception("删除失败", e));
                 });
@@ -75,18 +80,18 @@ public class TagServiceImpl implements TagService {
     @Override
     public Mono<PageResultT<List<TagVO>>> findAllByPage(RequestPage<TagVO> requestPage) {
         return ReactivePageQuery.of(
-                r2dbcEntityTemplate,
-                Tag.class,
-                RequestPage.<Tag>builder()
-                .condition(BeanUtil.toBean(
-                        requestPage.getCondition(),
-                        Tag.class)
-                )
-                .pageNum(requestPage.getPageNum())
-                .pageSize(requestPage.getPageSize())
-                .build())
+                        r2dbcEntityTemplate,
+                        Tag.class,
+                        RequestPage.<Tag>builder()
+                                .condition(BeanUtil.toBean(
+                                        requestPage.getCondition(),
+                                        Tag.class)
+                                )
+                                .pageNum(requestPage.getPageNum())
+                                .pageSize(requestPage.getPageSize())
+                                .build())
                 .page()
-                .map(page->{
+                .map(page -> {
                     log.info("查询成功");
                     return PageResultT.<List<TagVO>>builder()
                             .pageNum(page.getPageNum())
@@ -98,7 +103,7 @@ public class TagServiceImpl implements TagService {
                             )
                             .build();
                 })
-                .onErrorResume(e->{
+                .onErrorResume(e -> {
                     log.error("查询失败", e);
                     return Mono.just(PageResultT.<List<TagVO>>builder()
                             .pageNum(requestPage.getPageNum())
@@ -125,5 +130,10 @@ public class TagServiceImpl implements TagService {
                         .toList()
                 );
 
+    }
+
+    @Override
+    public Mono<List<TagVO>> findTagByProductId(List<BigInteger> productIds) {
+        return null;
     }
 }

@@ -6,10 +6,13 @@ import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.rpc.profile.ProductApiVO;
 import reactor.core.publisher.Mono;
 
+import java.math.BigInteger;
 import java.util.List;
 
 
 public interface ProductApiService {
 
     Mono<ResultT<CursorPageResult<List<ProductApiVO>>>> findCursor(RequestCursorPage<ProductApiVO> request);
+    //通过id
+    Mono<ResultT<ProductApiVO>> findProductById(BigInteger id);
 }

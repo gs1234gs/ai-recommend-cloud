@@ -31,4 +31,4 @@ logging:
     org.springframework.ai.chat.client.advisor: DEBUG
 
 server:
-  port: 1979
+  port: 9529

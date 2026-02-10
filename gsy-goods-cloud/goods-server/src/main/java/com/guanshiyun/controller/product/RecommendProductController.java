@@ -1,5 +1,6 @@
 package com.guanshiyun.controller.product;
 
+import com.guanshiyun.controller.product.vo.ProductCustomerDetailVO;
 import com.guanshiyun.controller.product.vo.ProductCustomerVO;
 import com.guanshiyun.controller.product.vo.ProductSearchSaveVO;
 import com.guanshiyun.requestpojo.RequestCursorPage;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -38,9 +40,16 @@ public class RecommendProductController {
                 .map(ResultT::success);
     }
 //    //获取商品详情
-//    @GetMapping("/detail/{id}")
-//    public Mono<ResultT<ProductCustomerDetailVO>> detail(@PathVariable String id){
-//        return recommendProductService.detail(id)
-//                .map(ResultT::success);
-//    }
+    @GetMapping("/detail/{id}")
+    public Mono<ResultT<ProductCustomerDetailVO>> detail(@PathVariable BigInteger id){
+        return recommendProductService.detail(id)
+                .map(ResultT::success);
+    }
+
+    //根据推荐商品id列表获取商品
+    @GetMapping("/recommendByIds")
+    public Mono<ResultT<List<ProductCustomerVO>>> recommendByIds(@RequestParam List<BigInteger> ids ){
+        return recommendProductService.findByIds(ids)
+                .map(ResultT::success);
+    }
 }

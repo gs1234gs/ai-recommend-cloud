@@ -1,6 +1,7 @@
 package com.guanshiyun.service.sysuser.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.util.StrUtil;
 import com.db.constsql.SqlConst;
 import com.db.page.PageUtils;
@@ -17,7 +18,6 @@ import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.sysuser.SysUserService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.userpojo.SysUser;
-import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -155,7 +155,7 @@ public class SysUserServiceImpl implements SysUserService {
     public Mono<BigInteger> updateUserById(SysUserVO sysUser) {
         return sysUserRepository.findById(sysUser.getId())
                 .flatMap(sysUserDB -> {
-                            BeanConvertUtil.copyNonNullToTarget(BeanUtil.toBean(sysUser, SysUser.class), sysUserDB);
+                    BeanUtil.copyProperties(sysUser, sysUserDB, CopyOptions.create().ignoreNullValue());
                             sysUserDB.setUpdateTime(LocalDateTime.now());
                             return r2dbcUpdateHelper.updateIgnoreNull(
                                             EntityTableNameUtils.getName(SysUser.class),

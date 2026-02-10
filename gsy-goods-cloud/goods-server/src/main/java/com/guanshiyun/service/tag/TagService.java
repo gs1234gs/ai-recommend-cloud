@@ -22,4 +22,6 @@ public interface TagService {
     Mono<Void> deleteAllById(List<BigInteger> ids);
 
     Mono<List<TagVO>> findTagByProductId(BigInteger productId);
+
+    Mono<List<TagVO>> findTagByProductId(List<BigInteger> productIds);
 }

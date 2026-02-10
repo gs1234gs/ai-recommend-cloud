@@ -7,6 +7,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
+
 @ToString
 @Data
 @AllArgsConstructor
@@ -46,6 +48,8 @@ public class SKUSaveVO implements Serializable {
     private BigDecimal weight;
     //排序值
     private Integer sort;
+    //图片
+    private List<String> picList;
     // 上架时间
     private LocalDateTime publishTime;
     // 下架时间

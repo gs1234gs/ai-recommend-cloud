@@ -16,5 +16,7 @@ public interface AiChatClientRecommendServiceApi {
      //推荐商品
      Mono<ResultT<List<BigInteger>>> recommendProduct(RequestBodyProductForEmbeddingApVO<List<ProductForEmbeddingApVO>> recentProducts);
      //删除商品向量
-     Mono<ResultT<Void>> embeddingDeleteProduct(List<BigInteger> productId);
+     Mono<ResultT<Void>> embeddingDeleteProduct(BigInteger productId);
+     //根据关键字检索
+     Mono<ResultT<List<BigInteger>>> searchByKeyword(String keyWard, Integer topK);
 }

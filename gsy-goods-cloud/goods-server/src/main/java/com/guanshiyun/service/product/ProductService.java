@@ -25,4 +25,6 @@ public interface ProductService {
     Mono<ProductVO> findById(BigInteger id);
 
     Mono<CursorPageResult<List<ProductVO>>> findCursorListProductVO(RequestCursorPage<ProductVO> requestCursorPage);
+
+    Mono<BigInteger> saveProduct(ProductSaveVO productSaveVO);
 }

@@ -15,6 +15,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
@@ -65,4 +67,6 @@ public class SKUApiVO extends BasePojo implements Serializable {
     private String detailContent;
     //商品id
     private BigInteger productId;
+    //图片
+    private List<String> picList;
 }

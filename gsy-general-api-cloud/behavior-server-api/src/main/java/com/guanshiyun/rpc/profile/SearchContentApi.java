@@ -1,7 +1,8 @@
 package com.guanshiyun.rpc.profile;
 
-import com.guanshiyun.base.BasePojo;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
@@ -12,14 +13,14 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
-@EqualsAndHashCode(callSuper = true)
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
 @Accessors(chain = true)
 @FieldNameConstants
-public class SearchContentApi extends BasePojo implements Serializable {
+public class SearchContentApi implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     //搜索内容id

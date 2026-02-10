@@ -14,6 +14,7 @@ import org.springframework.data.relational.core.query.Query;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.Collection;
 import java.util.List;
@@ -41,8 +42,10 @@ public class ReactivePageQuery<T> {
     public static <T> ReactivePageQuery<T> of(R2dbcEntityTemplate r2dbcEntityTemplate,
                                         Class<T> entityClass,
                                         RequestPage<T> page) {
-        return new ReactivePageQuery<>(r2dbcEntityTemplate, entityClass, page); // 自动触发 validate
+        return new ReactivePageQuery<>(r2dbcEntityTemplate, entityClass, page)
+                .delFlagQuery(entityClass); // 自动触发 validate
     }
+
     public ReactivePageQuery<T> eq(String field, Object value){
         if (value != null) {
             this.criteria = this.criteria.and(field).is(value);
@@ -205,6 +208,25 @@ public class ReactivePageQuery<T> {
         };
 
         this.criteria = this.criteria.and(field).like(pattern);
+        return this;
+    }
+
+    private ReactivePageQuery<T> delFlagQuery(Class<?> entityClass) {
+        Class<?> clazz = entityClass;
+
+        // 递归遍历当前类及其所有父类（直到 Object）
+        while (clazz != null && clazz != Object.class) {
+            for (Field field : clazz.getDeclaredFields()) {
+                if ("delFlag".equals(field.getName())) {
+                    // 找到 delFlag 字段 → 添加 del_flag = 0 条件
+                    this.criteria = this.criteria.and("del_flag").is((short) 0);
+                    return this;
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+
+        // 没找到 delFlag 字段 → 不加条件，安全返回
         return this;
     }
 }

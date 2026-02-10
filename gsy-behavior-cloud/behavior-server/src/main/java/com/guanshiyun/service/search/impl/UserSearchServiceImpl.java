@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.behaviorenums.GuestEnum;
+import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.controller.search.vo.UserSearchSaveVO;
 import com.guanshiyun.controller.search.vo.UserSearchVO;
 import com.guanshiyun.feedback.Feedback;
@@ -39,23 +40,25 @@ public class UserSearchServiceImpl implements UserSearchService {
     private final ReactiveMongoTemplate reactiveMongoTemplate;
     private final SnowflakePermanent snowflakePermanent;
     private final GorseClient gorseClient;
+    private final MyBigInteger myBigInteger;
 
     /**
-     * @param  userSearchVO
+     * @param userSearchVO
      * @return BigInteger
      * 保存用户搜索记录
-     *
-     * */
+     */
     @Override
     public Mono<BigInteger> save(UserSearchSaveVO userSearchVO) {
+
         return Mono.deferContextual(ctx -> {
             UserSearchMongodb userSearchMongodb =
                     BeanUtil.toBean(userSearchVO, UserSearchMongodb.class);
             BigInteger id = snowflakePermanent.nextId();
             LocalDateTime now = LocalDateTime.now();
-            userSearchMongodb.setId(id).setCreateTime( now);
-            if(ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
-                userSearchMongodb.setCreator(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            userSearchMongodb.setId(id).setCreateTime(now);
+            if (ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+                BigInteger creator = myBigInteger.bigIntegerOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+                userSearchMongodb.setCreator(creator);
             }
 
             Mono<UserSearchMongodb> save = userSearchMongodbRepository.save(userSearchMongodb);
@@ -74,16 +77,21 @@ public class UserSearchServiceImpl implements UserSearchService {
                             .build()
             ));
             return Mono.zip(save, rowAffectedMono)
-                    .map(tuple -> tuple.getT1().getId());
+                    .map(tuple -> tuple.getT1().getId())
+                    .onErrorResume(e ->
+                            {
+                                log.error("错误", e);
+                                return Mono.error(new RuntimeException("保存失败", e));
+                            }
+                    );
         });
     }
 
     /**
-     * @param  rows
+     * @param rows
      * @return Flux<UserSearchVO>
      * 查询用户搜索记录
-     *
-     * */
+     */
     @Override
     public Flux<UserSearchVO> findAll(Integer rows) {
         return Flux.deferContextual(ctx -> {
@@ -91,8 +99,9 @@ public class UserSearchServiceImpl implements UserSearchService {
                 return Flux.empty();
             }
 
-            int limit = (Objects.isNull( rows) || rows <= ConstNumber.INT_ZERO) ? ConstNumber.INTEGER_TEN : rows;
-            BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+            int limit = (Objects.isNull(rows) || rows <= ConstNumber.INT_ZERO) ? ConstNumber.INTEGER_TEN : rows;
+            BigInteger userId =
+                    myBigInteger.bigIntegerOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
             Query query = new Query()
                     .with(Sort.by(Sort.Order.desc(BasePojo.Fields.createTime))) // 最近搜索在前
@@ -104,4 +113,6 @@ public class UserSearchServiceImpl implements UserSearchService {
                     .onErrorResume(e -> Flux.error(new RuntimeException("查询失败", e)));
         });
     }
+
+
 }

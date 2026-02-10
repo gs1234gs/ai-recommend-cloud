@@ -8,6 +8,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 public interface TagApiService {
-    Mono<TagApiVO> findById(BigInteger id);
+    Mono<ResultT<TagApiVO>> findById(BigInteger id);
     Mono<ResultT<List<TagApiVO>>> findByProductId(BigInteger productId);
+    Mono<ResultT<List<TagApiVO>>> findByProductId(List<BigInteger> productId);
 }

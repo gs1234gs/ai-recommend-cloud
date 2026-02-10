@@ -84,6 +84,13 @@ public class ResultT<T> {
                 .msg(msg)
                 .build();
     }
+    public static <T> ResultT<T> error(String msg, T data){
+        return ResultT.<T>builder()
+                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                .msg(msg)
+                .data(data)
+                .build();
+    }
 
     public static <T> ResultT<T> error(){
         return ResultT.<T>builder()

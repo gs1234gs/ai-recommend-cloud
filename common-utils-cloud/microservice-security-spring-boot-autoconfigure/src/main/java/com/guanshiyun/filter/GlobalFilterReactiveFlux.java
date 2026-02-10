@@ -18,6 +18,7 @@ import org.springframework.http.server.RequestPath;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -49,13 +50,26 @@ public class GlobalFilterReactiveFlux implements WebFilter {
         HttpHeaders headers = exchange.getRequest().getHeaders();
         String traceId = headers.getFirst(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY);
         String userIdStr = headers.getFirst(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
-        if (
-                !StringUtil.isNullOrEmpty(traceId) && traceId.equals(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY)
-                || !StringUtil.isNullOrEmpty(userIdStr)
-        ) {
+        if (StringUtils.hasText(traceId) || StringUtils.hasText(userIdStr)) {
             log.info("这是特殊请求，放行：{}", path);
-            return chain.filter(exchange);
+            return chain.filter(exchange)
+                    .contextWrite(ctx -> {
+                        if (StringUtils.hasText(userIdStr)) {
+                            ctx = ctx.put(
+                                    ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY,
+                                    myBigInteger.bigIntegerOrNull(userIdStr)
+                            );
+                        }
+                        if (StringUtils.hasText(traceId)) {
+                            ctx = ctx.put(
+                                    ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY,
+                                    traceId
+                            );
+                        }
+                        return ctx;
+                    });
         }
+
 //        log.info("请求头：{}", headers);
         String userJson = headers.getFirst(ConstHeaderLocals.USER_INFO_KEY);
         if (StringUtil.isNullOrEmpty(userJson)) {

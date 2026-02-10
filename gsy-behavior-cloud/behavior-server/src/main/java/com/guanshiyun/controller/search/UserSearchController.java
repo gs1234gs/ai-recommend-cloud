@@ -33,8 +33,8 @@ public class UserSearchController {
                 );
     }
 
-    @GetMapping("findByRaws")
-    public Mono<ResultT<List<UserSearchVO>>> findByRaws(@RequestParam(required = false) Integer rows) {
+    @GetMapping("findByRows")
+    public Mono<ResultT<List<UserSearchVO>>> findByRows(@RequestParam(required = false) Integer rows) {
         return userSearchService.findAll(rows)
                 .collectList()
                 .map(ResultT::success)

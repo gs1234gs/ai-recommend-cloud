@@ -12,6 +12,7 @@ public class MyBigInteger {
         try {
             bigInteger = new BigInteger(number.toString().trim());
         } catch (Exception e) {
+            log.error("转换BigInteger异常，number：{}", number);
             throw new RuntimeException("转换BigInteger异常", e);
         }
         return bigInteger;

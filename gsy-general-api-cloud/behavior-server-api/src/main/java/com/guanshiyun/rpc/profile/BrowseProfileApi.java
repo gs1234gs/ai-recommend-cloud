@@ -1,11 +1,12 @@
 package com.guanshiyun.rpc.profile;
 
-import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.publicbehaviorvo.CategoryApiVO;
 import com.guanshiyun.publicbehaviorvo.ProductApiVO;
 import com.guanshiyun.publicbehaviorvo.SKUApiVO;
 import com.guanshiyun.publicbehaviorvo.TagApiVO;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
@@ -19,14 +20,14 @@ import java.util.List;
 /**
  * 用户画像（兴趣、偏好、地理位置等）
  * */
-@EqualsAndHashCode(callSuper = true)
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldNameConstants
 @SuperBuilder
 @Accessors(chain = true)
-public class BrowseProfileApi extends BasePojo implements Serializable {
+public class BrowseProfileApi implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     /** 主键ID */

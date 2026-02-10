@@ -23,24 +23,35 @@ public class UserClickServiceApiImpl implements UserClickServiceApi {
     @Override
     public Mono<ResultT<List<ClickProfileApi>>> findUserClickRecord(Integer rows) {
 
-        return behaviorWebClientRpc
-                .webClient()
-                .get()
+        return Mono.deferContextual(ctx->{
+            return behaviorWebClientRpc
+                    .webClient()
+                    .get()
 
-                .uri(uriBuilder ->
-                        uriBuilder
-                                .path(BehaviorClickApiUrlEnum.CLICK_FIND_BY_ROWS.getValue())
-                                .queryParam(BehaviorParamKey.ROWS, rows)// 参数
-                                .build()
-                )
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<ResultT<List<ClickProfileApi>>>() {});
+                    .uri(uriBuilder ->
+                            uriBuilder
+                                    .path(BehaviorClickApiUrlEnum.CLICK_FIND_BY_ROWS.getValue())
+                                    .queryParam(BehaviorParamKey.ROWS, rows)// 参数
+                                    .build()
+                    )
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<ResultT<List<ClickProfileApi>>>() {});
+        });
 
     }
 
     @Override
     public Mono<ResultT<BigInteger>> saveUserClickRecord(UserClickSaveApiVO userClickSaveApiVO) {
-        return null;
+        return Mono.deferContextual(ctx->{
+            return behaviorWebClientRpc
+                    .webClient()
+                    .post()
+                    .uri(BehaviorClickApiUrlEnum.CLICK_SAVE.getValue())
+                    .body(Mono.just(userClickSaveApiVO), UserClickSaveApiVO.class)
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<ResultT<BigInteger>>() {});
+        });
+
     }
 
 }

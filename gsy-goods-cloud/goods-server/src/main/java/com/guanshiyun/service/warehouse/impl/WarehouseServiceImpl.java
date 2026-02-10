@@ -103,7 +103,7 @@ public Mono<PageResultT<List<WarehouseVO>>> findPage(RequestPage<WarehouseVO> re
             .pageSize(pageSize)
             .build();
     return Mono.deferContextual(ctx->{
-                if(ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
+                if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
                     return Mono.error(new Exception("用户不存在"));
                 BigInteger userId =
                         myBigInteger.bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
