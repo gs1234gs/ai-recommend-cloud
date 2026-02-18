@@ -27,6 +27,8 @@ import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.CursorPageResult;
 import com.guanshiyun.responsepojo.PageResultT;
+import com.guanshiyun.responsepojo.ResultT;
+import com.guanshiyun.rowAffected.RowAffected;
 import com.guanshiyun.rpc.chatrecommend.AiChatClientRecommendServiceApi;
 import com.guanshiyun.service.product.ProductService;
 import com.guanshiyun.tag.Tag;
@@ -223,7 +225,7 @@ public class ProductServiceImpl implements ProductService {
                         // 新增商品
                         product.setCreateTime(now);
                         product.setCreator(userId);
-                        return productRepository.save(product)
+                        return r2dbcEntityTemplate.insert(product)
                                 .map(Product::getId)
                                 .flatMap(productId -> {
                                     // 保存分类关系
@@ -265,6 +267,7 @@ public class ProductServiceImpl implements ProductService {
                                     // 异步向量化处理（不阻塞主流程）
                                     bigIntegerMono(productId, categoryIds, tagIds, product)
                                             .contextWrite(ctxb -> ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
+                                            .subscribeOn(Schedulers.parallel())
                                             .subscribe(
                                                     ignored -> log.info("异步处理完成: {}", productId),
                                                     error -> log.error("异步处理失败: {}", productId, error)
@@ -352,6 +355,7 @@ public class ProductServiceImpl implements ProductService {
                                 .doOnSuccess(productId -> {
                                     bigIntegerMono(productId, categoryIds, tagIds, product)
                                             .contextWrite(ctxb -> ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
+                                            .subscribeOn(Schedulers.parallel())
                                             .subscribe(
                                                     ignored -> log.info("异步处理完成: {}", productId),
                                                     error -> log.error("异步处理失败: {}", productId, error)
@@ -372,6 +376,11 @@ public class ProductServiceImpl implements ProductService {
     @NonNull
     private Mono<BigInteger> bigIntegerMono(BigInteger productIdSave, List<BigInteger> categoryIds, List<BigInteger> tagIds, Product product) {
         log.info("更新商品信息成功：{}", productIdSave);
+
+        if (Objects.isNull(productIdSave) || productIdSave.equals(BigInteger.ZERO)) {
+            log.warn("商品ID为空，跳过关联数据保存");
+            return Mono.empty(); // 或抛异常，根据业务需求
+        }
 
         // 移除了 skuFlux
         Mono<List<Category>> categoryFlux = Flux.fromIterable(Objects.requireNonNullElse(categoryIds, Collections.emptyList()))
@@ -403,39 +412,44 @@ public class ProductServiceImpl implements ProductService {
                             .description(product.getDescription())
                             // 注意：不再设置 skuList
                             .build();
-
-                    return aiChatClientRecommendServiceApi.embeddingProduct(List.of(productForEmbeddingApVO))
-                            .flatMap(em -> {
-                                // 拼接 comment：用于调外部 embedding
-                                String comment = Stream.of(
-                                                product.getName(),
-                                                product.getBrand(),
-                                                product.getDescription(),
-                                                product.getPlaceOfOrigin()
-                                        ).filter(Objects::nonNull)
-                                        .filter(s -> !s.trim().isEmpty())
-                                        .collect(Collectors.joining(" | "));
-                                // Labels：标签名列表
-                                List<String> labelList = tags.stream()
-                                        .map(Tag::getName)
-                                        .filter(Objects::nonNull)
-                                        .toList();
-                                // Categories：类目名列表（从粗到细）
-                                List<String> categoryList = categories.stream()
-                                        .map(Category::getName)
-                                        .filter(Objects::nonNull)
-                                        .collect(Collectors.toList());
-                                String timestamp = Instant.now().toString();
-                                Item gorseItem = Item.builder()
-                                        .itemId(productIdSave.toString())
-                                        .isHidden(Boolean.FALSE) // 根据业务逻辑可动态设置
-                                        .labels(labelList)      // 注意：Item.labels 是 Object，但传 List<String>
-                                        .categories(categoryList)
-                                        .timestamp(timestamp)
-                                        .comment(comment)
-                                        .build();
-                                return gorseClient.saveItem(gorseItem)
-                                        .thenReturn(productIdSave);
+                    // 拼接 comment：用于调外部 embedding
+                    String comment = Stream.of(
+                                    product.getName(),
+                                    product.getBrand(),
+                                    product.getDescription(),
+                                    product.getPlaceOfOrigin()
+                            ).filter(Objects::nonNull)
+                            .filter(s -> !s.trim().isEmpty())
+                            .collect(Collectors.joining(" | "));
+                    // Labels：标签名列表
+                    List<String> labelList = tags.stream()
+                            .map(Tag::getName)
+                            .filter(Objects::nonNull)
+                            .toList();
+                    // Categories：类目名列表（从粗到细）
+                    List<String> categoryList = categories.stream()
+                            .map(Category::getName)
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toList());
+                    String timestamp = Instant.now().toString();
+                    Item gorseItem = Item.builder()
+                            .itemId(productIdSave.toString())
+                            .isHidden(Boolean.FALSE) // 根据业务逻辑可动态设置
+                            .labels(labelList)      // 注意：Item.labels 是 Object，但传 List<String>
+                            .categories(categoryList)
+                            .timestamp(timestamp)
+                            .comment(comment)
+                            .build();
+                    Mono<RowAffected> saveMono = gorseClient.saveItem(gorseItem);
+                    Mono<ResultT<List<String>>> embedMono =
+                            aiChatClientRecommendServiceApi.embeddingProduct(
+                                    List.of(productForEmbeddingApVO)
+                            );
+                    return Mono.zip(saveMono, embedMono)
+                            .thenReturn(productIdSave)
+                            .onErrorResume(ex -> {
+                                log.warn("保存 Gorse 商品失败，但继续主流程", ex);
+                                return Mono.just(productIdSave);
                             });
                 });
     }

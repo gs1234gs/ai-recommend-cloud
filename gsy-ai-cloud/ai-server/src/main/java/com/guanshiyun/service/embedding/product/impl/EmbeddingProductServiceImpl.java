@@ -3,8 +3,10 @@ package com.guanshiyun.service.embedding.product.impl;
 import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.behaviorenums.GuestEnum;
 import com.guanshiyun.biginteger.MyBigInteger;
+import com.guanshiyun.embedding.ActiveSimilarityThresholdConfiguration;
 import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import com.guanshiyun.goser.GorseClient;
+import com.guanshiyun.repository.embedding.ActiveSimilarityThresholdConfigurationRepository;
 import com.guanshiyun.service.embedding.product.EmbeddingProductService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +49,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
     private final VectorStore vectorStore;// 向量存储服务
     private final MyBigInteger myBigInteger;// BigInteger 工具
     private final GorseClient gorseClient;// Gorse 推荐客户端
+    private final ActiveSimilarityThresholdConfigurationRepository activeSimilarityThresholdConfigurationRepository;
 
     /**
      * 批量保存商品向量
@@ -115,33 +118,34 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
     public Mono<List<BigInteger>> recommendForUser(List<ProductForEmbeddingApVO> recentProducts, int topK) {
         //有行为，优先大模型推荐，解决商品冷启动，新商品需要语义检索推荐
         return Mono.deferContextual(ctx -> {
-            boolean hasKey =
-                    ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
-            // ================== 游客处理 ==================
-            if (!hasKey) {
-                return gorseClient(GuestEnum.GUEST_USER_ID.getValue(), topK);
-            }
-            BigInteger userId = myBigInteger.bigIntegerOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+                    boolean hasKey =
+                            ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+                    // ================== 游客处理 ==================
+                    if (!hasKey) {
+                        return gorseClient(GuestEnum.GUEST_USER_ID.getValue(), topK);
+                    }
+                    BigInteger userId = myBigInteger.bigIntegerOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
 
-            // ================== 无行为：直接走 Gorse ==================
-            if (Objects.isNull(recentProducts) || recentProducts.isEmpty()) {
-                return gorseClient(userId.toString(), topK);
-            }
-            // ===== 构造融合 Query（例如：拼接最近商品的语义文本）=====
-            String fusedQuery = recentProducts.stream()
-                    .limit(3) // 取最近 3 个避免过长
-                    .map(ProductForEmbeddingApVO::recommendEmbeddingText)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.joining(" "));
-            if (fusedQuery.isBlank()) {
-                return gorseClient(userId.toString(), topK);
-            }
-            SearchRequest request = SearchRequest.builder()
-                    .query(fusedQuery)
-                    .topK(topK) // 多取一点，留去重空间
-                    .build();
-            // ================== 根据历史商品向量推荐 ==================
+                    // ================== 无行为：直接走 Gorse ==================
+                    if (Objects.isNull(recentProducts) || recentProducts.isEmpty()) {
+                        return gorseClient(userId.toString(), topK);
+                    }
+                    // ===== 构造融合 Query（例如：拼接最近商品的语义文本）=====
+                    String fusedQuery = recentProducts.stream()
+                            .limit(3) // 取最近 3 个避免过长
+                            .map(ProductForEmbeddingApVO::recommendEmbeddingText)
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.joining(" "));
+                    if (fusedQuery.isBlank()) {
+                        return gorseClient(userId.toString(), topK);
+                    }
+//            SearchRequest request = SearchRequest.builder()
+//                    .query(fusedQuery)
+//                    .similarityThresholdAll()
+//                    .topK(topK) // 多取一点，留去重空间
+//                    .build();
+                    // ================== 根据历史商品向量推荐 ==================
 //            return Flux.fromIterable(recentProducts)
 //                    .flatMap(product -> {
 //                        String query = product.recommendEmbeddingText();
@@ -155,61 +159,125 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
 //                                .subscribeOn(Schedulers.boundedElastic())   // 阻塞调用异步化
 //                                .flatMapMany(Flux::fromIterable);
 //                    })
-            return Flux.fromIterable(vectorStore.similaritySearch(request))
-                    // ===== 去重：保留最高分 =====
-                    .collectMultimap(Document::getId)
-                    .flatMapMany(idToDocsMap ->
-                            Flux.fromIterable(idToDocsMap.entrySet())
-                                    .map(entry ->
-                                            entry.getValue()
-                                                    .stream()
-                                                    .max(Comparator.comparing(Document::getScore,
-                                                                    Comparator.nullsLast(Comparator.naturalOrder())
-                                                            )
-                                                    )
-                                                    .orElseThrow()
-                                    )
-                    )
-                    // ===== 按 score 降序 =====
-                    .sort((d1, d2) -> {
-                        Double s1 = d1.getScore();
-                        Double s2 = d2.getScore();
-                        return Objects.isNull(s1) &&
-                                Objects.isNull(s2) ?
-                                ConstNumber.INT_ZERO : (Objects.isNull(s1) ?
-                                ConstNumber.INT_ONE : Objects.isNull(s2) ?
-                                ConstNumber.INT_MINUS_ONE : s2.compareTo(s1)
-                        );
-//                    if (Objects.isNull(s1) && Objects.isNull(s2)) return ConstNumber.INT_ZERO;
-//                    if (Objects.isNull(s1)) return ConstNumber.INT_ONE;   // null 放后面
-//                    if (Objects.isNull(s2)) return ConstNumber.INT_MINUS_ONE;  // null 放后面
-//                    return s2.compareTo(s1);    // 降序：s2 > s1 → 负数？不，compareTo 是 s2 - s1
-                    })
-                    .take(topK)    // 最终返回 topK
-                    .map(document -> myBigInteger.bigInteger(
-                            document.getMetadata().get(ProductForEmbeddingApVO.Fields.id))
-                    )
-                    .collectList()
-                    .flatMap(productIdList -> {
-                        // 如果返回不足 topK，调用 Gorse 补充推荐
-                        if (productIdList.size() == topK) {
-                            return Mono.just(productIdList);
-                        }
-                        //1.有推荐，但是没有返回topK
-                        if (!productIdList.isEmpty() && productIdList.size() < topK) {
-                            return gorseClient.getRecommend(userId.toString(), topK - productIdList.size())
-                                    .map(productIds -> {
-                                        ArrayList<BigInteger> cloneProductIdList = new ArrayList<>(productIdList);
-                                        productIds.forEach(productId ->
-                                                cloneProductIdList.add(myBigInteger.bigInteger(productId))
-                                        );
-                                        return cloneProductIdList;
-                                    });
-                        }
-                        // 新用户冷启动
-                        return gorseClient(userId.toString(), topK);
-                    });
-        });
+                    return activeSimilarityThresholdConfigurationRepository
+                            .findById(BigInteger.ONE)
+                            .map(ActiveSimilarityThresholdConfiguration::getSimilarityThreshold)
+                            .defaultIfEmpty(0.0)
+                            .flatMap(threshold -> {
+                                SearchRequest request = SearchRequest.builder()
+                                        .query(fusedQuery)
+                                        .similarityThreshold(threshold)
+                                        .topK(topK) // 多取一点，留去重空间
+                                        .build();
+                                return Flux.fromIterable(vectorStore.similaritySearch(request))
+                                        // ===== 去重：保留最高分 =====
+                                        .collectMultimap(Document::getId)
+                                        .flatMapMany(idToDocsMap ->
+                                                Flux.fromIterable(idToDocsMap.entrySet())
+                                                        .map(entry ->
+                                                                entry.getValue()
+                                                                        .stream()
+                                                                        .max(Comparator.comparing(Document::getScore,
+                                                                                        Comparator.nullsLast(Comparator.naturalOrder())
+                                                                                )
+                                                                        )
+                                                                        .orElseThrow()
+                                                        )
+                                        )
+                                        // ===== 按 score 降序 =====
+                                        .sort((d1, d2) -> {
+                                            Double s1 = d1.getScore();
+                                            Double s2 = d2.getScore();
+                                            return Objects.isNull(s1) &&
+                                                    Objects.isNull(s2) ?
+                                                    ConstNumber.INT_ZERO : (Objects.isNull(s1) ?
+                                                    ConstNumber.INT_ONE : Objects.isNull(s2) ?
+                                                    ConstNumber.INT_MINUS_ONE : s2.compareTo(s1)
+                                            );
+                                        })
+                                        .take(topK)    // 最终返回 topK
+                                        .map(document -> myBigInteger.bigInteger(
+                                                document.getMetadata().get(ProductForEmbeddingApVO.Fields.id))
+                                        )
+                                        .collectList()
+                                        .flatMap(productIdList -> {
+                                            // 如果返回不足 topK，调用 Gorse 补充推荐
+                                            if (productIdList.size() == topK) {
+                                                return Mono.just(productIdList);
+                                            }
+                                            //1.有推荐，但是没有返回topK
+                                            if (!productIdList.isEmpty() && productIdList.size() < topK) {
+                                                return gorseClient.getRecommend(userId.toString(), topK - productIdList.size())
+                                                        .map(productIds -> {
+                                                            ArrayList<BigInteger> cloneProductIdList = new ArrayList<>(productIdList);
+                                                            productIds.forEach(productId ->
+                                                                    cloneProductIdList.add(myBigInteger.bigInteger(productId))
+                                                            );
+                                                            return cloneProductIdList;
+                                                        });
+                                            }
+                                            // 新用户冷启动
+                                            return gorseClient(userId.toString(), topK);
+                                        });
+                            })
+                            .defaultIfEmpty(Collections.emptyList());
+
+//            return Flux.fromIterable(vectorStore.similaritySearch(request))
+//                    // ===== 去重：保留最高分 =====
+//                    .collectMultimap(Document::getId)
+//                    .flatMapMany(idToDocsMap ->
+//                            Flux.fromIterable(idToDocsMap.entrySet())
+//                                    .map(entry ->
+//                                            entry.getValue()
+//                                                    .stream()
+//                                                    .max(Comparator.comparing(Document::getScore,
+//                                                                    Comparator.nullsLast(Comparator.naturalOrder())
+//                                                            )
+//                                                    )
+//                                                    .orElseThrow()
+//                                    )
+//                    )
+//                    // ===== 按 score 降序 =====
+//                    .sort((d1, d2) -> {
+//                        Double s1 = d1.getScore();
+//                        Double s2 = d2.getScore();
+//                        return Objects.isNull(s1) &&
+//                                Objects.isNull(s2) ?
+//                                ConstNumber.INT_ZERO : (Objects.isNull(s1) ?
+//                                ConstNumber.INT_ONE : Objects.isNull(s2) ?
+//                                ConstNumber.INT_MINUS_ONE : s2.compareTo(s1)
+//                        );
+////                    if (Objects.isNull(s1) && Objects.isNull(s2)) return ConstNumber.INT_ZERO;
+////                    if (Objects.isNull(s1)) return ConstNumber.INT_ONE;   // null 放后面
+////                    if (Objects.isNull(s2)) return ConstNumber.INT_MINUS_ONE;  // null 放后面
+////                    return s2.compareTo(s1);    // 降序：s2 > s1 → 负数？不，compareTo 是 s2 - s1
+//                    })
+//                    .take(topK)    // 最终返回 topK
+//                    .map(document -> myBigInteger.bigInteger(
+//                            document.getMetadata().get(ProductForEmbeddingApVO.Fields.id))
+//                    )
+//                    .collectList()
+//                    .flatMap(productIdList -> {
+//                        // 如果返回不足 topK，调用 Gorse 补充推荐
+//                        if (productIdList.size() == topK) {
+//                            return Mono.just(productIdList);
+//                        }
+//                        //1.有推荐，但是没有返回topK
+//                        if (!productIdList.isEmpty() && productIdList.size() < topK) {
+//                            return gorseClient.getRecommend(userId.toString(), topK - productIdList.size())
+//                                    .map(productIds -> {
+//                                        ArrayList<BigInteger> cloneProductIdList = new ArrayList<>(productIdList);
+//                                        productIds.forEach(productId ->
+//                                                cloneProductIdList.add(myBigInteger.bigInteger(productId))
+//                                        );
+//                                        return cloneProductIdList;
+//                                    });
+//                        }
+//                        // 新用户冷启动
+//                        return gorseClient(userId.toString(), topK);
+//                    });
+                }
+        );
     }
 
     /**
@@ -242,21 +310,42 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
 
     @Override
     public Mono<List<BigInteger>> searchByKeyword(String keyword, int topK) {
-        SearchRequest request = SearchRequest.builder()
-                .query(keyword)
-                .topK(topK)
-                .build();
-        return Flux.fromIterable(vectorStore.similaritySearch(request))
-                .map(document -> myBigInteger.bigInteger(document.getMetadata().get(ProductForEmbeddingApVO.Fields.id)))
-                .collectList();
+                    SearchRequest request = SearchRequest.builder()
+                            .similarityThreshold(0.3)
+                            .query(keyword)
+                            .topK(topK)
+                            .build();
+                    return Flux.fromIterable(vectorStore.similaritySearch(request))
+                            .map(document ->
+                                    myBigInteger
+                                            .bigInteger(document
+                                                    .getMetadata()
+                                                    .get(ProductForEmbeddingApVO
+                                                            .Fields.id)
+                                            ))
+                            .collectList()
+                            .map(list->{
+                                log.info("searchByKeyword {}: {}",keyword, list);
+                                return list;
+                            })
+                            .defaultIfEmpty(Collections.emptyList());
+//        SearchRequest request = SearchRequest.builder()
+//                .query(keyword)
+//                .topK(topK)
+//                .build();
+//        return Flux.fromIterable(vectorStore.similaritySearch(request))
+//                .map(document -> myBigInteger.bigInteger(document.getMetadata().get(ProductForEmbeddingApVO.Fields.id)))
+//                .collectList();
 
 
     }
+
 
     @Override
     public List<BigInteger> searchKeyword(String keyword, int topK) {
         SearchRequest request = SearchRequest.builder()
                 .query(keyword)
+                .similarityThreshold(0.4)
                 .topK(topK)
                 .build();
         return vectorStore.similaritySearch(request)
@@ -266,6 +355,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
 
 
     }
+
     private String generateVectorId(BigInteger productId) {
         return UUID.nameUUIDFromBytes(productId.toString().getBytes(StandardCharsets.UTF_8)).toString();
     }

@@ -29,6 +29,6 @@ public class ActiveSimilarityThresholdConfiguration extends BasePojo implements 
     @Id
     private BigInteger id;
     //阈值
-    private BigInteger threshold;
+    private Double similarityThreshold;
 
 }

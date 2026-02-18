@@ -1,6 +1,5 @@
 package com.guanshiyun.service.product.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.db.dbnumber.ConstNumber;
 import com.db.page.CursorPageUtil;
 import com.db.query.SafeCriteria;
@@ -42,6 +41,7 @@ import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.data.relational.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -49,6 +49,7 @@ import reactor.core.scheduler.Schedulers;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
@@ -121,7 +122,12 @@ public class RecommendProductServiceImpl implements RecommendProductService {
             // 优先使用 AI 推荐的商品 ID 列表
             return aiChatClientRecommendServiceApi
                     .searchByKeyword(searchContent.trim(), 20) // 获取最多 20 个候选 ID
-                    .map(ResultT::getData)
+                    .map(result->{
+                                List<BigInteger> data = result.getData();
+                                log.info("AI 搜索服务返回结果：{}", result);
+                                return data;
+                            }
+                          )
                     .filter(Objects::nonNull)
                     .flatMapMany(Flux::fromIterable)
                     .filter(Objects::nonNull)
@@ -194,11 +200,12 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                         .brand(p.getBrand())
                         .level(p.getLevel())
                         .placeOfOrigin(p.getPlaceOfOrigin())
-                        .minPrice(p.getMinPrice())
-                        .maxPrice(p.getMaxPrice())
-                        .originalPrice(p.getMinPrice())
+                        .minPrice(p.getMinPrice().setScale(2, RoundingMode.HALF_UP))
+                        .maxPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
+                        .originalPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
                         .discountPrice(Optional.ofNullable(p.getMinPrice())
-                                .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                .map(price -> price.multiply(new BigDecimal("0.7")))
+                                .map(price -> price.setScale(2, RoundingMode.HALF_UP))
                                 .orElse(BigDecimal.ZERO))
                         .build())
                 .collectList()
@@ -280,11 +287,12 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                         .brand(p.getBrand())
                         .level(p.getLevel())
                         .placeOfOrigin(p.getPlaceOfOrigin())
-                        .minPrice(p.getMinPrice())
-                        .maxPrice(p.getMaxPrice())
-                        .originalPrice(p.getMinPrice())
+                        .minPrice(p.getMinPrice().setScale(2, RoundingMode.HALF_UP))
+                        .maxPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
+                        .originalPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
                         .discountPrice(Optional.ofNullable(p.getMinPrice())
-                                .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                .map(price -> price.multiply(new BigDecimal("0.7")))
+                                .map(price -> price.setScale(2, RoundingMode.HALF_UP))
                                 .orElse(BigDecimal.ZERO))
                         .build())
                 .collectList()
@@ -299,7 +307,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
 
                     boolean hasNext = ordered.size() > pageSize;
                     List<ProductCustomerVO> rows = hasNext ? ordered.subList(0, pageSize) : ordered;
-                    BigInteger cursor = rows.isEmpty() ? BigInteger.ZERO : rows.get(rows.size() - 1).getId();
+                    BigInteger cursor = rows.isEmpty() ? BigInteger.ZERO : rows.getLast().getId();
                     return CursorPageResult.<List<ProductCustomerVO>>builder()
                             .rows(rows)
                             .cursor(cursor)
@@ -518,12 +526,13 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                                             .name(p.getName())
                                                             .level(p.getLevel())
                                                             .placeOfOrigin(p.getPlaceOfOrigin())
-                                                            .minPrice(p.getMinPrice())
-                                                            .maxPrice(p.getMaxPrice())
-                                                            .originalPrice(p.getMinPrice())
+                                                            .minPrice(p.getMinPrice().setScale(2, RoundingMode.HALF_UP))
+                                                            .maxPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
+                                                            .originalPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
                                                             .discountPrice(
                                                                     Optional.ofNullable(p.getMinPrice())
-                                                                            .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                                                            .map(price -> price.multiply(new BigDecimal("0.7")))
+                                                                            .map(price -> price.setScale(2, RoundingMode.HALF_UP))
                                                                             .orElse(BigDecimal.ZERO)
                                                             )
                                                             .placeOfOrigin(p.getPlaceOfOrigin())
@@ -544,12 +553,13 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                                                 .name(p.getName())
                                                                 .level(p.getLevel())
                                                                 .placeOfOrigin(p.getPlaceOfOrigin())
-                                                                .minPrice(p.getMinPrice())
-                                                                .maxPrice(p.getMaxPrice())
-                                                                .originalPrice(p.getMinPrice())
+                                                                .minPrice(p.getMinPrice().setScale(2, RoundingMode.HALF_UP))
+                                                                .maxPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
+                                                                .originalPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
                                                                 .discountPrice(
                                                                         Optional.ofNullable(p.getMinPrice())
-                                                                                .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                                                                .map(price -> price.multiply(new BigDecimal("0.7")))
+                                                                                .map(price -> price.setScale(2, RoundingMode.HALF_UP))
                                                                                 .orElse(BigDecimal.ZERO)
                                                                 )
                                                                 .placeOfOrigin(p.getPlaceOfOrigin())
@@ -609,12 +619,13 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                                     .name(p.getName())
                                                     .level(p.getLevel())
                                                     .placeOfOrigin(p.getPlaceOfOrigin())
-                                                    .minPrice(p.getMinPrice())
-                                                    .maxPrice(p.getMaxPrice())
-                                                    .originalPrice(p.getMinPrice())
+                                                    .minPrice(p.getMinPrice().setScale(2, RoundingMode.HALF_UP))
+                                                    .maxPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
+                                                    .originalPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
                                                     .discountPrice(
                                                             Optional.ofNullable(p.getMinPrice())
-                                                                    .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                                                    .map(price -> price.multiply(new BigDecimal("0.7")))
+                                                                    .map(price -> price.setScale(2, RoundingMode.HALF_UP))
                                                                     .orElse(BigDecimal.ZERO)
                                                     )
                                                     .build()
@@ -635,11 +646,12 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                                 .name(p.getName())
                                                 .level(p.getLevel())
                                                 .placeOfOrigin(p.getPlaceOfOrigin())
-                                                .minPrice(p.getMinPrice())
-                                                .maxPrice(p.getMaxPrice())
-                                                .originalPrice(p.getMinPrice())
+                                                .minPrice(p.getMinPrice().setScale(2, RoundingMode.HALF_UP))
+                                                .maxPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
+                                                .originalPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
                                                 .discountPrice(Optional.ofNullable(p.getMinPrice())
-                                                        .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                                        .map(price -> price.multiply(new BigDecimal("0.7")))
+                                                        .map(price -> price.setScale(2, RoundingMode.HALF_UP))
                                                         .orElse(BigDecimal.ZERO))
                                                 .placeOfOrigin(p.getPlaceOfOrigin())
                                                 .build()
@@ -659,12 +671,13 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                                         .name(p.getName())
                                                         .level(p.getLevel())
                                                         .placeOfOrigin(p.getPlaceOfOrigin())
-                                                        .minPrice(p.getMinPrice())
-                                                        .maxPrice(p.getMaxPrice())
-                                                        .originalPrice(p.getMinPrice())
+                                                        .minPrice(p.getMinPrice().setScale(2, RoundingMode.HALF_UP))
+                                                        .maxPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
+                                                        .originalPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
                                                         .discountPrice(
                                                                 Optional.ofNullable(p.getMinPrice())
-                                                                        .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                                                        .map(price -> price.multiply(new BigDecimal("0.7")))
+                                                                        .map(price -> price.setScale(2, RoundingMode.HALF_UP))
                                                                         .orElse(BigDecimal.ZERO)
                                                         )
                                                         .placeOfOrigin(p.getPlaceOfOrigin())
@@ -706,18 +719,19 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                             .id(product.getId())
                                             .level(product.getLevel())
                                             .name(product.getName())
-                                            .maxPrice(product.getMaxPrice())
-                                            .minPrice(product.getMinPrice())
+                                            .maxPrice(product.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
+                                            .minPrice(product.getMinPrice().setScale(2, RoundingMode.HALF_UP))
                                             .offlineTime(product.getOfflineTime())
                                             .placeOfOrigin(product.getPlaceOfOrigin())
                                             .publishTime(product.getPublishTime())
                                             .brand(product.getBrand())
                                             .status(product.getStatus())
                                             .tagList(tagList)
-                                            .originalPrice(product.getMinPrice())
+                                            .originalPrice(product.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
                                             .discountPrice(
                                                     Optional.ofNullable(product.getMinPrice())
-                                                            .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
+                                                            .map(price -> price.multiply(new BigDecimal("0.7")))
+                                                            .map(price -> price.setScale(2, RoundingMode.HALF_UP))
                                                             .orElse(BigDecimal.ZERO)
                                             )
                                             .skuList(BeanConvertUtil.toBeanList(skuList, SKUVO.class))
@@ -751,14 +765,43 @@ public class RecommendProductServiceImpl implements RecommendProductService {
 
     @Override
     public Mono<List<ProductCustomerVO>> findByIds(List<BigInteger> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
+            return Mono.just(Collections.emptyList());
+        }
+
         return productRepository.findAllById(ids)
-                .mapNotNull(item -> BeanUtil.toBean(item, ProductCustomerVO.class)
-                        .setOriginalPrice(item.getMinPrice())
-                        .setDiscountPrice(
-                                Optional.ofNullable(item.getMinPrice())
-                                        .map(price -> price.multiply(BigDecimal.valueOf(0.7)))
-                                        .orElse(BigDecimal.ZERO)
-                        ))
+                .map(item -> {
+                    // 安全获取 minPrice/maxPrice
+                    BigDecimal minPrice = Optional.ofNullable(item.getMinPrice())
+                            .orElse(BigDecimal.ZERO);
+                    BigDecimal maxPrice = Optional.ofNullable(item.getMaxPrice())
+                            .orElse(BigDecimal.ZERO);
+
+                    // 统一精度：2位小数，四舍五入
+                    minPrice = minPrice.setScale(2, RoundingMode.HALF_UP);
+                    maxPrice = maxPrice.setScale(2, RoundingMode.HALF_UP);
+
+                    // 计算折扣价（7折）
+                    BigDecimal discountPrice = minPrice.multiply(BigDecimal.valueOf(0.7))
+                            .setScale(2, RoundingMode.HALF_UP);
+
+                    return ProductCustomerVO.builder()
+                            .id(item.getId())
+                            .name(item.getName())
+                            .image(item.getImage())
+                            .video(item.getVideo())
+                            .status(item.getStatus())
+                            .description(item.getDescription())
+                            .publishTime(item.getPublishTime())
+                            .brand(item.getBrand())
+                            .level(item.getLevel())
+                            .placeOfOrigin(item.getPlaceOfOrigin())
+                            .minPrice(minPrice)
+                            .maxPrice(maxPrice)
+                            .originalPrice(maxPrice)           // 原价 = maxPrice（与传统查询一致）
+                            .discountPrice(discountPrice)
+                            .build();
+                })
                 .collectList();
     }
 }

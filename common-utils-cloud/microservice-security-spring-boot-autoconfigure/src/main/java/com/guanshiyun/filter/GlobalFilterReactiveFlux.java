@@ -50,6 +50,7 @@ public class GlobalFilterReactiveFlux implements WebFilter {
         HttpHeaders headers = exchange.getRequest().getHeaders();
         String traceId = headers.getFirst(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY);
         String userIdStr = headers.getFirst(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+        log.info("traceId : {} , userId : {}", traceId,userIdStr);
         if (StringUtils.hasText(traceId) || StringUtils.hasText(userIdStr)) {
             log.info("这是特殊请求，放行：{}", path);
             return chain.filter(exchange)

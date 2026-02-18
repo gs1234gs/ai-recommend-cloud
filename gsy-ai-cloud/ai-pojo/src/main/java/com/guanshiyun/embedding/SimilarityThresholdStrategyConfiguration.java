@@ -1,9 +1,13 @@
 package com.guanshiyun.embedding;
 
 import com.guanshiyun.base.BasePojo;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -14,10 +18,10 @@ import java.math.BigInteger;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@SuperBuilder(toBuilder = true)
 @Accessors(chain = true)
-@Table("similarity_threshold_configuration")
 @FieldNameConstants
+@Table("similarity_threshold_strategy_configuration")
 public class SimilarityThresholdStrategyConfiguration extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -25,6 +29,6 @@ public class SimilarityThresholdStrategyConfiguration extends BasePojo implement
     private BigInteger id;                 // 商品ID
 
     //阈值
-    private float similarityThreshold;
+    private Double similarityThreshold;
 
 }

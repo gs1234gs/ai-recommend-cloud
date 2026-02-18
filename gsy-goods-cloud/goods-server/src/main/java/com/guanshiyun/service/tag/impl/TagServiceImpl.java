@@ -46,7 +46,7 @@ public class TagServiceImpl implements TagService {
             BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
             if (Objects.isNull(tag.getId())) {
                 String code = snowflakePermanent.stringNextId();
-                tag.setCode(tagSaveVO.getCode() + code)
+                tag.setCode(code)
                         .setCreator(userId)
                         .setUpdateTime(now);
                 return tagRepository.save(tag)

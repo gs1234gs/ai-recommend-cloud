@@ -75,9 +75,19 @@ public class SKUServiceImpl implements SKUService {
             if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
                 return Mono.error(new RuntimeException("用户未登录"));
             BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+            Integer stockVO = skuVO.getStock();
+            Integer addStockVO = skuVO.getAddStock();
+            int stock = 0;
+            if (stockVO != null) {
+                stock = stockVO;
+            }
+            if (addStockVO != null) {
+                stock += addStockVO;
+            }
             if (Objects.isNull(sku.getId())) {
-                String code = snowflakePermanent.stringNextId() + skuVO.getSkuCode();
+                String code = snowflakePermanent.stringNextId();
                 sku.setSkuCode(code)
+                        .setStock(stock)
                         .setCreator(userId);
                 sku.setCreateTime(LocalDateTime.now());
                 return skuRepository.save(sku)
@@ -114,13 +124,25 @@ public class SKUServiceImpl implements SKUService {
                         });
             }
 
-            sku.setUpdater(userId);
-            sku.setUpdateTime(LocalDateTime.now());
-            return r2dbcUpdateHelper.updateIgnoreNull(
-                            EntityTableNameUtils.getName(SKU.class),
-                            sku,
-                            SKU.Fields.id
-                    )
+            sku.setUpdater(userId)
+                .setUpdateTime(LocalDateTime.now());
+            final int stockFinal = stock;
+            return skuRepository.findById(sku.getId())
+                            .flatMap(skuUpdate -> {
+                                Integer skuStock = skuUpdate.getStock();
+
+                                if(Objects.nonNull(skuStock)){
+                                    sku.setStock(skuStock + stockFinal);
+                                }
+                                else {
+                                    sku.setStock(stockFinal);
+                                }
+                                return   r2dbcUpdateHelper.updateIgnoreNull(
+                                        EntityTableNameUtils.getName(SKU.class),
+                                        sku,
+                                        SKU.Fields.id
+                                );
+                            })
                     .flatMap(skuId -> skuRepository.findAllByProductId(sku.getProductId()).collectList())
                     .flatMap(skuList -> {
                         //获取最低价
@@ -164,6 +186,7 @@ public class SKUServiceImpl implements SKUService {
                 );
     }
 
+    //
     @Override
     public Mono<PageResultT<List<SKUGroupByProductIdVO>>> findAllByPage(
             RequestPage<SKUFindVO> requestPage) {
@@ -205,7 +228,7 @@ public class SKUServiceImpl implements SKUService {
         return Mono.zip(productIdPageMono, totalMono)
                 .flatMap(tuple -> {
                     List<BigInteger> productIds = tuple.getT1();
-                    Long total = tuple.getT2();
+                    long total = tuple.getT2();
 
                     if (productIds.isEmpty()) {
                         return Mono.just(PageResultT.<List<SKUGroupByProductIdVO>>builder()
@@ -273,6 +296,17 @@ public class SKUServiceImpl implements SKUService {
                     return Mono.empty();
                 });
     }
+
+//    @Override
+//    public Mono<PageResultT<List<Map<BigInteger, SKUVO>>>> findAllPage(RequestPage<ProductSearchVO> requestPage) {
+//        BigInteger pageNum = PageUtils.pageNum(requestPage.getPageNum());
+//        Integer pageSize = PageUtils.pageSize(requestPage.getPageSize());
+//        ProductSearchVO condition = requestPage.getCondition();
+//        if (condition == null) {
+//            condition = ProductSearchVO.builder().build();
+//        }
+//        return utilsService.findProductPage(pageNum, pageSize, condition);
+//    }
 
     @Override
     public Flux<SKUVO> findByProductId(BigInteger productId) {

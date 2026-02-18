@@ -35,6 +35,8 @@ public class ProductForEmbeddingApVO implements Serializable {
     private List<SkuItem> skuList;   // SKU 信息（不进 embedding）// 当前价格（不进 embedding）
     //权重分数
     private double score;
+    // 顶级分类
+    private String topLevelCategory;
 
     // ================== 推荐系统核心方法 ==================
 
@@ -45,8 +47,12 @@ public class ProductForEmbeddingApVO implements Serializable {
     public String recommendEmbeddingText() {
         StringBuilder sb = new StringBuilder();
 
-        if (title != null) sb.append(title).append(" ");
-        if (brand != null) sb.append(brand).append(" ");
+        if (title != null) {
+            sb.append(title).append(" ");
+        }
+        if (brand != null) {
+            sb.append(brand).append(" ");
+        }
 
         if (categoryNames != null && !categoryNames.isEmpty()) {
             sb.append(String.join(" ", categoryNames)).append(" ");
@@ -71,6 +77,7 @@ public class ProductForEmbeddingApVO implements Serializable {
         putIfNotNull(metadata, Fields.tagNames, tagNames);
         putIfNotNull(metadata, Fields.skuList, skuList);
         putIfNotNull(metadata, Fields.score, score);
+        putIfNotNull(metadata, Fields.topLevelCategory, topLevelCategory);
         return metadata;
     }
     private void putIfNotNull(Map<String, Object> map, String key, Object value) {

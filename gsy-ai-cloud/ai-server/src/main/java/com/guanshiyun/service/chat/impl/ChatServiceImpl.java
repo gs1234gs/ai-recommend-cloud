@@ -15,13 +15,16 @@ import com.guanshiyun.repositorymongodb.chat.ChatRecordContentMongodbRepository;
 import com.guanshiyun.req.AllReqChat;
 import com.guanshiyun.req.ReqChat;
 import com.guanshiyun.service.chat.ChatService;
+import com.guanshiyun.service.chat.impl.utils.JsonUtils;
 import com.guanshiyun.snowflake.SnowflakePermanent;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.messages.AssistantMessage;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
+import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -32,22 +35,21 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+import reactor.util.context.ContextView;
 import reactor.util.function.Tuple2;
-import reactor.util.function.Tuple3;
 import reactor.util.function.Tuples;
 
 import java.math.BigInteger;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
  * ChatServiceImpl
- *
+ * <p>
  * 类功能：
  * - 提供聊天接口服务，支持一次性返回和流式返回聊天结果
  * - 自动创建会话（第一次聊天）并保存聊天记录到 MySQL 与 MongoDB
@@ -69,15 +71,14 @@ public class ChatServiceImpl implements ChatService {
     private final ReactiveMongoTemplate reactiveMongoTemplate;
 
 
-
     private static final String SHORT_ANSWER_SYSTEM_PROMPT = """
-你是一个高效的智能助手。
-回答要求：
-1. 内容简洁，直给结论
-2. 不要长篇解释
-3. 优先使用要点或短句
-4. 除非用户明确要求，否则不展开说明
-""";
+            你是一个高效的智能助手。
+            回答要求：
+            1. 内容简洁，直给结论
+            2. 不要长篇解释
+            3. 优先使用要点或短句
+            4. 除非用户明确要求，否则不展开说明
+            """;
 
     /**
      * 一次性返回完整聊天记录
@@ -224,7 +225,7 @@ public class ChatServiceImpl implements ChatService {
      * @return Flux<String> AI 回复内容流
      */
     @Override
-    public Mono<Tuple2<Flux<String>, BigInteger>>  chatFlux(ReqChat reqChat) {
+    public Mono<Tuple2<Flux<String>, BigInteger>> chatFlux(ReqChat reqChat) {
         //如果id为null,就为第一次对话，检索关键词作为标题
         //创建对象，保存记录
         ChatRecord chatRecord = ChatRecord.builder().build();
@@ -247,7 +248,7 @@ public class ChatServiceImpl implements ChatService {
              * */
             return Mono.deferContextual(ctx -> {
                 //没有登陆，允许对话，但是不保存记录
-                if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
+                if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                     // 未登录：不保存，但返回流 + newConvId
                     Flux<String> stream = chatClient.prompt()
                             .system(SHORT_ANSWER_SYSTEM_PROMPT)
@@ -278,7 +279,7 @@ public class ChatServiceImpl implements ChatService {
                                 {
                                     StringBuffer sb = new StringBuffer();
                                     //  调用 LLM 流式生成
-                                    Flux<String> stream  = chatClient.prompt()
+                                    Flux<String> stream = chatClient.prompt()
                                             .system(SHORT_ANSWER_SYSTEM_PROMPT)
                                             .user(content)
                                             .stream()
@@ -358,7 +359,7 @@ public class ChatServiceImpl implements ChatService {
                                                     chatRecord,
                                                     ChatRecord.Fields.id)
                                             .then(Mono.defer(() ->
-                                                    //加入历史对话
+                                                            //加入历史对话
                                                     {
                                                         StringBuffer sb = new StringBuffer();
                                                         // 流式调用 LLM
@@ -400,6 +401,7 @@ public class ChatServiceImpl implements ChatService {
                     });
         });
     }
+
     /**
      * 删除会话记录
      *
@@ -416,163 +418,107 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public Mono<Tuple3<Flux<String>, List<BigInteger>, BigInteger>> chatFluxRecommend(ReqChat reqChat) {
-        BigInteger conversationId = reqChat.getConversationId();
-        String content = reqChat.getContent();
+    public Mono<Tuple2<Flux<String>, BigInteger>> chatFluxRecommend(ReqChat reqChat) {
+        return Mono.deferContextual(ctx -> {
+            BigInteger conversationId = reqChat.getConversationId();
+            String userInput = reqChat.getContent();
+            BigInteger chatId = conversationId != null ? conversationId : snowflakePermanent.nextId();
+            StringBuilder collectedText = new StringBuilder();
 
+            return buildPrompt(conversationId, userInput)
+                    .map(prompt -> {
+
+                        Flux<String> stream = chatClient.prompt(prompt)
+                                .stream()
+                                .chatResponse()
+                                .<String>handle((chatResponse, sink) -> {
+                                    Generation gen = chatResponse.getResult();
+
+                                    AssistantMessage msg = gen.getOutput();
+
+                                    // 文本流
+                                    String text = msg.getText();
+                                    if (text != null && !text.isBlank()) {
+                                        collectedText.append(text);
+                                        sink.next(text); // String
+                                    }
+
+                                    // 工具商品 JSON
+                                    if (msg.hasToolCalls()) {
+                                        for (AssistantMessage.ToolCall toolCall : msg.getToolCalls()) {
+                                            if ("searchProduct".equals(toolCall.name())) {
+                                                try {
+                                                    Map<String, Object> args = JsonUtils.parseMap(toolCall.arguments());
+                                                    Object productsObj = args.get("toolProductList");
+                                                    if (productsObj instanceof List<?> products) {
+                                                        for (Object product : products) {
+                                                            Map<String, Object> wrapper = Map.of("product", product);
+                                                            String json = JsonUtils.toJson(wrapper);
+                                                            sink.next(Objects.requireNonNull(json)); // String
+                                                        }
+                                                    }
+                                                } catch (Exception e) {
+                                                    log.warn("Parse tool product failed", e);
+                                                }
+                                            }
+                                        }
+                                    }
+                                })
+                                .publishOn(Schedulers.boundedElastic())
+                                .doFinally(signal ->
+                                        saveChatRecord(chatId, userInput, collectedText.toString(), ctx).subscribe());
+
+
+
+                        return Tuples.of(stream, chatId);
+                    });
+        });
+    }
+
+
+    private Mono<String> buildPrompt(BigInteger conversationId, String userInput) {
+        String baseTemplate = JsonUtils.PROMPT_TEMPLATE;
         if (Objects.isNull(conversationId)) {
-            // === 首次对话 ===
-            String title = SmartTitleExtractor.extractFromSingle(content);
-            BigInteger chatId = snowflakePermanent.nextId();
-            ChatRecord chatRecord = ChatRecord.builder()
-                    .id(chatId)
-                    .title(title)
-                    .createTime(LocalDateTime.now())
-                    .build();
-
-            return Mono.deferContextual(ctx -> {
-                if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
-                    // 未登录
-                    AtomicReference<List<BigInteger>> productsRef = new AtomicReference<>(List.of());
-
-                    Flux<String> stream = chatClient.prompt(content).stream().content()
-                            .doOnComplete(() -> {
-
-                                productsRef.set(List.of());
-                            });
-
-                    return Mono.just(Tuples.of(stream, productsRef.get(), chatId));
-                }
-
-                // 已登录
-                BigInteger userId = myBigInteger.bigInteger(
-                        ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
-                );
-                chatRecord.setCreator(userId);
-
-                return databaseClient.sql(
-                                "INSERT INTO chat_record(id,title,creator,updater,create_time,update_time) " +
-                                        "VALUES(:id,:title,:creator,:updater,:createTime,:updateTime)"
-                        )
-                        .bind(ChatRecord.Fields.id, chatRecord.getId())
-                        .bind(ChatRecord.Fields.title, chatRecord.getTitle())
-                        .bind(ChatRecord.Fields.creator, chatRecord.getCreator())
-                        .bindNull(ChatRecord.Fields.updater, BigInteger.class)
-                        .bind(ChatRecord.Fields.createTime, chatRecord.getCreateTime())
-                        .bindNull(ChatRecord.Fields.updateTime, LocalDateTime.class)
-                        .fetch()
-                        .rowsUpdated()
-                        .then(Mono.defer(() -> {
-
-                            StringBuilder sb = new StringBuilder();
-                            AtomicReference<List<BigInteger>> productsRef = new AtomicReference<>(List.of());
-
-                            Flux<String> stream = chatClient.prompt(content).stream().content()
-                                    .doOnNext(sb::append)
-                                    .doOnComplete(() -> {
-                                        // 保存聊天记录
-                                        ChatRecordContent record = ChatRecordContent.builder()
-                                                .id(chatId)
-                                                .creator(userId)
-                                                .contentTexts(List.of(
-                                                        ContentText.builder()
-                                                                .id(snowflakePermanent.nextId())
-                                                                .receiverContent(content)
-                                                                .senderContent(sb.toString())
-                                                                .build()
-                                                ))
-                                                .delFlag((short) 0)
-                                                .createTime(LocalDateTime.now())
-                                                .senderId(userId)
-                                                .receiverId(BigInteger.ONE)
-                                                .updateTime(LocalDateTime.now())
-                                                .build();
-
-                                        chatRecordContentMongodbRepository.save(record)
-                                                .subscribe(
-                                                        success -> log.debug("Saved new chat: {}", chatId),
-                                                        error -> log.error("Save failed", error)
-                                                );
-
-                                        productsRef.set(List.of());
-                                    });
-
-                            return Mono.just(Tuples.of(stream, productsRef.get(), chatId));
-                        }));
-            });
+            return Mono.just(baseTemplate + "\n\n用户最新消息: " + userInput);
         }
 
-        // === 非首次对话 ===
-        return Mono.deferContextual(ctx -> {
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
-                return chatFluxRecommend(ReqChat.builder().content(content).build());
-            }
+        return chatRecordContentMongodbRepository.findById(conversationId)
+                .map(history -> {
+                    String chatHistory = FormatChatHistory.formatChatHistory(history.getContentTexts());
+                    // 历史内容 + 模板 + 用户最新输入
+                    return FormatChatHistory.CHAT_HISTORY.formatted(chatHistory, chatHistory)
+                            + "\n" + baseTemplate
+                            + "\n\n用户最新消息: " + userInput;
+                })
+                .switchIfEmpty(Mono.just(baseTemplate + "\n\n用户最新消息: " + userInput));
+    }
+    private Mono<Void> saveChatRecord(BigInteger chatId,
+                                      String userContent,
+                                      String aiContent,
+                                      ContextView ctx) {
 
-            BigInteger userId = myBigInteger.bigInteger(
-                    ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
-            );
+        if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+            return Mono.empty();
+        }
 
-            return chatRecordRepository.findById(conversationId)
-                    .switchIfEmpty(
-                            Mono.delay(Duration.ofSeconds(ConstNumber.INT_ONE))
-                                    .then(chatRecordRepository.findById(conversationId))
-                                    .switchIfEmpty(Mono.error(new IllegalArgumentException("会话不存在")))
-                    )
-                    .flatMap(chat -> chatRecordContentMongodbRepository.findById(conversationId)
-                            .switchIfEmpty(
-                                    Mono.delay(Duration.ofSeconds(ConstNumber.INT_ONE))
-                                            .then(chatRecordContentMongodbRepository.findById(conversationId))
-                                            .switchIfEmpty(Mono.error(new IllegalArgumentException("历史记录不存在")))
-                            )
-                            .flatMap(history -> {
-                                String chatHistory = FormatChatHistory.formatChatHistory(history.getContentTexts());
-                                String fullContext = FormatChatHistory.CHAT_HISTORY.formatted(chatHistory, chatHistory)
-                                        + "\n用户最新消息: " + content;
+        BigInteger userId = myBigInteger.bigInteger(
+                ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
+        );
 
-                                ChatRecord update = ChatRecord.builder()
-                                        .id(conversationId)
-                                        .updater(userId)
-                                        .updateTime(LocalDateTime.now())
-                                        .build();
+        ContentText contentText = ContentText.builder()
+                .id(snowflakePermanent.nextId())
+                .receiverContent(userContent)
+                .senderContent(aiContent)
+                .build();
 
-                                return r2dbcUpdateHelper.updateIgnoreNull(
-                                                EntityTableNameUtils.getName(ChatRecord.class),
-                                                update,
-                                                ChatRecord.Fields.id)
-                                        .then(Mono.defer(() -> {
-
-                                            StringBuilder sb = new StringBuilder();
-                                            AtomicReference<List<BigInteger>> productsRef = new AtomicReference<>(List.of());
-
-                                            Flux<String> stream = chatClient.prompt(fullContext).stream().content()
-                                                    .doOnNext(sb::append)
-                                                    .doOnComplete(() -> {
-                                                        ContentText newText = ContentText.builder()
-                                                                .id(snowflakePermanent.nextId())
-                                                                .receiverContent(content)
-                                                                .senderContent(sb.toString())
-                                                                .build();
-
-                                                        reactiveMongoTemplate.updateFirst(
-                                                                Query.query(Criteria.where(ChatRecordContent.Fields.id).is(conversationId)),
-                                                                new Update()
-                                                                        .push(ChatRecordContent.Fields.contentTexts, newText)
-                                                                        .set(BasePojo.Fields.updateTime, LocalDateTime.now())
-                                                                        .set(BasePojo.Fields.updater, userId),
-                                                                ChatRecordContent.class
-                                                        ).subscribe(
-                                                                success -> log.debug("Updated chat history"),
-                                                                error -> log.error("Update failed", error)
-                                                        );
-
-                                                        //  流结束后取 Tool 结果
-                                                        productsRef.set(List.of());
-                                                    });
-
-                                            return Mono.just(Tuples.of(stream, productsRef.get(), conversationId));
-                                        }));
-                            }));
-        });
+        return reactiveMongoTemplate.updateFirst(
+                Query.query(Criteria.where(ChatRecordContent.Fields.id).is(chatId)),
+                new Update()
+                        .push(ChatRecordContent.Fields.contentTexts, contentText)
+                        .set(BasePojo.Fields.updateTime, LocalDateTime.now())
+                        .set(BasePojo.Fields.updater, userId),
+                ChatRecordContent.class
+        ).then();
     }
 
 
@@ -582,19 +528,19 @@ public class ChatServiceImpl implements ChatService {
         BigInteger chatId = snowflakePermanent.nextId();
         Prompt prompt = new Prompt(List.of(
                 new SystemMessage("""
-            你是一个专业的电商购物助手。
-
-            当用户询问商品时，请按以下规则回答：
-            1. 先用 1~3 句自然语言推荐商品，说明理由（如品牌、功能、适用场景等）；
-            2. 然后在最后一行单独输出一个 JSON 对象，格式严格为：
-               {"recommend_products": [101, 102, 103]}
-
-             重要：
-            - 必须包含自然语言部分！禁止只输出 JSON！
-            - JSON 必须在最后一行，前面只能有换行；
-            - 不要使用反引号、代码块、注释或任何额外文字；
-            - 商品 ID 必须是数字，放在数组中。
-            """),
+                        你是一个专业的电商购物助手。
+                        
+                        当用户询问商品时，请按以下规则回答：
+                        1. 先用 1~3 句自然语言推荐商品，说明理由（如品牌、功能、适用场景等）；
+                        2. 然后在最后一行单独输出一个 JSON 对象，格式严格为：
+                           {"recommend_products": [101, 102, 103]}
+                        
+                         重要：
+                        - 必须包含自然语言部分！禁止只输出 JSON！
+                        - JSON 必须在最后一行，前面只能有换行；
+                        - 不要使用反引号、代码块、注释或任何额外文字；
+                        - 商品 ID 必须是数字，放在数组中。
+                        """),
                 new UserMessage(content)
         ));
 
@@ -620,6 +566,7 @@ public class ChatServiceImpl implements ChatService {
                     .build();
         }).subscribeOn(Schedulers.boundedElastic());
     }
+
     private String removeJsonLine(String response) {
         if (response == null || response.isEmpty()) {
             return "";

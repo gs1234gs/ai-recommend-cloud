@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/embedding")
+@RequestMapping("/embedding/product")
 public class EmbeddingProductController {
 
     private final EmbeddingProductService embeddingProductService;
@@ -26,7 +26,7 @@ public class EmbeddingProductController {
      * @return Mono<ResultT<List<String>>>
      *
      * */
-    @PostMapping("/product/saveBatch")
+    @PostMapping("/saveBatch")
     public Mono<ResultT<List<String>>> embeddingSaveProduct(@RequestBody List<ProductForEmbeddingApVO> products){
         return embeddingProductService.saveBatch( products)
                 .map(ResultT::success)
@@ -40,14 +40,14 @@ public class EmbeddingProductController {
      * @return Mono<ResultT<Void>>
      *
      * */
-    @DeleteMapping("/product/deleteByProductId/{productId}")
+    @DeleteMapping("/deleteByProductId/{productId}")
     public Mono<ResultT<Void>> embeddingDeleteProduct(@PathVariable BigInteger productId){
         return embeddingProductService.deleteById(List.of(productId))
                 .thenReturn(ResultT.success((Void) null))
                 .onErrorResume(throwable -> Mono.just(ResultT.error()));
     }
 
-    @PostMapping("/product/recommendForUser")
+    @PostMapping("/recommendForUser")
     public Mono<ResultT<List<BigInteger>>> embeddingRecommendForUser(
             @RequestBody RequestBodyProductForEmbeddingApVO<List<ProductForEmbeddingApVO>> recentProducts){
         return embeddingProductService.recommendForUser(recentProducts.getData(), recentProducts.getTopK())

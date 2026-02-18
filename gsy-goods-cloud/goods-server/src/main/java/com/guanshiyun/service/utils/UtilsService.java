@@ -8,6 +8,7 @@ import com.guanshiyun.repository.relation.ProductTagRepository;
 import com.guanshiyun.repository.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
@@ -32,5 +33,10 @@ public class UtilsService {
     //根据商品id查询商品信息
     public Mono<List<Product>> findProductByProductId(List<BigInteger> productIds) {
         return productRepository.findAllById(productIds).collectList();
+    }
+
+    //根据商品id查询商品信息
+    public Flux<Product> findProductPage(BigInteger pageNum, int pageSize, String nameKeyword) {
+        return productRepository.findPageByName(nameKeyword, pageSize, pageNum);
     }
 }

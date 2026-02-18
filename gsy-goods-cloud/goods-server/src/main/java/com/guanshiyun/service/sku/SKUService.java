@@ -21,6 +21,8 @@ public interface SKUService {
     Mono<SKUVO> findById(BigInteger id);
 //分页查询SKU
 Mono<PageResultT<List<SKUGroupByProductIdVO>>> findAllByPage(RequestPage<SKUFindVO> requestPage);
+
+//Mono<PageResultT<List<Map<BigInteger,SKUVO>>>> findAllPage(RequestPage<ProductSearchVO> requestPage);
 //根据商品id获取SKU列表
     Flux<SKUVO> findByProductId(BigInteger productId);
 //批量删除

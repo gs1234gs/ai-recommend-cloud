@@ -6,6 +6,7 @@ public class GoodsApiUrl {
     // 获取产品列表
     public static final String PRODUCT_FIND_CURSOR = "/product/findCursorList";
     public static final String PRODUCT_FIND_BY_ID = "/product/findById/{id}";
+    public static final String RECOMMEND_PRODUCT_FIND_BY_IDS = "/recommendProduct/recommendByIds";
     //获取sku列表
     public static final String SKU_FIND_PAGE = "/sku/findPage";
     //根据id获取sku

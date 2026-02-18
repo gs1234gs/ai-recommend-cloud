@@ -3,15 +3,11 @@ package com.guanshiyun.service.search.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.base.BasePojo;
-import com.guanshiyun.behaviorenums.GuestEnum;
 import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.controller.search.vo.UserSearchSaveVO;
 import com.guanshiyun.controller.search.vo.UserSearchVO;
-import com.guanshiyun.feedback.Feedback;
-import com.guanshiyun.gorseenum.GorseFeedbackEnum;
 import com.guanshiyun.goser.GorseClient;
 import com.guanshiyun.repository.search.UserSearchMongodbRepository;
-import com.guanshiyun.rowAffected.RowAffected;
 import com.guanshiyun.search.UserSearchMongodb;
 import com.guanshiyun.service.search.UserSearchService;
 import com.guanshiyun.snowflake.SnowflakePermanent;
@@ -28,8 +24,6 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -61,23 +55,23 @@ public class UserSearchServiceImpl implements UserSearchService {
                 userSearchMongodb.setCreator(creator);
             }
 
-            Mono<UserSearchMongodb> save = userSearchMongodbRepository.save(userSearchMongodb);
-            Mono<RowAffected> rowAffectedMono = gorseClient.insertFeedback(List.of(
-                    Feedback.builder()
-                            .userId(
-                                    Objects.nonNull(userSearchMongodb.getCreator())
-                                            ?
-                                            userSearchMongodb.getCreator().toString()
-                                            :
-                                            GuestEnum.GUEST_USER_ID.getValue()
-                            )
-                            .itemId(userSearchMongodb.getId().toString())
-                            .timestamp(userSearchMongodb.getCreateTime().format(DateTimeFormatter.ISO_DATE_TIME))
-                            .feedbackType(GorseFeedbackEnum.SEARCH.getValue())
-                            .build()
-            ));
-            return Mono.zip(save, rowAffectedMono)
-                    .map(tuple -> tuple.getT1().getId())
+            return userSearchMongodbRepository.save(userSearchMongodb)
+//            Mono<RowAffected> rowAffectedMono = gorseClient.insertFeedback(List.of(
+//                    Feedback.builder()
+//                            .userId(
+//                                    Objects.nonNull(userSearchMongodb.getCreator())
+//                                            ?
+//                                            userSearchMongodb.getCreator().toString()
+//                                            :
+//                                            GuestEnum.GUEST_USER_ID.getValue()
+//                            )
+//                            .itemId(userSearchMongodb.getId().toString())
+//                            .timestamp(userSearchMongodb.getCreateTime().format(DateTimeFormatter.ISO_DATE_TIME))
+//                            .feedbackType(GorseFeedbackEnum.SEARCH.getValue())
+//                            .build()
+//            ));
+//            return Mono.zip(save, rowAffectedMono)
+                    .map(UserSearchMongodb::getId)
                     .onErrorResume(e ->
                             {
                                 log.error("错误", e);

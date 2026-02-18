@@ -8,12 +8,13 @@ import com.guanshiyun.responsepojo.CursorPageResult;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.product.RecommendProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
 import java.util.List;
-
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/recommendProduct")
@@ -50,6 +51,10 @@ public class RecommendProductController {
     @GetMapping("/recommendByIds")
     public Mono<ResultT<List<ProductCustomerVO>>> recommendByIds(@RequestParam List<BigInteger> ids ){
         return recommendProductService.findByIds(ids)
-                .map(ResultT::success);
+                .map(ResultT::success)
+                .onErrorResume(e -> {
+                    log.error("获取商品详情失败：",e);
+                    return Mono.just(ResultT.error(e.getMessage()));
+                });
     }
 }

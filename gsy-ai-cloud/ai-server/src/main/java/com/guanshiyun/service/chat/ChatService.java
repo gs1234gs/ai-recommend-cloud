@@ -5,10 +5,8 @@ import com.guanshiyun.req.ReqChat;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
-import reactor.util.function.Tuple3;
 
 import java.math.BigInteger;
-import java.util.List;
 
 /**
  * ChatService
@@ -43,7 +41,7 @@ public interface ChatService {
      * @return Flux<String> AI 回复内容流（流式返回）
      */
     Mono<Tuple2<Flux<String>, BigInteger>>  chatFlux(ReqChat reqChat);
-    Mono<Tuple3<Flux<String>, List<BigInteger>, BigInteger>> chatFluxRecommend(ReqChat reqChat);
+    Mono<Tuple2<Flux<String>, BigInteger>> chatFluxRecommend(ReqChat reqChat);
     Mono<AllReqChat> recommend(ReqChat reqChat);
     /**
      * 删除聊天会话

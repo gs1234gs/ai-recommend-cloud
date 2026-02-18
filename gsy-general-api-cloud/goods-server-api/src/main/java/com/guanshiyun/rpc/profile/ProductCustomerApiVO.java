@@ -1,4 +1,4 @@
-package com.guanshiyun.controller.product.vo;
+package com.guanshiyun.rpc.profile;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class ProductCustomerVO {
+public class ProductCustomerApiVO {
     //商品id
     private BigInteger id;
     //商品名称
