@@ -332,9 +332,9 @@ public class RecommendProductServiceImpl implements RecommendProductService {
         //已经登陆,调用推荐接口，推荐接口自动根据条件判断新用户还是老用户
         //浏览暂时不要
 //            Mono<ResultT<List<BrowseProfileApi>>> apiUserBrowseRecord = userBrowseServiceApi.findUserBrowseRecord(ConstNumber.INTEGER_TEN);
-        Mono<ResultT<List<ClickProfileApi>>> apiUserClickRecord = userClickServiceApi.findUserClickRecord(ConstNumber.INTEGER_TEN);
-        Mono<ResultT<List<CollectProfileApi>>> apiUserCollectRecord = userCollectServiceApi.findUserCollectRecord(ConstNumber.INTEGER_TEN);
-        Mono<ResultT<List<SearchContentApi>>> apiUserSearchRecord = userSearchServiceApi.findUserSearchRecord(ConstNumber.INTEGER_TEN);
+        Mono<ResultT<List<ClickProfileApi>>> apiUserClickRecord = userClickServiceApi.findUserClickRecord(ConstNumber.INT_THREE);
+        Mono<ResultT<List<CollectProfileApi>>> apiUserCollectRecord = userCollectServiceApi.findUserCollectRecord(ConstNumber.INT_THREE);
+        Mono<ResultT<List<SearchContentApi>>> apiUserSearchRecord = userSearchServiceApi.findUserSearchRecord(ConstNumber.INT_THREE);
         return Mono.zip(
                         apiUserClickRecord,
                         apiUserCollectRecord,
@@ -505,7 +505,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                             );
                     RequestBodyProductForEmbeddingApVO<List<ProductForEmbeddingApVO>> requestBodyProductForEmbeddingApVO =
                             RequestBodyProductForEmbeddingApVO.<List<ProductForEmbeddingApVO>>builder()
-                                    .topK(ConstNumber.INT_HUNDRED)
+                                    .topK(20)
                                     .data(productForEmbeddingApVOList)
                                     .build();
                     return aiChatClientRecommendServiceApi.recommendProduct(requestBodyProductForEmbeddingApVO)
@@ -514,7 +514,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                                 || Objects.isNull(recommendProductIds.getData())
                                                 || recommendProductIds.getData().isEmpty()) {
                                             //默认返回最新加的5条
-                                            return productRepository.findAll().take(5)
+                                            return productRepository.findAll().take(20)
                                                     .map(p -> ProductCustomerVO.builder()
                                                             .image(p.getImage())
                                                             .video(p.getVideo())
@@ -596,7 +596,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 return Mono.error(new Exception("请先登陆"));
             }
             BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
-            return gorseClient.getRecommend(userId.toString(), 10)
+            return gorseClient.getRecommend(userId.toString(), 20)
                     .flatMap(productIds -> {
                         List<BigInteger> productIdList = productIds
                                 .stream()
@@ -605,7 +605,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                 .toList();
                         if (productIdList.isEmpty()) {
                             //默认从数据查出5条
-                            return productRepository.findAll().take(5)
+                            return productRepository.findAll().take(20)
                                     .map(p ->
                                             ProductCustomerVO
                                                     .builder()
@@ -659,7 +659,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                 .collectList()
                                 .flatMap(pList -> {
                                     if (pList.isEmpty()) {
-                                        return productRepository.findAll().take(5)
+                                        return productRepository.findAll().take(20)
                                                 .map(p -> ProductCustomerVO.builder()
                                                         .image(p.getImage())
                                                         .video(p.getVideo())
@@ -714,28 +714,29 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                     Product product = tuple.getT1();
                     List<TagVO> tagList = tuple.getT2();
                     List<SKU> skuList = tuple.getT3();
+                    ProductCustomerDetailVO detailVO = ProductCustomerDetailVO.builder()
+                            .id(product.getId())
+                            .level(product.getLevel())
+                            .name(product.getName())
+                            .maxPrice(product.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
+                            .minPrice(product.getMinPrice().setScale(2, RoundingMode.HALF_UP))
+                            .offlineTime(product.getOfflineTime())
+                            .placeOfOrigin(product.getPlaceOfOrigin())
+                            .publishTime(product.getPublishTime())
+                            .brand(product.getBrand())
+                            .status(product.getStatus())
+                            .tagList(tagList)
+                            .originalPrice(product.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
+                            .discountPrice(
+                                    Optional.ofNullable(product.getMinPrice())
+                                            .map(price -> price.multiply(new BigDecimal("0.7")))
+                                            .map(price -> price.setScale(2, RoundingMode.HALF_UP))
+                                            .orElse(BigDecimal.ZERO)
+                            )
+                            .skuList(BeanConvertUtil.toBeanList(skuList, SKUVO.class))
+                            .build();
                     return Mono.just(
-                                    ProductCustomerDetailVO.builder()
-                                            .id(product.getId())
-                                            .level(product.getLevel())
-                                            .name(product.getName())
-                                            .maxPrice(product.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
-                                            .minPrice(product.getMinPrice().setScale(2, RoundingMode.HALF_UP))
-                                            .offlineTime(product.getOfflineTime())
-                                            .placeOfOrigin(product.getPlaceOfOrigin())
-                                            .publishTime(product.getPublishTime())
-                                            .brand(product.getBrand())
-                                            .status(product.getStatus())
-                                            .tagList(tagList)
-                                            .originalPrice(product.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
-                                            .discountPrice(
-                                                    Optional.ofNullable(product.getMinPrice())
-                                                            .map(price -> price.multiply(new BigDecimal("0.7")))
-                                                            .map(price -> price.setScale(2, RoundingMode.HALF_UP))
-                                                            .orElse(BigDecimal.ZERO)
-                                            )
-                                            .skuList(BeanConvertUtil.toBeanList(skuList, SKUVO.class))
-                                            .build()
+                                    detailVO
                             )
                             .publishOn(Schedulers.boundedElastic())
                             .doOnSuccess(ok -> {

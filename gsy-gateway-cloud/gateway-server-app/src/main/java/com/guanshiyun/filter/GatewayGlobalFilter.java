@@ -48,6 +48,13 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
             log.info("白名单：{}", path);
             return chain.filter(exchange);
         }
+        // 2. 前缀匹配
+        for (String prefix : PublicEndpoints.PERMISSION_WHITE_PREFIX_LIST) {
+            if (path.startsWith(prefix)) {
+                log.info("白名单（前缀匹配）:{}", path);
+                return chain.filter(exchange);
+            }
+        }
         //不是白名单，拦截
         // ===== 特殊请求直通 =====
         String traceId = request.getHeaders().getFirst(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY);

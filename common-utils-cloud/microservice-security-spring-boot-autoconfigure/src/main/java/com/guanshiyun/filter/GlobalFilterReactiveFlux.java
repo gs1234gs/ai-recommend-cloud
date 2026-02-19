@@ -42,10 +42,18 @@ public class GlobalFilterReactiveFlux implements WebFilter {
     public @NonNull Mono<Void> filter(ServerWebExchange exchange,@NonNull WebFilterChain chain) {
         //获取用户信息
         RequestPath path = exchange.getRequest().getPath();
-        if (PublicEndpoints.PERMSSION_WHITE_LIST.contains(path.toString())) {
+        if (PublicEndpoints.PERMSSION_WHITE_LIST.contains(path.value())) {
             log.info("这是白名单，放行：{}", path);
             return chain.filter(exchange);
         }
+        // 2. 前缀匹配
+        for (String prefix : PublicEndpoints.PERMISSION_WHITE_PREFIX_LIST) {
+            if (path.value().startsWith(prefix)) {
+                log.info("白名单（前缀匹配）:{}", path);
+                return chain.filter(exchange);
+            }
+        }
+
         //获取用户信息
         HttpHeaders headers = exchange.getRequest().getHeaders();
         String traceId = headers.getFirst(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY);

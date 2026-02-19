@@ -11,10 +11,14 @@ public class PublicEndpoints {
             "/sys-api/verify",
             "/sys-api/reset/forget",
             "/sys-api/customer/use",
+            "/goods-api/product/carousal/findByType/",
             "/swagger-ui.html",
             "/swagger-ui/swagger-ui.html",
             "/swagger-ui/index.html",
             "/v3/api-docs",
             "/v3/api-docs/**",
             "/webjars/**");
+    public static final List<String> PERMISSION_WHITE_PREFIX_LIST = List.of(
+            "/goods-api/product/carousal/findByType/",
+            "/v3/api-docs/");
 }

@@ -78,7 +78,7 @@ public class ResultT<T> {
                 .data(data)
                 .build();
     }
-    public static <T> ResultT<T> error(String msg){
+    public static <T> ResultT <T> error(String msg){
         return ResultT.<T>builder()
                 .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                 .msg(msg)
