@@ -1,7 +1,7 @@
 package com.guanshiyun.service.aitool.impl;
 
 import com.guanshiyun.rpc.goodsapi.product.ProductApiService;
-import com.guanshiyun.rpc.profile.ProductCustomerApiVO;
+import com.guanshiyun.profile.ProductCustomerApiVO;
 import com.guanshiyun.service.aitool.ProductToolService;
 import com.guanshiyun.service.embedding.product.EmbeddingProductService;
 import lombok.RequiredArgsConstructor;

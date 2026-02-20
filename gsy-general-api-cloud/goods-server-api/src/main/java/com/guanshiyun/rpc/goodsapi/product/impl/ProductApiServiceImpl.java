@@ -6,8 +6,8 @@ import com.guanshiyun.responsepojo.CursorPageResult;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.rpc.config.GoodsWebClientRpc;
 import com.guanshiyun.rpc.goodsapi.product.ProductApiService;
-import com.guanshiyun.rpc.profile.ProductApiVO;
-import com.guanshiyun.rpc.profile.ProductCustomerApiVO;
+import com.guanshiyun.profile.ProductApiVO;
+import com.guanshiyun.profile.ProductCustomerApiVO;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,5 +60,18 @@ public class ProductApiServiceImpl implements ProductApiService {
                 .header(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY,ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<ResultT<List<ProductCustomerApiVO>>>() {});
+    }
+
+    @Override
+    public Mono<ResultT<List<ProductApiVO>>> findProductVOByIds(List<BigInteger> ids) {
+        return goodsWebClientRpc
+                .webClient()
+                .get()
+                .uri(builder->builder.path(GoodsApiUrl.RECOMMEND_PRODUCT_FIND_BY_IDS)
+                        .queryParam("ids", ids)
+                        .build())
+                .header(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY,ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ResultT<List<ProductApiVO>>>() {});
     }
 }

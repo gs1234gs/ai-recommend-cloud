@@ -6,7 +6,7 @@ import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.rpc.config.GoodsWebClientRpc;
 import com.guanshiyun.rpc.goodsapi.sku.SkuApiService;
-import com.guanshiyun.rpc.profile.SKUApiVO;
+import com.guanshiyun.profile.SKUApiVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
@@ -68,6 +68,19 @@ public class SkuApiServiceImpl implements SkuApiService {
                         .build(skuId))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<ResultT<SKUApiVO>>() {
+                });
+    }
+
+    @Override
+    public Mono<ResultT<Boolean>> reduceStockAndAddSales(BigInteger skuId, Integer count) {
+        return goodsWebClientRpc.webClient()
+                .get()
+                .uri(builder-> builder.path(GoodsApiUrl.SKU_ADD_SALES_BY_ID)
+                        .queryParam("count",count)
+                        .queryParam("id",skuId)
+                        .build())
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ResultT<Boolean>>() {
                 });
     }
 }

@@ -4,7 +4,7 @@ import com.guanshiyun.goodsenum.GoodsApiUrl;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.rpc.config.GoodsWebClientRpc;
 import com.guanshiyun.rpc.goodsapi.category.CategoryApiService;
-import com.guanshiyun.rpc.profile.CategoryApiVO;
+import com.guanshiyun.profile.CategoryApiVO;
 import com.guanshiyun.webutils.WebClientUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;

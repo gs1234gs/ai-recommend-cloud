@@ -4,7 +4,7 @@ import com.guanshiyun.goodsenum.GoodsApiUrl;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.rpc.config.GoodsWebClientRpc;
 import com.guanshiyun.rpc.goodsapi.tag.TagApiService;
-import com.guanshiyun.rpc.profile.TagApiVO;
+import com.guanshiyun.profile.TagApiVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;

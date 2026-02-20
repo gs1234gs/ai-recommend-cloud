@@ -2,7 +2,7 @@ package com.guanshiyun.controller.order.vo;
 
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.address.vo.OrderAddressVO;
-import com.guanshiyun.rpc.profile.TagApiVO;
+import com.guanshiyun.profile.TagApiVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -63,4 +63,6 @@ public class PurChaseOrderVO extends BasePojo implements Serializable {
     private List<TagApiVO> tags;
     //图片
     private String image;
+    //商品id
+    private BigInteger productId;
 }

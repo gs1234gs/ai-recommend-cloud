@@ -8,6 +8,7 @@ import com.guanshiyun.controller.order.vo.PurchaseOrderSearchVO;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.responsepojo.ResultT;
+import com.guanshiyun.rpc.order.vo.PurchaseOrderVOApi;
 import com.guanshiyun.service.order.PurChaseOrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -108,7 +109,7 @@ public class PurChaseOrderController {
     }
 
     @GetMapping("findByRows")
-    public Mono<ResultT<List<PurChaseOrderVO>>> findByRows(
+    public Mono<ResultT<List<PurchaseOrderVOApi>>> findByRows(
             @RequestParam(required = false, defaultValue = "10") Integer rows) {
         return purChaseOrderService.findByRows(rows)
                 .map(ResultT::success)

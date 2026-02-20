@@ -2,8 +2,8 @@ package com.guanshiyun.controller.order.vo;
 
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.address.vo.OrderAddressVO;
-import com.guanshiyun.rpc.profile.SKUApiVO;
-import com.guanshiyun.rpc.profile.TagApiVO;
+import com.guanshiyun.profile.SKUApiVO;
+import com.guanshiyun.profile.TagApiVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

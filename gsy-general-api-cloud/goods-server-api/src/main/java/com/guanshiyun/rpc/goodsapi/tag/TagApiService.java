@@ -1,7 +1,7 @@
 package com.guanshiyun.rpc.goodsapi.tag;
 
 import com.guanshiyun.responsepojo.ResultT;
-import com.guanshiyun.rpc.profile.TagApiVO;
+import com.guanshiyun.profile.TagApiVO;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;

@@ -6,6 +6,7 @@ import com.guanshiyun.controller.order.vo.PurchaseOrderDetailVO;
 import com.guanshiyun.controller.order.vo.PurchaseOrderSearchVO;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
+import com.guanshiyun.rpc.order.vo.PurchaseOrderVOApi;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
@@ -32,7 +33,7 @@ public interface PurChaseOrderService {
     Mono<PageResultT<List<PurChaseOrderVO>>> findByUserIdPage(RequestPage<PurchaseOrderSearchVO> requestPage);
 
     //获取指定条数的用户订单
-    Mono<List<PurChaseOrderVO>> findByRows(Integer rows);
+    Mono<List<PurchaseOrderVOApi>> findByRows(Integer rows);
 
     Mono<Boolean> deleteById(BigInteger id);
 }

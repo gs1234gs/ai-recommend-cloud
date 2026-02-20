@@ -1,6 +1,6 @@
 package com.guanshiyun.controller.browse.vo;
 
-import com.guanshiyun.rpc.profile.ProductApiVO;
+import com.guanshiyun.profile.ProductApiVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

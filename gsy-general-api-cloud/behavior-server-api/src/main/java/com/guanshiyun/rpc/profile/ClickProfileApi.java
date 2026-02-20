@@ -1,9 +1,10 @@
 package com.guanshiyun.rpc.profile;
 
-import com.guanshiyun.publicbehaviorvo.CategoryApiVO;
-import com.guanshiyun.publicbehaviorvo.ProductApiVO;
-import com.guanshiyun.publicbehaviorvo.SKUApiVO;
-import com.guanshiyun.publicbehaviorvo.TagApiVO;
+
+import com.guanshiyun.profile.CategoryApiVO;
+import com.guanshiyun.profile.ProductApiVO;
+import com.guanshiyun.profile.SKUApiVO;
+import com.guanshiyun.profile.TagApiVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

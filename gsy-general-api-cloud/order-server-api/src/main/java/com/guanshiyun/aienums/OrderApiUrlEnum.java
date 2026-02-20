@@ -8,9 +8,9 @@ import lombok.Getter;
 public enum OrderApiUrlEnum {
 
 
-    ORDER_FIND_BY_ROWS("获取指定条数订单","/order/findByRows"),
-    ORDER_FIND_BY_ID("根据id获取订单","/order/findById"),
-    ORDER_FIND_BY_USER_ID("根据用户id获取订单","/order/findByUserId"),
+    ORDER_FIND_BY_ROWS("获取指定条数订单","/purChaseOrder/findByRows"),
+    ORDER_FIND_BY_ID("根据id获取订单","/purChaseOrder/findById"),
+    ORDER_FIND_BY_USER_ID("根据用户id获取订单","/purChaseOrder/findByUserId"),
     ;
     private final   String  name;
     private final String url;

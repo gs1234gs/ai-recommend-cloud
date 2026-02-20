@@ -1,16 +1,25 @@
-package com.guanshiyun.publicbehaviorvo;
+package com.guanshiyun.profile;
 
+import com.guanshiyun.base.BasePojo;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.math.BigInteger;
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class WarehouseApiVO {
+@SuperBuilder
+@Accessors(chain = true)
+public class WarehouseApiVO extends BasePojo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     private BigInteger id;
     /** 仓库名称 */
     private String name;

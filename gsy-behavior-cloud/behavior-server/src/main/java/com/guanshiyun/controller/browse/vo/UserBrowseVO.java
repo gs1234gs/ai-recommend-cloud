@@ -1,10 +1,10 @@
 package com.guanshiyun.controller.browse.vo;
 
 import com.guanshiyun.base.BasePojo;
-import com.guanshiyun.rpc.profile.CategoryApiVO;
-import com.guanshiyun.rpc.profile.ProductApiVO;
-import com.guanshiyun.rpc.profile.SKUApiVO;
-import com.guanshiyun.rpc.profile.TagApiVO;
+import com.guanshiyun.profile.CategoryApiVO;
+import com.guanshiyun.profile.ProductApiVO;
+import com.guanshiyun.profile.SKUApiVO;
+import com.guanshiyun.profile.TagApiVO;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;

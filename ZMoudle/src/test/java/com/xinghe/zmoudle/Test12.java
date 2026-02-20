@@ -2,7 +2,7 @@ package com.xinghe.zmoudle;
 
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.rpc.goodsapi.product.ProductApiService;
-import com.guanshiyun.rpc.profile.ProductApiVO;
+import com.guanshiyun.profile.ProductApiVO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

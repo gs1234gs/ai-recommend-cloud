@@ -53,4 +53,8 @@ public interface RecommendProductService {
     Mono<ProductCustomerDetailVO> detail(BigInteger id);
 
     Mono<List<ProductCustomerVO>> findByIds(List<BigInteger> ids);
+    //热门推荐
+    Mono<List<ProductCustomerVO>> hot();
+    //最新上架
+    Mono<List<ProductCustomerVO>> mostNew();
 }

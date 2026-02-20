@@ -1,8 +1,11 @@
 package com.guanshiyun.rpc.apisave;
 
 
-import com.guanshiyun.publicbehaviorvo.ProductApiVO;
-import lombok.*;
+import com.guanshiyun.profile.ProductApiVO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 
 import java.math.BigInteger;

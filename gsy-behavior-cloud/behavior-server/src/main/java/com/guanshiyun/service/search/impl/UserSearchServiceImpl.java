@@ -6,7 +6,6 @@ import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.controller.search.vo.UserSearchSaveVO;
 import com.guanshiyun.controller.search.vo.UserSearchVO;
-import com.guanshiyun.goser.GorseClient;
 import com.guanshiyun.repository.search.UserSearchMongodbRepository;
 import com.guanshiyun.search.UserSearchMongodb;
 import com.guanshiyun.service.search.UserSearchService;
@@ -19,11 +18,11 @@ import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -33,7 +32,6 @@ public class UserSearchServiceImpl implements UserSearchService {
     private final UserSearchMongodbRepository userSearchMongodbRepository;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
     private final SnowflakePermanent snowflakePermanent;
-    private final GorseClient gorseClient;
     private final MyBigInteger myBigInteger;
 
     /**
@@ -87,10 +85,10 @@ public class UserSearchServiceImpl implements UserSearchService {
      * 查询用户搜索记录
      */
     @Override
-    public Flux<UserSearchVO> findAll(Integer rows) {
-        return Flux.deferContextual(ctx -> {
+    public Mono<List<UserSearchVO>> findAll(Integer rows) {
+        return Mono.deferContextual(ctx -> {
             if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
-                return Flux.empty();
+                return Mono.empty();
             }
 
             int limit = (Objects.isNull(rows) || rows <= ConstNumber.INT_ZERO) ? ConstNumber.INTEGER_TEN : rows;
@@ -103,8 +101,13 @@ public class UserSearchServiceImpl implements UserSearchService {
                     .addCriteria(Criteria.where(BasePojo.Fields.creator).is(userId));
 
             return reactiveMongoTemplate.find(query, UserSearchMongodb.class)
-                    .map(item -> BeanUtil.toBean(item, UserSearchVO.class))
-                    .onErrorResume(e -> Flux.error(new RuntimeException("查询失败", e)));
+                    .map(item ->
+                            BeanUtil.toBean(item, UserSearchVO.class))
+                    .collectList()
+                    .onErrorResume(e -> {
+                        log.error("搜索行为获取失败，userId: {}", userId, e);
+                        return Mono.just(List.of());
+                    });
         });
     }
 

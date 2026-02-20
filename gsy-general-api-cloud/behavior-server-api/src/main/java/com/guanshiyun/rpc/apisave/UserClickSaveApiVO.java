@@ -1,7 +1,7 @@
 package com.guanshiyun.rpc.apisave;
 
 
-import com.guanshiyun.publicbehaviorvo.ProductApiVO;
+import com.guanshiyun.profile.ProductApiVO;
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
 

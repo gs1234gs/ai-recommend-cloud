@@ -3,7 +3,7 @@ package com.guanshiyun.rpc.goodsapi.sku;
 import com.guanshiyun.publicvo.SKUGroupByProductIdApiVO;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.ResultT;
-import com.guanshiyun.rpc.profile.SKUApiVO;
+import com.guanshiyun.profile.SKUApiVO;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;
@@ -18,5 +18,7 @@ public interface SkuApiService {
     Mono<ResultT<List<SKUApiVO>>> findBySkuIds(List<BigInteger> skuIds);
     //通过id获取
     Mono<ResultT<SKUApiVO>> findBySkuId(BigInteger skuId);
+    //减少库存，增加销量
+    Mono<ResultT<Boolean>> reduceStockAndAddSales(BigInteger skuId, Integer count);
 
 }

@@ -340,4 +340,23 @@ public class SKUServiceImpl implements SKUService {
                 .collect(Collectors.toList())
                 .onErrorResume(Mono::error);
     }
+
+    @Override
+    public Mono<Boolean> addSalesById(BigInteger id, Integer count) {
+        return skuRepository.findById(id)
+                .flatMap(sku->{
+                    Integer salesVolume = sku.getSalesVolume();
+                    salesVolume += count;
+                    sku.setSalesVolume(salesVolume);
+                    Integer skuStock = sku.getStock();
+                    skuStock += count;
+                    sku.setStock(skuStock);
+                    return skuRepository.save(sku)
+                            .thenReturn(Boolean.TRUE);
+                })
+                .onErrorResume(e->{
+                    log.error("增加销量失败", e);
+                    return Mono.just(Boolean.FALSE);
+                });
+    }
 }

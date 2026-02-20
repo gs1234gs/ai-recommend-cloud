@@ -11,7 +11,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>ai-server-api</module>
-        <module>erp-server-api</module>
         <module>recommend-server-api</module>
         <module>statistical-server-api</module>
         <module>sys-server-api</module>

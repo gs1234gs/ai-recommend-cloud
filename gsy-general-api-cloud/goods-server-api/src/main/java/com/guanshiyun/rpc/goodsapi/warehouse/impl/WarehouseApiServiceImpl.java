@@ -5,7 +5,7 @@ import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.rpc.config.GoodsWebClientRpc;
 import com.guanshiyun.rpc.goodsapi.warehouse.WarehouseApiService;
-import com.guanshiyun.rpc.profile.WarehouseApiVO;
+import com.guanshiyun.profile.WarehouseApiVO;
 import com.guanshiyun.webutils.WebClientUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

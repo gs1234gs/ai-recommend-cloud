@@ -1,8 +1,14 @@
 package com.guanshiyun.rpc.order.vo;
 
 import com.guanshiyun.base.BasePojo;
+import com.guanshiyun.profile.CategoryApiVO;
+import com.guanshiyun.profile.SKUApiVO;
+import com.guanshiyun.profile.TagApiVO;
 import com.guanshiyun.rpc.address.vo.OrderAddressVOApi;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
 
@@ -11,6 +17,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
@@ -51,4 +59,16 @@ public class PurchaseOrderVOApi extends BasePojo implements Serializable {
     private Integer num;
     //收获地址信息
     private OrderAddressVOApi orderAddressVO;
+    //订单名称
+    private String name;
+    //标签
+    private List<TagApiVO> tags;
+    //图片
+    private String image;
+    //商品id
+    private BigInteger productId;
+    //分类
+    private List<CategoryApiVO> categoryApiVOList;
+    //sku
+    private List<SKUApiVO> skuApi;
 }

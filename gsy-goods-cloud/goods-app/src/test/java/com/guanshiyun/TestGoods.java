@@ -2,7 +2,7 @@ package com.guanshiyun;
 
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.rpc.goodsapi.product.ProductApiService;
-import com.guanshiyun.rpc.profile.ProductApiVO;
+import com.guanshiyun.profile.ProductApiVO;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.guanshiyun.rpc.apisave;
 
 
-import com.guanshiyun.publicbehaviorvo.ProductApiVO;
+import com.guanshiyun.profile.ProductApiVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

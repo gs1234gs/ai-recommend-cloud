@@ -35,4 +35,10 @@ Mono<PageResultT<List<SKUGroupByProductIdVO>>> findAllByPage(RequestPage<SKUFind
     Mono<Boolean> addStockById(BigInteger id, Integer count);
 
     Mono<List<SKUVO>> findAllByIds(List<BigInteger> skuIds);
+
+    Mono<Boolean> addSalesById(BigInteger id, Integer count);
+
+
+    //获取销量在某一固定值上的商品
+
 }

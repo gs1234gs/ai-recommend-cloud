@@ -3,7 +3,7 @@ package com.guanshiyun.publicvo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.guanshiyun.base.BasePojo;
-import com.guanshiyun.rpc.profile.SKUApiVO;
+import com.guanshiyun.profile.SKUApiVO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -190,4 +190,20 @@ public class SKUController {
                .map(ResultT::success)
                .onErrorResume(e->Mono.just(ResultT.error()));
     }
+
+    //增加销量
+    @PutMapping("addSalesById")
+    public Mono<ResultT<Boolean>> addSalesById(@RequestParam BigInteger id, @RequestParam Integer count) {
+        return skuService.addSalesById(id,count)
+                .map(ResultT::success)
+                .onErrorResume(throwable ->{
+                    log.error("修改销量失败", throwable);
+                    return Mono.just(
+                            ResultT.<Boolean>builder()
+                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .msg("修改销量失败")
+                                    .build()
+                    );
+                });
+    }
 }

@@ -1,6 +1,6 @@
 package com.guanshiyun.controller.collect.vo;
 
-import com.guanshiyun.rpc.profile.ProductApiVO;
+import com.guanshiyun.profile.ProductApiVO;
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
 

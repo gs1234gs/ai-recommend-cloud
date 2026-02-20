@@ -36,13 +36,15 @@ public class UserSearchController {
     @GetMapping("findByRows")
     public Mono<ResultT<List<UserSearchVO>>> findByRows(@RequestParam(required = false) Integer rows) {
         return userSearchService.findAll(rows)
-                .collectList()
                 .map(ResultT::success)
-                .onErrorResume(e -> Mono.just(ResultT
-                        .<List<UserSearchVO>>builder()
-                        .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
-                        .msg("查询失败")
-                        .build())
+                .onErrorResume(e -> {
+                    log.error("e",e);
+                          return   Mono.just(ResultT
+                                    .<List<UserSearchVO>>builder()
+                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .msg("查询失败")
+                                    .build());
+                        }
 
                 );
     }

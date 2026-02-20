@@ -3,6 +3,7 @@ package com.guanshiyun.service.product.impl;
 import com.db.dbnumber.ConstNumber;
 import com.db.page.CursorPageUtil;
 import com.db.query.SafeCriteria;
+import com.guanshiyun.behaviorenums.GuestEnum;
 import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.controller.product.vo.ProductCustomerDetailVO;
 import com.guanshiyun.controller.product.vo.ProductCustomerVO;
@@ -13,10 +14,13 @@ import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import com.guanshiyun.embedding.RequestBodyProductForEmbeddingApVO;
 import com.guanshiyun.goser.GorseClient;
 import com.guanshiyun.product.Product;
-import com.guanshiyun.publicbehaviorvo.CategoryApiVO;
-import com.guanshiyun.publicbehaviorvo.ProductApiVO;
-import com.guanshiyun.publicbehaviorvo.TagApiVO;
+import com.guanshiyun.profile.CategoryApiVO;
+import com.guanshiyun.profile.ProductApiVO;
+import com.guanshiyun.profile.TagApiVO;
+import com.guanshiyun.relationship.ProductCategory;
+import com.guanshiyun.repository.category.CategoryRepository;
 import com.guanshiyun.repository.product.ProductRepository;
+import com.guanshiyun.repository.relation.ProductCategoryRepository;
 import com.guanshiyun.repository.sku.SKURepository;
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.responsepojo.CursorPageResult;
@@ -26,6 +30,8 @@ import com.guanshiyun.rpc.behaviorapi.click.UserClickServiceApi;
 import com.guanshiyun.rpc.behaviorapi.collect.UserCollectServiceApi;
 import com.guanshiyun.rpc.behaviorapi.search.UserSearchServiceApi;
 import com.guanshiyun.rpc.chatrecommend.AiChatClientRecommendServiceApi;
+import com.guanshiyun.rpc.order.PurchaseOrderServiceApi;
+import com.guanshiyun.rpc.order.vo.PurchaseOrderVOApi;
 import com.guanshiyun.rpc.profile.ClickProfileApi;
 import com.guanshiyun.rpc.profile.CollectProfileApi;
 import com.guanshiyun.rpc.profile.SearchContentApi;
@@ -80,7 +86,9 @@ public class RecommendProductServiceImpl implements RecommendProductService {
     private final MyBigInteger myBigInteger;
     private final UtilsService utilsService;
     private final SKURepository sKURepository;
-
+    private final PurchaseOrderServiceApi purchaseOrderServiceApi;
+    private final ProductCategoryRepository productCategoryRepository;
+    private final CategoryRepository categoryRepository;
     /**
      * 根据搜索条件分页查询商品列表（仅限已登录用户）。
      * <p>
@@ -101,24 +109,61 @@ public class RecommendProductServiceImpl implements RecommendProductService {
         ProductSearchSaveVO condition = validate.getCondition();
         String searchContent = condition.getSearchContent();
 
-        // 如果没有搜索内容，直接走传统查询（AI 不适用）
-        if (!StringUtils.hasText(searchContent)) {
-            return executeTraditionalQuery(validate, condition);
-        }
-
         return Mono.deferContextual(ctx -> {
 
             // 登录校验
             if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
-                return Mono.just(
+                //先走gorse
+                return gorseClient.getRecommend(GuestEnum.GUEST_USER_ID.getValue(),20)
+                        .map(Flux::fromIterable)
+                        .flatMapMany(Function.identity())
+                        .mapNotNull(myBigInteger::bigIntegerOrNull)
+                        .collectList()
+                        .flatMap(ids->
+                           buildResultFromAiProductIds(ids,validate,condition)
+                        )
+                        .onErrorResume(e->{
+                            log.error("gorse",e);
+                            return Mono.just(
                         CursorPageResult.<List<ProductCustomerVO>>builder()
                                 .rows(Collections.emptyList())
                                 .cursor(BigInteger.ZERO)
                                 .hasNext(false)
                                 .build()
                 );
+                        });
+
+//                return Mono.just(
+//                        CursorPageResult.<List<ProductCustomerVO>>builder()
+//                                .rows(Collections.emptyList())
+//                                .cursor(BigInteger.ZERO)
+//                                .hasNext(false)
+//                                .build()
+//                );
             }
-            BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+            // 如果没有搜索内容，直接走传统查询（AI 不适用）
+            BigInteger userId = myBigInteger.bigIntegerOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            if (!StringUtils.hasText(searchContent)) {
+                //先走gorse
+                return gorseClient.getRecommend(userId.toString(),20)
+                        .map(Flux::fromIterable)
+                        .flatMapMany(Function.identity())
+                        .mapNotNull(myBigInteger::bigIntegerOrNull)
+                        .collectList()
+                        .flatMap(ids->
+                                buildResultFromAiProductIds(ids,validate,condition)
+                        )
+                        .onErrorResume(e->{
+                            log.error("gorse",e);
+                            return Mono.just(
+                                    CursorPageResult.<List<ProductCustomerVO>>builder()
+                                            .rows(Collections.emptyList())
+                                            .cursor(BigInteger.ZERO)
+                                            .hasNext(false)
+                                            .build()
+                            );
+                        });
+            }
             // 优先使用 AI 推荐的商品 ID 列表
             return aiChatClientRecommendServiceApi
                     .searchByKeyword(searchContent.trim(), 20) // 获取最多 20 个候选 ID
@@ -243,11 +288,18 @@ public class RecommendProductServiceImpl implements RecommendProductService {
         Integer pageSize = validate.getPageSize();
         BigDecimal maxPrice = condition.getMaxPrice();
         BigDecimal minPrice = condition.getMinPrice();
-
+        int startIndex = 0;
+        if (lastId != null) {
+            for (int i = 0; i < aiProductIds.size(); i++) {
+                if (aiProductIds.get(i).equals(lastId)) {
+                    startIndex = i + 1;
+                    break;
+                }
+            }
+        }
         // 过滤掉 <= lastId 的 ID（游标分页要求）
         List<BigInteger> filteredIds = aiProductIds.stream()
-                .filter(id -> lastId == null || id.compareTo(lastId) > 0)
-                .sorted() // 保证顺序（AI 可能无序）
+                .skip(startIndex)
                 .limit(pageSize + 1L)
                 .toList();
 
@@ -269,8 +321,8 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 .leIfNotNull(Product.Fields.minPrice, maxPrice)
                 .criteria();
 
-        Query query = Query.query(criteria)
-                .sort(Sort.by(Sort.Order.asc(Product.Fields.id)));
+        Query query = Query.query(criteria);
+//                .sort(Sort.by(Sort.Order.asc(Product.Fields.id)));
 
         return r2dbcEntityTemplate
                 .select(Product.class)
@@ -327,256 +379,266 @@ public class RecommendProductServiceImpl implements RecommendProductService {
      * @author guanshiyun
      * @since 2025-12-20 10:13
      */
-    @Override
-    public Mono<List<ProductCustomerVO>> recommend() {
-        //已经登陆,调用推荐接口，推荐接口自动根据条件判断新用户还是老用户
-        //浏览暂时不要
-//            Mono<ResultT<List<BrowseProfileApi>>> apiUserBrowseRecord = userBrowseServiceApi.findUserBrowseRecord(ConstNumber.INTEGER_TEN);
-        Mono<ResultT<List<ClickProfileApi>>> apiUserClickRecord = userClickServiceApi.findUserClickRecord(ConstNumber.INT_THREE);
-        Mono<ResultT<List<CollectProfileApi>>> apiUserCollectRecord = userCollectServiceApi.findUserCollectRecord(ConstNumber.INT_THREE);
-        Mono<ResultT<List<SearchContentApi>>> apiUserSearchRecord = userSearchServiceApi.findUserSearchRecord(ConstNumber.INT_THREE);
-        return Mono.zip(
-                        apiUserClickRecord,
-                        apiUserCollectRecord,
-                        apiUserSearchRecord
-                )
-                .flatMap(tuple -> {
-                    //处理搜索记录，按时间倒序
-                    List<SearchContentApi> searchContentApiList = Optional.ofNullable(tuple.getT3().getData())
-                            .orElse(List.of())
-                            .stream()
-                            .filter(Objects::nonNull)
-                            .sorted(Comparator.comparing(
-                                    SearchContentApi::getSearchTime,
-                                    Comparator.reverseOrder()
-                            ))
-                            .toList();
-                    List<ClickProfileApi> clickProfileApiList = tuple.getT1().getData();
-                    List<CollectProfileApi> collectProfileApiList = tuple.getT2().getData();
-                    // === 合并点击与收藏的商品 ID 列表 ===
-                    List<BigInteger> productIdList =
-                            Stream.concat(
-                                    Optional.ofNullable(clickProfileApiList).orElse(List.of()).stream()
-                                            .map(c -> c.getProduct().getId()),
-                                    Optional.ofNullable(collectProfileApiList).orElse(List.of()).stream()
-                                            .map(c -> c.getProduct().getId())
-                            ).toList();
-
-                    int totalProductId = productIdList.size();
-                    final int totalIds = totalProductId == ConstNumber.INT_ZERO ? ConstNumber.INT_ONE : totalProductId;
-                    //  计算每个商品 ID 的占比
-                    Map<BigInteger, Double> productRatioMap =
-                            productIdList.stream()
-                                    .collect(Collectors.groupingBy(
-                                            Function.identity(),          // 商品ID作为key
-                                            Collectors.collectingAndThen(
-                                                    Collectors.counting(), // 统计次数
-                                                    count -> count * ConstNumber.DOUBLE_ONE / totalIds// 计算占比
-                                            )
-                                    ));
-                    // 取占比排名前三的商品
-                    Map<BigInteger, Double> top3ProductRatioMap =
-                            productRatioMap.entrySet()
-                                    .stream()
-                                    // 按占比倒序排序
-                                    .sorted(Map.Entry.<BigInteger, Double>comparingByValue().reversed())
-                                    // 取前三
-                                    .limit(ConstNumber.INT_THREE)
-                                    // 收集回 Map（保持排序）
-                                    .collect(Collectors.toMap(
-                                            Map.Entry::getKey,
-                                            Map.Entry::getValue,
-                                            (v1, v2) -> v1,
-                                            LinkedHashMap::new
-                                    ));
-
-                    Set<BigInteger> top3ProductIdSet = top3ProductRatioMap.keySet();
-
-                    //构造用于大模型推荐的输入数据
-                    List<ProductForEmbeddingApVO> productForEmbeddingApVOList = new ArrayList<>();
-                    // === 将最新3条搜索内容转为虚拟商品（仅含关键词） ===
-                    Optional.of(searchContentApiList)
-                            .orElse(List.of())
-                            .stream()
-                            .limit(ConstNumber.INT_THREE)
-                            .filter(Objects::nonNull)
-                            .forEach(searchContentApi ->
-                                    productForEmbeddingApVOList.add(
-                                            ProductForEmbeddingApVO.builder()
-                                                    .brand(searchContentApi.getSearchContent())
-                                                    .title(searchContentApi.getSearchContent())
-                                                    .categoryNames(List.of(searchContentApi.getSearchContent()))
-                                                    .skuList(List.of(
-                                                                    ProductForEmbeddingApVO
-                                                                            .SkuItem
-                                                                            .builder()
-                                                                            .name(searchContentApi.getSearchContent())
-                                                                            .price(searchContentApi.getMinPrice().toString())
-                                                                            .build()
-                                                            )
-                                                    )
-                                                    .tagNames(List.of(searchContentApi.getSearchContent()))
-                                                    .build())
-                            );
-                    // === 将 Top3 点击商品转为结构化推荐输入 ===
-                    Optional.ofNullable(clickProfileApiList)
-                            .orElse(List.of())
-                            .stream()
-                            .filter(Objects::nonNull)
-                            .filter(clickProfileApi -> top3ProductIdSet.contains(clickProfileApi.getProduct().getId()))
-                            .forEach(clickProfileApi ->
-                                    productForEmbeddingApVOList.add(
-                                            ProductForEmbeddingApVO.builder()
-                                                    .id(clickProfileApi.getProduct().getId())
-                                                    .title(clickProfileApi.getProduct().getName())
-                                                    .brand(clickProfileApi.getProduct().getBrand())
-                                                    .score(top3ProductRatioMap.get(clickProfileApi.getProduct().getId()))
-                                                    .tagNames(
-                                                            clickProfileApi.getTagList()
-                                                                    .stream()
-                                                                    .map(TagApiVO::getName)
-                                                                    .collect(Collectors.toList())
-                                                    )
-                                                    .skuList(
-                                                            clickProfileApi.getSkuList()
-                                                                    .stream()
-                                                                    .map(skuApiVO ->
-                                                                            ProductForEmbeddingApVO.SkuItem.builder()
-                                                                                    .name(skuApiVO.getName())
-                                                                                    .price(skuApiVO.getPrice().toString())
-                                                                                    .id(skuApiVO.getId().toString())
-                                                                                    .skuCode(skuApiVO.getSkuCode())
-                                                                                    .build()
-                                                                    )
-                                                                    .collect(Collectors.toList())
-                                                    )
-                                                    .categoryNames(
-                                                            clickProfileApi.getCategoryList()
-                                                                    .stream()
-                                                                    .map(CategoryApiVO::getName)
-                                                                    .collect(Collectors.toList())
-                                                    )
-                                                    .placeOfOrigin(clickProfileApi.getProduct().getPlaceOfOrigin())
-                                                    .description(clickProfileApi.getProduct().getDescription())
-                                                    .build()
-                                    ));
-                    // === 将 Top3 收藏商品转为结构化推荐输入（去重逻辑由大模型处理）===
-                    Optional.ofNullable(collectProfileApiList)
-                            .orElse(List.of())
-                            .stream()
-                            .filter(Objects::nonNull)
-                            .filter(collect -> top3ProductIdSet.contains(collect.getProduct().getId()))
-                            .forEach(collectProfileApi ->
-                                    productForEmbeddingApVOList.add(
-                                            ProductForEmbeddingApVO.builder()
-                                                    .id(collectProfileApi.getProduct().getId())
-                                                    .title(collectProfileApi.getProduct().getName())
-                                                    .brand(collectProfileApi.getProduct().getBrand())
-                                                    .score(top3ProductRatioMap.get(collectProfileApi.getProduct().getId()))
-                                                    .description(collectProfileApi.getProduct().getDescription())
-                                                    .placeOfOrigin(collectProfileApi.getProduct().getPlaceOfOrigin())
-                                                    .categoryNames(
-                                                            collectProfileApi.getCategoryList()
-                                                                    .stream()
-                                                                    .map(CategoryApiVO::getName)
-                                                                    .collect(Collectors.toList())
-                                                    )
-                                                    .tagNames(
-                                                            collectProfileApi.getTagList()
-                                                                    .stream()
-                                                                    .map(TagApiVO::getName)
-                                                                    .collect(Collectors.toList())
-                                                    )
-                                                    .skuList(
-                                                            collectProfileApi.getSkuList()
-                                                                    .stream()
-                                                                    .map(skuApiVO ->
-                                                                            ProductForEmbeddingApVO.SkuItem.builder()
-                                                                                    .name(skuApiVO.getName())
-                                                                                    .price(skuApiVO.getPrice().toString())
-                                                                                    .id(skuApiVO.getId().toString())
-                                                                                    .skuCode(skuApiVO.getSkuCode())
-                                                                                    .build()
-                                                                    )
-                                                                    .toList()
-                                                    )
-                                                    .build()
-                                    )
-                            );
-                    RequestBodyProductForEmbeddingApVO<List<ProductForEmbeddingApVO>> requestBodyProductForEmbeddingApVO =
-                            RequestBodyProductForEmbeddingApVO.<List<ProductForEmbeddingApVO>>builder()
-                                    .topK(20)
-                                    .data(productForEmbeddingApVOList)
-                                    .build();
-                    return aiChatClientRecommendServiceApi.recommendProduct(requestBodyProductForEmbeddingApVO)
-                            .flatMap(recommendProductIds -> {
-                                        if (Objects.isNull(recommendProductIds)
-                                                || Objects.isNull(recommendProductIds.getData())
-                                                || recommendProductIds.getData().isEmpty()) {
-                                            //默认返回最新加的5条
-                                            return productRepository.findAll().take(20)
-                                                    .map(p -> ProductCustomerVO.builder()
-                                                            .image(p.getImage())
-                                                            .video(p.getVideo())
-                                                            .status(p.getStatus())
-                                                            .description(p.getDescription())
-                                                            .publishTime(p.getPublishTime())
-                                                            .brand(p.getBrand())
-                                                            .id(p.getId())
-                                                            .name(p.getName())
-                                                            .level(p.getLevel())
-                                                            .placeOfOrigin(p.getPlaceOfOrigin())
-                                                            .minPrice(p.getMinPrice().setScale(2, RoundingMode.HALF_UP))
-                                                            .maxPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
-                                                            .originalPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
-                                                            .discountPrice(
-                                                                    Optional.ofNullable(p.getMinPrice())
-                                                                            .map(price -> price.multiply(new BigDecimal("0.7")))
-                                                                            .map(price -> price.setScale(2, RoundingMode.HALF_UP))
-                                                                            .orElse(BigDecimal.ZERO)
-                                                            )
-                                                            .placeOfOrigin(p.getPlaceOfOrigin())
-                                                            .build()
-                                                    ).collectList();
-                                        }
-                                        return productRepository.findAllById(recommendProductIds.getData())
-                                                .map(p ->
-                                                        ProductCustomerVO
-                                                                .builder()
-                                                                .image(p.getImage())
-                                                                .video(p.getVideo())
-                                                                .status(p.getStatus())
-                                                                .description(p.getDescription())
-                                                                .publishTime(p.getPublishTime())
-                                                                .brand(p.getBrand())
-                                                                .id(p.getId())
-                                                                .name(p.getName())
-                                                                .level(p.getLevel())
-                                                                .placeOfOrigin(p.getPlaceOfOrigin())
-                                                                .minPrice(p.getMinPrice().setScale(2, RoundingMode.HALF_UP))
-                                                                .maxPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
-                                                                .originalPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
-                                                                .discountPrice(
-                                                                        Optional.ofNullable(p.getMinPrice())
-                                                                                .map(price -> price.multiply(new BigDecimal("0.7")))
-                                                                                .map(price -> price.setScale(2, RoundingMode.HALF_UP))
-                                                                                .orElse(BigDecimal.ZERO)
-                                                                )
-                                                                .placeOfOrigin(p.getPlaceOfOrigin())
-                                                                .build()
-
-                                                )
-                                                .collectList();
-                                    }
-
-                            )
-                            .onErrorResume(Mono::error);
-                })
-                .onErrorResume(e -> {
-                    log.error("获取推荐商品失败", e);
-                    return Mono.empty();
-                });
-    }
+//    @Override
+//    public Mono<List<ProductCustomerVO>> recommend() {
+//        //已经登陆,调用推荐接口，推荐接口自动根据条件判断新用户还是老用户
+//        //浏览暂时不要
+////            Mono<ResultT<List<BrowseProfileApi>>> apiUserBrowseRecord = userBrowseServiceApi.findUserBrowseRecord(ConstNumber.INTEGER_TEN);
+//        Mono<ResultT<List<ClickProfileApi>>> apiUserClickRecord = userClickServiceApi.findUserClickRecord(ConstNumber.INT_TWO);
+//        Mono<ResultT<List<CollectProfileApi>>> apiUserCollectRecord = userCollectServiceApi.findUserCollectRecord(ConstNumber.INT_TWO);
+//        Mono<ResultT<List<SearchContentApi>>> apiUserSearchRecord = userSearchServiceApi.findUserSearchRecord(ConstNumber.INT_TWO);
+//        Mono<ResultT<List<PurchaseOrderVOApi>>> apiOrderRecord = purchaseOrderServiceApi.findByRows(ConstNumber.INT_TWO);
+//
+//        return Mono.zip(
+//                        apiUserClickRecord,
+//                        apiUserCollectRecord,
+//                        apiUserSearchRecord,
+//                        apiOrderRecord
+//                )
+//                .flatMap(tuple -> {
+//                    //处理搜索记录，按时间倒序
+//                    List<SearchContentApi> searchContentApiList = Optional.ofNullable(tuple.getT3().getData())
+//                            .orElse(List.of())
+//                            .stream()
+//                            .filter(Objects::nonNull)
+//                            .sorted(Comparator.comparing(
+//                                    SearchContentApi::getSearchTime,
+//                                    Comparator.reverseOrder()
+//                            ))
+//                            .toList();
+//                    List<ClickProfileApi> clickProfileApiList =
+//                            Optional.ofNullable(tuple.getT1().getData()).orElse(List.of());
+//                    List<CollectProfileApi> collectProfileApiList =
+//                            Optional.ofNullable(tuple.getT2().getData()).orElse(List.of());
+//                    List<PurchaseOrderVOApi> purchaseOrderList =
+//                            Optional.ofNullable(tuple.getT4().getData()).orElse(List.of());
+//                    List<BigInteger> orderPids =
+//                            purchaseOrderList.stream().map(PurchaseOrderVOApi::getProductId).toList();
+//                    Flux<Product> allById = productRepository.findAllById(orderPids);
+//                    // === 合并点击与收藏的商品 ID 列表 ===
+//                    List<BigInteger> productIdList =
+//                            Stream.concat(
+//                                    Optional.of(clickProfileApiList).orElse(List.of()).stream()
+//                                            .map(c -> c.getProduct().getId()),
+//                                    Optional.of(collectProfileApiList).orElse(List.of()).stream()
+//                                            .map(c -> c.getProduct().getId())
+//                            ).toList();
+//
+//                    int totalProductId = productIdList.size();
+//                    final int totalIds = totalProductId == ConstNumber.INT_ZERO ? ConstNumber.INT_ONE : totalProductId;
+//                    //  计算每个商品 ID 的占比
+//                    Map<BigInteger, Double> productRatioMap =
+//                            productIdList.stream()
+//                                    .collect(Collectors.groupingBy(
+//                                            Function.identity(),          // 商品ID作为key
+//                                            Collectors.collectingAndThen(
+//                                                    Collectors.counting(), // 统计次数
+//                                                    count -> count * ConstNumber.DOUBLE_ONE / totalIds// 计算占比
+//                                            )
+//                                    ));
+//                    // 取占比排名前三的商品
+//                    Map<BigInteger, Double> top3ProductRatioMap =
+//                            productRatioMap.entrySet()
+//                                    .stream()
+//                                    // 按占比倒序排序
+//                                    .sorted(Map.Entry.<BigInteger, Double>comparingByValue().reversed())
+//                                    // 取前三
+//                                    .limit(ConstNumber.INT_THREE)
+//                                    // 收集回 Map（保持排序）
+//                                    .collect(Collectors.toMap(
+//                                            Map.Entry::getKey,
+//                                            Map.Entry::getValue,
+//                                            (v1, v2) -> v1,
+//                                            LinkedHashMap::new
+//                                    ));
+//
+//                    Set<BigInteger> top3ProductIdSet = top3ProductRatioMap.keySet();
+//
+//                    //构造用于大模型推荐的输入数据
+//                    List<ProductForEmbeddingApVO> productForEmbeddingApVOList = new ArrayList<>();
+//                    // === 将最新3条搜索内容转为虚拟商品（仅含关键词） ===
+//                    Optional.of(searchContentApiList)
+//                            .orElse(List.of())
+//                            .stream()
+//                            .limit(ConstNumber.INT_THREE)
+//                            .filter(Objects::nonNull)
+//                            .forEach(searchContentApi ->
+//                                    productForEmbeddingApVOList.add(
+//                                            ProductForEmbeddingApVO.builder()
+//                                                    .brand(searchContentApi.getSearchContent())
+//                                                    .title(searchContentApi.getSearchContent())
+//                                                    .categoryNames(List.of(searchContentApi.getSearchContent()))
+//                                                    .skuList(List.of(
+//                                                                    ProductForEmbeddingApVO
+//                                                                            .SkuItem
+//                                                                            .builder()
+//                                                                            .name(searchContentApi.getSearchContent())
+//                                                                            .price(searchContentApi.getMinPrice().toString())
+//                                                                            .build()
+//                                                            )
+//                                                    )
+//                                                    .tagNames(List.of(searchContentApi.getSearchContent()))
+//                                                    .build())
+//                            );
+//                    // === 将 Top3 点击商品转为结构化推荐输入 ===
+//                    Optional.of(clickProfileApiList)
+//                            .orElse(List.of())
+//                            .stream()
+//                            .filter(Objects::nonNull)
+//                            .filter(clickProfileApi -> top3ProductIdSet.contains(clickProfileApi.getProduct().getId()))
+//                            .forEach(clickProfileApi ->
+//                                    productForEmbeddingApVOList.add(
+//                                            ProductForEmbeddingApVO.builder()
+//                                                    .id(clickProfileApi.getProduct().getId())
+//                                                    .title(clickProfileApi.getProduct().getName())
+//                                                    .brand(clickProfileApi.getProduct().getBrand())
+//                                                    .score(top3ProductRatioMap.get(clickProfileApi.getProduct().getId()))
+//                                                    .tagNames(
+//                                                            clickProfileApi.getTagList()
+//                                                                    .stream()
+//                                                                    .map(TagApiVO::getName)
+//                                                                    .collect(Collectors.toList())
+//                                                    )
+//                                                    .skuList(
+//                                                            clickProfileApi.getSkuList()
+//                                                                    .stream()
+//                                                                    .map(skuApiVO ->
+//                                                                            ProductForEmbeddingApVO.SkuItem.builder()
+//                                                                                    .name(skuApiVO.getName())
+//                                                                                    .price(skuApiVO.getPrice().toString())
+//                                                                                    .id(skuApiVO.getId().toString())
+//                                                                                    .skuCode(skuApiVO.getSkuCode())
+//                                                                                    .build()
+//                                                                    )
+//                                                                    .collect(Collectors.toList())
+//                                                    )
+//                                                    .categoryNames(
+//                                                            clickProfileApi.getCategoryList()
+//                                                                    .stream()
+//                                                                    .map(CategoryApiVO::getName)
+//                                                                    .collect(Collectors.toList())
+//                                                    )
+//                                                    .placeOfOrigin(clickProfileApi.getProduct().getPlaceOfOrigin())
+//                                                    .description(clickProfileApi.getProduct().getDescription())
+//                                                    .build()
+//                                    ));
+//                    // === 将 Top3 收藏商品转为结构化推荐输入（去重逻辑由大模型处理）===
+//                    Optional.of(collectProfileApiList)
+//                            .orElse(List.of())
+//                            .stream()
+//                            .filter(Objects::nonNull)
+//                            .filter(collect -> top3ProductIdSet.contains(collect.getProduct().getId()))
+//                            .forEach(collectProfileApi ->
+//                                    productForEmbeddingApVOList.add(
+//                                            ProductForEmbeddingApVO.builder()
+//                                                    .id(collectProfileApi.getProduct().getId())
+//                                                    .title(collectProfileApi.getProduct().getName())
+//                                                    .brand(collectProfileApi.getProduct().getBrand())
+//                                                    .score(top3ProductRatioMap.get(collectProfileApi.getProduct().getId()))
+//                                                    .description(collectProfileApi.getProduct().getDescription())
+//                                                    .placeOfOrigin(collectProfileApi.getProduct().getPlaceOfOrigin())
+//                                                    .categoryNames(
+//                                                            collectProfileApi.getCategoryList()
+//                                                                    .stream()
+//                                                                    .map(CategoryApiVO::getName)
+//                                                                    .collect(Collectors.toList())
+//                                                    )
+//                                                    .tagNames(
+//                                                            collectProfileApi.getTagList()
+//                                                                    .stream()
+//                                                                    .map(TagApiVO::getName)
+//                                                                    .collect(Collectors.toList())
+//                                                    )
+//                                                    .skuList(
+//                                                            collectProfileApi.getSkuList()
+//                                                                    .stream()
+//                                                                    .map(skuApiVO ->
+//                                                                            ProductForEmbeddingApVO.SkuItem.builder()
+//                                                                                    .name(skuApiVO.getName())
+//                                                                                    .price(skuApiVO.getPrice().toString())
+//                                                                                    .id(skuApiVO.getId().toString())
+//                                                                                    .skuCode(skuApiVO.getSkuCode())
+//                                                                                    .build()
+//                                                                    )
+//                                                                    .toList()
+//                                                    )
+//                                                    .build()
+//                                    )
+//                            );
+//                    RequestBodyProductForEmbeddingApVO<List<ProductForEmbeddingApVO>> requestBodyProductForEmbeddingApVO =
+//                            RequestBodyProductForEmbeddingApVO.<List<ProductForEmbeddingApVO>>builder()
+//                                    .topK(20)
+//                                    .data(productForEmbeddingApVOList)
+//                                    .build();
+//                    return aiChatClientRecommendServiceApi.recommendProduct(requestBodyProductForEmbeddingApVO)
+//                            .flatMap(recommendProductIds -> {
+//                                        if (Objects.isNull(recommendProductIds)
+//                                                || Objects.isNull(recommendProductIds.getData())
+//                                                || recommendProductIds.getData().isEmpty()) {
+//                                            //默认返回最新加的5条
+//                                            return productRepository.findAll().take(20)
+//                                                    .map(p -> ProductCustomerVO.builder()
+//                                                            .image(p.getImage())
+//                                                            .video(p.getVideo())
+//                                                            .status(p.getStatus())
+//                                                            .description(p.getDescription())
+//                                                            .publishTime(p.getPublishTime())
+//                                                            .brand(p.getBrand())
+//                                                            .id(p.getId())
+//                                                            .name(p.getName())
+//                                                            .level(p.getLevel())
+//                                                            .placeOfOrigin(p.getPlaceOfOrigin())
+//                                                            .minPrice(p.getMinPrice().setScale(2, RoundingMode.HALF_UP))
+//                                                            .maxPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
+//                                                            .originalPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
+//                                                            .discountPrice(
+//                                                                    Optional.ofNullable(p.getMinPrice())
+//                                                                            .map(price -> price.multiply(new BigDecimal("0.7")))
+//                                                                            .map(price -> price.setScale(2, RoundingMode.HALF_UP))
+//                                                                            .orElse(BigDecimal.ZERO)
+//                                                            )
+//                                                            .placeOfOrigin(p.getPlaceOfOrigin())
+//                                                            .build()
+//                                                    ).collectList();
+//                                        }
+//                                        return productRepository.findAllById(recommendProductIds.getData())
+//                                                .map(p ->
+//                                                        ProductCustomerVO
+//                                                                .builder()
+//                                                                .image(p.getImage())
+//                                                                .video(p.getVideo())
+//                                                                .status(p.getStatus())
+//                                                                .description(p.getDescription())
+//                                                                .publishTime(p.getPublishTime())
+//                                                                .brand(p.getBrand())
+//                                                                .id(p.getId())
+//                                                                .name(p.getName())
+//                                                                .level(p.getLevel())
+//                                                                .placeOfOrigin(p.getPlaceOfOrigin())
+//                                                                .minPrice(p.getMinPrice().setScale(2, RoundingMode.HALF_UP))
+//                                                                .maxPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
+//                                                                .originalPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
+//                                                                .discountPrice(
+//                                                                        Optional.ofNullable(p.getMinPrice())
+//                                                                                .map(price -> price.multiply(new BigDecimal("0.7")))
+//                                                                                .map(price -> price.setScale(2, RoundingMode.HALF_UP))
+//                                                                                .orElse(BigDecimal.ZERO)
+//                                                                )
+//                                                                .placeOfOrigin(p.getPlaceOfOrigin())
+//                                                                .build()
+//
+//                                                )
+//                                                .collectList();
+//                                    }
+//
+//                            )
+//                            .onErrorResume(Mono::error);
+//                })
+//                .onErrorResume(e -> {
+//                    log.error("获取推荐商品失败", e);
+//                    return Mono.empty();
+//                });
+//    }
 
     /**
      * 基于 Gorse 协同过滤引擎获取用户喜欢的商品推荐。
@@ -804,5 +866,389 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                             .build();
                 })
                 .collectList();
+    }
+
+    /**
+     * 获取购买记录并融合商品信息和分类信息
+     * 购买记录从远程API获取，商品和分类信息从本地数据库查询，然后组合
+     */
+    private Mono<List<PurchaseOrderVOApi>> findPurchaseOrdersWithProductInfo() {
+        return purchaseOrderServiceApi.findByRows(ConstNumber.INT_TWO)
+                .flatMap(r -> {
+                    List<PurchaseOrderVOApi> purchaseOrderVOApis = Optional.ofNullable(r.getData()).orElse(new ArrayList<>());
+                    if (purchaseOrderVOApis.isEmpty()) {
+                        return Mono.just(new ArrayList<PurchaseOrderVOApi>());
+                    }
+
+                    // 提取所有商品ID（去重）
+                    List<BigInteger> productIds = purchaseOrderVOApis.stream()
+                            .map(PurchaseOrderVOApi::getProductId)
+                            .filter(Objects::nonNull)
+                            .distinct()
+                            .toList();
+
+                    if (productIds.isEmpty()) {
+                        return Mono.just(purchaseOrderVOApis);
+                    }
+
+                    // 查询商品信息
+                    Mono<List<Product>> productMono = productRepository.findAllById(productIds)
+                            .collectList();
+
+                    // 查询商品 - 分类关联关系
+                    Mono<List<ProductCategory>> productCategoryMono = productCategoryRepository.findByProductIdIn(productIds)
+                            .collectList();
+
+                    // 同时获取商品和商品 - 分类关联关系
+                    return Mono.zip(productMono, productCategoryMono)
+                            .flatMap(tuple -> {
+                                List<Product> products = tuple.getT1();
+                                List<ProductCategory> productCategories = tuple.getT2();
+
+                                // 提取所有分类ID
+                                List<BigInteger> categoryIds = productCategories.stream()
+                                        .map(ProductCategory::getCategoryId)
+                                        .filter(Objects::nonNull)
+                                        .distinct()
+                                        .toList();
+
+                                if (categoryIds.isEmpty()) {
+                                    // 没有分类信息，只融合商品信息
+                                    return Mono.just(combineProductAndOrder(purchaseOrderVOApis, products, new ArrayList<>()));
+                                }
+
+                                // 查询分类详情
+                                return categoryRepository.findAllById(categoryIds)
+                                        .map(category -> BeanConvertUtil.toBean(category, CategoryApiVO.class))
+                                        .collectList()
+                                        .map(categories -> combineProductAndOrder(purchaseOrderVOApis, products, productCategories, categories));
+                            });
+                })
+                .onErrorResume(e -> {
+                    log.warn("获取购买记录融合商品信息失败", e);
+                    return Mono.just(new ArrayList<PurchaseOrderVOApi>());
+                });
+    }
+
+    /**
+     * 融合购买记录、商品信息（无分类）
+     */
+    private List<PurchaseOrderVOApi> combineProductAndOrder(List<PurchaseOrderVOApi> orders,
+                                                            List<Product> products,
+                                                            List<CategoryApiVO> categories) {
+        return combineProductAndOrder(orders, products, new ArrayList<>(), categories);
+    }
+
+    /**
+     * 融合购买记录、商品信息和分类信息
+     */
+    private List<PurchaseOrderVOApi> combineProductAndOrder(List<PurchaseOrderVOApi> orders,
+                                                            List<Product> products,
+                                                            List<ProductCategory> productCategories,
+                                                            List<CategoryApiVO> categories) {
+        // 构建商品ID到商品对象的映射
+        Map<BigInteger, Product> productMap = products.stream()
+                .collect(Collectors.toMap(Product::getId, Function.identity(), (v1, v2) -> v1));
+
+        // 构建商品ID到分类列表的映射
+        Map<BigInteger, List<CategoryApiVO>> productCategoryMap = productCategories.stream()
+                .collect(Collectors.groupingBy(
+                        ProductCategory::getProductId,
+                        Collectors.mapping(
+                                pc -> categories.stream()
+                                        .filter(c -> c.getId().equals(pc.getCategoryId()))
+                                        .findFirst()
+                                        .orElse(null),
+                                Collectors.filtering(Objects::nonNull, Collectors.toList())
+                        )
+                ));
+
+        // 融合购买记录、商品信息和分类信息
+        return orders.stream()
+                .peek(order -> {
+                    BigInteger productId = order.getProductId();
+
+                    // 融合商品信息
+                    Product product = productMap.get(productId);
+                    if (product != null) {
+                        order.setName(product.getName());
+                        order.setImage(product.getImage());
+                    }
+
+                    // 融合分类信息
+                    List<CategoryApiVO> categoryList = productCategoryMap.get(productId);
+                    if (categoryList != null && !categoryList.isEmpty()) {
+                        order.setCategoryApiVOList(categoryList);
+                    }
+                })
+                .toList();
+    }
+
+    /**
+     * 从点击记录构建推荐输入对象
+     */
+    private ProductForEmbeddingApVO buildProductForEmbeddingFromClick(ClickProfileApi clickProfileApi,
+                                                                      Map<BigInteger, Double> ratioMap) {
+        return ProductForEmbeddingApVO.builder()
+                .id(clickProfileApi.getProduct().getId())
+                .title(clickProfileApi.getProduct().getName())
+                .brand(clickProfileApi.getProduct().getBrand())
+                .score(ratioMap.get(clickProfileApi.getProduct().getId()))
+                .tagNames(clickProfileApi.getTagList().stream()
+                        .map(TagApiVO::getName)
+                        .collect(Collectors.toList()))
+                .skuList(clickProfileApi.getSkuList().stream()
+                        .map(skuApiVO -> ProductForEmbeddingApVO.SkuItem.builder()
+                                .name(skuApiVO.getName())
+                                .price(skuApiVO.getPrice().toString())
+                                .id(skuApiVO.getId().toString())
+                                .skuCode(skuApiVO.getSkuCode())
+                                .build())
+                        .collect(Collectors.toList()))
+                .categoryNames(clickProfileApi.getCategoryList().stream()
+                        .map(CategoryApiVO::getName)
+                        .collect(Collectors.toList()))
+                .placeOfOrigin(clickProfileApi.getProduct().getPlaceOfOrigin())
+                .description(clickProfileApi.getProduct().getDescription())
+                .build();
+    }
+
+    /**
+     * 从收藏记录构建推荐输入对象
+     */
+    private ProductForEmbeddingApVO buildProductForEmbeddingFromCollect(CollectProfileApi collectProfileApi,
+                                                                        Map<BigInteger, Double> ratioMap) {
+        return ProductForEmbeddingApVO.builder()
+                .id(collectProfileApi.getProduct().getId())
+                .title(collectProfileApi.getProduct().getName())
+                .brand(collectProfileApi.getProduct().getBrand())
+                .score(ratioMap.get(collectProfileApi.getProduct().getId()))
+                .description(collectProfileApi.getProduct().getDescription())
+                .placeOfOrigin(collectProfileApi.getProduct().getPlaceOfOrigin())
+                .categoryNames(collectProfileApi.getCategoryList().stream()
+                        .map(CategoryApiVO::getName)
+                        .collect(Collectors.toList()))
+                .tagNames(collectProfileApi.getTagList().stream()
+                        .map(TagApiVO::getName)
+                        .collect(Collectors.toList()))
+                .skuList(collectProfileApi.getSkuList().stream()
+                        .map(skuApiVO -> ProductForEmbeddingApVO.SkuItem.builder()
+                                .name(skuApiVO.getName())
+                                .price(skuApiVO.getPrice().toString())
+                                .id(skuApiVO.getId().toString())
+                                .skuCode(skuApiVO.getSkuCode())
+                                .build())
+                        .toList())
+                .build();
+    }
+
+    /**
+     * 从购买记录构建推荐输入对象（新增）
+     */
+    private ProductForEmbeddingApVO buildProductForEmbeddingFromPurchase(PurchaseOrderVOApi order,
+                                                                         Map<BigInteger, Double> ratioMap) {
+        return ProductForEmbeddingApVO.builder()
+                .id(order.getProductId())
+                .title(order.getName())
+                .score(ratioMap.get(order.getProductId()))
+                .categoryNames(Optional.ofNullable(order.getCategoryApiVOList()).orElse(List.of()).stream()
+                        .map(CategoryApiVO::getName)
+                        .collect(Collectors.toList()))
+                .tagNames(Optional.ofNullable(order.getTags()).orElse(List.of()).stream()
+                        .map(TagApiVO::getName)
+                        .collect(Collectors.toList()))
+                .skuList(Optional.ofNullable(order.getSkuApi()).orElse(List.of()).stream()
+                        .map(skuApiVO -> ProductForEmbeddingApVO.SkuItem.builder()
+                                .name(skuApiVO.getName())
+                                .price(skuApiVO.getPrice().toString())
+                                .id(skuApiVO.getId().toString())
+                                .skuCode(skuApiVO.getSkuCode())
+                                .build())
+                        .toList())
+                .build();
+    }
+
+    /**
+     * 从 Product 构建 ProductCustomerVO（提取公共逻辑）
+     */
+    private ProductCustomerVO buildProductCustomerVO(Product p) {
+        return ProductCustomerVO.builder()
+                .image(p.getImage())
+                .video(p.getVideo())
+                .status(p.getStatus())
+                .description(p.getDescription())
+                .publishTime(p.getPublishTime())
+                .brand(p.getBrand())
+                .id(p.getId())
+                .name(p.getName())
+                .level(p.getLevel())
+                .placeOfOrigin(p.getPlaceOfOrigin())
+                .minPrice(p.getMinPrice().setScale(2, RoundingMode.HALF_UP))
+                .maxPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
+                .originalPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
+                .discountPrice(Optional.ofNullable(p.getMinPrice())
+                        .map(price -> price.multiply(new BigDecimal("0.7")))
+                        .map(price -> price.setScale(2, RoundingMode.HALF_UP))
+                        .orElse(BigDecimal.ZERO))
+                .build();
+    }
+
+    @Override
+    public Mono<List<ProductCustomerVO>> recommend() {
+        // 获取用户行为记录
+        Mono<ResultT<List<ClickProfileApi>>> apiUserClickRecord = userClickServiceApi.findUserClickRecord(ConstNumber.INT_TWO);
+        Mono<ResultT<List<CollectProfileApi>>> apiUserCollectRecord = userCollectServiceApi.findUserCollectRecord(ConstNumber.INT_TWO);
+        Mono<ResultT<List<SearchContentApi>>> apiUserSearchRecord = userSearchServiceApi.findUserSearchRecord(ConstNumber.INT_TWO);
+        // 使用融合后的购买记录
+        Mono<List<PurchaseOrderVOApi>> apiOrderRecord = findPurchaseOrdersWithProductInfo();
+
+        return Mono.zip(apiUserClickRecord, apiUserCollectRecord, apiUserSearchRecord, apiOrderRecord)
+                .flatMap(tuple -> {
+                    // 处理搜索记录，按时间倒序
+                    List<SearchContentApi> searchContentApiList = Optional.ofNullable(tuple.getT3().getData())
+                            .orElse(List.of())
+                            .stream()
+                            .filter(Objects::nonNull)
+                            .sorted(Comparator.comparing(SearchContentApi::getSearchTime, Comparator.reverseOrder()))
+                            .toList();
+
+                    List<ClickProfileApi> clickProfileApiList = Optional.ofNullable(tuple.getT1().getData()).orElse(List.of());
+                    List<CollectProfileApi> collectProfileApiList = Optional.ofNullable(tuple.getT2().getData()).orElse(List.of());
+                    // 购买记录已经是融合后的数据
+                    List<PurchaseOrderVOApi> purchaseOrderList = Optional.of(tuple.getT4()).orElse(List.of());
+
+                    // === 合并点击、收藏、购买的商品 ID 列表 ===
+                    List<BigInteger> productIdList = Stream.concat(
+                                    Stream.concat(
+                                            Optional.of(clickProfileApiList).orElse(List.of()).stream()
+                                                    .map(c -> c.getProduct().getId()),
+                                            Optional.of(collectProfileApiList).orElse(List.of()).stream()
+                                                    .map(c -> c.getProduct().getId())
+                                    ),
+                                    purchaseOrderList.stream()
+                                            .map(PurchaseOrderVOApi::getProductId)
+                                            .filter(Objects::nonNull)
+                            )
+                            .filter(Objects::nonNull)
+                            .distinct()
+                            .toList();
+
+                    int totalProductId = productIdList.size();
+                    final int totalIds = totalProductId == ConstNumber.INT_ZERO ? ConstNumber.INT_ONE : totalProductId;
+
+                    // 计算每个商品 ID 的占比（点击+收藏+购买）
+                    Map<BigInteger, Double> productRatioMap = productIdList.stream()
+                            .collect(Collectors.groupingBy(
+                                    Function.identity(),
+                                    Collectors.collectingAndThen(
+                                            Collectors.counting(),
+                                            count -> count * ConstNumber.DOUBLE_ONE / totalIds
+                                    )
+                            ));
+
+                    // 取占比排名前三的商品
+                    Map<BigInteger, Double> top3ProductRatioMap = productRatioMap.entrySet().stream()
+                            .sorted(Map.Entry.<BigInteger, Double>comparingByValue().reversed())
+                            .limit(ConstNumber.INT_THREE)
+                            .collect(Collectors.toMap(
+                                    Map.Entry::getKey,
+                                    Map.Entry::getValue,
+                                    (v1, v2) -> v1,
+                                    LinkedHashMap::new
+                            ));
+
+                    Set<BigInteger> top3ProductIdSet = top3ProductRatioMap.keySet();
+
+                    // 构造用于大模型推荐的输入数据
+                    List<ProductForEmbeddingApVO> productForEmbeddingApVOList = new ArrayList<>();
+
+                    // === 将最新3条搜索内容转为虚拟商品（仅含关键词） ===
+                    Optional.of(searchContentApiList).orElse(List.of()).stream()
+                            .limit(ConstNumber.INT_THREE)
+                            .filter(Objects::nonNull)
+                            .forEach(searchContentApi ->
+                                    productForEmbeddingApVOList.add(
+                                            ProductForEmbeddingApVO.builder()
+                                                    .brand(searchContentApi.getSearchContent())
+                                                    .title(searchContentApi.getSearchContent())
+                                                    .categoryNames(List.of(searchContentApi.getSearchContent()))
+                                                    .skuList(List.of(
+                                                            ProductForEmbeddingApVO.SkuItem.builder()
+                                                                    .name(searchContentApi.getSearchContent())
+                                                                    .price(searchContentApi.getMinPrice().toString())
+                                                                    .build()
+                                                    ))
+                                                    .tagNames(List.of(searchContentApi.getSearchContent()))
+                                                    .build())
+                            );
+
+                    // === 将 Top3 点击商品转为结构化推荐输入 ===
+                    Optional.of(clickProfileApiList).orElse(List.of()).stream()
+                            .filter(Objects::nonNull)
+                            .filter(clickProfileApi -> top3ProductIdSet.contains(clickProfileApi.getProduct().getId()))
+                            .forEach(clickProfileApi ->
+                                    productForEmbeddingApVOList.add(buildProductForEmbeddingFromClick(clickProfileApi, top3ProductRatioMap))
+                            );
+
+                    // === 将 Top3 收藏商品转为结构化推荐输入 ===
+                    Optional.of(collectProfileApiList).orElse(List.of()).stream()
+                            .filter(Objects::nonNull)
+                            .filter(collect -> top3ProductIdSet.contains(collect.getProduct().getId()))
+                            .forEach(collectProfileApi ->
+                                    productForEmbeddingApVOList.add(buildProductForEmbeddingFromCollect(collectProfileApi, top3ProductRatioMap))
+                            );
+
+                    // === 将购买记录商品转为结构化推荐输入（新增） ===
+                    purchaseOrderList.stream()
+                            .filter(Objects::nonNull)
+                            .filter(order -> top3ProductIdSet.contains(order.getProductId()))
+                            .forEach(order ->
+                                    productForEmbeddingApVOList.add(buildProductForEmbeddingFromPurchase(order, top3ProductRatioMap))
+                            );
+
+                    RequestBodyProductForEmbeddingApVO<List<ProductForEmbeddingApVO>> requestBodyProductForEmbeddingApVO =
+                            RequestBodyProductForEmbeddingApVO.<List<ProductForEmbeddingApVO>>builder()
+                                    .topK(20)
+                                    .data(productForEmbeddingApVOList)
+                                    .build();
+
+                    return aiChatClientRecommendServiceApi.recommendProduct(requestBodyProductForEmbeddingApVO)
+                            .flatMap(recommendProductIds -> {
+                                if (Objects.isNull(recommendProductIds)
+                                        || Objects.isNull(recommendProductIds.getData())
+                                        || recommendProductIds.getData().isEmpty()) {
+                                    // 默认返回最新的5条
+                                    return productRepository.findAll().take(20)
+                                            .map(this::buildProductCustomerVO)
+                                            .collectList();
+                                }
+                                List<BigInteger> recommendIds = recommendProductIds.getData();
+
+                                return productRepository.findAllById(recommendIds)
+                                        .collectMap(Product::getId)
+                                        .flatMapMany(productMap ->
+                                                Flux.fromIterable(recommendIds)
+                                                        .map(productMap::get)
+                                                        .filter(Objects::nonNull)
+                                        )
+                                        .map(this::buildProductCustomerVO)
+                                        .collectList();
+                            })
+                            .onErrorResume(Mono::error);
+                })
+                .onErrorResume(e -> {
+                    log.error("获取推荐商品失败", e);
+                    return Mono.empty();
+                });
+    }
+
+    @Override
+    public Mono<List<ProductCustomerVO>> hot() {
+        return null;
+    }
+
+    @Override
+    public Mono<List<ProductCustomerVO>> mostNew() {
+        return null;
     }
 }

@@ -13,6 +13,8 @@ public class GoodsApiUrl {
     public static final String SKU_FIND_BY_SKU_IDS = "/sku/findBySkuIds";
 
     public static final String SKU_FIND_BY_ID = "/sku/findById/{id}";
+    //减少库存
+    public static final String SKU_ADD_SALES_BY_ID = "/sku/addSalesById";
     //获取属性列表
     public static final String SKU_FIND_PRODUCT = "/sku/findByProductId/{productId}";
     //获取标签列表

@@ -2,7 +2,7 @@ package com.guanshiyun.rpc.goodsapi.warehouse;
 
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.ResultT;
-import com.guanshiyun.rpc.profile.WarehouseApiVO;
+import com.guanshiyun.profile.WarehouseApiVO;
 import reactor.core.publisher.Mono;
 
 import java.math.BigInteger;

@@ -1,6 +1,6 @@
 package com.guanshiyun.service.aitool;
 
-import com.guanshiyun.rpc.profile.ProductCustomerApiVO;
+import com.guanshiyun.profile.ProductCustomerApiVO;
 
 import java.math.BigInteger;
 import java.util.List;
