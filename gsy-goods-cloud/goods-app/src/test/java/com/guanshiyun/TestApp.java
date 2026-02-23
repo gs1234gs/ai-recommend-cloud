@@ -16,7 +16,7 @@ public class TestApp {
     public void test1()
     {
 
-        List<String> block = gorseClient.getRecommend("1")
+        List<String> block = gorseClient.getRecommend("2")
                 .block();
         System.out.println(block);
 

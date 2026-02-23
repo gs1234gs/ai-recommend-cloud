@@ -49,4 +49,12 @@ public interface SKURepository extends ReactiveCrudRepository<SKU, BigInteger> {
             SELECT * FROM sku WHERE product_id IN (:allProductIds)
             """)
     Flux<SKU> findAllByProductId(List<BigInteger> allProductIds);
+
+    @Query("""
+           SELECT product_id 
+                 FROM sku 
+                 GROUP BY product_id 
+                 HAVING SUM(sales_volume) > :salesVolume
+            """)
+    Flux<BigInteger> findProductIdsByTotalSalesGreaterThan(@Param("salesVolume") Integer salesVolume);
 }

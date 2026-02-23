@@ -153,7 +153,8 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
                                             .toList())
                                     .onErrorReturn(Collections.emptyList())
                     )
-                    .map(tuple -> mergeResults(tuple.getT1(), tuple.getT2(), topK));
+                    .map(tuple ->
+                            mergeResults(tuple.getT1(), tuple.getT2(), topK));
         });
     }
 

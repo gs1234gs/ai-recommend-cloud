@@ -59,6 +59,7 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -658,99 +659,74 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 return Mono.error(new Exception("请先登陆"));
             }
             BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+
+            // 封装默认返回方法
+            Supplier<Mono<List<ProductCustomerVO>>> defaultProducts = () ->
+                    productRepository.findAll()
+                            .take(20)
+                            .map(this::toVO)
+                            .collectList();
+
             return gorseClient.getRecommend(userId.toString(), 20)
                     .flatMap(productIds -> {
-                        List<BigInteger> productIdList = productIds
-                                .stream()
+                        List<BigInteger> productIdList = productIds.stream()
                                 .filter(id -> StringUtils.hasText(id) && id.matches("\\d+"))
                                 .map(myBigInteger::bigInteger)
                                 .toList();
+
                         if (productIdList.isEmpty()) {
-                            //默认从数据查出5条
-                            return productRepository.findAll().take(20)
-                                    .map(p ->
-                                            ProductCustomerVO
-                                                    .builder()
-                                                    .image(p.getImage())
-                                                    .video(p.getVideo())
-                                                    .status(p.getStatus())
-                                                    .description(p.getDescription())
-                                                    .publishTime(p.getPublishTime())
-                                                    .brand(p.getBrand())
-                                                    .id(p.getId())
-                                                    .name(p.getName())
-                                                    .level(p.getLevel())
-                                                    .placeOfOrigin(p.getPlaceOfOrigin())
-                                                    .minPrice(p.getMinPrice().setScale(2, RoundingMode.HALF_UP))
-                                                    .maxPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
-                                                    .originalPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
-                                                    .discountPrice(
-                                                            Optional.ofNullable(p.getMinPrice())
-                                                                    .map(price -> price.multiply(new BigDecimal("0.7")))
-                                                                    .map(price -> price.setScale(2, RoundingMode.HALF_UP))
-                                                                    .orElse(BigDecimal.ZERO)
-                                                    )
-                                                    .build()
-                                    )
-                                    .collectList();
+                            return defaultProducts.get();
                         }
+
                         return productRepository.findAllById(productIdList)
-                                .map(p ->
-                                        ProductCustomerVO
-                                                .builder()
-                                                .image(p.getImage())
-                                                .video(p.getVideo())
-                                                .status(p.getStatus())
-                                                .description(p.getDescription())
-                                                .publishTime(p.getPublishTime())
-                                                .brand(p.getBrand())
-                                                .id(p.getId())
-                                                .name(p.getName())
-                                                .level(p.getLevel())
-                                                .placeOfOrigin(p.getPlaceOfOrigin())
-                                                .minPrice(p.getMinPrice().setScale(2, RoundingMode.HALF_UP))
-                                                .maxPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
-                                                .originalPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
-                                                .discountPrice(Optional.ofNullable(p.getMinPrice())
-                                                        .map(price -> price.multiply(new BigDecimal("0.7")))
-                                                        .map(price -> price.setScale(2, RoundingMode.HALF_UP))
-                                                        .orElse(BigDecimal.ZERO))
-                                                .placeOfOrigin(p.getPlaceOfOrigin())
-                                                .build()
-                                )
                                 .collectList()
-                                .flatMap(pList -> {
-                                    if (pList.isEmpty()) {
-                                        return productRepository.findAll().take(20)
-                                                .map(p -> ProductCustomerVO.builder()
-                                                        .image(p.getImage())
-                                                        .video(p.getVideo())
-                                                        .status(p.getStatus())
-                                                        .description(p.getDescription())
-                                                        .publishTime(p.getPublishTime())
-                                                        .brand(p.getBrand())
-                                                        .id(p.getId())
-                                                        .name(p.getName())
-                                                        .level(p.getLevel())
-                                                        .placeOfOrigin(p.getPlaceOfOrigin())
-                                                        .minPrice(p.getMinPrice().setScale(2, RoundingMode.HALF_UP))
-                                                        .maxPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
-                                                        .originalPrice(p.getMaxPrice().setScale(2, RoundingMode.HALF_UP))
-                                                        .discountPrice(
-                                                                Optional.ofNullable(p.getMinPrice())
-                                                                        .map(price -> price.multiply(new BigDecimal("0.7")))
-                                                                        .map(price -> price.setScale(2, RoundingMode.HALF_UP))
-                                                                        .orElse(BigDecimal.ZERO)
-                                                        )
-                                                        .placeOfOrigin(p.getPlaceOfOrigin())
-                                                        .build()
-                                                ).collectList();
+                                .flatMap(list -> {
+                                    if (list.isEmpty()) {
+                                        return defaultProducts.get();
                                     }
-                                    return Mono.just(pList);
+                                    // 保持 AI 推荐顺序
+                                    Map<BigInteger, Product> map = list.stream()
+                                            .collect(Collectors.toMap(Product::getId, Function.identity()));
+
+                                    List<ProductCustomerVO> ordered = productIdList.stream()
+                                            .map(map::get)
+                                            .filter(Objects::nonNull)
+                                            .map(this::toVO)
+                                            .toList();
+
+                                    return Mono.just(ordered.isEmpty() ? defaultProducts.get().block() : ordered);
                                 });
-                    })
-                    .onErrorResume(Mono::error);
+                    });
         });
+    }
+
+    // 构建 VO 的方法复用
+    private ProductCustomerVO toVO(Product p) {
+        return ProductCustomerVO.builder()
+                .id(p.getId())
+                .name(p.getName())
+                .image(p.getImage())
+                .video(p.getVideo())
+                .status(p.getStatus())
+                .description(p.getDescription())
+                .publishTime(p.getPublishTime())
+                .brand(p.getBrand())
+                .level(p.getLevel())
+                .placeOfOrigin(p.getPlaceOfOrigin())
+                .minPrice(Optional.ofNullable(p.getMinPrice())
+                        .map(price -> price.setScale(2, RoundingMode.HALF_UP))
+                        .orElse(BigDecimal.ZERO))
+                .maxPrice(Optional.ofNullable(p.getMaxPrice())
+                        .map(price -> price.setScale(2, RoundingMode.HALF_UP))
+                        .orElse(BigDecimal.ZERO))
+                .originalPrice(Optional.ofNullable(p.getMaxPrice())
+                        .map(price -> price.setScale(2, RoundingMode.HALF_UP))
+                        .orElse(BigDecimal.ZERO))
+                .discountPrice(Optional.ofNullable(p.getMinPrice())
+                        .map(price -> price.multiply(new BigDecimal("0.7"))
+                                .setScale(2, RoundingMode.HALF_UP))
+                        .orElse(BigDecimal.ZERO))
+                .build();
     }
 
     /**
@@ -1244,7 +1220,51 @@ public class RecommendProductServiceImpl implements RecommendProductService {
 
     @Override
     public Mono<List<ProductCustomerVO>> hot() {
-        return null;
+        return utilsService
+                .findProductIdsByTotalSalesGreaterThan(ConstNumber.INT_HUNDRED)
+                .flatMap(ids -> {
+                    if (ids.isEmpty()) {
+                        return Mono.just(Collections.emptyList());
+                    }
+
+                    // 查询这些 ID 对应的商品
+                    return productRepository.findAllById(ids)
+                            .map(p -> ProductCustomerVO.builder()
+                                    .id(p.getId())
+                                    .name(p.getName())
+                                    .image(p.getImage())
+                                    .video(p.getVideo())
+                                    .status(p.getStatus())
+                                    .description(p.getDescription())
+                                    .publishTime(p.getPublishTime())
+                                    .brand(p.getBrand())
+                                    .level(p.getLevel())
+                                    .placeOfOrigin(p.getPlaceOfOrigin())
+                                    .minPrice(Optional.ofNullable(p.getMinPrice())
+                                            .map(price -> price.setScale(2, RoundingMode.HALF_UP))
+                                            .orElse(BigDecimal.ZERO))
+                                    .maxPrice(Optional.ofNullable(p.getMaxPrice())
+                                            .map(price -> price.setScale(2, RoundingMode.HALF_UP))
+                                            .orElse(BigDecimal.ZERO))
+                                    .originalPrice(Optional.ofNullable(p.getMaxPrice())
+                                            .map(price -> price.setScale(2, RoundingMode.HALF_UP))
+                                            .orElse(BigDecimal.ZERO))
+                                    .discountPrice(Optional.ofNullable(p.getMinPrice())
+                                            .map(price -> price.multiply(new BigDecimal("0.7"))
+                                                    .setScale(2, RoundingMode.HALF_UP))
+                                            .orElse(BigDecimal.ZERO))
+                                    .build())
+                            .collectList()
+                            // 保持输入 ID 顺序
+                            .map(list -> {
+                                Map<BigInteger, ProductCustomerVO> map = list.stream()
+                                        .collect(Collectors.toMap(ProductCustomerVO::getId, Function.identity()));
+                                return ids.stream()
+                                        .map(map::get)
+                                        .filter(Objects::nonNull)
+                                        .toList();
+                            });
+                });
     }
 
     @Override
