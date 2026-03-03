@@ -43,6 +43,7 @@ public class UserCollectController {
                                 .build()
                 );
     }
+    //删除收藏记录
     @DeleteMapping("deleteById/{id}")
     public Mono<ResultT<Boolean>> deleteById(@PathVariable BigInteger id) {
         try {

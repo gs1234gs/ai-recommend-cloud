@@ -2,6 +2,7 @@ package com.guanshiyun.service.chat;
 
 import com.guanshiyun.chat.ChatRecord;
 import com.guanshiyun.controller.chat.vo.ChatRecordVO;
+import com.guanshiyun.mymongodb.ChatRecordContent;
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
@@ -34,7 +35,7 @@ public interface ChatRecordService {
      * @return Mono<BigInteger> 返回保存成功的记录 ID
      *                        如果保存失败或用户未登录返回 0
      */
-    Mono<BigInteger> save(ChatRecord chatRecord);
+    public Mono<BigInteger> save(ChatRecordContent chatRecord);
 
     /**
      * 游标分页查询聊天记录
@@ -42,5 +43,5 @@ public interface ChatRecordService {
      * @param requestCursorPage 游标分页请求对象，包含起始游标、页大小和查询条件
      * @return Flux<ChatRecord> 返回符合条件的聊天记录流（Flux 可用于响应式流式处理）
      */
-    Flux<ChatRecord> findCursorPageChat(RequestCursorPage<ChatRecord> requestCursorPage);
+    Flux<ChatRecordContent> findCursorPageChat(RequestCursorPage<ChatRecord> requestCursorPage);
 }

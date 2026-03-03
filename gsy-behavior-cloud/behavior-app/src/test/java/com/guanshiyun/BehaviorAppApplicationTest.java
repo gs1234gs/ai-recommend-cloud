@@ -1,6 +1,6 @@
 package com.guanshiyun;
 
-import com.guanshiyun.service.browse.UserBrowseService;
+import com.guanshiyun.service.collect.UserCollectService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import io.gorse.gorse4j.Gorse;
 import org.junit.jupiter.api.Test;
@@ -19,13 +19,13 @@ import java.util.List;
 public class BehaviorAppApplicationTest
 {
     @Autowired
-    private UserBrowseService userBrowseService;
+    private UserCollectService userCollectService;
 
     @Test
     public void test()
     {
-        userBrowseService.findAll(10)
-                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(1)))
+        userCollectService.findAll(10)
+                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(17)))
                 .collectList()
                 .map(i->{
                     System.out.println("=======================");

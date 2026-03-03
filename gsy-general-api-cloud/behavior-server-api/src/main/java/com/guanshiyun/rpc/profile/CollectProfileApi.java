@@ -15,6 +15,7 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -32,7 +33,7 @@ public class CollectProfileApi  implements Serializable {
     //商品 id
     private ProductApiVO product;
     //收集时间
-    private BigInteger collectTime;
+    private LocalDateTime collectTime;
     //分类
     private List<CategoryApiVO> categoryList;
     //sku列表

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guanshiyun.chat.ChatRecord;
 import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.chat.vo.ChatRecordVO;
+import com.guanshiyun.mymongodb.ChatRecordContent;
 import com.guanshiyun.req.AllReqChat;
 import com.guanshiyun.req.ReqChat;
 import com.guanshiyun.requestpojo.RequestCursorPage;
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
@@ -89,6 +91,23 @@ public class ChatController {
                             .build());
                 });
     }
+    //流式
+    @PostMapping(value = "/recommendFluxChat", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> recommendFluxChat(@RequestBody ReqChat reqChat, ServerWebExchange exchange) {
+        return chatService.chatFluxRecommend(reqChat)
+                .doOnNext(tuple -> {
+                    BigInteger chatId = tuple.getT2();
+                    if (!exchange.getResponse().isCommitted()) {
+                        exchange.getResponse().getHeaders().set("X-Conversation-ID", chatId.toString());
+                    }
+                })
+                .flatMapMany(Tuple2::getT1)
+                .onErrorResume(throwable -> {
+                    log.error("Recommend chat stream error", throwable);
+                    // 错误信息也直接返回纯文本，Spring 会自动包装
+                    return Flux.just("{\"msg\":\"服务器内部错误\",\"code\":500}");
+                });
+    }
 
 
     //删除对话
@@ -133,7 +152,7 @@ public class ChatController {
     }
     //修改对话标题
     @PutMapping("saveChat")
-    public Mono<ResultT<BigInteger>> chatSave(@RequestBody ChatRecord chatRecord){
+    public Mono<ResultT<BigInteger>> chatSave(@RequestBody ChatRecordContent chatRecord){
    return chatRecordService.save(chatRecord)
            .map(saveId ->{
                return ResultT.<BigInteger>builder()

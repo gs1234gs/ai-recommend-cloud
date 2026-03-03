@@ -1,5 +1,6 @@
 package com.guanshiyun.controller.browse.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.guanshiyun.profile.ProductApiVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,12 +18,14 @@ import java.time.LocalDateTime;
 @FieldNameConstants
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserBrowseSaveVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     //主键id
     private BigInteger id;
     //商品id
+
     private ProductApiVO product;
     //浏览开始时间
     private LocalDateTime browseStartTime;

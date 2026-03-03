@@ -42,7 +42,7 @@ public interface RecommendProductService {
      */
     Mono<List<ProductCustomerVO>> like();
 
-
+    Mono<List<ProductCustomerVO>> likePool(Integer offset, int limit, Boolean refresh);
 
     /**
      * 根据商品 ID 查询商品的详细信息。
@@ -57,4 +57,18 @@ public interface RecommendProductService {
     Mono<List<ProductCustomerVO>> hot();
     //最新上架
     Mono<List<ProductCustomerVO>> mostNew();
+    /**
+     * 基于 Redis 候选池的推荐商品滚动加载接口。
+     * <p>
+     * 一次性从推荐引擎（Gorse 等）或数据库中获取 100~200 个候选商品 ID，
+     * 写入 Redis 列表，之后前端通过滚动加载按页弹出并返回商品详情。
+     * 当候选池耗尽时，会自动从数据库回源补充。
+     *
+     * @param pageSize 每次返回的商品数量
+     * @param refresh  是否刷新候选池（true 表示丢弃旧池并重新生成推荐）
+     * @return 游标结果，包含本次返回的商品列表以及是否还有下一页
+     */
+    Mono<CursorPageResult<List<ProductCustomerVO>>> recommendByPool(Integer pageSize, Boolean refresh);
+
+    Mono<CursorPageResult<List<ProductCustomerVO>>> findCursorEnd(RequestCursorPage<ProductCustomerVO> requestCursorPage);
 }

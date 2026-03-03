@@ -12,6 +12,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -33,5 +34,5 @@ public class UserSearchVO extends BasePojo implements Serializable {
     //品牌id等
     private BigInteger brandId;
     //搜索时间
-    private BigInteger searchTime;
+    private LocalDateTime searchTime;
 }

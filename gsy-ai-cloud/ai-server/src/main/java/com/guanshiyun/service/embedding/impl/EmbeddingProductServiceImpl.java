@@ -1,12 +1,13 @@
-package com.guanshiyun.service.embedding.product.impl;
+package com.guanshiyun.service.embedding.impl;
 
+import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.behaviorenums.GuestEnum;
 import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.embedding.ActiveSimilarityThresholdConfiguration;
 import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import com.guanshiyun.goser.GorseClient;
 import com.guanshiyun.repository.embedding.ActiveSimilarityThresholdConfigurationRepository;
-import com.guanshiyun.service.embedding.product.EmbeddingProductService;
+import com.guanshiyun.service.embedding.EmbeddingProductService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -134,7 +135,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
 
             // 构造语义查询
             String fusedQuery = recentProducts.stream()
-                    .limit(5)
+                    .limit(ConstNumber.INT_FIVE)
                     .map(ProductForEmbeddingApVO::recommendEmbeddingText)
                     .filter(Objects::nonNull)
                     .filter(text -> !text.isBlank())

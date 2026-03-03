@@ -3,7 +3,7 @@ package com.guanshiyun.controller.embedding;
 import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import com.guanshiyun.embedding.RequestBodyProductForEmbeddingApVO;
 import com.guanshiyun.responsepojo.ResultT;
-import com.guanshiyun.service.embedding.product.EmbeddingProductService;
+import com.guanshiyun.service.embedding.EmbeddingProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

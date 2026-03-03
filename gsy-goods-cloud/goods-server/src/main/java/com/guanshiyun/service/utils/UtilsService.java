@@ -50,7 +50,7 @@ public class UtilsService {
                 .collectList()
                 .map(ids->{
                     Collections.shuffle(ids);
-                   return ids.subList(0, Math.min(ids.size(), 4));
+                   return ids;
                 });
 
     }

@@ -6,6 +6,8 @@ spring:
   webflux:
     multipart:
       max-in-memory-size: 100MB
+  main:
+    allow-bean-definition-overriding: true
 
 server:
   port: 9531

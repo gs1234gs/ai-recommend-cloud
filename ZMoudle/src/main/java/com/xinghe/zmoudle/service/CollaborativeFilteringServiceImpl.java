@@ -114,8 +114,8 @@ currentUserPurchaseRecord.keySet().forEach(productId->{
                 Math.fma(user1.get(productId), user2.get(productId), 0.0)
 //                user1.get(productId) * user2.get(productId)
         ).sum();
-        double sqrt1 = Math.sqrt(user1.values().stream().mapToDouble(value -> Math.pow(value, 2)).sum());
-        double sqrt2 = Math.sqrt(user2.values().stream().mapToDouble(value -> Math.pow(value, 2)).sum());
+        double sqrt1 = Math.sqrt(user1.values().stream().mapToDouble(v -> Math.pow(v, 2)).sum());
+        double sqrt2 = Math.sqrt(user2.values().stream().mapToDouble(v -> Math.pow(v, 2)).sum());
         double denominator = Math.fma(sqrt1, sqrt2, 0.0);
         if(denominator == 0){
             return 0;

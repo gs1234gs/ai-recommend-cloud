@@ -1,5 +1,6 @@
 package com.guanshiyun.profile;
 
+
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.guanshiyun.base.BasePojo;

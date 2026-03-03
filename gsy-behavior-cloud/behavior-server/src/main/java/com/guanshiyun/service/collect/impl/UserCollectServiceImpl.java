@@ -87,7 +87,7 @@ public class UserCollectServiceImpl implements UserCollectService {
                     tagApiService.findByProductId(productId);
             return Mono.zip(categoryApiServiceByProductId, skuApiServiceByProductId, tagApiServiceByProductId)
                     .map(tuple -> {
-                                UserCollectMongodb clickMongodb = userCollectMongodb.setSkuList(tuple.getT2().getData())
+                                UserCollectMongodb collectMongodb = userCollectMongodb.setSkuList(tuple.getT2().getData())
                                         .setCategoryList(tuple.getT1().getData())
                                         .setTagList(tuple.getT3().getData());
                                 Feedback feedback = Feedback.builder()
@@ -96,7 +96,7 @@ public class UserCollectServiceImpl implements UserCollectService {
                                         .itemId(productId.toString())
                                         .timestamp(userCollectMongodb.getCollectTime().format(DateTimeFormatter.ISO_DATE_TIME))
                                         .build();
-                                return Tuples.of(clickMongodb, feedback);
+                                return Tuples.of(collectMongodb, feedback);
                             }
 
                     )
@@ -106,7 +106,18 @@ public class UserCollectServiceImpl implements UserCollectService {
                         Mono<RowAffected> rowAffectedMono = gorseClient.insertFeedback(List.of(feedback));
                         Mono<UserCollectMongodb> save = userCollectMongodbRepository.save(collectMongodb);
                         return Mono.zip(rowAffectedMono, save)
-                                .map(t -> t.getT2().getId());
+                                .map(t -> {
+                                    log.info("保存收藏记录成功{}:{}", t.getT1().getRowAffected(), t.getT2().getId());
+                                    return t.getT2().getId();
+                                })
+                                .onErrorResume(e -> {
+                                    log.error("保存收藏记录失败", e);
+                                    return Mono.error(new RuntimeException("保存收藏记录失败", e));
+                                });
+                    })
+                    .onErrorResume(e->{
+                        log.error("保存收藏记录失败", e);
+                        return Mono.error(new RuntimeException("保存收藏记录失败", e));
                     });
 
     });

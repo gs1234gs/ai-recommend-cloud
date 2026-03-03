@@ -25,7 +25,6 @@ import reactor.test.StepVerifier;
 import reactor.util.context.Context;
 
 import java.math.BigInteger;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -211,18 +210,18 @@ class AiAppApplicationTests {
                         }
                 );
     }
-    @Test
-    void Test6() {
-        chatRecordService.save(
-                ChatRecord.builder()
-                        .id(BigInteger.valueOf(143200670353195008L))
-                        .title("二牛")
-                        .creator(BigInteger.valueOf(1))
-                        .createTime(LocalDateTime.now())
-                        .build()
-        ).contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(1)))
-                .subscribe(System.out::println);
-    }
+//    @Test
+//    void Test6() {
+//        chatRecordService.save(
+//                ChatRecord.builder()
+//                        .id(BigInteger.valueOf(143200670353195008L))
+//                        .title("二牛")
+//                        .creator(BigInteger.valueOf(1))
+//                        .createTime(LocalDateTime.now())
+//                        .build()
+//        ).contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(1)))
+//                .subscribe(System.out::println);
+//    }
     @Test
     void Test7() {
         StringBuffer stringBuffer = new StringBuffer();

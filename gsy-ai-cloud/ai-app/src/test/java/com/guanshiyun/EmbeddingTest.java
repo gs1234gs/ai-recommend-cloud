@@ -1,14 +1,16 @@
 package com.guanshiyun;
 
+import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import com.guanshiyun.rpc.goodsapi.category.CategoryApiService;
 import com.guanshiyun.rpc.goodsapi.product.ProductApiService;
 import com.guanshiyun.rpc.goodsapi.sku.SkuApiService;
 import com.guanshiyun.rpc.goodsapi.tag.TagApiService;
-import com.guanshiyun.service.embedding.product.EmbeddingProductService;
+import com.guanshiyun.service.embedding.EmbeddingProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Base64;
@@ -76,14 +78,14 @@ public class EmbeddingTest {
     @Test
     void test2() {
         embeddingProductService.recommendForUser(List.of(
-//                ProductForEmbeddingApVO.builder()
-//                        .id(BigInteger.ONE)
-//                        .title("vivo智能耳机 Pro + 无线降噪")
-//                        .build(),
-//                ProductForEmbeddingApVO.builder()
-//                        .id(BigInteger.TWO)
-//                        .title("Midea 美的一匹半 变频冷暖壁挂空调")
-//                        .build()
+                ProductForEmbeddingApVO.builder()
+                        .id(BigInteger.ONE)
+                        .title("vivo智能耳机 Pro + 无线降噪")
+                        .build(),
+                ProductForEmbeddingApVO.builder()
+                        .id(BigInteger.TWO)
+                        .title("Midea 美的一匹半 变频冷暖壁挂空调")
+                        .build()
         ),5)
                 .doOnNext(System.out::println)
                 .block(Duration.ofSeconds(60));

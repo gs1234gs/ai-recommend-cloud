@@ -18,10 +18,18 @@ import java.util.Objects;
 
 @Configuration
 public class WebClientLoadBalanced {
-    @Bean
-    @Primary  // 关键：标记为首选
+    /**
+     * 全局首选的 WebClient.Builder Bean
+     * 别名：defaultWebClientBuilder（语义化命名，明确标识这是默认/首选的构建器）
+     * @return WebClient.Builder 实例
+     */
+    @Bean("defaultWebClientBuilder")  // 自定义别名，语义清晰
+    @Primary                           // 保留首选标记，解决多Bean冲突
     public WebClient.Builder webClientBuilder() {
-        return WebClient.builder();
+        // 基础配置：可根据需要扩展默认配置（如默认超时、默认请求头）
+        return WebClient.builder()
+                // 可选：添加全局默认配置，增强实用性
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(16 * 1024 * 1024)); // 调整默认内存缓冲区大小
     }
 
     @Bean

@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.10</version>
+        <version>3.5.11</version>
         <relativePath/>
         <!-- lookup parent from repository -->
     </parent>
@@ -47,21 +47,21 @@
         <java.version>21</java.version>
         <project-version>2025.0.0.0</project-version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
-        <fastjson.version>2.0.58</fastjson.version>
+        <fastjson.version>2.0.61</fastjson.version>
         <snapshotName>0.0.1-SNAPSHOT</snapshotName>
         <r2dbc.mysql.version>1.4.1</r2dbc.mysql.version>
         <r2dbc.postgresql.version>1.1.1.RELEASE</r2dbc.postgresql.version>
         <junit.version>4.13.2</junit.version>
-        <gareway.version>4.3.2</gareway.version>
-        <hutool.version>5.8.42</hutool.version>
+        <hutool.version>5.8.43</hutool.version>
         <spring-ai.version>1.1.2</spring-ai.version>
+        <spring-alibaba-ai.version>1.1.2.0</spring-alibaba-ai.version>
 <!--        <mcp.version>0.17.0</mcp.version>-->
 <!--        <mcp.webflux.version>0.8.0</mcp.webflux.version>-->
-        <aliyun.core.version>4.7.6</aliyun.core.version>
+        <aliyun.core.version>4.7.8</aliyun.core.version>
         <gorse.version>0.5.0</gorse.version>
-        <all.dash.version>2.22.2</all.dash.version>
+        <all.dash.version>2.22.9</all.dash.version>
         <common.version>2.1</common.version>
-        <reactive.feign.version>4.2.1</reactive.feign.version>
+<!--        <reactive.feign.version>4.2.1</reactive.feign.version>-->
         <jaxb.api.version>2.3.1</jaxb.api.version>
         <powerjob.version>5.1.2</powerjob.version>
     </properties>
@@ -123,11 +123,11 @@
                 <scope>import</scope>
             </dependency>
             <!-- https://mvnrepository.com/artifact/com.playtika.reactivefeign/feign-reactor-spring-configuration -->
-            <dependency>
-                <groupId>com.playtika.reactivefeign</groupId>
-                <artifactId>feign-reactor-spring-configuration</artifactId>
-                <version>${reactive.feign.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.playtika.reactivefeign</groupId>-->
+<!--                <artifactId>feign-reactor-spring-configuration</artifactId>-->
+<!--                <version>${reactive.feign.version}</version>-->
+<!--            </dependency>-->
 <!--            <dependency>-->
 <!--                <groupId>com.playtika.reactivefeign</groupId>-->
 <!--                <artifactId>feign-reactor-cloud</artifactId>-->
@@ -143,8 +143,8 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
             <dependency>
@@ -153,6 +153,13 @@
                 <version>1.0.0</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud.ai</groupId>
+                <artifactId>spring-ai-alibaba</artifactId>
+                <version>${spring-alibaba-ai.version}</version>
+                <type>pom</type>
+                <scope>import</scope> <!-- 这里改成了 import -->
             </dependency>
             <dependency>
                 <groupId>io.gorse</groupId>

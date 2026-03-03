@@ -1,5 +1,6 @@
 package com.guanshiyun.controller.click.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.guanshiyun.profile.ProductApiVO;
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @ToString(callSuper = true)
 @FieldNameConstants
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserClickSaveVO {
     private BigInteger id;
     //点击时间

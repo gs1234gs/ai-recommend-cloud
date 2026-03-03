@@ -103,7 +103,11 @@ public class UserBrowseServiceImpl implements UserBrowseService {
                 return Flux.fromIterable(userBrowseMongodbList)
                         .flatMap(userBrowseMongodb -> {
                             // ===== 设置浏览记录基础信息 =====
+                            //开始时间=结束时间-浏览时间
+                            LocalDateTime startTime = now.minusDays(userBrowseMongodb.getBrowseDuration().longValueExact());
                             userBrowseMongodb
+                                    .setBrowseEndTime(now)
+                                    .setBrowseStartTime(startTime)
                                     .setId(snowflakePermanent.nextId())
                                     .setCreateTime(now)
                                     .setCreator(useId);

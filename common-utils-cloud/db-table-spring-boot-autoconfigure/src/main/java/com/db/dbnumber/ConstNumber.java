@@ -43,6 +43,10 @@ public class ConstNumber {
     public static final int INT_EIGHT = 8;
     public static final int INT_NINE = 9;
     public static final int INT_TEN = 10;
+    //20
+    public static final int INT_TWENTY = 20;
+    //50
+    public static final int INT_FIFTY = 50;
     public static final int INT_HUNDRED = 100;
     public static final int INT_THOUSAND = 1000;
     //double

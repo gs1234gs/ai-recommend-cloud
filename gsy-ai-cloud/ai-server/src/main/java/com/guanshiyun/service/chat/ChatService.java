@@ -54,4 +54,6 @@ public interface ChatService {
      * @return Mono<Long> 删除的记录行数
      */
     Mono<Long> deleteChatById(Object id);
+
+    Flux<String> tFlux(ReqChat reqChat);
 }

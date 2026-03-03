@@ -3,7 +3,7 @@ package com.guanshiyun.service.aitool.impl;
 import com.guanshiyun.rpc.goodsapi.product.ProductApiService;
 import com.guanshiyun.profile.ProductCustomerApiVO;
 import com.guanshiyun.service.aitool.ProductToolService;
-import com.guanshiyun.service.embedding.product.EmbeddingProductService;
+import com.guanshiyun.service.embedding.EmbeddingProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.tool.annotation.Tool;

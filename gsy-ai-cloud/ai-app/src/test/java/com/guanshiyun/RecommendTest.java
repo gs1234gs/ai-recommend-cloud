@@ -4,7 +4,7 @@ import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import com.guanshiyun.req.ReqChat;
 import com.guanshiyun.rpc.goodsapi.product.ProductApiService;
 import com.guanshiyun.service.chat.ChatService;
-import com.guanshiyun.service.embedding.product.EmbeddingProductService;
+import com.guanshiyun.service.embedding.EmbeddingProductService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

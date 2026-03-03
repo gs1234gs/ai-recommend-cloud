@@ -74,7 +74,7 @@ public class SkuApiServiceImpl implements SkuApiService {
     @Override
     public Mono<ResultT<Boolean>> reduceStockAndAddSales(BigInteger skuId, Integer count) {
         return goodsWebClientRpc.webClient()
-                .get()
+                .put()
                 .uri(builder-> builder.path(GoodsApiUrl.SKU_ADD_SALES_BY_ID)
                         .queryParam("count",count)
                         .queryParam("id",skuId)

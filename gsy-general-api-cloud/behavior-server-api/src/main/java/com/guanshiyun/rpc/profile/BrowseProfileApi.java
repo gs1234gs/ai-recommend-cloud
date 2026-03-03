@@ -34,7 +34,7 @@ public class BrowseProfileApi implements Serializable {
     /** 主键ID */
     private BigInteger id;
     //sku id
-    private List<ProductApiVO> product;
+    private ProductApiVO product;
     //浏览开始时间
     private LocalDateTime browseStartTime;
     //浏览结束时间

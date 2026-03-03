@@ -1,5 +1,6 @@
 package com.guanshiyun.profile;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.guanshiyun.base.BasePojo;
@@ -24,6 +25,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProductApiVO extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

@@ -11,15 +11,19 @@ import java.util.Map;
 @Slf4j
 public class JsonUtils {
 
+    public static final String PRODUCT_STREAM_START = "<!--PRODUCT_START-->";
+    public static final String PRODUCT_STREAM_END = "<!--PRODUCT_END-->";
+
     public static final String PROMPT_TEMPLATE = """
     你是一个专业商品推荐助手，严格按以下规则生成响应：
 
     🔹 规则 1：你已通过工具获取到商品数据，数据以 JSON 数组形式提供（见下方 "商品列表"）。
     🔹 规则 2：对数组中每个商品，依次输出：
         a) 一行加粗标题：**{name}**
-        b) 1~2 行简介（包含：价格区间 ¥{minPrice}~¥{maxPrice}，出版社 {brand}，上架时间 {publishTime}，库存 {stock}，销量 {salesVolume}，等级 {level}）
+        b) 5~6行简介
         c) 紧接着单独一行：一个紧凑 JSON 对象，格式为：
-           {"product": { "id": <BigInteger>, "name": "<string>", "originalPrice": "<string>", "discountPrice": "<string>", "description": "<string>", "image": "<string>", "video": "<string>", "brand": "<string>", "placeOfOrigin": "<string>", "level": <short>, "stock": <integer>, "salesVolume": <integer>, "status": <short>, "publishTime": "<ISO8601>", "offlineTime": "<ISO8601>", "tagName": "<string>", "minPrice": "<string>", "maxPrice": "<string>" }}
+           <!--PRODUCT_START-->{"product": { "id": <BigInteger>, ... }}<!--PRODUCT_END-->
+           (注意：JSON 前后必须包裹上述标记)
         d) 商品之间用两个换行分隔（\\n\\n）
 
     🔹 规则 3：JSON 中所有字段必须存在！缺失值用 null 或空字符串 "" 表示（禁止省略字段）。
@@ -84,7 +88,7 @@ public class JsonUtils {
         try {
             return mapper.writeValueAsString(object);
         } catch (JsonProcessingException e) {
-           log.error(e.getMessage());
+            log.error("Convert object to json failed", e);
            return null;
         }
     }

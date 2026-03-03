@@ -22,6 +22,8 @@ public class ChatRecordContent {
     //聊天记录内容id
     @Id
     private BigInteger id;
+    // 会话标题
+    private String title;
     //发送方id
     private BigInteger senderId;
     //接收方id

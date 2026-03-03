@@ -31,6 +31,7 @@
         <tag/>
         <url/>
     </scm>
+
     <dependencies>
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -73,6 +74,19 @@
             <version>4.38.0</version>
             <scope>compile</scope>
         </dependency>
+        <!-- Spring AI Alibaba Agent Framework -->
+        <dependency>
+            <groupId>com.alibaba.cloud.ai</groupId>
+            <artifactId>spring-ai-alibaba-agent-framework</artifactId>
+            <version>${spring-alibaba-ai.version}</version>
+        </dependency>
+
+        <!-- DashScope ChatModel 支持（如果使用其他模型，请跳转 Spring AI 文档选择对应的 starter） -->
+        <dependency>
+            <groupId>com.alibaba.cloud.ai</groupId>
+            <artifactId>spring-ai-alibaba-starter-dashscope</artifactId>
+            <version>${spring-alibaba-ai.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-vector-store-qdrant</artifactId>
@@ -113,11 +127,6 @@
         <dependency>
             <groupId>com.guanshiyun</groupId>
             <artifactId>public-pojo-spring-boot-starter</artifactId>
-            <version>${snapshotName}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.guanshiyun</groupId>
-            <artifactId>db-table-spring-boot-starter</artifactId>
             <version>${snapshotName}</version>
         </dependency>
         <dependency>

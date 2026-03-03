@@ -1,4 +1,4 @@
-package com.guanshiyun.service.embedding.product;
+package com.guanshiyun.service.embedding;
 
 import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import reactor.core.publisher.Mono;
