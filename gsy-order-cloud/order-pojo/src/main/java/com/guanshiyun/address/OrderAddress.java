@@ -9,7 +9,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,7 +23,7 @@ public class OrderAddress extends BasePojo implements Serializable {
     private static final long serialVersionUID = 1L;
     //地址id
     @Id
-    private BigInteger id;
+    private Long id;
     //地址
     private String address;
     //联系电话

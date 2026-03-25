@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +29,7 @@ public class ProductVO extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     //商品id
-    private BigInteger id;
+    private Long id;
     //商品名称
     private String name;
     //商品价格
@@ -54,11 +54,11 @@ public class ProductVO extends BasePojo implements Serializable {
     private LocalDateTime publishTime; // 上架时间
     private LocalDateTime offlineTime; // 下架时间
     //仓库id
-    private BigInteger warehouseId;
+    private Long warehouseId;
     //分类 id
-    private List<BigInteger> categoryId;
+    private List<Long> categoryId;
     //标签 id
-    private List<BigInteger> tagId;
+    private List<Long> tagId;
     //创建开始时间
     private LocalDateTime startTime;
     //创建结束时间

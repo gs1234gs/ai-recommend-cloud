@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
+
 
 @Getter
 @Builder
@@ -13,12 +13,12 @@ import java.math.BigInteger;
 @NoArgsConstructor
 public class RequestPage<T> {
     // 当前页码
-    private BigInteger pageNum;
+    private Long pageNum;
     // 每页数量
     private Integer pageSize;
     // 查询条件
     private T condition;
-    public RequestPage< T> setPageNum(BigInteger pageNum){
+    public RequestPage< T> setPageNum(Long pageNum){
         this.pageNum = pageNum;
         return this;
     }

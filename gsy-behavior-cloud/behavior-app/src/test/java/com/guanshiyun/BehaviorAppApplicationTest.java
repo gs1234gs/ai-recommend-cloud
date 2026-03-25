@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import reactor.util.context.Context;
 
 import java.io.IOException;
-import java.math.BigInteger;
+
 import java.util.List;
 
 /**
@@ -25,7 +25,7 @@ public class BehaviorAppApplicationTest
     public void test()
     {
         userCollectService.findAll(10)
-                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(17)))
+                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, Long.valueOf(17)))
                 .collectList()
                 .map(i->{
                     System.out.println("=======================");

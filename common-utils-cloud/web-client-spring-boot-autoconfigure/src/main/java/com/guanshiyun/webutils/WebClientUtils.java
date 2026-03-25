@@ -4,20 +4,20 @@ package com.guanshiyun.webutils;
 import com.alibaba.fastjson2.TypeReference;
 import org.springframework.core.ParameterizedTypeReference;
 
-import java.math.BigInteger;
+
 
 public class WebClientUtils {
     public static <T> ParameterizedTypeReference<T> typeRef() {
         return new ParameterizedTypeReference<T>() {};
     }
-    public static BigInteger bigInteger(Object number) {
-        BigInteger bigInteger = null;;
+    public static Long Long(Object number) {
+        Long Long = null;;
         try {
-            bigInteger = new BigInteger(number.toString().trim());
+            Long = new Long(number.toString().trim());
         } catch (Exception e) {
-            throw new RuntimeException("转换BigInteger异常", e);
+            throw new RuntimeException("转换Long异常", e);
         }
-        return bigInteger;
+        return Long;
     }
     public static <T> TypeReference<T> typeRefFastJson2() {
         return new TypeReference<>() {};

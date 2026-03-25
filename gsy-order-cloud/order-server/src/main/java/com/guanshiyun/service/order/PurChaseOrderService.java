@@ -9,24 +9,24 @@ import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.rpc.order.vo.PurchaseOrderVOApi;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 public interface PurChaseOrderService {
     //添加订单
-    Mono<BigInteger> save(PurChaseOrderSaveVO purChaseOrderSaveVO);
+    Mono<Long> save(PurChaseOrderSaveVO purChaseOrderSaveVO);
 
     //修改订单
-    Mono<BigInteger> updateById(PurChaseOrderSaveVO purChaseOrderSaveVO);
+    Mono<Long> updateById(PurChaseOrderSaveVO purChaseOrderSaveVO);
 
     //根据用户id查询
-    Mono<List<PurChaseOrderVO>> findByUserId(BigInteger userId,Integer rows);
+    Mono<List<PurChaseOrderVO>> findByUserId(Long userId,Integer rows);
 
     //根据用户id查询
-    Mono<List<PurChaseOrderVO>> findByUserIds(List<BigInteger> userIds, Integer rows);
+    Mono<List<PurChaseOrderVO>> findByUserIds(List<Long> userIds, Integer rows);
 
     //根据id查询
-    Mono<PurchaseOrderDetailVO> findById(BigInteger id);
+    Mono<PurchaseOrderDetailVO> findById(Long id);
 
     Mono<PageResultT<List<PurChaseOrderVO>>> findByPage(RequestPage<PurchaseOrderSearchVO> requestPage);
 
@@ -35,5 +35,5 @@ public interface PurChaseOrderService {
     //获取指定条数的用户订单
     Mono<List<PurchaseOrderVOApi>> findByRows(Integer rows);
 
-    Mono<Boolean> deleteById(BigInteger id);
+    Mono<Boolean> deleteById(Long id);
 }

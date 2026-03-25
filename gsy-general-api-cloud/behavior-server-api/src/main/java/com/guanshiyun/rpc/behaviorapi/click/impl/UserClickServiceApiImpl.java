@@ -12,7 +12,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Service
@@ -41,7 +41,7 @@ public class UserClickServiceApiImpl implements UserClickServiceApi {
     }
 
     @Override
-    public Mono<ResultT<BigInteger>> saveUserClickRecord(UserClickSaveApiVO userClickSaveApiVO) {
+    public Mono<ResultT<Long>> saveUserClickRecord(UserClickSaveApiVO userClickSaveApiVO) {
         return Mono.deferContextual(ctx->{
             return behaviorWebClientRpc
                     .webClient()
@@ -49,7 +49,7 @@ public class UserClickServiceApiImpl implements UserClickServiceApi {
                     .uri(BehaviorClickApiUrlEnum.CLICK_SAVE.getValue())
                     .body(Mono.just(userClickSaveApiVO), UserClickSaveApiVO.class)
                     .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<ResultT<BigInteger>>() {});
+                    .bodyToMono(new ParameterizedTypeReference<ResultT<Long>>() {});
         });
 
     }

@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,11 +24,11 @@ public class CategoryController {
     private final CategoryService categoryService;
     //添加类型或修改
     @PostMapping("save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody CategorySaveVO categorySaveVO) {
+    public Mono<ResultT<Long>> save(@RequestBody CategorySaveVO categorySaveVO) {
         return categoryService.save(categorySaveVO)
                 .map(id->{
                     log.info("保存成功，id为{}",id);
-                    return ResultT.<BigInteger>builder()
+                    return ResultT.<Long>builder()
                             .code(HttpCodeConst.OK)
                             .msg("保存成功")
                             .data(id)
@@ -37,7 +37,7 @@ public class CategoryController {
                 .onErrorResume(throwable ->{
                     log.error("保存失败", throwable);
                     return Mono.just(
-                            ResultT.<BigInteger>builder()
+                            ResultT.<Long>builder()
                                     .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                                     .msg("系统错误")
                                     .build()
@@ -46,7 +46,7 @@ public class CategoryController {
     }
     //删除类型
     @DeleteMapping("deleteById/{id}")
-    public Mono<ResultT<Void>> deleteById(@PathVariable BigInteger id) {
+    public Mono<ResultT<Void>> deleteById(@PathVariable Long id) {
         return categoryService.deleteById(id)
                 .then(Mono.fromCallable(() -> {
                     log.info("删除成功，id为{}",id);
@@ -67,7 +67,7 @@ public class CategoryController {
     }
     //根据id获取
     @GetMapping("findById/{id}")
-    public Mono<ResultT<Category>> fndById(@PathVariable BigInteger id) {
+    public Mono<ResultT<Category>> fndById(@PathVariable Long id) {
         return categoryService.fndById(id)
                 .map(categorySaveVO ->{
                     log.info("查询成功，id为{}",id);
@@ -129,7 +129,7 @@ public class CategoryController {
                 });
     }
     @GetMapping("findByProductId/{productId}")
-    public Mono<ResultT<List<CategoryVO>>> findByProductId(@PathVariable BigInteger productId){
+    public Mono<ResultT<List<CategoryVO>>> findByProductId(@PathVariable Long productId){
         return categoryService.findByProductId(productId)
                 .collectList()
                 .map(category ->{

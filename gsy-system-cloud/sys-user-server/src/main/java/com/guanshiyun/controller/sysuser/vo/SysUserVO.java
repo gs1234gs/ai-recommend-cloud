@@ -8,7 +8,7 @@ import lombok.experimental.FieldNameConstants;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 @Data
 @Builder
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class SysUserVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private BigInteger id;
+    private Long id;
     //部门id
     private int deptId;
     //用户名
@@ -49,14 +49,14 @@ public class SysUserVO implements Serializable {
     //创建时间
     private LocalDateTime createTime;
     //创建者
-    private BigInteger creatorId;
+    private Long creatorId;
     //更新者
-    private BigInteger updaterId;
+    private Long updaterId;
     //更新时间
     private LocalDateTime updateTime;
 
     //角色id
-    private BigInteger roleId;
+    private Long roleId;
     //备注
     private String remark;
 }

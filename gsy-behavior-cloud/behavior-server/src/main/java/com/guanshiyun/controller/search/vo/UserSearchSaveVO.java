@@ -3,7 +3,7 @@ package com.guanshiyun.controller.search.vo;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @ToString(callSuper = true)
 public class UserSearchSaveVO {
     //会话 id
-    private BigInteger id;
+    private Long id;
     //搜索内容
     private String searchContent;
     // 最高价格
@@ -21,7 +21,7 @@ public class UserSearchSaveVO {
     //最低价格
     private BigDecimal minPrice;
     //品牌id等
-    private BigInteger brandId;
+    private Long brandId;
     //搜索时间
     private LocalDateTime searchTime;
 }

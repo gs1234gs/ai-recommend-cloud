@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
@@ -30,13 +30,13 @@ public class PromotionEvent extends BasePojo implements Serializable {
 
     // 活动ID ⭐
     @Id
-    private BigInteger id;
+    private Long id;
 
     // 活动名称
     private String name;
 
     // 商家ID
-    private BigInteger merchantId;
+    private Long merchantId;
 
     // 优惠活动类型  使用枚举
     private Integer type;
@@ -51,7 +51,7 @@ public class PromotionEvent extends BasePojo implements Serializable {
     private String description;
 
     // 商品ID
-    private BigInteger productId;
+    private Long productId;
 
     // 活动状态  使用枚举
     private short status;

@@ -7,14 +7,14 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
 
-public interface SysUserRoleRepository extends ReactiveCrudRepository<SysUserRole, BigInteger> {
+
+public interface SysUserRoleRepository extends ReactiveCrudRepository<SysUserRole, Long> {
     @Query("select role_id from sys_user_role where user_id = :userId")
-    Flux<BigInteger> findRoleIdByUserId(BigInteger userId);
+    Flux<Long> findRoleIdByUserId(Long userId);
     @Query("SELECT COUNT(*) FROM sys_user_role WHERE user_id = :userId AND role_id = :roleId")
-    Mono<BigInteger> findExistsUserRole(@Param("userId") BigInteger userId, @Param("roleId") BigInteger roleId);
+    Mono<Long> findExistsUserRole(@Param("userId") Long userId, @Param("roleId") Long roleId);
     //根据用户id删除用户角色关联
     @Query("DELETE FROM sys_user_role WHERE user_id = :id")
-    Mono<Void> deleteAllByUserId(BigInteger id);
+    Mono<Void> deleteAllByUserId(Long id);
 }

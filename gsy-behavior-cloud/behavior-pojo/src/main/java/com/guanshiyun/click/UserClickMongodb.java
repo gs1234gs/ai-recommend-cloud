@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,11 +31,11 @@ public class UserClickMongodb extends BasePojo implements Serializable {
     private static final long serialVersionUID = 1L;
     //主键id
     @Id
-    private BigInteger id;
+    private Long id;
     //点击时间
     private LocalDateTime clickTime;
     //点击标签id
-    private BigInteger tagId;
+    private Long tagId;
     //点击skuId
     private ProductApiVO product;
     //分类

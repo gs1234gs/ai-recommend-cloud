@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -30,11 +30,11 @@ public class UserClickVO extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     //主键id
-    private BigInteger id;
+    private Long id;
     //点击时间
     private LocalDateTime clickTime;
     //点击标签id
-    private BigInteger tagId;
+    private Long tagId;
     //点击skuId
     private ProductApiVO product;
     //分类

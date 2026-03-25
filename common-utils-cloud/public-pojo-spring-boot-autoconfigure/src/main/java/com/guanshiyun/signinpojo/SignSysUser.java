@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 @Builder
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class SignSysUser {
-    private BigInteger id;
+    private Long id;
     //部门id
     private int deptId;
     //用户名
@@ -46,9 +46,9 @@ public class SignSysUser {
     //创建时间
     private LocalDateTime createTime;
     //创建者
-    private BigInteger creatorId;
+    private Long creatorId;
     //更新者
-    private BigInteger updaterId;
+    private Long updaterId;
     //更新时间
     private LocalDateTime updateTime;
     //备注

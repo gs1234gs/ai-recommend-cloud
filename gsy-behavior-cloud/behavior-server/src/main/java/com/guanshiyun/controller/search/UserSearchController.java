@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Slf4j
@@ -21,11 +21,11 @@ public class UserSearchController {
     private final UserSearchService userSearchService;
 
     @PostMapping("save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody UserSearchSaveVO userSearchVO) {
+    public Mono<ResultT<Long>> save(@RequestBody UserSearchSaveVO userSearchVO) {
         return userSearchService.save(userSearchVO)
                 .map(ResultT::success)
                 .onErrorResume(e -> Mono.just(ResultT
-                                .<BigInteger>builder()
+                                .<Long>builder()
                                 .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                                 .msg("保存失败")
                                 .build()

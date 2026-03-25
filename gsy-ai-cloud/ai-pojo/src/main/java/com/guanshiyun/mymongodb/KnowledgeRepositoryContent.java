@@ -6,7 +6,7 @@ import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -22,18 +22,18 @@ import java.util.List;
 public class KnowledgeRepositoryContent {
     //知识库id
     @Id
-    private BigInteger id;
+    private Long id;
     //知识库内容
     private List<ContentText> contentTexts;
     /**
      * 创建者，目前使用 SysUser 的 id 编号
      *
      */
-    public BigInteger creator;
+    public Long creator;
     /**
      * 更新者，目前使用 SysUser 的 id 编号
      */
-    public BigInteger updater;
+    public Long updater;
     /**
      * 创建时间
      */

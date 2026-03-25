@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Slf4j
@@ -30,7 +30,7 @@ public class PurChaseOrderController {
      * 添加订单
      */
     @PostMapping("save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody PurChaseOrderSaveVO purChaseOrderSaveVO) {
+    public Mono<ResultT<Long>> save(@RequestBody PurChaseOrderSaveVO purChaseOrderSaveVO) {
         return purChaseOrderService.save(purChaseOrderSaveVO)
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
@@ -41,7 +41,7 @@ public class PurChaseOrderController {
 
     //修改订单
     @PutMapping("updateById")
-    public Mono<ResultT<BigInteger>> update(@RequestBody PurChaseOrderSaveVO purChaseOrderSaveVO) {
+    public Mono<ResultT<Long>> update(@RequestBody PurChaseOrderSaveVO purChaseOrderSaveVO) {
         return purChaseOrderService.updateById(purChaseOrderSaveVO)
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
@@ -53,7 +53,7 @@ public class PurChaseOrderController {
     //根据用户id查询订单
     @GetMapping("findByUserId")
     public Mono<ResultT<List<PurChaseOrderVO>>> findByUserId(
-            @RequestParam BigInteger userId,
+            @RequestParam Long userId,
             @RequestParam(required = false, defaultValue = "10") Integer rows) {
         return purChaseOrderService.findByUserId(userId, rows)
                 .map(ResultT::success)
@@ -76,7 +76,7 @@ public class PurChaseOrderController {
     //根据多个·用户id批量返回订单
     @PostMapping("findByUserIds")
     public Mono<ResultT<List<PurChaseOrderVO>>> findByUserIds(
-            @RequestBody List<BigInteger> userIds,
+            @RequestBody List<Long> userIds,
             @RequestParam(required = false, defaultValue = "10") Integer rows) {
         return purChaseOrderService.findByUserIds(userIds, rows)
                 .map(ResultT::success)
@@ -87,7 +87,7 @@ public class PurChaseOrderController {
     }
     //根据订单id查询订单
     @GetMapping("findById/{id}")
-    public Mono<ResultT<PurchaseOrderDetailVO>> findById(@PathVariable BigInteger id) {
+    public Mono<ResultT<PurchaseOrderDetailVO>> findById(@PathVariable Long id) {
         return purChaseOrderService.findById(id)
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
@@ -120,7 +120,7 @@ public class PurChaseOrderController {
             }
     //根据删除订单
     @DeleteMapping("/deletedById/{id}")
-    public Mono<ResultT<Boolean>> deleteById(@PathVariable BigInteger id){
+    public Mono<ResultT<Boolean>> deleteById(@PathVariable Long id){
         return purChaseOrderService.deleteById(id)
                 .map(ResultT::success)
                 .onErrorResume(e->Mono.just(ResultT.error()));

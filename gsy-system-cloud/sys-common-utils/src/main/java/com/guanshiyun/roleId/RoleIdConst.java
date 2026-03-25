@@ -1,11 +1,11 @@
 package com.guanshiyun.roleId;
 
-import java.math.BigInteger;
+
 
 public class RoleIdConst {
-    public static final BigInteger ROLE_COMMON_USER = BigInteger.valueOf(3L);
-    public static final BigInteger ROLE_ADMIN = BigInteger.valueOf(2L);
-    public static final BigInteger ROLE_SUPER_ADMIN = BigInteger.valueOf(1L);
-    public static final BigInteger ROLE_SYSTEM_ADMIN = BigInteger.valueOf(4L);
-    public static final BigInteger ROLE_SYSTEM_SUPER_ADMIN = BigInteger.valueOf(5L);
+    public static final Long ROLE_COMMON_USER = Long.valueOf(3L);
+    public static final Long ROLE_ADMIN = Long.valueOf(2L);
+    public static final Long ROLE_SUPER_ADMIN = Long.valueOf(1L);
+    public static final Long ROLE_SYSTEM_ADMIN = Long.valueOf(4L);
+    public static final Long ROLE_SYSTEM_SUPER_ADMIN = Long.valueOf(5L);
 }

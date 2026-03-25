@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 @Slf4j
 @RestController()
@@ -44,7 +44,7 @@ public class ProductCarousalController {
     }
     //删除轮播图
     @DeleteMapping("/deleteById/{id}")
-    public Mono<ResultT<Void>> deleteById(@PathVariable BigInteger id) {
+    public Mono<ResultT<Void>> deleteById(@PathVariable Long id) {
         return productCarousalService.deleteById(id)
                 .then(Mono.just(ResultT.<Void>success()))
                 .onErrorResume(throwable -> Mono.just(ResultT
@@ -55,7 +55,7 @@ public class ProductCarousalController {
     }
     //批量删除轮播图
     @DeleteMapping("/deleteBatch")
-    public Mono<ResultT<Void>> deleteBatch(@RequestBody List<BigInteger> ids) {
+    public Mono<ResultT<Void>> deleteBatch(@RequestBody List<Long> ids) {
         return productCarousalService.deleteByIds(ids)
                 .then(Mono.just(ResultT.<Void>success()))
                 .onErrorResume(e->{
@@ -68,7 +68,7 @@ public class ProductCarousalController {
                 );
     }
     @GetMapping("/findById/{id}")
-    public Mono<ResultT<ProductCarousalVO>> findById(@PathVariable BigInteger id) {
+    public Mono<ResultT<ProductCarousalVO>> findById(@PathVariable Long id) {
         return productCarousalService.findById(id)
                 .map(ResultT::success)
                 .onErrorResume(throwable -> Mono.just(ResultT

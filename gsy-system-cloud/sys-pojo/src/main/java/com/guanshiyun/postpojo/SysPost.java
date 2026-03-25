@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.math.BigInteger;
+
 
 /**
  * 岗位实体
@@ -21,7 +21,7 @@ public class SysPost {
 
     //岗位ID
     @Id
-    private BigInteger id;
+    private Long id;
     //岗位代号
     private String code;
     //岗位名称
@@ -31,11 +31,11 @@ public class SysPost {
     //岗位状态
     private short status;
     //创建者id
-    private BigInteger creatorId;
+    private Long creatorId;
     //创建时间
     private String createTime;
     //更新者id
-    private BigInteger updaterId;
+    private Long updaterId;
     //更新时间
     private String updateTime;
     //删除标识,0-正常,1-删除

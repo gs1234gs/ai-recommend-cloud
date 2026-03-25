@@ -3,10 +3,10 @@ package com.guanshiyun.service.sysmenu.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
-import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.menupojo.SysMenu;
 import com.guanshiyun.menupojo.reponse.SysMenuResponse;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.repository.menurole.SysRoleMenuRepository;
 import com.guanshiyun.repository.sysmenu.SysMenuRepository;
 import com.guanshiyun.repository.userrole.SysUserRoleRepository;
@@ -20,7 +20,6 @@ import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,11 +33,11 @@ public class SysMenuServiceImpl implements SysMenuService {
     private final SysRoleMenuRepository sysRoleMenuRepository;
     private final DatabaseClient databaseClient;
     private final TransactionalOperator transactionalOperator;
-    private final MyBigInteger myBigInteger;
+    private final MyLong myLong;
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
 
     @Override
-    public Flux<SysMenu> findByIds(Collection<BigInteger> menuIds) {
+    public Flux<SysMenu> findByIds(Collection<Long> menuIds) {
 
         return sysMenuRepository.findAllById(menuIds);
     }
@@ -49,7 +48,7 @@ public class SysMenuServiceImpl implements SysMenuService {
                     if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                         return Flux.error(new RuntimeException("用户未登录"));
                     }
-                    BigInteger userId = myBigInteger.bigInteger(
+                    Long userId = myLong.myLong(
                             ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
                     );
                     return sysUserRoleRepository.findRoleIdByUserId(userId)
@@ -72,18 +71,18 @@ public class SysMenuServiceImpl implements SysMenuService {
     }
 
     @Override
-    public Flux<SysMenu> findAllByParentId(BigInteger id) {
+    public Flux<SysMenu> findAllByParentId(Long id) {
         if (Objects.isNull(id))
-            id = BigInteger.ZERO;
+            id = ConstNumber.LONG_ZERO;
         return sysMenuRepository.findAllByParentId(id);
     }
 
 //    @Override
-//    public Mono<Long> deleteById(BigInteger id) {
+//    public Mono<Long> deleteById(Long id) {
 //        if (Objects.isNull(id))
 //            return Mono.just(ConstNumber.LONG_ZERO);
 //        //避免误操作，只能删除id大于100000的菜单
-//        if (id.compareTo(BigInteger.valueOf(131)) < 0)
+//        if (id.compareTo(Long.valueOf(131)) < 0)
 //            return Mono.just(ConstNumber.LONG_ZERO);
 //        return databaseClient.sql("delete from sys_menu where id = :id")
 //                .bind(SysMenu.Fields.id, id)
@@ -104,8 +103,8 @@ public class SysMenuServiceImpl implements SysMenuService {
 //                .as(transaction -> transaction.as(transactionalOperator::transactional));
 //    }
 @Override
-public Mono<Long> deleteById(BigInteger id) {
-    if (id == null || id.compareTo(BigInteger.valueOf(131)) <= 0) {
+public Mono<Long> deleteById(Long id) {
+    if (id == null || id.compareTo(Long.valueOf(131)) <= 0) {
         return Mono.just(ConstNumber.LONG_ZERO);
     }
 
@@ -151,7 +150,7 @@ public Mono<Long> deleteById(BigInteger id) {
     /**
      * 使用响应式 BFS（广度优先）收集所有后代菜单 ID（包括自己）
      */
-    private Mono<List<BigInteger>> collectAllDescendantIds(BigInteger rootId) {
+    private Mono<List<Long>> collectAllDescendantIds(Long rootId) {
         return Mono.just(Collections.singletonList(rootId)) // 初始层：[rootId]
                 .expand(currentBatch -> {
                     if (currentBatch.isEmpty()) {
@@ -169,7 +168,7 @@ public Mono<Long> deleteById(BigInteger id) {
                     )
                             .fetch()
                             .all()
-                            .map(row ->myBigInteger.bigInteger(row.get(SysMenu.Fields.id)))
+                            .map(row ->myLong.myLong(row.get(SysMenu.Fields.id)))
                             .collectList()
                             .filter(nextBatch -> !nextBatch.isEmpty());
                 })
@@ -180,13 +179,13 @@ public Mono<Long> deleteById(BigInteger id) {
     }
 
     @Override
-    public Mono<BigInteger> save(SysMenu sysMenu) {
+    public Mono<Long> save(SysMenu sysMenu) {
 
         return Mono.deferContextual(ctx->{
             if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
-            BigInteger userId = myBigInteger.bigInteger(
+            Long userId = myLong.myLong(
                     ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
             );
             if(Objects.isNull(sysMenu.getId())){
@@ -207,7 +206,7 @@ public Mono<Long> deleteById(BigInteger id) {
     }
 
     @Override
-    public Mono<BigInteger> updateById(SysMenu sysMenu) {
+    public Mono<Long> updateById(SysMenu sysMenu) {
         sysMenu.setUpdateTime(LocalDateTime.now());
         return r2dbcUpdateHelper.updateIgnoreNull(
                         EntityTableNameUtils.getName(SysMenu.class),
@@ -222,14 +221,14 @@ public Mono<Long> deleteById(BigInteger id) {
     }
 
     @Override
-    public Flux<SysMenu> findMenuByRoleId(BigInteger roleId) {
+    public Flux<SysMenu> findMenuByRoleId(Long roleId) {
         return sysRoleMenuRepository.findMenuIdByRoleId(roleId)
                 .collectList()
                 .flatMapMany(sysMenuRepository::findAllById);
     }
 
     @Override
-    public Mono<SysMenuResponse> findById(BigInteger id) {
+    public Mono<SysMenuResponse> findById(Long id) {
         return sysMenuRepository.findById(id)
                 .map(sysMenu -> BeanUtil.toBean(sysMenu, SysMenuResponse.class));
     }

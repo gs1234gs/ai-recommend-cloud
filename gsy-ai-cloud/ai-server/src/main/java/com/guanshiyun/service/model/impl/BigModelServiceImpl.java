@@ -1,8 +1,9 @@
 package com.guanshiyun.service.model.impl;
 
 import com.db.cursorQuery.ReactivePageQuery;
-import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.bigmodel.BigModel;
+import com.guanshiyun.consts.ConstNumber;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.repository.model.BigModelRepository;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
@@ -15,7 +16,6 @@ import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -25,16 +25,16 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class BigModelServiceImpl implements BigModelService {
     private final BigModelRepository bigModelRepository;
-    private final MyBigInteger myBigInteger;
+    private final MyLong myLong;
     private final DatabaseClient databaseClient;
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
     @Override
-    public Mono<BigInteger> sava(BigModel bigModel) {
+    public Mono<Long> sava(BigModel bigModel) {
         return Mono.deferContextual(ctx ->{
-            BigInteger userId = myBigInteger.bigInteger(
+            Long userId = myLong.myLong(
                     ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
             if(Objects.isNull(bigModel.getId()))
-                return Mono.just(BigInteger.ZERO);
+                return Mono.just(ConstNumber.LONG_ZERO);
            if(Objects.isNull(userId)){
                bigModel.setCreator(userId);
                bigModel.setCreateTime(LocalDateTime.now());
@@ -48,32 +48,31 @@ public class BigModelServiceImpl implements BigModelService {
                         return Mono.just(model.getId());
                     })
                     .switchIfEmpty( Mono.fromRunnable(() -> log.info("保存失败"))
-                            .then(Mono.just(BigInteger.ZERO))
+                            .then(Mono.just(ConstNumber.LONG_ZERO))
                     )
                     .onErrorResume(throwable ->{
                         log.info("保存失败", throwable);
-                        return Mono.just(BigInteger.ZERO);
+                        return Mono.just(ConstNumber.LONG_ZERO);
                     });
         });
     }
 
     @Override
-    public Mono<BigInteger> deleteById(BigInteger id) {
+    public Mono<Long> deleteById(Long id) {
         if(Objects.isNull(id))
-            return Mono.just(BigInteger.ZERO);
+            return Mono.just(ConstNumber.LONG_ZERO);
         return databaseClient.sql("delete from big_model where id = :id")
                 .bind(BigModel.Fields.id, id)
                 .fetch()
                 .rowsUpdated()
                 .flatMap(rowsUpdated ->{
                     log.info("删除成功");
-                    return Mono.just(myBigInteger
-                            .bigInteger(rowsUpdated));
+                    return Mono.just(myLong.myLong(rowsUpdated));
                 });
     }
 
     @Override
-    public Mono<BigModel> findById(BigInteger id) {
+    public Mono<BigModel> findById(Long id) {
         return bigModelRepository.findById(id);
     }
 

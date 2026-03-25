@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 
-import java.math.BigInteger;
+
 
 @Data
 @Builder
@@ -17,7 +17,7 @@ import java.math.BigInteger;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CategorySaveVO {
     /** 分类主键ID */
-    private BigInteger id;
+    private Long id;
 
     /** 分类名称 */
     private String name;

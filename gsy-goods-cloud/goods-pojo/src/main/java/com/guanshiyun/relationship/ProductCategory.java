@@ -12,7 +12,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -25,7 +25,7 @@ public class ProductCategory extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = -1L;
     @Id
-    private BigInteger id;
-    private BigInteger productId;
-    private BigInteger categoryId;
+    private Long id;
+    private Long productId;
+    private Long categoryId;
 }

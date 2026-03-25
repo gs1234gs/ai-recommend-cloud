@@ -1,5 +1,6 @@
 package com.guanshiyun.controller.model;
 
+import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.bigmodel.BigModel;
 import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -11,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Slf4j
@@ -23,10 +24,10 @@ public class BigModelController {
 
     //添加大模型,修改大模型
     @PostMapping("save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody BigModel bigModel) {
+    public Mono<ResultT<Long>> save(@RequestBody BigModel bigModel) {
         return bigModelService.sava(bigModel)
                 .map(saveId ->
-                        ResultT.<BigInteger>builder()
+                        ResultT.<Long>builder()
                                 .code(HttpCodeConst.OK)
                                 .data(saveId)
                                 .build());
@@ -34,18 +35,18 @@ public class BigModelController {
 
     //删除大模型
     @DeleteMapping("/deleteById/{id}")
-    public Mono<ResultT<BigInteger>> delete(@PathVariable BigInteger id) {
+    public Mono<ResultT<Long>> delete(@PathVariable Long id) {
         return bigModelService.deleteById(id)
                 .map(deleteCount -> {
-                    return ResultT.<BigInteger>builder()
+                    return ResultT.<Long>builder()
                             .code(HttpCodeConst.OK)
                             .data(deleteCount)
                             .build();
                 }).onErrorResume(throwable -> {
                     log.error("删除大模型失败", throwable);
-                    return Mono.just(ResultT.<BigInteger>builder()
+                    return Mono.just(ResultT.<Long>builder()
                             .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
-                            .data(BigInteger.ZERO)
+                            .data(ConstNumber.LONG_ZERO)
                             .build());
                 });
     }
@@ -73,7 +74,7 @@ public class BigModelController {
 
     //
     @GetMapping("findById/{id}")
-    public Mono<ResultT<BigModel>> queryById(@PathVariable BigInteger id) {
+    public Mono<ResultT<BigModel>> queryById(@PathVariable Long id) {
         return bigModelService.findById(id)
                 .map(bigModel ->
                         ResultT.<BigModel>builder()

@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,11 +16,11 @@ import java.util.List;
 @NoArgsConstructor
 @FieldNameConstants
 public class SysMenuResponse {
-    private BigInteger id;
+    private Long id;
     //菜单名称
     private String name;
     //父级菜单id
-    private BigInteger parentId;
+    private Long parentId;
     //显示顺序
     private int sort;
     //路由地址
@@ -46,11 +46,11 @@ public class SysMenuResponse {
     //图标
     private String icon;
     //创建者id
-    private BigInteger creatorId;
+    private Long creatorId;
     //创建时间
     private LocalDateTime createTime;
     //更新者id
-    private BigInteger updaterId;
+    private Long updaterId;
     //更新时间
     private LocalDateTime updateTime;
     //备注

@@ -7,7 +7,7 @@ import com.guanshiyun.profile.ProductApiVO;
 import com.guanshiyun.profile.ProductCustomerApiVO;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 
@@ -15,9 +15,9 @@ public interface ProductApiService {
 
     Mono<ResultT<CursorPageResult<List<ProductApiVO>>>> findCursor(RequestCursorPage<ProductApiVO> request);
     //通过id
-    Mono<ResultT<ProductApiVO>> findProductById(BigInteger id);
+    Mono<ResultT<ProductApiVO>> findProductById(Long id);
 
-    Mono<ResultT<List<ProductCustomerApiVO>>> findProductsByIds(List<BigInteger> ids);
+    Mono<ResultT<List<ProductCustomerApiVO>>> findProductsByIds(List<Long> ids);
 
-    Mono<ResultT<List<ProductApiVO>>> findProductVOByIds(List<BigInteger> ids);
+    Mono<ResultT<List<ProductApiVO>>> findProductVOByIds(List<Long> ids);
 }

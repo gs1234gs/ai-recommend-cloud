@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Slf4j
@@ -36,19 +36,19 @@ public class EmbeddingProductController {
     /**
      *
      * 删除商品向量
-     * @PathVariable BigInteger  productId
+     * @PathVariable Long  productId
      * @return Mono<ResultT<Void>>
      *
      * */
     @DeleteMapping("/deleteByProductId/{productId}")
-    public Mono<ResultT<Void>> embeddingDeleteProduct(@PathVariable BigInteger productId){
+    public Mono<ResultT<Void>> embeddingDeleteProduct(@PathVariable Long productId){
         return embeddingProductService.deleteById(List.of(productId))
                 .thenReturn(ResultT.success((Void) null))
                 .onErrorResume(throwable -> Mono.just(ResultT.error()));
     }
 
     @PostMapping("/recommendForUser")
-    public Mono<ResultT<List<BigInteger>>> embeddingRecommendForUser(
+    public Mono<ResultT<List<Long>>> embeddingRecommendForUser(
             @RequestBody RequestBodyProductForEmbeddingApVO<List<ProductForEmbeddingApVO>> recentProducts){
         return embeddingProductService.recommendForUser(recentProducts.getData(), recentProducts.getTopK())
                 .map(ResultT::success)
@@ -59,7 +59,7 @@ public class EmbeddingProductController {
      * 给根关键字检索
      * */
     @GetMapping("/searchKeyWard")
-    public Mono<ResultT<List<BigInteger>>> embeddingKeyWard(@RequestParam String keyWard,
+    public Mono<ResultT<List<Long>>> embeddingKeyWard(@RequestParam String keyWard,
                                                             @RequestParam(required = false,defaultValue = "10") Integer topK){
         return embeddingProductService.searchByKeyword(keyWard,topK)
                 .map(ResultT::success)

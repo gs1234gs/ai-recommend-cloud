@@ -7,7 +7,7 @@ import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.responsepojo.CursorPageResult;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 /**
  * 商品推荐服务接口。
@@ -47,12 +47,12 @@ public interface RecommendProductService {
     /**
      * 根据商品 ID 查询商品的详细信息。
      *
-     * @param id 商品唯一标识（使用 {@link BigInteger} 类型）
+     * @param id 商品唯一标识（使用 {@link Long} 类型）
      * @return 商品详情视图对象 {@link ProductCustomerDetailVO}
      */
-    Mono<ProductCustomerDetailVO> detail(BigInteger id);
+    Mono<ProductCustomerDetailVO> detail(Long id);
 
-    Mono<List<ProductCustomerVO>> findByIds(List<BigInteger> ids);
+    Mono<List<ProductCustomerVO>> findByIds(List<Long> ids);
     //热门推荐
     Mono<List<ProductCustomerVO>> hot();
     //最新上架

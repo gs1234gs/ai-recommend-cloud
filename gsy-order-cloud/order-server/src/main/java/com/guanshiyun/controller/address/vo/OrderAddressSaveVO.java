@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 
 @Data
 @AllArgsConstructor
@@ -18,7 +18,7 @@ import java.math.BigInteger;
 public class OrderAddressSaveVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private BigInteger id;
+    private Long id;
     //地址
     private String address;
     //联系电话

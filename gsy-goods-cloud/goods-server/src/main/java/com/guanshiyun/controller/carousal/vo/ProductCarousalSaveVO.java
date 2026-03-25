@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 
 @Data
 @Builder(toBuilder = true)
@@ -19,7 +19,7 @@ public class ProductCarousalSaveVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     //
-    private BigInteger id;
+    private Long id;
     //轮播标题
     private String title;
     //图片路径

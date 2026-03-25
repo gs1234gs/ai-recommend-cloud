@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Service
@@ -36,7 +36,7 @@ public class WarehouseApiServiceImpl implements WarehouseApiService {
 
     //获取仓库列表
     @Override
-    public Mono<ResultT<List<WarehouseApiVO>>> findByProductId(BigInteger productId) {
+    public Mono<ResultT<List<WarehouseApiVO>>> findByProductId(Long productId) {
         return goodsWebClientRpc
                 .webClient()
                 .get()
@@ -63,7 +63,7 @@ public class WarehouseApiServiceImpl implements WarehouseApiService {
     }
 
     @Override
-    public Mono<ResultT<WarehouseApiVO>> findById(BigInteger warehouseId) {
+    public Mono<ResultT<WarehouseApiVO>> findById(Long warehouseId) {
         return goodsWebClientRpc
                 .webClient()
                 .get()

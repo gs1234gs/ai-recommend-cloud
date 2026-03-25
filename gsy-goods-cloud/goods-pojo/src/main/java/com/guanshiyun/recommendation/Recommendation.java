@@ -4,7 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 /**
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class Recommendation {
     /** 主键ID */
     @Id
-    private BigInteger id;
+    private Long id;
 
     /** 推荐分数（算法评分或置信度） */
     private Double score;
@@ -32,7 +32,7 @@ public class Recommendation {
     /** 曝光时间（推荐展示时间） */
     private LocalDateTime exposureTime;
     //用户id
-    private BigInteger userId;
+    private Long userId;
     //商品id
     private String productId;
     //描述

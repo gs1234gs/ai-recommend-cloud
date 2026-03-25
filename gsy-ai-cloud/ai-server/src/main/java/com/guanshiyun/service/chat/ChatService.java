@@ -6,7 +6,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
-import java.math.BigInteger;
+
 
 /**
  * ChatService
@@ -40,8 +40,8 @@ public interface ChatService {
      * @param reqChat 聊天请求对象
      * @return Flux<String> AI 回复内容流（流式返回）
      */
-    Mono<Tuple2<Flux<String>, BigInteger>>  chatFlux(ReqChat reqChat);
-    Mono<Tuple2<Flux<String>, BigInteger>> chatFluxRecommend(ReqChat reqChat);
+    Mono<Tuple2<Flux<String>, Long>>  chatFlux(ReqChat reqChat);
+    Mono<Tuple2<Flux<String>, Long>> chatFluxRecommend(ReqChat reqChat);
     Mono<AllReqChat> recommend(ReqChat reqChat);
     /**
      * 删除聊天会话

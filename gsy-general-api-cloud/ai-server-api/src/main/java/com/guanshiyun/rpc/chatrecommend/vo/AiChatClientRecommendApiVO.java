@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.math.BigInteger;
+
 
 @Data
 @AllArgsConstructor
@@ -21,7 +21,7 @@ public class AiChatClientRecommendApiVO {
     //价格
     private Double price;
     //商品id
-    private BigInteger productId;
+    private Long productId;
     //
 
 }

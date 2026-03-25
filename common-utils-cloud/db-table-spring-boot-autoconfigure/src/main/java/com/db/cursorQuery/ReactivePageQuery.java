@@ -15,7 +15,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Field;
-import java.math.BigInteger;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -73,13 +73,13 @@ public class ReactivePageQuery<T> {
         return r2dbcEntityTemplate.count(Query.query( criteria), entityClass);
     }
     public Flux<T> list(){
-        BigInteger pageNum = validatedPage.getPageNum();
+        Long pageNum = validatedPage.getPageNum();
         Integer pageSize = validatedPage.getPageSize();
-        BigInteger multiply = pageNum.subtract(BigInteger.ONE).multiply(BigInteger.valueOf(pageSize));
+        long multiply = pageNum * pageSize;
         Query limit = Query.query(criteria)
                 .sort(Sort.by(order))
                 .limit(pageSize)
-                .offset(multiply.longValue());
+                .offset(multiply);
         return r2dbcEntityTemplate.select(limit, entityClass);
     }
 

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class BehaviorRecord {
     private LocalDateTime time;
-    private BigInteger productId;
+    private Long productId;
     private String type; // "click", "collect", "purchase", "browse", "search"
     private Object origin;
 }

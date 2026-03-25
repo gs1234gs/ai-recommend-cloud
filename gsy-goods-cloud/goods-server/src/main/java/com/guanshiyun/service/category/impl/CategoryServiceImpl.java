@@ -4,10 +4,10 @@ import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.ReactivePageQuery;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
-import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.category.Category;
 import com.guanshiyun.controller.category.vo.CategorySaveVO;
 import com.guanshiyun.controller.category.vo.CategoryVO;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.repository.category.CategoryRepository;
 import com.guanshiyun.repository.relation.ProductCategoryRepository;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
-    private final MyBigInteger myBigInteger;
+    private final MyLong myLong;
     private final ProductCategoryRepository productCategoryRepository;
     private final SnowflakePermanent snowflakePermanent;
 
@@ -43,12 +42,12 @@ public class CategoryServiceImpl implements CategoryService {
  * 添加 类型
  * */
     @Override
-    public Mono<BigInteger> save(CategorySaveVO categorySaveVO) {
+    public Mono<Long> save(CategorySaveVO categorySaveVO) {
         Category category = BeanUtil.toBean(categorySaveVO, Category.class).setCode(snowflakePermanent.stringNextId());
         return Mono.deferContextual(ctx->{
             if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
                 return Mono.error(new RuntimeException("用户未登录"));
-            BigInteger userId = myBigInteger.bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
             if(Objects.nonNull(category.getId())){
                 category.setUpdater(userId);
                 category.setUpdateTime(LocalDateTime.now());
@@ -70,12 +69,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Mono<Void> deleteById(BigInteger id) {
+    public Mono<Void> deleteById(Long id) {
         return categoryRepository.deleteById(id);
     }
 
     @Override
-    public Mono<Category> fndById(BigInteger id) {
+    public Mono<Category> fndById(Long id) {
         return categoryRepository.findById(id);
     }
 
@@ -83,13 +82,13 @@ public class CategoryServiceImpl implements CategoryService {
 //    public Mono<PageResultT<List<CategoryVO>>> findAllByPage( RequestPage<CategoryVO> requestPage) {
 //        RequestPage<CategoryVO> categoryRequestPage = PageUtils.pageValidation(requestPage, CategoryVO.class);
 //        Integer pageSize = categoryRequestPage.getPageSize();
-//        BigInteger pageNum = categoryRequestPage.getPageNum();
+//        Long pageNum = categoryRequestPage.getPageNum();
 //        CategoryVO conditionVO = categoryRequestPage.getCondition();
 //        Category condition = BeanUtil.toBean(conditionVO, Category.class);
 //        String name = condition.getName();// 添加用户权限
 //        // 计算 offset
-//        long offset = pageNum.subtract(BigInteger.ONE)
-//                .multiply(BigInteger.valueOf(pageSize))
+//        long offset = pageNum.subtract(Long.ONE)
+//                .multiply(Long.valueOf(pageSize))
 //                .longValue();
 //        Criteria criteria = Criteria.empty();
 //        criteria= criteria.and(Category.Fields.name).like( SqlConst.PERCENT+name+SqlConst.PERCENT);
@@ -131,7 +130,7 @@ public Mono<PageResultT<List<CategoryVO>>> findAllByPage( RequestPage<CategoryVO
     }
 
     @Override
-    public Flux<CategoryVO> findByProductId(BigInteger productId) {
+    public Flux<CategoryVO> findByProductId(Long productId) {
         return productCategoryRepository.findByProductId(productId)
                 .flatMap(productCategory->categoryRepository.findById(productCategory.getCategoryId()))
                 .mapNotNull(item->BeanConvertUtil.toBean(item,CategoryVO.class));

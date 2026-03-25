@@ -6,7 +6,7 @@ import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 /**
@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 public class BigModel {
     //大模型id
     @Id
-    private BigInteger id;
+    private Long id;
     //大模型名称
     private String name;
     //大模型类型
@@ -37,11 +37,11 @@ public class BigModel {
      * 创建者，目前使用 SysUser 的 id 编号
      *
      */
-    public BigInteger creator;
+    public Long creator;
     /**
      * 更新者，目前使用 SysUser 的 id 编号
      */
-    public BigInteger updater;
+    public Long updater;
     /**
      * 创建时间
      */

@@ -24,7 +24,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 import reactor.util.context.Context;
 
-import java.math.BigInteger;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -127,7 +127,7 @@ class AiAppApplicationTests {
                         .content("我叫二牛,请问你是谁")
                         .build()
 
-        ).contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(1)))
+        ).contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, Long.valueOf(1)))
                         .subscribe(System.out::println) ;
         System.out.println("======================================================");
     }
@@ -145,9 +145,9 @@ class AiAppApplicationTests {
         chatService.chatAll(
                         ReqChat.builder()
                                 .content("我是谁")
-                                .conversationId(BigInteger.valueOf(176485086349230080L))
+                                .conversationId(Long.valueOf(176485086349230080L))
                                 .build()
-                ).contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(1)))
+                ).contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, Long.valueOf(1)))
                 .doOnNext(System.out::println)
                 .onErrorResume(i->{
                     System.out.println("错误");
@@ -195,14 +195,14 @@ class AiAppApplicationTests {
     void Test5() {
         chatRecordService.findPageChat(
                 RequestPage.<ChatRecordVO>builder()
-                        .pageNum(BigInteger.valueOf(1))
+                        .pageNum(Long.valueOf(1))
                         .pageSize(10)
                         .condition(ChatRecordVO.builder()
                                 .title("二牛")
                                 .build())
                         .build()
         )
-                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(1)))
+                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, Long.valueOf(1)))
                 .subscribe(i->{
                  i.getRows().forEach(i1->{
                      System.out.println(i1);
@@ -214,12 +214,12 @@ class AiAppApplicationTests {
 //    void Test6() {
 //        chatRecordService.save(
 //                ChatRecord.builder()
-//                        .id(BigInteger.valueOf(143200670353195008L))
+//                        .id(Long.valueOf(143200670353195008L))
 //                        .title("二牛")
-//                        .creator(BigInteger.valueOf(1))
+//                        .creator(Long.valueOf(1))
 //                        .createTime(LocalDateTime.now())
 //                        .build()
-//        ).contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(1)))
+//        ).contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, Long.valueOf(1)))
 //                .subscribe(System.out::println);
 //    }
     @Test
@@ -227,7 +227,7 @@ class AiAppApplicationTests {
         StringBuffer stringBuffer = new StringBuffer();
         chatRecordService.findCursorPageChat(
                 RequestCursorPage.<ChatRecord>builder()
-//                        .lastId(BigInteger.valueOf(141934032957997056L))
+//                        .lastId(Long.valueOf(141934032957997056L))
                         .pageSize(10)
                         .condition(ChatRecord.builder()
                                 .title("二牛")
@@ -235,7 +235,7 @@ class AiAppApplicationTests {
 //                        .order("ASC")
                         .build()
         )
-                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(1)))
+                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, Long.valueOf(1)))
                 .doAfterTerminate(()->{
                     log.info("结束");
                     log.info(stringBuffer.toString());
@@ -255,14 +255,14 @@ class AiAppApplicationTests {
         StepVerifier.create(
                         chatRecordService.findCursorPageChat(
                                         RequestCursorPage.<ChatRecord>builder()
-                                                .lastId(BigInteger.valueOf(143200670353195008L)) //  用 long
+                                                .lastId(Long.valueOf(143200670353195008L)) //  用 long
                                                 .pageSize(10)
                                                 .condition(ChatRecord.builder()
                                                         .title("二牛")
                                                         .build())
                                                 .build()
                                 )
-                                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(1)))
+                                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, Long.valueOf(1)))
                                 .collectList() // 收集成 List
                 )
                 .assertNext(list -> {

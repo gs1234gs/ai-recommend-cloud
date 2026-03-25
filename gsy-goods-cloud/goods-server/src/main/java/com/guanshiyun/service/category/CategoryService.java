@@ -8,20 +8,20 @@ import com.guanshiyun.responsepojo.PageResultT;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 public interface CategoryService {
     //添加类型
-    Mono<BigInteger> save(CategorySaveVO categorySaveVO);
+    Mono<Long> save(CategorySaveVO categorySaveVO);
 
-    Mono<Void> deleteById(BigInteger id);
+    Mono<Void> deleteById(Long id);
 
-    Mono<Category> fndById(BigInteger id);
+    Mono<Category> fndById(Long id);
 
     Mono<PageResultT<List<CategoryVO>>> findAllByPage( RequestPage<CategoryVO> requestPage);
 
     Mono<List<CategoryVO>> findAll();
 
-    Flux<CategoryVO> findByProductId(BigInteger productId);
+    Flux<CategoryVO> findByProductId(Long productId);
 }

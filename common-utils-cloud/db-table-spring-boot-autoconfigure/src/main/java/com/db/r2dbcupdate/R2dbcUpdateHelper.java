@@ -1,6 +1,8 @@
 package com.db.r2dbcupdate;
 
-import com.guanshiyun.biginteger.MyBigInteger;
+
+import com.db.dbnumber.ConstNumber;
+import com.guanshiyun.mylong.MyLong;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.r2dbc.core.DatabaseClient;
@@ -8,7 +10,6 @@ import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.math.BigInteger;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -17,7 +18,7 @@ import java.util.function.Function;
 @RequiredArgsConstructor
 public class R2dbcUpdateHelper {
     private final DatabaseClient databaseClient;
-    private final MyBigInteger myBigInteger;
+    private final MyLong myLong;
 
     /**
      * 通用动态更新，忽略 null 字段
@@ -26,9 +27,9 @@ public class R2dbcUpdateHelper {
      * @param entity      实体对象
      * @param idFieldName ID 字段名
      * @param <T>         实体类型
-     * @return Mono<BigInteger> 更新行数
+     * @return Mono<Long> 更新行数
      */
-    public <T> Mono<BigInteger> updateIgnoreNull(String tableName, T entity, String idFieldName) {
+    public <T> Mono<Long> updateIgnoreNull(String tableName, T entity, String idFieldName) {
         Map<String, Object> updateFields = new LinkedHashMap<>();
         Object idValue = null;
 
@@ -54,7 +55,7 @@ public class R2dbcUpdateHelper {
         }
 
         if (updateFields.isEmpty() || idValue == null) {
-            return Mono.just(BigInteger.ZERO);
+            return Mono.just(ConstNumber.LONG_ZERO);
         }
 
         //  驼峰转下划线工具方法
@@ -93,11 +94,11 @@ public class R2dbcUpdateHelper {
         }
         spec = spec.bind(idFieldName, idValue);
 
-//        return spec.fetch().rowsUpdated().map(BigInteger::valueOf);
+//        return spec.fetch().rowsUpdated().map(Long::valueOf);
         // 执行并判断是否更新成功
         final Object idValueTemp = idValue;
         return spec.fetch()
                 .rowsUpdated()
-                .flatMap(rowsUpdated -> rowsUpdated > 0 ? Mono.just(myBigInteger.bigIntegerOrNull(idValueTemp)) : Mono.empty());
+                .flatMap(rowsUpdated -> rowsUpdated > 0 ? Mono.just(myLong.LongOrNull(idValueTemp)) : Mono.empty());
     }
 }

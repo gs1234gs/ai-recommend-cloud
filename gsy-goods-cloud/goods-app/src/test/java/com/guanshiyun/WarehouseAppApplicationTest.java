@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Mono;
 import reactor.util.context.Context;
 
-import java.math.BigInteger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,17 +37,17 @@ public class WarehouseAppApplicationTest {
 
     @Test
     public void test1Del(){
-        warehouseService.deleteById(BigInteger.valueOf(19))
+        warehouseService.deleteById(Long.valueOf(19))
                 .subscribe();
     }
     @Test
     public void test2(){
         warehouseService.findPage(
                 RequestPage.<WarehouseVO>builder()
-                        .pageNum(BigInteger.valueOf(1))
+                        .pageNum(Long.valueOf(1))
                         .pageSize(10)
                         .build()
-        ) .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(1)))
+        ) .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, Long.valueOf(1)))
                 .onErrorResume(e->{
                     System.out.println("异常："+e.getMessage());
                     return Mono.error( e);
@@ -60,15 +60,15 @@ public class WarehouseAppApplicationTest {
     @Test
     public void test3(){
        warehouseService.save(WarehouseSaveVO.builder()
-                       .id(BigInteger.valueOf(1))
+                       .id(Long.valueOf(1))
                        .address("上海市浦东新区3号")
                        .name("上海仓")
-                       .adminId(BigInteger.valueOf(1))
+                       .adminId(Long.valueOf(1))
                        .capacity(1000)
                        .status((short)1)
                        .build()
        )
-               .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(1)))
+               .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, Long.valueOf(1)))
                .subscribe(System.out::println);
     }
 
@@ -84,7 +84,7 @@ public class WarehouseAppApplicationTest {
                 .address("上海市浦东新区1号")
                 .capacity(1000)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(101))
+                .adminId(Long.valueOf(101))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -92,7 +92,7 @@ public class WarehouseAppApplicationTest {
                 .address("北京市朝阳区2号")
                 .capacity(1200)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(102))
+                .adminId(Long.valueOf(102))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -100,7 +100,7 @@ public class WarehouseAppApplicationTest {
                 .address("广州市天河区3号")
                 .capacity(1500)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(103))
+                .adminId(Long.valueOf(103))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -108,7 +108,7 @@ public class WarehouseAppApplicationTest {
                 .address("深圳市南山区4号")
                 .capacity(800)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(104))
+                .adminId(Long.valueOf(104))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -116,7 +116,7 @@ public class WarehouseAppApplicationTest {
                 .address("杭州市西湖区5号")
                 .capacity(900)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(105))
+                .adminId(Long.valueOf(105))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -124,7 +124,7 @@ public class WarehouseAppApplicationTest {
                 .address("南京市鼓楼区6号")
                 .capacity(1100)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(106))
+                .adminId(Long.valueOf(106))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -132,7 +132,7 @@ public class WarehouseAppApplicationTest {
                 .address("成都市锦江区7号")
                 .capacity(1300)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(107))
+                .adminId(Long.valueOf(107))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -140,7 +140,7 @@ public class WarehouseAppApplicationTest {
                 .address("武汉市武昌区8号")
                 .capacity(950)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(108))
+                .adminId(Long.valueOf(108))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -148,7 +148,7 @@ public class WarehouseAppApplicationTest {
                 .address("西安市雁塔区9号")
                 .capacity(1000)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(109))
+                .adminId(Long.valueOf(109))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -156,7 +156,7 @@ public class WarehouseAppApplicationTest {
                 .address("沈阳市和平区10号")
                 .capacity(1400)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(110))
+                .adminId(Long.valueOf(110))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -164,7 +164,7 @@ public class WarehouseAppApplicationTest {
                 .address("重庆市渝中区11号")
                 .capacity(1250)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(111))
+                .adminId(Long.valueOf(111))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -172,7 +172,7 @@ public class WarehouseAppApplicationTest {
                 .address("苏州市工业园区12号")
                 .capacity(1100)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(112))
+                .adminId(Long.valueOf(112))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -180,7 +180,7 @@ public class WarehouseAppApplicationTest {
                 .address("宁波市海曙区13号")
                 .capacity(1150)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(113))
+                .adminId(Long.valueOf(113))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -188,7 +188,7 @@ public class WarehouseAppApplicationTest {
                 .address("厦门市思明区14号")
                 .capacity(1050)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(114))
+                .adminId(Long.valueOf(114))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -196,7 +196,7 @@ public class WarehouseAppApplicationTest {
                 .address("郑州市金水区15号")
                 .capacity(1200)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(115))
+                .adminId(Long.valueOf(115))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -204,7 +204,7 @@ public class WarehouseAppApplicationTest {
                 .address("长沙市岳麓区16号")
                 .capacity(1000)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(116))
+                .adminId(Long.valueOf(116))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -212,7 +212,7 @@ public class WarehouseAppApplicationTest {
                 .address("青岛市市南区17号")
                 .capacity(950)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(117))
+                .adminId(Long.valueOf(117))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -220,7 +220,7 @@ public class WarehouseAppApplicationTest {
                 .address("大连市中山区18号")
                 .capacity(1100)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(118))
+                .adminId(Long.valueOf(118))
                 .build());
 
         warehouses.add(WarehouseSaveVO.builder()
@@ -228,7 +228,7 @@ public class WarehouseAppApplicationTest {
                 .address("天津市和平区19号")
                 .capacity(1300)
                 .status((short)1)
-                .adminId(BigInteger.valueOf(119))
+                .adminId(Long.valueOf(119))
                 .build());
 
         return warehouses;

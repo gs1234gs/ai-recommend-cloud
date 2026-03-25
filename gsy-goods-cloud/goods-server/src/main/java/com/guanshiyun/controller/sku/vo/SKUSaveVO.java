@@ -5,7 +5,7 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class SKUSaveVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    private BigInteger id;
+    private Long id;
     //商品id
 
     /** 名称*/
@@ -57,5 +57,5 @@ public class SKUSaveVO implements Serializable {
     // 商品详情
     private String detailContent;
     //商品id
-    private BigInteger productId;
+    private Long productId;
 }

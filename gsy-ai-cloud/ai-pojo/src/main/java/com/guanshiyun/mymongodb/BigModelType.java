@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @AllArgsConstructor
@@ -18,6 +18,6 @@ import java.util.List;
 @FieldNameConstants
 @Document(collection = "big_model_type")
 public class BigModelType{
-    private BigInteger id;
+    private Long id;
     private List<KeyValue> keyValueList;
 }

@@ -1,9 +1,10 @@
 package com.guanshiyun.controller.address;
 
-import com.guanshiyun.biginteger.MyBigInteger;
+
 import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.address.vo.OrderAddressSaveVO;
 import com.guanshiyun.controller.address.vo.OrderAddressVO;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.responsepojo.ResultT;
@@ -13,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @Slf4j
@@ -22,10 +22,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderAddressController {
     private final OrderAddressService orderAddressService;
-    private final MyBigInteger myBigInteger;
+    private final MyLong myLong;
     //添加地址和保存地址
     @PostMapping("/save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody OrderAddressSaveVO orderAddressSaveVO) {
+    public Mono<ResultT<Long>> save(@RequestBody OrderAddressSaveVO orderAddressSaveVO) {
         return orderAddressService.save(orderAddressSaveVO)
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
@@ -35,7 +35,7 @@ public class OrderAddressController {
     }
 
     @DeleteMapping("/deleteById/{id}")
-    public Mono<ResultT<Void>> deleteById(@PathVariable BigInteger id) {
+    public Mono<ResultT<Void>> deleteById(@PathVariable Long id) {
         return orderAddressService.deleteById(id)
                 .then(Mono.just(
                         ResultT.<Void>builder()
@@ -67,7 +67,7 @@ public class OrderAddressController {
 
     //批量订单id获取地址
     @PostMapping("/findByOrderIds")
-    public Mono<ResultT<List<OrderAddressVO>>> findByOrderIds(@RequestBody List<BigInteger> orderIds) {
+    public Mono<ResultT<List<OrderAddressVO>>> findByOrderIds(@RequestBody List<Long> orderIds) {
         return orderAddressService.findByOrderIds(orderIds)
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
@@ -79,7 +79,7 @@ public class OrderAddressController {
     //根据用户id获取地址
     @GetMapping("/findByUserId/{userId}")
     public Mono<ResultT<List<OrderAddressVO>>> findByUserId(@PathVariable Object userId) {
-        return orderAddressService.findByUserId(myBigInteger.bigInteger(userId))
+        return orderAddressService.findByUserId(myLong.myLong(userId))
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
                     log.error("查询地址失败", throwable);
@@ -89,7 +89,7 @@ public class OrderAddressController {
 
     //根据id获取地址
     @GetMapping("/findById/{id}")
-    public Mono<ResultT<OrderAddressVO>> findById(@PathVariable BigInteger id) {
+    public Mono<ResultT<OrderAddressVO>> findById(@PathVariable Long id) {
         return orderAddressService.findById(id)
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {

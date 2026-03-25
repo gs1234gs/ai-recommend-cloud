@@ -2,6 +2,7 @@ package com.guanshiyun.cors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,18 +26,26 @@ public class CorsFilter {
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .authorizeExchange(exchange -> exchange.anyExchange().permitAll()) // 所有请求都放行
+                .authorizeExchange(exchange ->
+                        exchange
+                                .pathMatchers(HttpMethod.OPTIONS).permitAll()
+                                .anyExchange().permitAll()) // 所有请求都放行
                 .build();
     }
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://127.0.0.1:9000");
-        config.addAllowedOrigin("http://localhost:9000");
-        config.addAllowedOrigin("http://localhost:3000");
-        config.addAllowedOrigin("http://127.0.0.1:80");
-        config.addAllowedOrigin("http://localhost:80");
-
+//        config.addAllowedOrigin("http://127.0.0.1:9000");
+//        config.addAllowedOrigin("http://localhost:9000");
+//        config.addAllowedOrigin("http://localhost:3000");
+//        config.addAllowedOrigin("http://127.0.0.1:80");
+//        config.addAllowedOrigin("http://localhost:80");
+//        config.addAllowedOrigin("http://39.106.226.85:8080");
+//        config.addAllowedOrigin("https://39.106.226.85:8080");
+//        config.addAllowedOrigin("http://39.106.226.85:9000");
+//        config.addAllowedOrigin("https://39.106.226.85:9000");
+//        config.addAllowedOrigin("http://127.0.0.1:9674");
+        config.addAllowedOriginPattern("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowCredentials(true);

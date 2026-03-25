@@ -25,7 +25,7 @@ import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -128,7 +128,7 @@ public class SignInUpServiceImpl implements SignInUpService {
                 });
     }
 
-    public Flux<SysMenu> sysMenuFlux(BigInteger userId) {
+    public Flux<SysMenu> sysMenuFlux(Long userId) {
 
         return sysUserRoleService.findRoleIdsByUserId(userId)
                 .collectList()

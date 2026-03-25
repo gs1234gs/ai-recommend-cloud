@@ -5,7 +5,7 @@ import com.guanshiyun.embedding.RequestBodyProductForEmbeddingApVO;
 import com.guanshiyun.responsepojo.ResultT;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 public interface AiChatClientRecommendServiceApi {
@@ -14,9 +14,9 @@ public interface AiChatClientRecommendServiceApi {
     //向量化商品
      Mono<ResultT<List<String>>> embeddingProduct(List<ProductForEmbeddingApVO> product);
      //推荐商品
-     Mono<ResultT<List<BigInteger>>> recommendProduct(RequestBodyProductForEmbeddingApVO<List<ProductForEmbeddingApVO>> recentProducts);
+     Mono<ResultT<List<Long>>> recommendProduct(RequestBodyProductForEmbeddingApVO<List<ProductForEmbeddingApVO>> recentProducts);
      //删除商品向量
-     Mono<ResultT<Void>> embeddingDeleteProduct(BigInteger productId);
+     Mono<ResultT<Void>> embeddingDeleteProduct(Long productId);
      //根据关键字检索
-     Mono<ResultT<List<BigInteger>>> searchByKeyword(String keyWard, Integer topK);
+     Mono<ResultT<List<Long>>> searchByKeyword(String keyWard, Integer topK);
 }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class SysRoleMenuServiceImpl implements SysRoleMenuService {
     private final SysRoleMenuRepository sysRoleMenuRepository;
     private final DatabaseClient databaseClient;
     @Override
-    public Flux<BigInteger> findMenuIdsByRoleId(Collection<BigInteger> roleIds) {
+    public Flux<Long> findMenuIdsByRoleId(Collection<Long> roleIds) {
         return sysRoleMenuRepository.findMenuIdByRoleId(roleIds);
     }
 
@@ -38,7 +38,7 @@ public class SysRoleMenuServiceImpl implements SysRoleMenuService {
     }
 
     @Override
-    public Mono<Long> deleteRoleMenu(BigInteger roleId, List<BigInteger> menuIds) {
+    public Mono<Long> deleteRoleMenu(Long roleId, List<Long> menuIds) {
         return databaseClient.sql("delete from sys_role_menu where role_id = :roleId and menu_id in (:menuId)")
                 .bind(SysRoleMenu.Fields.roleId, roleId)
                 .bind(SysRoleMenu.Fields.menuId, menuIds)

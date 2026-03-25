@@ -21,7 +21,7 @@ import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -37,13 +37,13 @@ public class TagServiceImpl implements TagService {
     private final SnowflakePermanent snowflakePermanent;
 
     @Override
-    public Mono<BigInteger> save(TagSaveVO tagSaveVO) {
+    public Mono<Long> save(TagSaveVO tagSaveVO) {
         Tag tag = BeanUtil.toBean(tagSaveVO, Tag.class);
         LocalDateTime now = LocalDateTime.now();
         return Mono.deferContextual(ctx -> {
             if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
                 return Mono.error(new Throwable("用户未登录"));
-            BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+            Long userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
             if (Objects.isNull(tag.getId())) {
                 String code = snowflakePermanent.stringNextId();
                 tag.setCode(code)
@@ -63,7 +63,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Mono<Void> deleteById(BigInteger id) {
+    public Mono<Void> deleteById(Long id) {
         return tagRepository.deleteById(id)
                 .onErrorResume(e -> {
                     log.error("删除失败", e);
@@ -72,7 +72,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Mono<TagVO> findById(BigInteger id) {
+    public Mono<TagVO> findById(Long id) {
         return tagRepository.findById(id)
                 .map(tag -> BeanUtil.toBean(tag, TagVO.class));
     }
@@ -115,12 +115,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Mono<Void> deleteAllById(List<BigInteger> ids) {
+    public Mono<Void> deleteAllById(List<Long> ids) {
         return tagRepository.deleteAllById(ids);
     }
 
     @Override
-    public Mono<List<TagVO>> findTagByProductId(BigInteger productId) {
+    public Mono<List<TagVO>> findTagByProductId(Long productId) {
         return productTagRepository.findTagIdByProductId(productId)
 
                 .flatMap(tagRepository::findById)
@@ -133,7 +133,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Mono<List<TagVO>> findTagByProductId(List<BigInteger> productIds) {
+    public Mono<List<TagVO>> findTagByProductId(List<Long> productIds) {
         return null;
     }
 }

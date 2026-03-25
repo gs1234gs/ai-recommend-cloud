@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
+
 
 /**
  * 游标
@@ -15,13 +15,13 @@ import java.math.BigInteger;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RequestCursorPage< T> {
-    private BigInteger lastId;
+    private Long lastId;
     @Builder.Default
     private Integer pageSize = 10;
     @Builder.Default
     private String order = "DESC";
     private T condition;
-    public RequestCursorPage<T> setLastId(BigInteger lastId){
+    public RequestCursorPage<T> setLastId(Long lastId){
         this.lastId = lastId;
         return this;
     }

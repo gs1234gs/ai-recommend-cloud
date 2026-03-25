@@ -2,11 +2,11 @@ package com.guanshiyun.service.order.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.ReactivePageQuery;
+import com.db.dbnumber.ConstNumber;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.base.BasePojo;
-import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.controller.order.vo.PurChaseOrderSaveVO;
 import com.guanshiyun.controller.order.vo.PurChaseOrderVO;
 import com.guanshiyun.controller.order.vo.PurchaseOrderDetailVO;
@@ -14,6 +14,7 @@ import com.guanshiyun.controller.order.vo.PurchaseOrderSearchVO;
 import com.guanshiyun.feedback.Feedback;
 import com.guanshiyun.gorseenum.GorseFeedbackEnum;
 import com.guanshiyun.goser.GorseClient;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.order.PurChaseOrder;
 import com.guanshiyun.profile.ProductApiVO;
 import com.guanshiyun.profile.SKUApiVO;
@@ -34,12 +35,14 @@ import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
+import org.springframework.data.relational.core.query.Criteria;
+import org.springframework.data.relational.core.query.Query;
+import org.springframework.data.relational.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -51,7 +54,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PurChaseOrderServiceImpl implements PurChaseOrderService {
     private final PurChaseOrderRepository purChaseOrderRepository;
-    private final MyBigInteger myBigInteger;
+    private final MyLong myLong;
     private final SnowflakePermanent snowflakePermanent;
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
     private final TransactionalOperator transactionalOperator;
@@ -67,14 +70,14 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
      * 保存订单
      */
     @Override
-    public Mono<BigInteger> save(PurChaseOrderSaveVO purChaseOrderSaveVO) {
+    public Mono<Long> save(PurChaseOrderSaveVO purChaseOrderSaveVO) {
         return Mono.deferContextual(ctx -> {
             if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
-            BigInteger userId =
-                    myBigInteger.bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
-            BigInteger id = snowflakePermanent.nextId();
+            Long userId =
+                    myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long id = snowflakePermanent.nextId();
             LocalDateTime now = LocalDateTime.now();
             //订单
             PurChaseOrder purChaseOrder =
@@ -93,7 +96,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
                     )
                     .publishOn(Schedulers.boundedElastic())
                     .doOnSuccess(ok->{
-                        BigInteger productId = purChaseOrder.getProductId();
+                        Long productId = purChaseOrder.getProductId();
                         gorseClient.insertFeedback(
                                 List.of(
                                         Feedback.builder()
@@ -117,13 +120,13 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
      * 修改订单
      */
     @Override
-    public Mono<BigInteger> updateById(PurChaseOrderSaveVO purChaseOrderSaveVO) {
+    public Mono<Long> updateById(PurChaseOrderSaveVO purChaseOrderSaveVO) {
         Integer status = purChaseOrderSaveVO.getStatus();
         return Mono.deferContextual(ctx -> {
             if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
-            BigInteger userId = myBigInteger.bigInteger(
+            Long userId = myLong.myLong(
                     ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
             );
             return r2dbcUpdateHelper.updateIgnoreNull(
@@ -145,14 +148,14 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
     }
 
     @Override
-    public Mono<List<PurChaseOrderVO>> findByUserId(BigInteger userId, Integer rows) {
+    public Mono<List<PurChaseOrderVO>> findByUserId(Long userId, Integer rows) {
         return purChaseOrderRepository.findAllByUserId(userId, rows)
                 .map(purChaseOrder -> BeanUtil.toBean(purChaseOrder, PurChaseOrderVO.class))
                 .collectList();
     }
 
     @Override
-    public Mono<List<PurChaseOrderVO>> findByUserIds(List<BigInteger> userIds, Integer rows) {
+    public Mono<List<PurChaseOrderVO>> findByUserIds(List<Long> userIds, Integer rows) {
         return purChaseOrderRepository.findAllByUserIds(userIds, rows)
                 .map(purChaseOrder ->
                         BeanUtil.toBean(purChaseOrder, PurChaseOrderVO.class)
@@ -161,11 +164,11 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
     }
 
     @Override
-    public Mono<PurchaseOrderDetailVO> findById(BigInteger id) {
+    public Mono<PurchaseOrderDetailVO> findById(Long id) {
         return purChaseOrderRepository.findById(id)
                 .flatMap(purChaseOrder -> {
-                    BigInteger productId = purChaseOrder.getProductId();
-                    BigInteger skuId = purChaseOrder.getSkuId();
+                    Long productId = purChaseOrder.getProductId();
+                    Long skuId = purChaseOrder.getSkuId();
                     return Mono.zip(skuApiService.findBySkuId(skuId),
                                     tagApiService.findByProductId(productId),
                                     productApiService.findProductById(productId)
@@ -212,7 +215,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
             if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
-            BigInteger userId = myBigInteger.bigInteger(
+            Long userId = myLong.myLong(
                     ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
             );
             RequestPage<PurChaseOrder> orderRequestPage =
@@ -224,11 +227,11 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
                     .page()
                     .flatMap(pageResultT -> {
                                 List<PurChaseOrder> rows = pageResultT.getRows();
-                                List<BigInteger> skuIdList = rows.stream().map(PurChaseOrder::getSkuId).toList();
-//                                List<BigInteger> productIdList = rows.stream().map(PurChaseOrder::getProductId).toList();
+                                List<Long> skuIdList = rows.stream().map(PurChaseOrder::getSkuId).toList();
+//                                List<Long> productIdList = rows.stream().map(PurChaseOrder::getProductId).toList();
                                 return skuApiService.findBySkuIds(skuIdList)
                                         .map(skuList -> {
-                                            Map<BigInteger, SKUApiVO> skuMap = skuList.getData().stream()
+                                            Map<Long, SKUApiVO> skuMap = skuList.getData().stream()
                                                     .collect(Collectors.toMap(
                                                             SKUApiVO::getId,      // key = skuId
                                                             Function.identity()   // value = SKUApiVO
@@ -271,7 +274,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
 
-            BigInteger userId = myBigInteger.bigInteger(
+            Long userId = myLong.myLong(
                     ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
             );
 
@@ -284,7 +287,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
                         }
 
                         // 提取地址 ID，过滤 null 值
-                        List<BigInteger> addressIds = purChaseOrders.stream()
+                        List<Long> addressIds = purChaseOrders.stream()
                                 .map(PurChaseOrder::getAddressId)
                                 .filter(Objects::nonNull)
                                 .distinct()
@@ -310,7 +313,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
                                     }
 
                                     // 构建地址 ID 到地址对象的映射
-                                    Map<BigInteger, OrderAddressVOApi> addressGroupById =
+                                    Map<Long, OrderAddressVOApi> addressGroupById =
                                             BeanConvertUtil.toBeanList(orderAddresses, OrderAddressVOApi.class)
                                                     .stream()
                                                     .filter(Objects::nonNull)
@@ -322,7 +325,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
                                                     ));
 
                                     // 构建地址 ID 到订单列表的映射
-                                    Map<BigInteger, List<PurChaseOrder>> orderGroupByAddressId =
+                                    Map<Long, List<PurChaseOrder>> orderGroupByAddressId =
                                             purChaseOrders.stream()
                                                     .filter(Objects::nonNull)
                                                     .filter(o -> o.getAddressId() != null)
@@ -339,7 +342,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
                                                     return null;
                                                 }
 
-                                                BigInteger addressId = purChaseOrder.getAddressId();
+                                                Long addressId = purChaseOrder.getAddressId();
                                                 OrderAddressVOApi addressVO = addressId != null
                                                         ? addressGroupById.get(addressId)
                                                         : null;
@@ -362,9 +365,18 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
     }
 
     @Override
-    public Mono<Boolean> deleteById(BigInteger id) {
-        return purChaseOrderRepository.softDeleteById(id)
-                .map(success -> Boolean.TRUE)
-                .onErrorResume(throwable -> Mono.just(false));
+    public Mono<Boolean> deleteById(Long id) {
+        // 构建更新操作
+        return r2dbcEntityTemplate.update(PurChaseOrder.class)
+                .matching(Query.query(
+                       Criteria.where(PurChaseOrder.Fields.id).is(id)
+                ))
+                .apply(Update.update(BasePojo.Fields.delFlag, ConstNumber.INT_ONE))
+                .then() // 转换为 Mono<Void> 表示完成
+                .thenReturn(true) // 成功后返回 true
+                .onErrorResume(e -> {
+                    log.error("删除失败", e);
+                    return Mono.just(false);
+                });
     }
 }

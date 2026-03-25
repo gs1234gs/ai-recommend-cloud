@@ -11,7 +11,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.net.URI;
 import java.util.List;
 @Slf4j
@@ -21,7 +21,7 @@ public class TagApiServiceImpl implements TagApiService {
     private final GoodsWebClientRpc goodsWebClientRpc;
 
     @Override
-    public Mono<ResultT<TagApiVO>> findById(BigInteger id) {
+    public Mono<ResultT<TagApiVO>> findById(Long id) {
         return goodsWebClientRpc
                 .webClient()
                 .get()
@@ -33,7 +33,7 @@ public class TagApiServiceImpl implements TagApiService {
     }
 
     @Override
-    public Mono<ResultT<List<TagApiVO>>> findByProductId(BigInteger productId) {
+    public Mono<ResultT<List<TagApiVO>>> findByProductId(Long productId) {
         return goodsWebClientRpc
                 .webClient()
                 .get()
@@ -50,7 +50,7 @@ public class TagApiServiceImpl implements TagApiService {
     }
 
     @Override
-    public Mono<ResultT<List<TagApiVO>>> findByProductId(List<BigInteger> productIds) {
+    public Mono<ResultT<List<TagApiVO>>> findByProductId(List<Long> productIds) {
         return goodsWebClientRpc
                 .webClient()
                 .get()

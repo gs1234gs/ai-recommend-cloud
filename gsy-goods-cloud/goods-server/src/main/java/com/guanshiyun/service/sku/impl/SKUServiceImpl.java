@@ -29,7 +29,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -67,14 +67,14 @@ public class SKUServiceImpl implements SKUService {
     }
 
     @Override
-    public Mono<BigInteger> save(SKUSaveVO skuVO) {
+    public Mono<Long> save(SKUSaveVO skuVO) {
 
         SKU sku = BeanUtil.toBean(skuVO, SKU.class)
                 .setPicList(JSONObject.toJSONString(skuVO.getPicList()));
         return Mono.deferContextual(ctx -> {
             if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
                 return Mono.error(new RuntimeException("用户未登录"));
-            BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+            Long userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
             Integer stockVO = skuVO.getStock();
             Integer addStockVO = skuVO.getAddStock();
             int stock = 0;
@@ -174,12 +174,12 @@ public class SKUServiceImpl implements SKUService {
     }
 
     @Override
-    public Mono<Void> deleteById(BigInteger id) {
+    public Mono<Void> deleteById(Long id) {
         return skuRepository.deleteById(id);
     }
 
     @Override
-    public Mono<SKUVO> findById(BigInteger id) {
+    public Mono<SKUVO> findById(Long id) {
         return skuRepository.findById(id)
                 .map(sku -> BeanUtil.toBean(sku, SKUVO.class)
                         .setPicList(parsePicList(sku.getPicList()))
@@ -191,15 +191,12 @@ public class SKUServiceImpl implements SKUService {
     public Mono<PageResultT<List<SKUGroupByProductIdVO>>> findAllByPage(
             RequestPage<SKUFindVO> requestPage) {
 
-        BigInteger pageNum = requestPage.getPageNum();
+        Long pageNum = requestPage.getPageNum();
         int pageSize = requestPage.getPageSize();
-        long offset = pageNum
-                .subtract(BigInteger.ONE)
-                .multiply(BigInteger.valueOf(pageSize))
-                .longValueExact();
+        long offset = pageNum * pageSize;
 
         // 1. 分页查 productId
-        Mono<List<BigInteger>> productIdPageMono =
+        Mono<List<Long>> productIdPageMono =
                 r2dbcEntityTemplate.getDatabaseClient()
                         .sql("""
                                     SELECT DISTINCT product_id
@@ -210,7 +207,7 @@ public class SKUServiceImpl implements SKUService {
                                 """)
                         .bind("limit", pageSize)
                         .bind("offset", offset)
-                        .map((row, meta) -> row.get("product_id", BigInteger.class))
+                        .map((row, meta) -> row.get("product_id", Long.class))
                         .all()
                         .collectList();
 
@@ -227,7 +224,7 @@ public class SKUServiceImpl implements SKUService {
 
         return Mono.zip(productIdPageMono, totalMono)
                 .flatMap(tuple -> {
-                    List<BigInteger> productIds = tuple.getT1();
+                    List<Long> productIds = tuple.getT1();
                     long total = tuple.getT2();
 
                     if (productIds.isEmpty()) {
@@ -258,7 +255,7 @@ public class SKUServiceImpl implements SKUService {
                                 log.info("skuList: {}", skuList);
                                 List<Product> productList = data.getT2();
 
-                                Map<BigInteger, List<SKUVO>> skuByProductId =
+                                Map<Long, List<SKUVO>> skuByProductId =
                                         skuList.stream()
                                                 .map(sku ->
                                                         BeanUtil.toBean(sku, SKUVO.class)
@@ -266,7 +263,7 @@ public class SKUServiceImpl implements SKUService {
                                                 )
                                                 .collect(Collectors.groupingBy(SKUVO::getProductId));
 
-                                Map<BigInteger, Product> productMap =
+                                Map<Long, Product> productMap =
                                         productList.stream()
                                                 .collect(Collectors.toMap(Product::getId, p -> p));
 
@@ -298,8 +295,8 @@ public class SKUServiceImpl implements SKUService {
     }
 
 //    @Override
-//    public Mono<PageResultT<List<Map<BigInteger, SKUVO>>>> findAllPage(RequestPage<ProductSearchVO> requestPage) {
-//        BigInteger pageNum = PageUtils.pageNum(requestPage.getPageNum());
+//    public Mono<PageResultT<List<Map<Long, SKUVO>>>> findAllPage(RequestPage<ProductSearchVO> requestPage) {
+//        Long pageNum = PageUtils.pageNum(requestPage.getPageNum());
 //        Integer pageSize = PageUtils.pageSize(requestPage.getPageSize());
 //        ProductSearchVO condition = requestPage.getCondition();
 //        if (condition == null) {
@@ -309,7 +306,7 @@ public class SKUServiceImpl implements SKUService {
 //    }
 
     @Override
-    public Flux<SKUVO> findByProductId(BigInteger productId) {
+    public Flux<SKUVO> findByProductId(Long productId) {
         return skuRepository.findAllByProductId(productId)
                 .map(sku -> BeanUtil.toBean(sku, SKUVO.class)
                         .setPicList(parsePicList(sku.getPicList()))
@@ -317,24 +314,24 @@ public class SKUServiceImpl implements SKUService {
     }
 
     @Override
-    public Mono<Void> deleteAllById(List<BigInteger> ids) {
+    public Mono<Void> deleteAllById(List<Long> ids) {
         return skuRepository.deleteAllById(ids);
     }
 
     @Override
-    public Mono<Boolean> reduceStockById(BigInteger id, Integer count) {
+    public Mono<Boolean> reduceStockById(Long id, Integer count) {
         return skuRepository.reduceStockById(id, count)
                 .map(rows -> rows > 0);
     }
 
     @Override
-    public Mono<Boolean> addStockById(BigInteger id, Integer count) {
+    public Mono<Boolean> addStockById(Long id, Integer count) {
         return skuRepository.addStockById(id, count)
                 .map(rows -> rows > 0);
     }
 
     @Override
-    public Mono<List<SKUVO>> findAllByIds(List<BigInteger> skuIds) {
+    public Mono<List<SKUVO>> findAllByIds(List<Long> skuIds) {
         return skuRepository.findAllById(skuIds)
                 .mapNotNull(item -> BeanUtil.toBean(item, SKUVO.class))
                 .collect(Collectors.toList())
@@ -342,7 +339,7 @@ public class SKUServiceImpl implements SKUService {
     }
 
     @Override
-    public Mono<Boolean> addSalesById(BigInteger id, Integer count) {
+    public Mono<Boolean> addSalesById(Long id, Integer count) {
         return skuRepository.findById(id)
                 .flatMap(sku->{
                     Integer salesVolume = sku.getSalesVolume();

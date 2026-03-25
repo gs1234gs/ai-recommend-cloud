@@ -7,7 +7,7 @@ import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.userpojo.SysUser;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -15,13 +15,13 @@ public interface SysUserService {
 
     Mono<PageResultT<List<SysUser>>> findPage(RequestPage<SysUser> requestPage);
 
-    Mono<Long> deleteUserById(BigInteger id);
+    Mono<Long> deleteUserById(Long id);
 
-    Mono< Long> deleteUserByIds(Collection<BigInteger> ids);
+    Mono< Long> deleteUserByIds(Collection<Long> ids);
 
-    Mono<SysUserVO> findById(BigInteger id);
+    Mono<SysUserVO> findById(Long id);
 
-    Mono<BigInteger> updateUserById(SysUserVO sysUserVO);
+    Mono<Long> updateUserById(SysUserVO sysUserVO);
 
-    Mono<BigInteger> save(SysUserSaveVO sysUserSaveVO);
+    Mono<Long> save(SysUserSaveVO sysUserSaveVO);
 }

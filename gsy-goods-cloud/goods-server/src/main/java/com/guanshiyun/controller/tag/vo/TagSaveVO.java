@@ -5,14 +5,14 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class TagSaveVO {
-    private BigInteger id;
+    private Long id;
     /** 标签名称 */
     private String name;
 

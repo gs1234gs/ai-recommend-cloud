@@ -6,7 +6,6 @@ import com.db.cursorQuery.ReactivePageQuery;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
-import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.category.Category;
 import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.controller.product.vo.ProductSaveVO;
@@ -14,6 +13,7 @@ import com.guanshiyun.controller.product.vo.ProductVO;
 import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import com.guanshiyun.goser.GorseClient;
 import com.guanshiyun.items.Item;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.product.Product;
 import com.guanshiyun.relationship.ProductCategory;
 import com.guanshiyun.relationship.ProductTag;
@@ -45,7 +45,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.math.BigInteger;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -58,7 +57,7 @@ import java.util.stream.Stream;
 public class ProductServiceImpl implements ProductService {
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
     private final ProductRepository productRepository;
-    private final MyBigInteger myBigInteger;
+    private final MyLong myLong;
     private final DatabaseClient databaseClient;
     private final ProductTagRepository productTagRepository;
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
@@ -71,16 +70,16 @@ public class ProductServiceImpl implements ProductService {
     private final GorseClient gorseClient;
 
     @Override
-    public Mono<BigInteger> save(ProductSaveVO productSaveVO) {
+    public Mono<Long> save(ProductSaveVO productSaveVO) {
         Product product = BeanUtil.toBean(productSaveVO, Product.class);
-        List<BigInteger> tagIds = productSaveVO.getTagId();
+        List<Long> tagIds = productSaveVO.getTagId();
         LocalDateTime now = LocalDateTime.now();
-        List<BigInteger> categoryIds = productSaveVO.getCategoryId();
+        List<Long> categoryIds = productSaveVO.getCategoryId();
         return Mono.deferContextual(ctx -> {
                     if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                         return Mono.error(new RuntimeException("用户不存在"));
                     }
-                    BigInteger userId = myBigInteger.bigInteger(
+                    Long userId = myLong.myLong(
                             ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
                     );
                     if (Objects.isNull(tagIds))
@@ -129,8 +128,8 @@ public class ProductServiceImpl implements ProductService {
                                 )
                                 .publishOn(Schedulers.boundedElastic())
                                 .doOnSuccess(productId -> {
-                                    // 异步调用 bigIntegerMono，但不阻塞主链
-                                    bigIntegerMono(productId, categoryIds, tagIds, product)
+                                    // 异步调用 LongMono，但不阻塞主链
+                                    LongMono(productId, categoryIds, tagIds, product)
                                             .contextWrite(ctxb -> ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
                                             .subscribe(
                                                     ignored -> log.info("异步处理完成: {}", productId),
@@ -152,7 +151,7 @@ public class ProductServiceImpl implements ProductService {
                             .flatMap(productId -> {
                                         return productCategoryRepository.findByProductId(productId).collectList()
                                                 .flatMap(oldCategoryList -> {
-                                                    List<BigInteger> oldCategoryIds = oldCategoryList.stream()
+                                                    List<Long> oldCategoryIds = oldCategoryList.stream()
                                                             .map(ProductCategory::getCategoryId).toList();
                                                     List<ProductCategory> toAddCategory = categoryIds.stream()
                                                             .filter(id -> !oldCategoryIds.contains(id))
@@ -177,8 +176,8 @@ public class ProductServiceImpl implements ProductService {
                                                 })
                                                 .publishOn(Schedulers.boundedElastic())
                                                 .doOnSuccess(OK -> {
-                                                    // 异步调用 bigIntegerMono，但不阻塞主链
-                                                    bigIntegerMono(productId, categoryIds, tagIds, product)
+                                                    // 异步调用 LongMono，但不阻塞主链
+                                                    LongMono(productId, categoryIds, tagIds, product)
                                                             .contextWrite(ctxb -> ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
                                                             .subscribe(
                                                                     ignored -> log.info("异步处理完成: {}", productId),
@@ -199,11 +198,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Mono<BigInteger> saveProduct(ProductSaveVO productSaveVO) {
+    public Mono<Long> saveProduct(ProductSaveVO productSaveVO) {
         Product product = BeanUtil.toBean(productSaveVO, Product.class);
-        List<BigInteger> tagIds = productSaveVO.getTagId();
+        List<Long> tagIds = productSaveVO.getTagId();
         LocalDateTime now = LocalDateTime.now();
-        List<BigInteger> categoryIds = productSaveVO.getCategoryId();
+        List<Long> categoryIds = productSaveVO.getCategoryId();
 
         // 参数校验提前做（非 reactor 上下文部分）
         if (Objects.isNull(tagIds)) {
@@ -214,7 +213,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return Mono.deferContextual(ctx -> {
-                    BigInteger userId = myBigInteger.bigInteger(
+                    Long userId = myLong.myLong(
                             ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
                     );
                     if (Objects.isNull(userId)) {
@@ -265,7 +264,7 @@ public class ProductServiceImpl implements ProductService {
                                 .publishOn(Schedulers.boundedElastic())
                                 .doOnSuccess(productId -> {
                                     // 异步向量化处理（不阻塞主流程）
-                                    bigIntegerMono(productId, categoryIds, tagIds, product)
+                                    LongMono(productId, categoryIds, tagIds, product)
                                             .contextWrite(ctxb -> ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
                                             .subscribeOn(Schedulers.parallel())
                                             .subscribe(
@@ -288,16 +287,16 @@ public class ProductServiceImpl implements ProductService {
                                 )
                                 .flatMap(productId -> {
                                     // 查询旧的分类关系
-                                    Mono<List<BigInteger>> tagIdsMono = productTagRepository.findTagIdByProductId(productId).collectList();
-                                    Mono<List<BigInteger>> categoryIdsMono = productCategoryRepository.findByProductId(productId)
+                                    Mono<List<Long>> tagIdsMono = productTagRepository.findTagIdByProductId(productId).collectList();
+                                    Mono<List<Long>> categoryIdsMono = productCategoryRepository.findByProductId(productId)
                                             .map(ProductCategory::getCategoryId)
                                             .collectList();
                                     return Mono.zip(tagIdsMono, categoryIdsMono)
                                             .flatMap(tuple -> {
-                                                List<BigInteger> oldCategoryIds = tuple.getT2();
-                                                List<BigInteger> oldTagIds = tuple.getT1();
-                                                Set<BigInteger> oldCategorySet = new HashSet<>(oldCategoryIds);
-                                                Set<BigInteger> oldTagSet = new HashSet<>(oldTagIds);
+                                                List<Long> oldCategoryIds = tuple.getT2();
+                                                List<Long> oldTagIds = tuple.getT1();
+                                                Set<Long> oldCategorySet = new HashSet<>(oldCategoryIds);
+                                                Set<Long> oldTagSet = new HashSet<>(oldTagIds);
 
                                                 //  新增的分类：新ID中不在旧ID里的
                                                 List<ProductCategory> toAddCategories = categoryIds.stream()
@@ -323,13 +322,13 @@ public class ProductServiceImpl implements ProductService {
                                                         .collect(Collectors.toList());
 
                                                 // 删除的分类：旧ID中不在新ID里的
-                                                Set<BigInteger> newCategorySet = new HashSet<>(categoryIds);
-                                                List<BigInteger> toDeleteCategories = oldCategoryIds.stream()
+                                                Set<Long> newCategorySet = new HashSet<>(categoryIds);
+                                                List<Long> toDeleteCategories = oldCategoryIds.stream()
                                                         .filter(id -> !newCategorySet.contains(id))
                                                         .toList();
                                                 // 删除的标签：旧ID中不在新ID里的
-                                                Set<BigInteger> newTagSet = new HashSet<>(tagIds);
-                                                List<BigInteger> toDeleteTags = oldTagIds.stream()
+                                                Set<Long> newTagSet = new HashSet<>(tagIds);
+                                                List<Long> toDeleteTags = oldTagIds.stream()
                                                         .filter(id -> !newTagSet.contains(id))
                                                         .toList();
                                                 Mono<Void> deleteCategories = toDeleteCategories.isEmpty()
@@ -353,7 +352,7 @@ public class ProductServiceImpl implements ProductService {
                                 .transform(transactionalOperator::transactional)
                                 .publishOn(Schedulers.boundedElastic())
                                 .doOnSuccess(productId -> {
-                                    bigIntegerMono(productId, categoryIds, tagIds, product)
+                                    LongMono(productId, categoryIds, tagIds, product)
                                             .contextWrite(ctxb -> ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
                                             .subscribeOn(Schedulers.parallel())
                                             .subscribe(
@@ -374,10 +373,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @NonNull
-    private Mono<BigInteger> bigIntegerMono(BigInteger productIdSave, List<BigInteger> categoryIds, List<BigInteger> tagIds, Product product) {
+    private Mono<Long> LongMono(Long productIdSave, List<Long> categoryIds, List<Long> tagIds, Product product) {
         log.info("更新商品信息成功：{}", productIdSave);
 
-        if (Objects.isNull(productIdSave) || productIdSave.equals(BigInteger.ZERO)) {
+        if (Objects.isNull(productIdSave) || productIdSave.equals(ConstNumber.LONG_ZERO)) {
             log.warn("商品ID为空，跳过关联数据保存");
             return Mono.empty(); // 或抛异常，根据业务需求
         }
@@ -455,7 +454,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Mono<Long> deleteById(BigInteger id) {
+    public Mono<Long> deleteById(Long id) {
         return databaseClient.sql("delete from product where id = :id")
                 .bind(Product.Fields.id, id)
                 .fetch()
@@ -487,10 +486,10 @@ public class ProductServiceImpl implements ProductService {
         RequestPage<ProductVO> recordRequestPage = PageUtils.pageValidation(requestPage, ProductVO.class);
         ProductVO condition = recordRequestPage.getCondition();
         RequestPage<Product> productRequestPage = BeanConvertUtil.toBean(recordRequestPage, Product.class);
-        List<BigInteger> categoryIds = condition.getCategoryId();
+        List<Long> categoryIds = condition.getCategoryId();
         return Mono.deferContextual(ctx -> {
-            BigInteger userId = myBigInteger
-                    .bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong
+                    .myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
             if (Objects.isNull(userId))
                 return Mono.just(PageResultT.<List<ProductVO>>builder()
                         .total(ConstNumber.INT_ZERO)
@@ -524,8 +523,8 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Mono<Long> save(List<ProductSaveVO> productSaveVOList) {
         return Mono.deferContextual(ctx -> {
-            BigInteger userId = myBigInteger
-                    .bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong
+                    .myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
             if (Objects.isNull(userId))
                 return Mono.just(ConstNumber.LONG_ZERO);
             return Flux.fromIterable(productSaveVOList)
@@ -553,12 +552,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Mono<Void> deleteAllById(List<BigInteger> ids) {
+    public Mono<Void> deleteAllById(List<Long> ids) {
         return productRepository.deleteAllById(ids);
     }
 
     @Override
-    public Mono<ProductVO> findById(BigInteger id) {
+    public Mono<ProductVO> findById(Long id) {
         return productRepository.findById(id)
                 .flatMap(product -> productCategoryRepository.findByProductId(id)
                         .map(ProductCategory::getCategoryId)
@@ -578,7 +577,7 @@ public class ProductServiceImpl implements ProductService {
                                         List<String> tagNames =
                                                 tags.stream().map(Tag::getName)
                                                         .collect(Collectors.toList());
-                                        List<BigInteger> tagIds = tags.stream().map(Tag::getId)
+                                        List<Long> tagIds = tags.stream().map(Tag::getId)
                                                 .toList();
                                         ProductVO productVO = BeanConvertUtil.toBean(product, ProductVO.class);
                                         productVO.setCategoryId(categoryIdList)
@@ -603,7 +602,7 @@ public class ProductServiceImpl implements ProductService {
                     // 截取真实需要的数据
                     List<Product> data = hasNext ? products.subList(0, requestCursorPage.getPageSize()) : products;
                     List<ProductVO> toListProductVO = BeanConvertUtil.toBeanList(data, ProductVO.class);
-                    BigInteger nextCursor = null;
+                    Long nextCursor = null;
                     if (!data.isEmpty()) {
                         Product lastProduct = data.getLast();
                         nextCursor = lastProduct.getId(); // 假设 getId() 返回主键

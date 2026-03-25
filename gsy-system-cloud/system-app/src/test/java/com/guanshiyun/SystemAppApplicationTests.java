@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Slf4j
@@ -27,16 +27,16 @@ class SystemAppApplicationTests {
 
 //    @Test
 //    void contextLoads() {
-//        sysUserRoleRepository.findRoleIdByUserId(BigInteger.valueOf(3L))
+//        sysUserRoleRepository.findRoleIdByUserId(Long.valueOf(3L))
 //                .collectList()
 //                .subscribe(list -> System.out.println(list));
-//        sysUserRoleRepository.existsByUserIdAndRoleId(BigInteger.valueOf(3L), BigInteger.valueOf(1L))
+//        sysUserRoleRepository.existsByUserIdAndRoleId(Long.valueOf(3L), Long.valueOf(1L))
 //                .subscribe(exist -> System.out.println(exist));
 //    }
 
     @Test
     void test() {
-        sysRoleMenuService.findMenuIdsByRoleId(List.of(BigInteger.valueOf(1L)))
+        sysRoleMenuService.findMenuIdsByRoleId(List.of(Long.valueOf(1L)))
                 .collectList()
                 .flatMap(menuIds ->
                         sysMenuService.findByIds(menuIds)
@@ -48,7 +48,7 @@ class SystemAppApplicationTests {
 
     @Test
     void test2() {
-        sysMenuService.findAllByParentId(BigInteger.TWO)
+        sysMenuService.findAllByParentId(Long.TWO)
                 .collectList()
                 .subscribe(list -> {
                     log.info("====================");

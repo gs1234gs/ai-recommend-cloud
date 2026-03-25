@@ -15,7 +15,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Slf4j
@@ -27,19 +27,19 @@ public class ProductController {
 
     //添加商品
     @PostMapping("/save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody ProductSaveVO productSaveVO) {
+    public Mono<ResultT<Long>> save(@RequestBody ProductSaveVO productSaveVO) {
         return productService.saveProduct(productSaveVO)
                 .map(productId ->
                 {
                     log.info("保存商品成功，商品ID为：{}", productId);
-                    return ResultT.<BigInteger>builder()
+                    return ResultT.<Long>builder()
                             .code(HttpCodeConst.OK)
                             .msg("保存成功")
                             .data(productId)
                             .build();
                 })
                 .onErrorResume(throwable ->
-                        Mono.just(ResultT.<BigInteger>builder()
+                        Mono.just(ResultT.<Long>builder()
                                 .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                                 .msg("保存失败")
                                 .build())
@@ -50,7 +50,7 @@ public class ProductController {
      * 删除商品
      */
     @DeleteMapping("/deleteById/{id}")
-    public Mono<ResultT<Long>> deleteById(@PathVariable @Validated BigInteger id) {
+    public Mono<ResultT<Long>> deleteById(@PathVariable @Validated Long id) {
         return productService.deleteById(id)
                 .map(deleteCount -> {
                     log.info("删除商品成功，删除数量为：{}", deleteCount);
@@ -118,7 +118,7 @@ public class ProductController {
 
     //批量删除
     @DeleteMapping("/deleteAllById")
-    public Mono<ResultT<Void>> deleteAllById(@RequestBody List<BigInteger> ids) {
+    public Mono<ResultT<Void>> deleteAllById(@RequestBody List<Long> ids) {
         return productService.deleteAllById(ids)
                 .map(deleteCount ->
                         ResultT.<Void>builder()
@@ -139,7 +139,7 @@ public class ProductController {
     }
 
     @GetMapping("/findById/{id}")
-    public Mono<ResultT<ProductVO>> findById(@PathVariable BigInteger id) {
+    public Mono<ResultT<ProductVO>> findById(@PathVariable Long id) {
         return productService.findById(id)
                 .map(productVO ->
                         ResultT.<ProductVO>builder()

@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,11 +24,11 @@ public class TagController {
 
     //添加标签
     @PostMapping("save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody TagSaveVO tagSaveVO) {
+    public Mono<ResultT<Long>> save(@RequestBody TagSaveVO tagSaveVO) {
         return tagService.save(tagSaveVO)
                 .map(id -> {
                     log.info("添加成功，id为{}", id);
-                    return ResultT.<BigInteger>builder()
+                    return ResultT.<Long>builder()
                             .code(HttpCodeConst.OK)
                             .msg("添加成功")
                             .data(id)
@@ -37,7 +37,7 @@ public class TagController {
                 .onErrorResume(throwable -> {
                             log.error("添加失败", throwable);
                             return Mono.just(
-                                    ResultT.<BigInteger>builder()
+                                    ResultT.<Long>builder()
                                             .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                                             .msg("添加失败")
                                             .build()
@@ -48,7 +48,7 @@ public class TagController {
 
     //删除标签
     @DeleteMapping("deleteById/{id}")
-    public Mono<ResultT<Void>> deleteById(@PathVariable BigInteger id) {
+    public Mono<ResultT<Void>> deleteById(@PathVariable Long id) {
         return tagService.deleteById(id)
                 .then(Mono.just(
                         ResultT.<Void>builder()
@@ -68,7 +68,7 @@ public class TagController {
     }
 
     @GetMapping("findById/{id}")
-    public Mono<ResultT<TagVO>> findById(@PathVariable BigInteger id) {
+    public Mono<ResultT<TagVO>> findById(@PathVariable Long id) {
       return   tagService.findById( id)
                 .map(tag ->{
                     log.info("查询成功，id为{}", id);
@@ -103,7 +103,7 @@ public class TagController {
     }
     //批量删除
     @DeleteMapping("deleteAllById")
-    public Mono<ResultT<Void>> deleteByIds(@RequestBody List<BigInteger> ids) {
+    public Mono<ResultT<Void>> deleteByIds(@RequestBody List<Long> ids) {
         return tagService.deleteAllById(ids)
                 .then(Mono.just(
                         ResultT.<Void>builder()
@@ -122,7 +122,7 @@ public class TagController {
                 });
     }
     @GetMapping("findByProductId/{productId}")
-    public Mono<ResultT<List<TagVO>>> findTagByProductId(@PathVariable BigInteger productId) {
+    public Mono<ResultT<List<TagVO>>> findTagByProductId(@PathVariable Long productId) {
         return tagService.findTagByProductId(productId)
                 .map(tag ->{
                     log.info("通过商品id查询成功Tag，id为{}", tag);
@@ -144,7 +144,7 @@ public class TagController {
     }
 
     @GetMapping("findByProductIds")
-    public Mono<ResultT<List<TagVO>>> findTagByProductIds(@RequestParam List<BigInteger> productIds) {
+    public Mono<ResultT<List<TagVO>>> findTagByProductIds(@RequestParam List<Long> productIds) {
         return tagService.findTagByProductId(productIds)
                 .map(tag ->{
                     log.info("通过商品id查询成功Tag，id为{}", tag);

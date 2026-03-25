@@ -8,7 +8,7 @@ import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.math.BigInteger;
+
 
 @Data
 @Builder
@@ -19,9 +19,9 @@ import java.math.BigInteger;
 public class SysUserRole {
     //主键id
     @Id
-    private BigInteger id;
+    private Long id;
     //用户Id
-    private BigInteger userId;
+    private Long userId;
     //角色Id
-    private BigInteger roleId;
+    private Long roleId;
 }

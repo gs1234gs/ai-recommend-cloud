@@ -31,7 +31,7 @@ public class HelpUtil {
 //                    List<BrowseProfileApi> browseList = Optional.ofNullable(tuple.getT5().getData()).orElse(List.of());
 //
 //                    //  合并所有行为的商品 ID (点击 + 收藏 + 购买 + 浏览)
-//                    List<BigInteger> allProductIds = Stream.concat(
+//                    List<Long> allProductIds = Stream.concat(
 //                                    Stream.concat(
 //                                            Stream.concat(
 //                                                    // 点击
@@ -59,12 +59,12 @@ public class HelpUtil {
 //
 //
 //                    int totalIds = allProductIds.isEmpty() ? 1 : allProductIds.size();
-//                    Map<BigInteger, Double> ratioMap = allProductIds.stream()
+//                    Map<Long, Double> ratioMap = allProductIds.stream()
 //                            .collect(Collectors.groupingBy(Function.identity(), Collectors.collectingAndThen(
 //                                    Collectors.counting(), c -> c * 1.0 / totalIds)));
 //
-//                    Map<BigInteger, Double> top3RatioMap = ratioMap.entrySet().stream()
-//                            .sorted(Map.Entry.<BigInteger, Double>comparingByValue().reversed())
+//                    Map<Long, Double> top3RatioMap = ratioMap.entrySet().stream()
+//                            .sorted(Map.Entry.<Long, Double>comparingByValue().reversed())
 //                            .limit(3)
 //                            .collect(Collectors
 //                                    .toMap(Map
@@ -74,7 +74,7 @@ public class HelpUtil {
 //                                            LinkedHashMap::new)
 //                            );
 //
-//                    Set<BigInteger> top3Ids = top3RatioMap.keySet();
+//                    Set<Long> top3Ids = top3RatioMap.keySet();
 //                    List<ProductForEmbeddingApVO> embeddingInput = new ArrayList<>();
 //                    //  构造 Embedding 输入数据
 //                    // 搜索关键词 (虚拟商品)
@@ -139,12 +139,12 @@ public class HelpUtil {
 //                                int hotCount = (int) (totalSize * 0.25);
 //                                int newCount = totalSize - aiCount - hotCount;
 //
-//                                List<BigInteger> validAiIds = aiIds.stream().limit(aiCount).toList();
-//                                List<BigInteger> finalPoolIds = new ArrayList<>(validAiIds);
+//                                List<Long> validAiIds = aiIds.stream().limit(aiCount).toList();
+//                                List<Long> finalPoolIds = new ArrayList<>(validAiIds);
 //
 //                                if (finalPoolIds.size() < totalSize) {
 //                                    // 补充热门商品
-//                                    Mono<List<BigInteger>> hotMono = utilsService
+//                                    Mono<List<Long>> hotMono = utilsService
 //                                            .findProductIdsByTotalSalesGreaterThan(ConstNumber.INT_HUNDRED)
 //                                            .defaultIfEmpty(Collections.emptyList())
 //                                            .map(list -> list.stream()
@@ -153,7 +153,7 @@ public class HelpUtil {
 //                                                    .toList()
 //                                            );
 //
-//                                    Mono<List<BigInteger>> newMono = productRepository.findAll()
+//                                    Mono<List<Long>> newMono = productRepository.findAll()
 //                                            .sort(Comparator.comparing(Product::getPublishTime).reversed())
 //                                            .map(Product::getId)
 //                                            .collectList()
@@ -221,11 +221,11 @@ public class HelpUtil {
 //                            Optional.ofNullable(tuple.getT2().getData()).orElse(List.of());
 //                    List<PurchaseOrderVOApi> purchaseOrderList =
 //                            Optional.ofNullable(tuple.getT4().getData()).orElse(List.of());
-//                    List<BigInteger> orderPids =
+//                    List<Long> orderPids =
 //                            purchaseOrderList.stream().map(PurchaseOrderVOApi::getProductId).toList();
 //                    Flux<Product> allById = productRepository.findAllById(orderPids);
 //                    // === 合并点击与收藏的商品 ID 列表 ===
-//                    List<BigInteger> productIdList =
+//                    List<Long> productIdList =
 //                            Stream.concat(
 //                                    Optional.of(clickProfileApiList).orElse(List.of()).stream()
 //                                            .map(c -> c.getProduct().getId()),
@@ -236,7 +236,7 @@ public class HelpUtil {
 //                    int totalProductId = productIdList.size();
 //                    final int totalIds = totalProductId == ConstNumber.INT_ZERO ? ConstNumber.INT_ONE : totalProductId;
 //                    //  计算每个商品 ID 的占比
-//                    Map<BigInteger, Double> productRatioMap =
+//                    Map<Long, Double> productRatioMap =
 //                            productIdList.stream()
 //                                    .collect(Collectors.groupingBy(
 //                                            Function.identity(),          // 商品ID作为key
@@ -246,11 +246,11 @@ public class HelpUtil {
 //                                            )
 //                                    ));
 //                    // 取占比排名前三的商品
-//                    Map<BigInteger, Double> top3ProductRatioMap =
+//                    Map<Long, Double> top3ProductRatioMap =
 //                            productRatioMap.entrySet()
 //                                    .stream()
 //                                    // 按占比倒序排序
-//                                    .sorted(Map.Entry.<BigInteger, Double>comparingByValue().reversed())
+//                                    .sorted(Map.Entry.<Long, Double>comparingByValue().reversed())
 //                                    // 取前三
 //                                    .limit(ConstNumber.INT_THREE)
 //                                    // 收集回 Map（保持排序）
@@ -261,7 +261,7 @@ public class HelpUtil {
 //                                            LinkedHashMap::new
 //                                    ));
 //
-//                    Set<BigInteger> top3ProductIdSet = top3ProductRatioMap.keySet();
+//                    Set<Long> top3ProductIdSet = top3ProductRatioMap.keySet();
 //
 //                    //构造用于大模型推荐的输入数据
 //                    List<ProductForEmbeddingApVO> productForEmbeddingApVOList = new ArrayList<>();

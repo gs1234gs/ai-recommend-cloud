@@ -3,6 +3,7 @@ package com.db.cursorQuery;
 import cn.hutool.core.util.StrUtil;
 import com.db.constsql.SqlConst;
 import com.db.page.CursorPageUtil;
+import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.sqlenums.LikeType;
@@ -15,7 +16,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Field;
-import java.math.BigInteger;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -98,12 +99,12 @@ public class CursorQuery<T> {
      * 执行列表查询（带游标分页）
      */
     public Flux<T> list() {
-        BigInteger lastId = validatedPage.getLastId();         // 使用校验后的 lastId
+        Long lastId = validatedPage.getLastId();         // 使用校验后的 lastId
         int pageSize =  Integer.sum(validatedPage.getPageSize(), 1);         // 已经是合法值
         String orderStr = validatedPage.getOrder();             //  已转为大写 ASC/DESC
 
         // 添加游标条件：基于 lastId 和 order 方向
-        if (lastId != null && lastId.compareTo(BigInteger.ZERO) > 0) {
+        if (lastId != null && lastId.compareTo(ConstNumber.LONG_ZERO) > 0) {
             criteria = SortOrderEnum.ASC.getKey().equalsIgnoreCase(orderStr)
                     ? criteria.and(SqlConst.ID).greaterThan(lastId)
                     : criteria.and(SqlConst.ID).lessThan(lastId);

@@ -9,7 +9,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +20,7 @@ public class OrderAddressServiceApiImpl implements OrderAddressServiceApi {
      * 根据订单id，或者订单号，获取订单配送地址信息
      * */
     @Override
-    public Mono<ResultT<OrderAddressVOApi>> findOrderAddress(BigInteger orderId) {
+    public Mono<ResultT<OrderAddressVOApi>> findOrderAddress(Long orderId) {
         return webClientRpc.webClient()
                 .get()
                 .uri("/address/findByOrderId/{orderId}", orderId)

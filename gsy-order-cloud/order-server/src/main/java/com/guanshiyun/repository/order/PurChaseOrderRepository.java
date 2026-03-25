@@ -7,25 +7,25 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.Collection;
 import java.util.List;
 
-public interface PurChaseOrderRepository extends ReactiveCrudRepository<PurChaseOrder, BigInteger> {
+public interface PurChaseOrderRepository extends ReactiveCrudRepository<PurChaseOrder, Long> {
 
     //根据用户id查询，查询rows订单
 
     @Query("SELECT * FROM purchase_order WHERE creator = :userId ORDER BY id DESC LIMIT :rows")
-    Flux<PurChaseOrder> findAllByUserId(@Param("userId") BigInteger userId, @Param("rows") Integer rows);
+    Flux<PurChaseOrder> findAllByUserId(@Param("userId") Long userId, @Param("rows") Integer rows);
 
     @Query("SELECT * FROM purchase_order WHERE creator IN (:userIds) ORDER BY id DESC LIMIT :rows")
     Flux<PurChaseOrder> findAllByUserIds(
-            @Param("userIds") List<BigInteger> userIds,
+            @Param("userIds") List<Long> userIds,
             @Param("rows") Integer rows);
 
     @Query("SELECT address_id FROM purchase_order WHERE id IN (:orderIds)")
-    Flux<BigInteger> findAllAddressById(Collection<BigInteger> orderIds);
+    Flux<Long> findAllAddressById(Collection<Long> orderIds);
 
-    @Query("update purchase_order set deleted = 1 where id = (:id)")
-    Mono<Integer> softDeleteById(BigInteger id);
+    @Query("update purchase_order set del_flag = 1 where id = (:id)")
+    Mono<Integer> softDeleteById(Long id);
 }

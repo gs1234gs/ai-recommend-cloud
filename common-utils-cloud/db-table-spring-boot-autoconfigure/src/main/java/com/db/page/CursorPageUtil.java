@@ -7,7 +7,7 @@ import com.guanshiyun.sqlenums.SortOrderEnum;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Constructor;
-import java.math.BigInteger;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -119,8 +119,8 @@ public class CursorPageUtil {
     /**
      * 可选：校验 lastId 是否有效（非负数）
      */
-    public static BigInteger validateLastId(BigInteger lastId) {
-        if (lastId == null || lastId.compareTo(BigInteger.ZERO) < 0) {
+    public static Long validateLastId(Long lastId) {
+        if (lastId == null || lastId.compareTo(ConstNumber.LONG_ZERO) < 0) {
             return null; // 表示第一页
         }
         return lastId;

@@ -9,33 +9,33 @@ import com.guanshiyun.responsepojo.PageResultT;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 public interface SKUService {
     //添加SKU
-    Mono<BigInteger> save(SKUSaveVO skuVO);
+    Mono<Long> save(SKUSaveVO skuVO);
 //删除SKU
-    Mono<Void> deleteById(BigInteger id);
+    Mono<Void> deleteById(Long id);
 //查询SKU
-    Mono<SKUVO> findById(BigInteger id);
+    Mono<SKUVO> findById(Long id);
 //分页查询SKU
 Mono<PageResultT<List<SKUGroupByProductIdVO>>> findAllByPage(RequestPage<SKUFindVO> requestPage);
 
-//Mono<PageResultT<List<Map<BigInteger,SKUVO>>>> findAllPage(RequestPage<ProductSearchVO> requestPage);
+//Mono<PageResultT<List<Map<Long,SKUVO>>>> findAllPage(RequestPage<ProductSearchVO> requestPage);
 //根据商品id获取SKU列表
-    Flux<SKUVO> findByProductId(BigInteger productId);
+    Flux<SKUVO> findByProductId(Long productId);
 //批量删除
-    Mono<Void> deleteAllById(List<BigInteger> ids);
+    Mono<Void> deleteAllById(List<Long> ids);
 
     //根据id减库存
-    Mono<Boolean> reduceStockById(BigInteger id, Integer count);
+    Mono<Boolean> reduceStockById(Long id, Integer count);
 
     //根据id加库存
-    Mono<Boolean> addStockById(BigInteger id, Integer count);
+    Mono<Boolean> addStockById(Long id, Integer count);
 
-    Mono<List<SKUVO>> findAllByIds(List<BigInteger> skuIds);
+    Mono<List<SKUVO>> findAllByIds(List<Long> skuIds);
 
-    Mono<Boolean> addSalesById(BigInteger id, Integer count);
+    Mono<Boolean> addSalesById(Long id, Integer count);
 
 }

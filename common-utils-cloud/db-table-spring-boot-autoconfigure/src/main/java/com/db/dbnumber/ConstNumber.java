@@ -1,6 +1,6 @@
 package com.db.dbnumber;
 
-import java.math.BigInteger;
+
 
 public class ConstNumber {
     //Long类型
@@ -24,11 +24,6 @@ public class ConstNumber {
     public static final Short SHORT_EIGHT = 8;
     public static final Short SHORT_NINE = 9;
     public static final Short SHORT_TEN = 10;
-
-    //BigInteger类型
-    public static final BigInteger BIG_INTEGER_ONE = BigInteger.ONE;
-    public static final BigInteger BIG_INTEGER_ZERO = BigInteger.ZERO;
-    public static final BigInteger BIG_INTEGER_TEN = BigInteger.TEN;
     //int
     public static final int INT_ONE = 1;
     //-1

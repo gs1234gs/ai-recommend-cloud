@@ -11,7 +11,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Service
@@ -35,12 +35,12 @@ public class UserSearchServiceApiImpl implements UserSearchServiceApi {
     }
 
     @Override
-    public Mono<ResultT<BigInteger>> saveUserSearchRecord(SearchContentApi searchContentApi) {
+    public Mono<ResultT<Long>> saveUserSearchRecord(SearchContentApi searchContentApi) {
         return behaviorWebClientRpc.webClient()
                 .post()
                 .uri(BehaviorSearchApiUrlEnum.BEHAVIOR_SAVE.getValue())
                 .bodyValue(searchContentApi)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<ResultT<BigInteger>>() {});
+                .bodyToMono(new ParameterizedTypeReference<ResultT<Long>>() {});
     }
 }

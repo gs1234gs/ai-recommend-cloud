@@ -8,23 +8,23 @@ import com.guanshiyun.rolepojo.SysRole;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 public interface SysRoleService {
     /**
      * 为了提升用户体验，返回最新默认分页数据
      * */
-   Mono<BigInteger> save(SysRoleSaveVO sysRoleSaveVO);
+   Mono<Long> save(SysRoleSaveVO sysRoleSaveVO);
    /**
     * 带条件的分页查询
     * */
    Mono<PageResultT<List<SysRoleVO>>> findPage(RequestPage<SysRoleVO> requestPage);
 
-    Mono<Long> deleteRoleById(BigInteger id);
+    Mono<Long> deleteRoleById(Long id);
 
-    Flux<SysRole> findAllByUserId(BigInteger userId);
+    Flux<SysRole> findAllByUserId(Long userId);
 
-    Mono<SysRoleVO> findById(BigInteger id);
-    Mono<BigInteger> update(SysRoleSaveVO sysRoleSaveVO);
+    Mono<SysRoleVO> findById(Long id);
+    Mono<Long> update(SysRoleSaveVO sysRoleSaveVO);
 }

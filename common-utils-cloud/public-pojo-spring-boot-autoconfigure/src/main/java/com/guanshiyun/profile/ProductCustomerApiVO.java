@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 public class ProductCustomerApiVO {
     //商品id
-    private BigInteger id;
+    private Long id;
     //商品名称
     private String name;
     //商品原价

@@ -6,22 +6,22 @@ import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 public interface TagService {
     //添加标签
-    Mono<BigInteger> save(TagSaveVO tagSaveVO);
+    Mono<Long> save(TagSaveVO tagSaveVO);
     //删除标签
-    Mono<Void> deleteById(BigInteger id);
+    Mono<Void> deleteById(Long id);
     //查询标签
-    Mono<TagVO> findById(BigInteger id);
+    Mono<TagVO> findById(Long id);
     //查询标签列表
     Mono<PageResultT<List<TagVO>>> findAllByPage(RequestPage<TagVO> requestPage);
 
-    Mono<Void> deleteAllById(List<BigInteger> ids);
+    Mono<Void> deleteAllById(List<Long> ids);
 
-    Mono<List<TagVO>> findTagByProductId(BigInteger productId);
+    Mono<List<TagVO>> findTagByProductId(Long productId);
 
-    Mono<List<TagVO>> findTagByProductId(List<BigInteger> productIds);
+    Mono<List<TagVO>> findTagByProductId(List<Long> productIds);
 }

@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
@@ -20,7 +20,7 @@ public class CategoryVO extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     /** 分类主键ID */
-    private BigInteger id;
+    private Long id;
 
     /** 分类名称 */
     private String name;

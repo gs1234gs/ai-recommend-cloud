@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -24,12 +24,12 @@ public class WarehouseController {
     private final WarehouseService warehouseService;
     //添加仓库或者修改仓库
     @PostMapping("save")
-    public Mono<ResultT<BigInteger>> save( @RequestBody WarehouseSaveVO warehouseSaveVO){
+    public Mono<ResultT<Long>> save( @RequestBody WarehouseSaveVO warehouseSaveVO){
         return warehouseService.save(warehouseSaveVO)
                 .map(warehouseId->
                 {
                     log.info("保存仓库成功，仓库ID为：{}",warehouseId);
-                    return ResultT.<BigInteger>builder()
+                    return ResultT.<Long>builder()
                             .code(HttpCodeConst.OK)
                             .msg("保存成功")
                             .data(warehouseId)
@@ -37,7 +37,7 @@ public class WarehouseController {
                 })
                 .onErrorResume(throwable ->{
                     log.info("保存仓库失败", throwable);
-                    return Mono.just(ResultT.<BigInteger>builder()
+                    return Mono.just(ResultT.<Long>builder()
                             .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                             .msg("保存失败")
                             .build());
@@ -47,7 +47,7 @@ public class WarehouseController {
      * 删除
      * */
     @DeleteMapping("deleteById/{id}")
-    public Mono<ResultT<Long>> deleteById(@PathVariable BigInteger id){
+    public Mono<ResultT<Long>> deleteById(@PathVariable Long id){
         return warehouseService.deleteById(id)
                 .map(deleteCount->ResultT.<Long>builder()
                         .code(HttpCodeConst.OK)
@@ -68,7 +68,7 @@ public class WarehouseController {
      * 批量删除
      * */
     @DeleteMapping("deleteAllByIds")
-    public Mono<ResultT<Long>> deleteByIds(@RequestBody Collection<BigInteger> ids){
+    public Mono<ResultT<Long>> deleteByIds(@RequestBody Collection<Long> ids){
         return warehouseService.deleteAllById(ids)
                 .map(deleteCount->ResultT.<Long>builder()
                         .code(HttpCodeConst.OK)
@@ -111,7 +111,7 @@ public class WarehouseController {
                 });
     }
     @GetMapping("findById{id}")
-    public Mono<ResultT<WarehouseVO>> findById(@PathVariable BigInteger id){
+    public Mono<ResultT<WarehouseVO>> findById(@PathVariable Long id){
         return warehouseService.findById(id)
                 .map(warehouseVO->
                 {

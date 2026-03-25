@@ -5,7 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
+
 
 @Data
 @Builder
@@ -13,7 +13,7 @@ import java.math.BigInteger;
 @NoArgsConstructor
 public class SysRelationRequest {
     //实体id
-    private BigInteger entityId;
+    private Long entityId;
     //角色 id
-    private BigInteger roleId;
+    private Long roleId;
 }

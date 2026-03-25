@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.math.BigInteger;
+
 
 @Data
 @Builder(toBuilder = true)
@@ -18,7 +18,7 @@ import java.math.BigInteger;
 public class ReqChat {
     //会话id
     @JsonSerialize(using = ToStringSerializer.class)
-    private BigInteger conversationId;
+    private Long conversationId;
     //消息内容
     private String content;
     //是否是新对话

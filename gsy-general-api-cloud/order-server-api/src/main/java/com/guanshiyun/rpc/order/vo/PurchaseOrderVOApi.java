@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,7 +28,7 @@ import java.util.List;
 public class PurchaseOrderVOApi extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private BigInteger id;
+    private Long id;
     //订单编号
     private String orderNo;
     //订单状态，1-待付款，2-待发货，3-待收货，4-待评价，5-已完成，6-已取消
@@ -44,7 +44,7 @@ public class PurchaseOrderVOApi extends BasePojo implements Serializable {
     //下单时间
     private LocalDateTime orderPlacementTime;
     //商品id
-    private BigInteger skuId;
+    private Long skuId;
     //付款方式，1-在线支付，2-货到付款，3-其他
     private String payType;
     //配送费用
@@ -66,7 +66,7 @@ public class PurchaseOrderVOApi extends BasePojo implements Serializable {
     //图片
     private String image;
     //商品id
-    private BigInteger productId;
+    private Long productId;
     //分类
     private List<CategoryApiVO> categoryApiVOList;
     //sku

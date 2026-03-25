@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
@@ -30,7 +30,7 @@ public class ProductApiVO extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     //商品id
-    private BigInteger id;
+    private Long id;
     //商品名称
     private String name;
     //商品价格

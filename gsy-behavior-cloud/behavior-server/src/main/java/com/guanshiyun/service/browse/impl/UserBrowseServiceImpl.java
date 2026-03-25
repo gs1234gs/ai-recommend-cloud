@@ -4,13 +4,16 @@ import com.db.cursorQuery.MongoCursorQuery;
 import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.behaviorenums.GuestEnum;
-import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.browse.UserBrowseMongodb;
 import com.guanshiyun.controller.browse.vo.UserBrowseSaveVO;
 import com.guanshiyun.controller.browse.vo.UserBrowseVO;
 import com.guanshiyun.feedback.Feedback;
 import com.guanshiyun.gorseenum.GorseFeedbackEnum;
 import com.guanshiyun.goser.GorseClient;
+import com.guanshiyun.mylong.MyLong;
+import com.guanshiyun.profile.CategoryApiVO;
+import com.guanshiyun.profile.SKUApiVO;
+import com.guanshiyun.profile.TagApiVO;
 import com.guanshiyun.repository.browse.UserBrowseMongodbRepository;
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.responsepojo.CursorPageResult;
@@ -19,9 +22,6 @@ import com.guanshiyun.rowAffected.RowAffected;
 import com.guanshiyun.rpc.goodsapi.category.CategoryApiService;
 import com.guanshiyun.rpc.goodsapi.sku.SkuApiService;
 import com.guanshiyun.rpc.goodsapi.tag.TagApiService;
-import com.guanshiyun.profile.CategoryApiVO;
-import com.guanshiyun.profile.SKUApiVO;
-import com.guanshiyun.profile.TagApiVO;
 import com.guanshiyun.service.browse.UserBrowseService;
 import com.guanshiyun.snowflake.SnowflakePermanent;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
@@ -38,7 +38,6 @@ import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
@@ -65,7 +64,7 @@ import java.util.Objects;
 public class UserBrowseServiceImpl implements UserBrowseService {
     private final UserBrowseMongodbRepository userBrowseMongodbRepository;
     private final SnowflakePermanent snowflakePermanent;
-    private final MyBigInteger myBigInteger;
+    private final MyLong myLong;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
     private final GorseClient gorseClient;
     private final CategoryApiService categoryApiService;
@@ -90,7 +89,7 @@ public class UserBrowseServiceImpl implements UserBrowseService {
      */
 
     @Override
-    public Mono<List<BigInteger>> save(List<UserBrowseSaveVO> userBrowseSaveVOList) {
+    public Mono<List<Long>> save(List<UserBrowseSaveVO> userBrowseSaveVOList) {
         List<UserBrowseMongodb> userBrowseMongodbList = BeanConvertUtil
                 .toBeanList(userBrowseSaveVOList, UserBrowseMongodb.class);
         return Mono.deferContextual(ctx -> {
@@ -98,13 +97,13 @@ public class UserBrowseServiceImpl implements UserBrowseService {
             // ===== 判断是否为登录用户 =====
             // Context 中存在用户 ID，则视为登录用户
             if (ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
-                BigInteger useId =
-                        myBigInteger.bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+                Long useId =
+                        myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
                 return Flux.fromIterable(userBrowseMongodbList)
                         .flatMap(userBrowseMongodb -> {
                             // ===== 设置浏览记录基础信息 =====
                             //开始时间=结束时间-浏览时间
-                            LocalDateTime startTime = now.minusDays(userBrowseMongodb.getBrowseDuration().longValueExact());
+                            LocalDateTime startTime = now.minusDays(userBrowseMongodb.getBrowseDuration());
                             userBrowseMongodb
                                     .setBrowseEndTime(now)
                                     .setBrowseStartTime(startTime)
@@ -115,7 +114,7 @@ public class UserBrowseServiceImpl implements UserBrowseService {
                             // 1. 商品所属分类
                             // 2. 商品 SKU 列表
                             // 3. 商品标签
-                            BigInteger productId = userBrowseMongodb.getProduct().getId();
+                            Long productId = userBrowseMongodb.getProduct().getId();
                             Mono<ResultT<List<CategoryApiVO>>> categoryApiServiceByProductId =
                                     categoryApiService.findByProductId(productId);
 
@@ -184,7 +183,7 @@ public class UserBrowseServiceImpl implements UserBrowseService {
                         userBrowseMongodb
                                 .setId(snowflakePermanent.nextId())
                                 .setCreateTime(now);
-                        BigInteger productId = userBrowseMongodb.getProduct().getId();
+                        Long productId = userBrowseMongodb.getProduct().getId();
                         Mono<ResultT<List<CategoryApiVO>>> categoryApiServiceByProductId =
                                 categoryApiService.findByProductId(productId);
                         Mono<ResultT<List<SKUApiVO>>> skuApiServiceByProductId =
@@ -239,7 +238,7 @@ public class UserBrowseServiceImpl implements UserBrowseService {
                 return Flux.empty();
             }
 
-            BigInteger userId = myBigInteger.bigIntegerOrNull(
+            Long userId = myLong.LongOrNull(
                     ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
             // ===== 构造查询条件 =====
@@ -291,11 +290,11 @@ public class UserBrowseServiceImpl implements UserBrowseService {
                 .map(browseList -> {
                     // ===== 获取本次查询结果中最大的 ID =====
                     // 用于作为下一页的游标
-                    BigInteger maxId = browseList.stream()
+                    Long maxId = browseList.stream()
                             .map(UserBrowseMongodb::getId)
                             .filter(Objects::nonNull)
                             .max(Comparator.naturalOrder())
-                            .orElse(BigInteger.ZERO);
+                            .orElse(ConstNumber.LONG_ZERO);
                     // 构造返回结果
                     return CursorPageResult.of(
                             maxId,

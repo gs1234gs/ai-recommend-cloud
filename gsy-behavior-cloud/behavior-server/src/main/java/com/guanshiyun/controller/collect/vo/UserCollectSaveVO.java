@@ -5,7 +5,7 @@ import com.guanshiyun.profile.ProductApiVO;
 import lombok.*;
 import lombok.experimental.FieldNameConstants;
 
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserCollectSaveVO {
     //id
-    private BigInteger id;
+    private Long id;
     //商品id
     private ProductApiVO product;
     //收藏时间

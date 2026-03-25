@@ -3,7 +3,7 @@ package com.guanshiyun.service.embedding;
 import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 /**
  * EmbeddingProductService
@@ -41,7 +41,7 @@ public interface EmbeddingProductService {
       * @param idList 商品 ID 列表
       * @return Mono<Void>
       */
-     Mono<Void> deleteById(List<BigInteger> idList);
+     Mono<Void> deleteById(List<Long> idList);
      /**
       * 基于用户历史行为实时推荐商品
       *
@@ -52,9 +52,9 @@ public interface EmbeddingProductService {
       *
       * @param recentProducts 用户最近浏览的商品列表
       * @param topK 返回推荐数量
-      * @return Mono<List<BigInteger>> 推荐商品 ID 列表
+      * @return Mono<List<Long>> 推荐商品 ID 列表
       */
-     Mono<List<BigInteger>> recommendForUser(List<ProductForEmbeddingApVO> recentProducts, int topK);
+     Mono<List<Long>> recommendForUser(List<ProductForEmbeddingApVO> recentProducts, int topK);
      /**
       * 向量化用户历史行为
       *
@@ -69,7 +69,7 @@ public interface EmbeddingProductService {
      /**
       * 根据关键词搜索商品
       * */
-     Mono<List<BigInteger>> searchByKeyword(String keyword, int topK);
-     List<BigInteger> searchKeyword(String keyword, int topK);
+     Mono<List<Long>> searchByKeyword(String keyword, int topK);
+     List<Long> searchKeyword(String keyword, int topK);
 
 }

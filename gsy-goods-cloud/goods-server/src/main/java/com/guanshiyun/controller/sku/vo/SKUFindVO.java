@@ -7,7 +7,7 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 @ToString
 @Data
@@ -18,7 +18,7 @@ public class SKUFindVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     @JsonSerialize(using = ToStringSerializer.class)
-    private BigInteger id;
+    private Long id;
     //商品id
 
     /** 名称*/
@@ -55,5 +55,5 @@ public class SKUFindVO implements Serializable {
     // 商品详情
     private String detailContent;
     //商品id
-    private BigInteger productId;
+    private Long productId;
 }

@@ -11,7 +11,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Service
@@ -33,7 +33,7 @@ public class CategoryApiServiceImpl implements CategoryApiService {
     }
 
     @Override
-    public Mono<ResultT<List<CategoryApiVO>>> findByProductId(BigInteger productId) {
+    public Mono<ResultT<List<CategoryApiVO>>> findByProductId(Long productId) {
         return  goodsWebClientRpc
                         .webClient()
                         .get()

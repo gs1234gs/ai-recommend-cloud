@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Data
@@ -19,9 +19,9 @@ import java.util.List;
 public class AllReqChat {
     //会话id
     @JsonSerialize(using = ToStringSerializer.class)
-    private BigInteger conversationId;
+    private Long conversationId;
     //消息内容
     private String content;
     //商品id列表
-    private List<BigInteger> productIdList;
+    private List<Long> productIdList;
 }

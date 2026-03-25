@@ -17,7 +17,7 @@
 //import reactor.util.context.Context;
 //
 //import java.math.BigDecimal;
-//import java.math.BigInteger;
+//
 //import java.time.LocalDateTime;
 //import java.util.ArrayList;
 //import java.util.List;
@@ -40,7 +40,7 @@
 //    {
 //
 //        productService.save(build())
-//                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(1)))
+//                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, Long.valueOf(1)))
 //                .onErrorResume(throwable -> {
 //                    log.error("保存失败：",throwable);
 //                    return Mono.just(ConstNumber.BIG_INTEGER_ZERO);
@@ -57,7 +57,7 @@
 //        productService.findPage(
 //
 //                RequestPage.<ProductVO>builder()
-//                        .pageNum(BigInteger.valueOf(1))
+//                        .pageNum(Long.valueOf(1))
 //                        .pageSize(10)
 //                        .build()
 //
@@ -65,7 +65,7 @@
 //            log.info("查询结果：{}",pageResultT);
 //            return Mono.just(pageResultT);
 //        })
-//                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(1)))
+//                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, Long.valueOf(1)))
 //                .onErrorResume(throwable -> {
 //                    log.error("分页查询失败：",throwable);
 //                    return Mono.just(PageResultT.<List<ProductVO>>builder().build());
@@ -77,8 +77,8 @@
 //    @Test
 //    public void test3()
 //    {
-//        productService.deleteById(BigInteger.valueOf(1))
-//                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(1)))
+//        productService.deleteById(Long.valueOf(1))
+//                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, Long.valueOf(1)))
 //                .onErrorResume(throwable -> {
 //                    log.error("删除失败：",throwable);
 //                    return Mono.just(ConstNumber.LONG_ZERO);
@@ -92,7 +92,7 @@
 //    public void test4(){
 //        productService.findCursor(
 //                RequestCursorPage.<ProductVO>builder()
-//                        .lastId(BigInteger.valueOf(2))
+//                        .lastId(Long.valueOf(2))
 //                        .pageSize(10)
 //                        .build()
 //        ).flatMap(item->{
@@ -106,7 +106,7 @@
 //@Test
 //public void test5(){
 //    productService.save(generateDiverseTestProducts())
-//            .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(1)))
+//            .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, Long.valueOf(1)))
 //            .onErrorResume(throwable -> {
 //                log.error("批量保存失败：",throwable);
 //                return Mono.just(ConstNumber.LONG_ZERO);
@@ -129,7 +129,7 @@
 //
 //    public static ProductSaveVO build(){
 //        return ProductSaveVO.builder()
-////                .id(BigInteger.valueOf(1001))
+////                .id(Long.valueOf(1001))
 //                .name("vivo智能耳机 Pro + 无线降噪")
 //                .price(new BigDecimal("299.00"))
 //                .description("高保真音质，主动降噪，超长续航72小时，支持无线充电。")
@@ -147,7 +147,7 @@
 //                        big(1), big(2), big(3)
 //                ))
 //                .categoryId(List.of())
-//                .tagId(BigInteger.valueOf(1))
+//                .tagId(Long.valueOf(1))
 //                .build();
 //    }
 //    public static List<ProductSaveVO> generateDiverseTestProducts() {
@@ -172,8 +172,8 @@
 //
 //                        List.of(big(2), big(4), big(5))
 //                )
-//                .categoryId(BigInteger.valueOf(1001)) // 手机
-//                .tagId(BigInteger.valueOf(8001))
+//                .categoryId(Long.valueOf(1001)) // 手机
+//                .tagId(Long.valueOf(8001))
 //                .build());
 //
 //        // 2. Samsung Galaxy Z Fold6
@@ -194,8 +194,8 @@
 //                .warehouseId(
 //                        List.of(big(4), big(6), big(9))
 //                )
-//                .categoryId(BigInteger.valueOf(1001))
-//                .tagId(BigInteger.valueOf(8002))
+//                .categoryId(Long.valueOf(1001))
+//                .tagId(Long.valueOf(8002))
 //                .build());
 //
 //        // 3. Huawei MatePad Pro 13
@@ -216,8 +216,8 @@
 //                .warehouseId(
 //                        List.of(big(2))
 //                )
-//                .categoryId(BigInteger.valueOf(1002)) // 平板
-//                .tagId(BigInteger.valueOf(8003))
+//                .categoryId(Long.valueOf(1002)) // 平板
+//                .tagId(Long.valueOf(8003))
 //                .build());
 //
 //        // 4. Xiaomi 14 Ultra 手机
@@ -238,8 +238,8 @@
 //                .warehouseId(
 //                        List.of(big(11), big(13))
 //                )
-//                .categoryId(BigInteger.valueOf(1001))
-//                .tagId(BigInteger.valueOf(8004))
+//                .categoryId(Long.valueOf(1001))
+//                .tagId(Long.valueOf(8004))
 //                .build());
 //
 //        // 5. Dell XPS 13 笔记本
@@ -260,8 +260,8 @@
 //                .warehouseId(
 //                        List.of(big(12))
 //                )
-//                .categoryId(BigInteger.valueOf(1003)) // 笔记本
-//                .tagId(BigInteger.valueOf(8005))
+//                .categoryId(Long.valueOf(1003)) // 笔记本
+//                .tagId(Long.valueOf(8005))
 //                .build());
 //
 //        // 6. HP 暗影精灵10 游戏本
@@ -280,8 +280,8 @@
 //                .publishTime(LocalDateTime.of(2025, 3, 12, 13, 0))
 //                .offlineTime(LocalDateTime.of(2026, 3, 12, 13, 0))
 //                .warehouseId(List.of(big(12)))
-//                .categoryId(BigInteger.valueOf(1003))
-//                .tagId(BigInteger.valueOf(8006))
+//                .categoryId(Long.valueOf(1003))
+//                .tagId(Long.valueOf(8006))
 //                .build());
 //
 //        // 7. Sony PS5 游戏主机
@@ -300,8 +300,8 @@
 //                .publishTime(LocalDateTime.of(2025, 1, 18, 10, 0))
 //                .offlineTime(LocalDateTime.of(2026, 1, 18, 10, 0))
 //                .warehouseId(List.of(big(18)))
-//                .categoryId(BigInteger.valueOf(1004)) // 游戏设备
-//                .tagId(BigInteger.valueOf(8007))
+//                .categoryId(Long.valueOf(1004)) // 游戏设备
+//                .tagId(Long.valueOf(8007))
 //                .build());
 //
 //        // 8. Midea 1.5匹 变频空调
@@ -320,8 +320,8 @@
 //                .publishTime(LocalDateTime.of(2025, 4, 1, 9, 0))
 //                .offlineTime(LocalDateTime.of(2025, 10, 31, 9, 0)) // 季节性商品
 //                .warehouseId(List.of(big(16)))
-//                .categoryId(BigInteger.valueOf(1005)) // 家电
-//                .tagId(BigInteger.valueOf(8008))
+//                .categoryId(Long.valueOf(1005)) // 家电
+//                .tagId(Long.valueOf(8008))
 //                .build());
 //
 //        // 9. Roborock 扫地机器人 S8
@@ -340,8 +340,8 @@
 //                .publishTime(LocalDateTime.of(2025, 6, 1, 10, 0))
 //                .offlineTime(LocalDateTime.of(2026, 6, 1, 10, 0))
 //                .warehouseId(List.of(big(12)))
-//                .categoryId(BigInteger.valueOf(1005))
-//                .tagId(BigInteger.valueOf(8009))
+//                .categoryId(Long.valueOf(1005))
+//                .tagId(Long.valueOf(8009))
 //                .build());
 //
 //        // 10. Nike Air Zoom Pegasus 40 跑鞋
@@ -360,14 +360,14 @@
 //                .publishTime(LocalDateTime.of(2025, 3, 1, 8, 0))
 //                .offlineTime(LocalDateTime.of(2026, 3, 1, 8, 0))
 //                .warehouseId(List.of(big(12)))
-//                .categoryId(BigInteger.valueOf(1006)) // 运动鞋
-//                .tagId(BigInteger.valueOf(8010))
+//                .categoryId(Long.valueOf(1006)) // 运动鞋
+//                .tagId(Long.valueOf(8010))
 //                .build());
 //
 //        return products;
 //    }
 //
-//    public static BigInteger big(Integer  i){
-//        return BigInteger.valueOf(i);
+//    public static Long big(Integer  i){
+//        return Long.valueOf(i);
 //    }
 //}

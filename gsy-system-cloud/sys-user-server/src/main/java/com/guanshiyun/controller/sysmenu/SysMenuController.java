@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Slf4j
@@ -47,7 +47,7 @@ public class SysMenuController {
                 );
     }
     @GetMapping("findById/{id}")
-    public Mono<ResultT<SysMenuResponse>> findById(@PathVariable BigInteger id) {
+    public Mono<ResultT<SysMenuResponse>> findById(@PathVariable Long id) {
         return sysMenuService.findById(id)
                 .map(menu ->
                         ResultT.<SysMenuResponse>builder()
@@ -92,7 +92,7 @@ public class SysMenuController {
     //获取菜单列表
     @GetMapping({"/findByParentId/{id}"})
     public Mono<ResultT<List<SysMenuResponse>>> sysMenuList(
-            @PathVariable(name = "id", required = false) BigInteger id) {
+            @PathVariable(name = "id", required = false) Long id) {
         return sysMenuService.findAllByParentId(id)
                 .map(menu -> BeanUtil.toBean(menu, SysMenuResponse.class))
                 .collectList()
@@ -115,7 +115,7 @@ public class SysMenuController {
 
     //删除菜单
     @DeleteMapping("/deleteById/{id}")
-    public Mono<ResultT<Long>> deleteMenu(@PathVariable BigInteger id) {
+    public Mono<ResultT<Long>> deleteMenu(@PathVariable Long id) {
         return sysMenuService.deleteById(id)
                 .map(result ->
                         result >= ConstNumber.INT_ONE ?
@@ -143,10 +143,10 @@ public class SysMenuController {
 
     //添加菜单或者更新菜单
     @PostMapping("/save")
-    public Mono<ResultT<BigInteger>> addMenu(@RequestBody SysMenu sysMenu) {
+    public Mono<ResultT<Long>> addMenu(@RequestBody SysMenu sysMenu) {
         return sysMenuService.save(sysMenu)
                 .map(id ->
-                        ResultT.<BigInteger>builder()
+                        ResultT.<Long>builder()
                                 .code(HttpCodeConst.OK)
                                 .msg("成功")
                                 .data(id)
@@ -154,7 +154,7 @@ public class SysMenuController {
                 )
                 .switchIfEmpty(
                         Mono.just(
-                                ResultT.<BigInteger>builder()
+                                ResultT.<Long>builder()
                                         .code(HttpCodeConst.UNAUTHORIZED)
                                         .msg("添加失败")
                                         .data(null)
@@ -163,7 +163,7 @@ public class SysMenuController {
                 )
                 .onErrorResume(throwable ->
                         Mono.just(
-                                ResultT.<BigInteger>builder()
+                                ResultT.<Long>builder()
                                         .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                                         .msg("系统错误")
                                         .data(null)
@@ -174,10 +174,10 @@ public class SysMenuController {
 
     //修改菜单
     @PutMapping("/updateById")
-    public Mono<ResultT<BigInteger>> updateMenu(@RequestBody SysMenu sysMenu) {
+    public Mono<ResultT<Long>> updateMenu(@RequestBody SysMenu sysMenu) {
         return sysMenuService.updateById(sysMenu)
                 .map(id ->
-                        ResultT.<BigInteger>builder()
+                        ResultT.<Long>builder()
                                 .code(HttpCodeConst.OK)
                                 .msg("成功")
                                 .data(id)
@@ -185,7 +185,7 @@ public class SysMenuController {
                 )
                 .switchIfEmpty(
                         Mono.just(
-                                ResultT.<BigInteger>builder()
+                                ResultT.<Long>builder()
                                         .code(HttpCodeConst.UNAUTHORIZED)
                                         .msg("修改失败")
                                         .data(null)
@@ -194,7 +194,7 @@ public class SysMenuController {
                 )
                 .onErrorResume(throwable ->
                         Mono.just(
-                                ResultT.<BigInteger>builder()
+                                ResultT.<Long>builder()
                                         .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                                         .msg("系统错误")
                                         .data(null)
@@ -279,7 +279,7 @@ public class SysMenuController {
     }
     //根据角色id获取菜单
     @GetMapping("/findMenuByRoleId/{roleId}")
-    public Mono<ResultT<List<SysMenuResponse>>> findMenuByRoleId(@PathVariable BigInteger roleId) {
+    public Mono<ResultT<List<SysMenuResponse>>> findMenuByRoleId(@PathVariable Long roleId) {
         return sysMenuService.findMenuByRoleId(roleId)
                 .map(menu ->BeanUtil.toBean(menu, SysMenuResponse.class))
                 .collectList()

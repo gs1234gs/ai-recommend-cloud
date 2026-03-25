@@ -13,7 +13,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
@@ -26,7 +26,7 @@ public class SimilarityThresholdStrategyConfiguration extends BasePojo implement
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
-    private BigInteger id;                 // 商品ID
+    private Long id;                 // 商品ID
 
     //阈值
     private Double similarityThreshold;

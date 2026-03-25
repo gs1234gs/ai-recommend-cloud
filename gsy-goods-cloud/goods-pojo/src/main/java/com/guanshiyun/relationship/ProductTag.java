@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.math.BigInteger;
+
 
 /**
  *
@@ -26,9 +26,9 @@ import java.math.BigInteger;
 public class ProductTag extends BasePojo {
     /** 主键id */
     @Id
-    private BigInteger id;
+    private Long id;
     /** 商品id */
-    private BigInteger productId;
+    private Long productId;
     /** 标签id */
-    private BigInteger tagId;
+    private Long tagId;
 }

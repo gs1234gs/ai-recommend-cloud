@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class ClickProfileApi implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     //用户点击画像
-    private BigInteger id;
+    private Long id;
     //点击时间
     private LocalDateTime clickTime;
     //点击skuId

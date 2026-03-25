@@ -8,7 +8,7 @@ import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 /**
 * 用户实体
@@ -23,7 +23,7 @@ public class SysUser {
 
     //用户id
     @Id
-    private BigInteger id;
+    private Long id;
     //部门id
     private int deptId;
     //用户名
@@ -54,9 +54,9 @@ public class SysUser {
     //创建时间
     private LocalDateTime createTime;
     //创建者
-    private BigInteger creatorId;
+    private Long creatorId;
     //更新者
-    private BigInteger updaterId;
+    private Long updaterId;
     //更新时间
     private LocalDateTime updateTime;
     //备注

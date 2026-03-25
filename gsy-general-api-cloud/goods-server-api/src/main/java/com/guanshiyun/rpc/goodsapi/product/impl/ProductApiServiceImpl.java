@@ -15,7 +15,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 @Slf4j
 @Service
@@ -38,7 +38,7 @@ public class ProductApiServiceImpl implements ProductApiService {
     }
 
     @Override
-    public Mono<ResultT<ProductApiVO>> findProductById(BigInteger id) {
+    public Mono<ResultT<ProductApiVO>> findProductById(Long id) {
         return goodsWebClientRpc.webClient()
                 .post()
                 .uri(builder -> builder
@@ -50,7 +50,7 @@ public class ProductApiServiceImpl implements ProductApiService {
     }
 
     @Override///recommendByIds
-    public Mono<ResultT<List<ProductCustomerApiVO>>> findProductsByIds(List<BigInteger> ids) {
+    public Mono<ResultT<List<ProductCustomerApiVO>>> findProductsByIds(List<Long> ids) {
         return goodsWebClientRpc
                 .webClient()
                 .get()
@@ -63,7 +63,7 @@ public class ProductApiServiceImpl implements ProductApiService {
     }
 
     @Override
-    public Mono<ResultT<List<ProductApiVO>>> findProductVOByIds(List<BigInteger> ids) {
+    public Mono<ResultT<List<ProductApiVO>>> findProductVOByIds(List<Long> ids) {
         return goodsWebClientRpc
                 .webClient()
                 .get()

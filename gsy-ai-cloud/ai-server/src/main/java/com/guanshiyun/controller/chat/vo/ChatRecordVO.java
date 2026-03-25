@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
 
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 /**
@@ -26,18 +26,18 @@ import java.time.LocalDateTime;
 public class ChatRecordVO {
     //聊天记录id
     @JsonSerialize(using = ToStringSerializer.class)
-    private BigInteger id;
+    private Long id;
     //标题
     private String title;
     /**
      * 创建者，目前使用 SysUser 的 id 编号
      *
      */
-    public BigInteger creator;
+    public Long creator;
     /**
      * 更新者，目前使用 SysUser 的 id 编号
      */
-    public BigInteger updater;
+    public Long updater;
     /**
      * 创建时间
      */

@@ -7,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
@@ -17,7 +17,7 @@ import java.math.BigInteger;
 public class WarehouseVO extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private BigInteger id;
+    private Long id;
     /** 仓库名称 */
     private String name;
     /** 仓库地址 */
@@ -27,5 +27,5 @@ public class WarehouseVO extends BasePojo implements Serializable {
     /** 状态,是否禁用（0=启用，1=禁用） */
     private short status;
     /** 仓库管理员ID */
-    private BigInteger adminId;
+    private Long adminId;
 }

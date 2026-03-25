@@ -6,14 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
 public class PurChaseOrderSaveVO {
-    private BigInteger id;
+    private Long id;
     //订单编号
     private String orderNo;
     //订单状态，1-待付款，2-待发货，3-待收货，4-待评价，5-已完成，6-已取消
@@ -29,7 +29,7 @@ public class PurChaseOrderSaveVO {
     //下单时间
     private LocalDateTime orderPlacementTime;
     //商品id
-    private BigInteger skuId;
+    private Long skuId;
     //付款方式，1-在线支付，2-货到付款，3-其他
     private String payType;
     //配送费用
@@ -43,7 +43,7 @@ public class PurChaseOrderSaveVO {
     //商品数量
     private Integer num;
     //地址 id
-    private BigInteger addressId;
+    private Long addressId;
     //商品id
-    private BigInteger productId;
+    private Long productId;
 }

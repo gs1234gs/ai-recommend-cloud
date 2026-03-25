@@ -13,7 +13,7 @@ import reactor.core.publisher.Flux;
 import reactor.test.StepVerifier;
 import reactor.util.context.Context;
 
-import java.math.BigInteger;
+
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -35,12 +35,12 @@ public class RecommendTest {
 //                .content("推荐 Python编程从入门到实践 第三版")
 //                .flag(false)
 //                .build();
-//        Tuple3<Flux<String>, List<BigInteger>, BigInteger> result = chatService.chatFluxRecommend(build).block();
+//        Tuple3<Flux<String>, List<Long>, Long> result = chatService.chatFluxRecommend(build).block();
 //
 //        if (result != null) {
 //            Flux<String> stream = result.getT1();
-//            List<BigInteger> productIds = result.getT2();
-//            BigInteger chatId = result.getT3();
+//            List<Long> productIds = result.getT2();
+//            Long chatId = result.getT3();
 //
 //            System.out.println("=== 商品ID列表 ===");
 //            System.out.println(productIds);
@@ -64,14 +64,14 @@ public class RecommendTest {
 //    }
     @Test
     public void testEmbeddingProductService() {
-        List<BigInteger> block = embeddingProductService.recommendForUser(
+        List<Long> block = embeddingProductService.recommendForUser(
                 List.of(
                         ProductForEmbeddingApVO.builder()
                                 .title("Python编程从入门到实践 第三版 ")
                                 .build()
                 )
                 , 3)
-                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(17L)))
+                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, Long.valueOf(17L)))
                 .block();
         System.out.println(block);
     }
@@ -94,7 +94,7 @@ public class RecommendTest {
     @Test
     public void testRecommend() throws InterruptedException {
         ReqChat req = ReqChat.builder()
-                .conversationId(BigInteger.valueOf(43939561600L))
+                .conversationId(Long.valueOf(43939561600L))
                 .content("推荐 Python编程从入门到实践 第三版")
                 .flag(false)
                 .build();
@@ -104,7 +104,7 @@ public class RecommendTest {
         chatService.chatFluxRecommend(req)
                 .doOnNext(tuple -> {
                     Flux<String> stream = tuple.getT1();
-                    BigInteger chatId = tuple.getT2();
+                    Long chatId = tuple.getT2();
 
                     System.out.println("Conversation ID: " + chatId);
                     System.out.println("Streaming responses:");
@@ -135,8 +135,8 @@ public class RecommendTest {
     @Test
     public void testEmbeddingProductService4() {
         StepVerifier.create(
-                        productService.findProductsByIds(List.of(BigInteger.valueOf(23), BigInteger.valueOf(24)))
-                                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, BigInteger.valueOf(17L)))
+                        productService.findProductsByIds(List.of(Long.valueOf(23), Long.valueOf(24)))
+                                .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, Long.valueOf(17L)))
                 )
                 .consumeNextWith(products -> {
                     System.out.println(products);

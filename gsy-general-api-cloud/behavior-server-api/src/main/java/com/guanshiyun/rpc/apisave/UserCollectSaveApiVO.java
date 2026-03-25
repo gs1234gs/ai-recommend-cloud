@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @FieldNameConstants
 public class UserCollectSaveApiVO {
     //id
-    private BigInteger id;
+    private Long id;
     //商品id
     private ProductApiVO product;
     //收藏时间

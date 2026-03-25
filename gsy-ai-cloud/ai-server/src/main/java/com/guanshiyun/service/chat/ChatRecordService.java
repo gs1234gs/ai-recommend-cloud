@@ -9,7 +9,7 @@ import com.guanshiyun.responsepojo.PageResultT;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 /**
  * ChatRecordService
@@ -32,10 +32,10 @@ public interface ChatRecordService {
      * 保存聊天记录
      *
      * @param chatRecord 聊天记录实体对象
-     * @return Mono<BigInteger> 返回保存成功的记录 ID
+     * @return Mono<Long> 返回保存成功的记录 ID
      *                        如果保存失败或用户未登录返回 0
      */
-    public Mono<BigInteger> save(ChatRecordContent chatRecord);
+    public Mono<Long> save(ChatRecordContent chatRecord);
 
     /**
      * 游标分页查询聊天记录

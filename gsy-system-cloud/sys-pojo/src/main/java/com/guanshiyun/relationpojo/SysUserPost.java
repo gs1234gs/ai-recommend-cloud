@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.math.BigInteger;
+
 
 @Data
 @Builder
@@ -17,9 +17,9 @@ import java.math.BigInteger;
 public class SysUserPost {
     //主键id
     @Id
-    private BigInteger id;
+    private Long id;
     //用户id
-    private BigInteger userId;
+    private Long userId;
     //岗位id
-    private BigInteger postId;
+    private Long postId;
 }

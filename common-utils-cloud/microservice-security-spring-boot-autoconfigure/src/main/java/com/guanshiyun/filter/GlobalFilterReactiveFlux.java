@@ -2,10 +2,10 @@ package com.guanshiyun.filter;
 
 
 import com.alibaba.fastjson2.JSONObject;
-import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.consts.ConstHeaderLocals;
 import com.guanshiyun.consts.ConstMapClassNickName;
 import com.guanshiyun.consts.PublicEndpoints;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.utils.OnDisableBusinessWebFilterCondition;
@@ -24,7 +24,6 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
@@ -35,7 +34,7 @@ import java.util.Objects;
 @Conditional(OnDisableBusinessWebFilterCondition.class)
 public class GlobalFilterReactiveFlux implements WebFilter {
 
-    private final MyBigInteger myBigInteger;
+    private final MyLong myLong;
 
 
     @Override
@@ -66,7 +65,7 @@ public class GlobalFilterReactiveFlux implements WebFilter {
                         if (StringUtils.hasText(userIdStr)) {
                             ctx = ctx.put(
                                     ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY,
-                                    myBigInteger.bigIntegerOrNull(userIdStr)
+                                    myLong.LongOrNull(userIdStr)
                             );
                         }
                         if (StringUtils.hasText(traceId)) {
@@ -109,7 +108,7 @@ public class GlobalFilterReactiveFlux implements WebFilter {
             //不放行
             return Mono.error(new RuntimeException("用户信息为空"));
         }
-        BigInteger userId = myBigInteger.bigInteger(
+        Long userId = myLong.myLong(
                 userMap.get(
                         ConstMapClassNickName.MAP_USERID_KEY
                 ));

@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.math.BigInteger;
+
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Base64;
@@ -79,11 +79,11 @@ public class EmbeddingTest {
     void test2() {
         embeddingProductService.recommendForUser(List.of(
                 ProductForEmbeddingApVO.builder()
-                        .id(BigInteger.ONE)
+                        .id(Long.ONE)
                         .title("vivo智能耳机 Pro + 无线降噪")
                         .build(),
                 ProductForEmbeddingApVO.builder()
-                        .id(BigInteger.TWO)
+                        .id(Long.TWO)
                         .title("Midea 美的一匹半 变频冷暖壁挂空调")
                         .build()
         ),5)

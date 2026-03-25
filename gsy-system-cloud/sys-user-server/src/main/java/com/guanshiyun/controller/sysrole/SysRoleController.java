@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Slf4j
@@ -27,11 +27,11 @@ public class SysRoleController {
     //添加角色或者修改角色
 //    @Operation(summary = "添加角色或者修改角色")
     @PostMapping("save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody SysRoleSaveVO sysRoleSaveVO) {
+    public Mono<ResultT<Long>> save(@RequestBody SysRoleSaveVO sysRoleSaveVO) {
         return sysRoleService.save(sysRoleSaveVO)
                 .flatMap(id ->
                         Mono.just(
-                                ResultT.<BigInteger>builder()
+                                ResultT.<Long>builder()
                                         .code(HttpCodeConst.OK)
                                         .msg("成功")
                                         .data(id)
@@ -40,7 +40,7 @@ public class SysRoleController {
                 )
                 .switchIfEmpty(
                         Mono.just(
-                                ResultT.<BigInteger>builder()
+                                ResultT.<Long>builder()
                                         .code(HttpCodeConst.OK)
                                         .msg("失败")
                                         .data(null)
@@ -51,7 +51,7 @@ public class SysRoleController {
                         throwable -> {
                             log.error("添加角色失败", throwable);
                             return Mono.just(
-                                    ResultT.<BigInteger>builder()
+                                    ResultT.<Long>builder()
                                             .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                                             .msg("服务器错误")
                                             .data(null)
@@ -63,7 +63,7 @@ public class SysRoleController {
 
     //删除角色
     @DeleteMapping("deleteById/{id}")
-    public Mono<ResultT<Long>> deleteRole(@PathVariable BigInteger id) {
+    public Mono<ResultT<Long>> deleteRole(@PathVariable Long id) {
         return sysRoleService.deleteRoleById(id)
                 .map(result ->
                         ResultT.<Long>builder()
@@ -94,11 +94,11 @@ public class SysRoleController {
 
     //修改角色
     @PutMapping("updateById")
-    public Mono<ResultT<BigInteger>> updateRole(@RequestBody SysRoleSaveVO sysRoleVO) {
+    public Mono<ResultT<Long>> updateRole(@RequestBody SysRoleSaveVO sysRoleVO) {
         return sysRoleService.update(sysRoleVO)
                 .flatMap(id ->
                         Mono.just(
-                                ResultT.<BigInteger>builder()
+                                ResultT.<Long>builder()
                                         .code(HttpCodeConst.OK)
                                         .msg("修改成功")
                                         .data(id)
@@ -107,7 +107,7 @@ public class SysRoleController {
                 )
                 .switchIfEmpty(
                         Mono.just(
-                                ResultT.<BigInteger>builder()
+                                ResultT.<Long>builder()
                                         .code(HttpCodeConst.OK)
                                         .msg("修改失败")
                                         .data(null)
@@ -118,7 +118,7 @@ public class SysRoleController {
                         throwable -> {
                             log.error("修改角色失败", throwable);
                             return Mono.just(
-                                    ResultT.<BigInteger>builder()
+                                    ResultT.<Long>builder()
                                             .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                                             .msg("修改角色失败")
                                             .data(null)
@@ -153,7 +153,7 @@ public class SysRoleController {
 
     //根据用户id获取角色
     @GetMapping("findRoleListByUserId/{userId}")
-    public Mono<ResultT<List<SysRoleVO>>> roleList(@PathVariable BigInteger userId) {
+    public Mono<ResultT<List<SysRoleVO>>> roleList(@PathVariable Long userId) {
         return sysRoleService.findAllByUserId(userId)
                 .map(role -> BeanUtil.toBean(role, SysRoleVO.class))
                 .collectList()
@@ -187,7 +187,7 @@ public class SysRoleController {
                 );
     }
     @GetMapping("findById/{id}")
-    public Mono<ResultT<SysRoleVO>> findById(@PathVariable BigInteger id) {
+    public Mono<ResultT<SysRoleVO>> findById(@PathVariable Long id) {
         return sysRoleService.findById(id)
                 .map(role ->
                         ResultT.<SysRoleVO>builder()

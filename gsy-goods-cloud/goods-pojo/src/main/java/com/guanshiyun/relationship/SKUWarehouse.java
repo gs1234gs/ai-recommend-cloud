@@ -12,7 +12,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 
 /**
  * 产品仓库关系
@@ -29,9 +29,9 @@ public class SKUWarehouse extends BasePojo implements Serializable {
     private static final long serialVersionUID = 1L;
     /** 主键ID */
     @Id
-    private BigInteger id;
+    private Long id;
     /** 产品ID */
-    private BigInteger productId;
+    private Long productId;
     /** 仓库ID */
-    private BigInteger warehouseId;
+    private Long warehouseId;
 }

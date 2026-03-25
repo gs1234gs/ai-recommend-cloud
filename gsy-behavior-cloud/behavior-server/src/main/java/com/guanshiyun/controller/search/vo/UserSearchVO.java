@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
@@ -24,7 +24,7 @@ public class UserSearchVO extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     //会话 id
-    private BigInteger id;
+    private Long id;
     //搜索内容
     private String searchContent;
     // 最高价格
@@ -32,7 +32,7 @@ public class UserSearchVO extends BasePojo implements Serializable {
     //最低价格
     private BigDecimal minPrice;
     //品牌id等
-    private BigInteger brandId;
+    private Long brandId;
     //搜索时间
     private LocalDateTime searchTime;
 }

@@ -1,6 +1,7 @@
 package com.guanshiyun.bean;
 
-import com.guanshiyun.biginteger.MyBigInteger;
+
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.snowflake.SnowflakePermanent;
 import com.guanshiyun.utils.WebContextUtils;
 import org.springframework.context.annotation.Bean;
@@ -10,8 +11,8 @@ import org.springframework.context.annotation.Configuration;
 public class UtilsBean {
 
     @Bean
-    public MyBigInteger myBigInteger() {
-        return new MyBigInteger();
+    public MyLong myLong() {
+        return new MyLong();
     }
 
     @Bean
@@ -33,6 +34,6 @@ public class UtilsBean {
     }
     @Bean
     public WebContextUtils webContextUtils() {
-        return new WebContextUtils(myBigInteger());
+        return new WebContextUtils(myLong());
     }
 }

@@ -25,7 +25,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Slf4j
@@ -96,7 +96,7 @@ public class ChatController {
     public Flux<String> recommendFluxChat(@RequestBody ReqChat reqChat, ServerWebExchange exchange) {
         return chatService.chatFluxRecommend(reqChat)
                 .doOnNext(tuple -> {
-                    BigInteger chatId = tuple.getT2();
+                    Long chatId = tuple.getT2();
                     if (!exchange.getResponse().isCommitted()) {
                         exchange.getResponse().getHeaders().set("X-Conversation-ID", chatId.toString());
                     }
@@ -152,10 +152,10 @@ public class ChatController {
     }
     //修改对话标题
     @PutMapping("saveChat")
-    public Mono<ResultT<BigInteger>> chatSave(@RequestBody ChatRecordContent chatRecord){
+    public Mono<ResultT<Long>> chatSave(@RequestBody ChatRecordContent chatRecord){
    return chatRecordService.save(chatRecord)
            .map(saveId ->{
-               return ResultT.<BigInteger>builder()
+               return ResultT.<Long>builder()
                        .code(HttpCodeConst.OK)
                        .msg("保存成功")
                        .data(saveId)

@@ -11,7 +11,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Service
@@ -29,17 +29,17 @@ public class AiChatClientRecommendServiceApiImpl implements AiChatClientRecommen
     }
 
     @Override
-    public Mono<ResultT<List<BigInteger>>> recommendProduct(RequestBodyProductForEmbeddingApVO<List<ProductForEmbeddingApVO>> recentProducts) {
+    public Mono<ResultT<List<Long>>> recommendProduct(RequestBodyProductForEmbeddingApVO<List<ProductForEmbeddingApVO>> recentProducts) {
         return aiWebClientRpc.webClient()
                 .post()
                 .uri(AiApiUrl.EMBEDDING_PRODUCT_RECOMMEND_FOR_USER)
                 .bodyValue(recentProducts)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<ResultT<List<BigInteger>>>() {});
+                .bodyToMono(new ParameterizedTypeReference<ResultT<List<Long>>>() {});
     }
 
     @Override
-    public Mono<ResultT<Void>> embeddingDeleteProduct(BigInteger productId) {
+    public Mono<ResultT<Void>> embeddingDeleteProduct(Long productId) {
         return aiWebClientRpc.webClient()
                 .delete()
                 .uri(AiApiUrl.EMBEDDING_PRODUCT_DELETE_BY_PRODUCT_ID, productId)
@@ -48,7 +48,7 @@ public class AiChatClientRecommendServiceApiImpl implements AiChatClientRecommen
     }
 
     @Override
-    public Mono<ResultT<List<BigInteger>>> searchByKeyword(String keyWard, Integer topK) {
+    public Mono<ResultT<List<Long>>> searchByKeyword(String keyWard, Integer topK) {
         return aiWebClientRpc.webClient()
                 .get()
                 .uri(build->build.path(AiApiUrl.EMBEDDING_PRODUCT_RECOMMEND_BY_KEY_WARD)
@@ -56,7 +56,7 @@ public class AiChatClientRecommendServiceApiImpl implements AiChatClientRecommen
                         .queryParam("topK",topK)
                         .build())
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<ResultT<List<BigInteger>>>() {});
+                .bodyToMono(new ParameterizedTypeReference<ResultT<List<Long>>>() {});
     }
 //    private final WebClientRpc webClientRpc;
 //    @Override

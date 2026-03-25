@@ -15,7 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 
 
 @Slf4j
@@ -30,7 +30,7 @@ public class RewriteLoginSuccessHandler {
                     .flatMap(map -> {
                         String token = (String) map.get(ConstMapClassNickName.MAP_TOKEN_KEY);
 //                        log.info("保存token：{}", token);
-                        BigInteger id = (BigInteger) map.get(ConstMapClassNickName.MAP_USERID_KEY);
+                        Long id = (Long) map.get(ConstMapClassNickName.MAP_USERID_KEY);
                         Mono<Boolean> saveToken = redisUtil.hSet(
                                         ConstClassNickName.REDIS_TOKEN_KEY,
                                         id.toString(),

@@ -7,9 +7,9 @@ import com.db.constsql.SqlConst;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
-import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.controller.sysuser.vo.SysUserSaveVO;
 import com.guanshiyun.controller.sysuser.vo.SysUserVO;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.relationpojo.SysUserRole;
 import com.guanshiyun.repository.sysuser.SysUserRepository;
 import com.guanshiyun.repository.userrole.SysUserRoleRepository;
@@ -31,7 +31,6 @@ import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -47,7 +46,7 @@ public class SysUserServiceImpl implements SysUserService {
     private final TransactionalOperator transactionalOperator;
     private final DatabaseClient databaseClient;
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
-    private final MyBigInteger myBigInteger;
+    private final MyLong myLong;
 
     /**
      * Keyset分页查询SysUser
@@ -61,7 +60,7 @@ public class SysUserServiceImpl implements SysUserService {
     public Mono<PageResultT<List<SysUser>>> findPage(RequestPage<SysUser> requestPage) {
         requestPage = PageUtils.pageValidation(requestPage, SysUser.class);
         // 前端没传 pageSize 时默认10条
-        BigInteger pageNum = requestPage.getPageNum();
+        Long pageNum = requestPage.getPageNum();
         int pageSize = requestPage.getPageSize();
         // 条件
         Criteria criteria = Criteria.empty();
@@ -76,9 +75,7 @@ public class SysUserServiceImpl implements SysUserService {
                     SysUser.Fields.nickName
             ).like(SqlConst.PERCENT + nickName + SqlConst.PERCENT);
         // 计算 offset
-        long offset = pageNum.subtract(BigInteger.ONE)
-                .multiply(BigInteger.valueOf(pageSize))
-                .longValue();
+        long offset = (pageNum - 1) * pageSize;
         // 数据查询：ORDER BY id DESC（推荐主键排序）
         Query dataQuery = Query.query(criteria)
                 .sort(Sort.by(
@@ -107,7 +104,7 @@ public class SysUserServiceImpl implements SysUserService {
      * @return Integer
      */
     @Override
-    public Mono<Long> deleteUserById(BigInteger id) {
+    public Mono<Long> deleteUserById(Long id) {
         return transactionalOperator.execute(status ->
                         databaseClient.sql("delete from sys_user where id = :id")
                                 .bind(SysUser.Fields.id, id)
@@ -124,7 +121,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public Mono<Long> deleteUserByIds(Collection<BigInteger> ids) {
+    public Mono<Long> deleteUserByIds(Collection<Long> ids) {
         return databaseClient.sql("delete from sys_user where id in (:id)")
                 .bind(SysUser.Fields.id, ids)
                 .fetch()
@@ -142,9 +139,9 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public Mono<SysUserVO> findById(BigInteger id) {
+    public Mono<SysUserVO> findById(Long id) {
 //       return Mono.deferContextual(ctx ->{
-//           BigInteger userId = myBigInteger.bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+//           Long userId = myLong.Long(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 //           return sysUserRepository.findById(userId);
 //       });
         return sysUserRepository.findById(id)
@@ -152,7 +149,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public Mono<BigInteger> updateUserById(SysUserVO sysUser) {
+    public Mono<Long> updateUserById(SysUserVO sysUser) {
         return sysUserRepository.findById(sysUser.getId())
                 .flatMap(sysUserDB -> {
                     BeanUtil.copyProperties(sysUser, sysUserDB, CopyOptions.create().ignoreNullValue());
@@ -174,15 +171,15 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public Mono<BigInteger> save(SysUserSaveVO sysUserSaveVO) {
+    public Mono<Long> save(SysUserSaveVO sysUserSaveVO) {
         String password = passwordEncoder.encode(sysUserSaveVO.getPassword());
         sysUserSaveVO.setPassword(password);
         sysUserSaveVO.setCreateTime(LocalDateTime.now());
         return Mono.deferContextual(ctx -> {
             if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
                 return Mono.error(new Exception("用户ID不存在"));
-            BigInteger userId =
-                    myBigInteger.bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId =
+                    myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
             SysUser sysUser = BeanUtil.toBean(sysUserSaveVO, SysUser.class);
             if (Objects.isNull(sysUserSaveVO.getId())) {
                 sysUser.setCreatorId(userId);

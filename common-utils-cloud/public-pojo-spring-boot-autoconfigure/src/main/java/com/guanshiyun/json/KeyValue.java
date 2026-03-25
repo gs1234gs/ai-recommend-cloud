@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 
-import java.math.BigInteger;
+
 
 @Data
 @AllArgsConstructor
@@ -14,7 +14,7 @@ import java.math.BigInteger;
 @Builder
 @FieldNameConstants
 public class KeyValue {
-    private BigInteger id;
+    private Long id;
     private Integer value;
     private String name;
 }

@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
@@ -30,7 +30,7 @@ public class UserSearchMongodb extends BasePojo implements Serializable {
     private static final long serialVersionUID = 1L;
     // id
     @Id
-    private BigInteger id;
+    private Long id;
     //搜索内容
     private String searchContent;
     // 最高价格
@@ -38,9 +38,9 @@ public class UserSearchMongodb extends BasePojo implements Serializable {
     //最低价格
     private BigDecimal minPrice;
     //品牌id等
-    private BigInteger brandId;
+    private Long brandId;
     /**商品类别 */
-    private BigInteger categoryId;
+    private Long categoryId;
     //搜索时间
     private LocalDateTime searchTime;
 }

@@ -8,7 +8,7 @@ import lombok.experimental.FieldNameConstants;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,7 +20,7 @@ import java.util.List;
 public class SysUserSaveVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private BigInteger id;
+    private Long id;
     //部门id
     private int deptId;
     //用户名
@@ -51,13 +51,13 @@ public class SysUserSaveVO implements Serializable {
     //创建时间
     private LocalDateTime createTime;
     //创建者
-    private BigInteger creatorId;
+    private Long creatorId;
     //更新者
-    private BigInteger updaterId;
+    private Long updaterId;
     //更新时间
     private LocalDateTime updateTime;
     //备注
     private String remark;
     //角色id
-    private List<BigInteger> roleIdList;
+    private List<Long> roleIdList;
 }

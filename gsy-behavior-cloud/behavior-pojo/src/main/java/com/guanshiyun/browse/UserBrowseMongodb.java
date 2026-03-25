@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class UserBrowseMongodb extends BasePojo implements Serializable {
     private static final long serialVersionUID = 1L;
     //主键id
     @Id
-    private BigInteger id;
+    private Long id;
     //商品id
     private ProductApiVO product;
     //浏览开始时间
@@ -43,7 +43,7 @@ public class UserBrowseMongodb extends BasePojo implements Serializable {
     //设备类型
     private String deviceType;
     //浏览时长,单位毫秒
-    private BigInteger browseDuration;
+    private Long browseDuration;
     //分类
     private List<CategoryApiVO> categoryList;
     //sku列表

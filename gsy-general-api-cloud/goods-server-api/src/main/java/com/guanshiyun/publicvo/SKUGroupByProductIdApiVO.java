@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -27,7 +27,7 @@ public class SKUGroupByProductIdApiVO extends BasePojo implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @JsonSerialize(using = ToStringSerializer.class)
-    private BigInteger productId;
+    private Long productId;
     
     private String productName;
     

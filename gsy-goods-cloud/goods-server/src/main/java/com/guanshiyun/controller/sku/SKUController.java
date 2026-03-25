@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -25,11 +25,11 @@ public class SKUController {
     private final SKUService skuService;
     //添加SKU
     @PostMapping("save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody SKUSaveVO skuVO) {
+    public Mono<ResultT<Long>> save(@RequestBody SKUSaveVO skuVO) {
         return skuService.save(skuVO)
                 .map(id->{
                     log.info("添加成功，id为{}",id);
-                    return ResultT.<BigInteger>builder()
+                    return ResultT.<Long>builder()
                             .code(HttpCodeConst.OK)
                             .msg("添加成功")
                             .data(id)
@@ -38,7 +38,7 @@ public class SKUController {
                 .onErrorResume(e->{
                     log.error("添加sku失败", e);
                     return Mono.just(
-                            ResultT.<BigInteger>builder()
+                            ResultT.<Long>builder()
                                     .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                                     .msg("添加失败")
                                     .build());
@@ -46,7 +46,7 @@ public class SKUController {
     }
     //删除SKU
     @DeleteMapping("deleteById/{id}")
-    public Mono<ResultT<Void>> deleteById(@PathVariable BigInteger id) {
+    public Mono<ResultT<Void>> deleteById(@PathVariable Long id) {
         return skuService.deleteById(id)
                 .then(Mono.fromCallable(() -> {
                     log.info("删除成功，id为{}",id);
@@ -65,7 +65,7 @@ public class SKUController {
                 });
     }
     @GetMapping("findById/{id}")
-    public Mono<ResultT<SKUVO>> findById(@PathVariable BigInteger id) {
+    public Mono<ResultT<SKUVO>> findById(@PathVariable Long id) {
         return skuService.findById(id)
                 .map(sku ->
                         ResultT.<SKUVO>builder()
@@ -110,7 +110,7 @@ public class SKUController {
      * 根据商品id获取SKU列表
      * */
     @GetMapping("findByProductId/{productId}")
-    public Mono<ResultT<List<SKUVO>>> findByProductId(@PathVariable BigInteger productId) {
+    public Mono<ResultT<List<SKUVO>>> findByProductId(@PathVariable Long productId) {
         return skuService.findByProductId(productId)
                 .collectList()
                 .map(skus ->
@@ -132,7 +132,7 @@ public class SKUController {
     }
     //批量删除
     @DeleteMapping("deleteAllById")
-    public Mono<ResultT<Void>> deleteAllById(@RequestBody List<BigInteger> ids) {
+    public Mono<ResultT<Void>> deleteAllById(@RequestBody List<Long> ids) {
         return skuService.deleteAllById(ids)
                 .then(Mono.fromCallable(() -> {
                     log.info("批量删除成功，ids为{}",ids);
@@ -154,7 +154,7 @@ public class SKUController {
     }
     //根据id减库存
     @PutMapping("reduceStockById")
-    public Mono<ResultT<Boolean>> reduceStockById(@RequestParam BigInteger id, @RequestParam Integer count) {
+    public Mono<ResultT<Boolean>> reduceStockById(@RequestParam Long id, @RequestParam Integer count) {
         return skuService.reduceStockById(id,count)
                 .map(ResultT::success)
                 .onErrorResume(throwable ->{
@@ -169,7 +169,7 @@ public class SKUController {
     }
     //加 存 库
     @PutMapping("addStockById")
-    public Mono<ResultT<Boolean>> addStockById(@RequestParam BigInteger id, @RequestParam Integer count) {
+    public Mono<ResultT<Boolean>> addStockById(@RequestParam Long id, @RequestParam Integer count) {
         return skuService.addStockById(id,count)
                 .map(ResultT::success)
                 .onErrorResume(throwable ->{
@@ -185,7 +185,7 @@ public class SKUController {
 
     //根据ids获取SKU
     @GetMapping("findBySkuIds")
-    public Mono<ResultT<List<SKUVO>>> findBySkuIds(@RequestParam List<BigInteger> skuIds) {
+    public Mono<ResultT<List<SKUVO>>> findBySkuIds(@RequestParam List<Long> skuIds) {
        return skuService.findAllByIds(skuIds)
                .map(ResultT::success)
                .onErrorResume(e->Mono.just(ResultT.error()));
@@ -193,7 +193,7 @@ public class SKUController {
 
     //增加销量
     @PutMapping("addSalesById")
-    public Mono<ResultT<Boolean>> addSalesById(@RequestParam BigInteger id, @RequestParam Integer count) {
+    public Mono<ResultT<Boolean>> addSalesById(@RequestParam Long id, @RequestParam Integer count) {
         return skuService.addSalesById(id,count)
                 .map(ResultT::success)
                 .onErrorResume(throwable ->{

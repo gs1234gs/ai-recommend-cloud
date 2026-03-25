@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductSaveVO {
     //商品id
-    private BigInteger id;
+    private Long id;
     //商品名称
     private String name;
     //商品价格
@@ -44,8 +44,8 @@ public class ProductSaveVO {
     private LocalDateTime publishTime; // 上架时间
     private LocalDateTime offlineTime; // 下架时间
     //分类 id
-    private List<BigInteger> categoryId;
+    private List<Long> categoryId;
     //标签 id
-    private List<BigInteger> tagId;
+    private List<Long> tagId;
 
 }

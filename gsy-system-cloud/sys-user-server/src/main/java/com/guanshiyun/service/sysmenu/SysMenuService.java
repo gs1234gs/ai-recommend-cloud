@@ -5,26 +5,26 @@ import com.guanshiyun.menupojo.reponse.SysMenuResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.Collection;
 
 public interface SysMenuService {
     //根据菜单id列表
-    Flux<SysMenu> findByIds(Collection<BigInteger> menuIds);
+    Flux<SysMenu> findByIds(Collection<Long> menuIds);
     //根据用户id获取菜单
     Flux<SysMenu> findMenuByUserId();
 
-    Flux<SysMenu> findAllByParentId(BigInteger id);
+    Flux<SysMenu> findAllByParentId(Long id);
 
-    Mono<Long> deleteById(BigInteger id);
+    Mono<Long> deleteById(Long id);
 
-    Mono<BigInteger> save(SysMenu sysMenu);
+    Mono<Long> save(SysMenu sysMenu);
 
-   Mono<BigInteger> updateById(SysMenu sysMenu);
+   Mono<Long> updateById(SysMenu sysMenu);
 
     Flux<SysMenu> findAll();
 
-    Flux<SysMenu> findMenuByRoleId(BigInteger roleId);
+    Flux<SysMenu> findMenuByRoleId(Long roleId);
 
-    Mono<SysMenuResponse> findById(BigInteger id);
+    Mono<SysMenuResponse> findById(Long id);
 }

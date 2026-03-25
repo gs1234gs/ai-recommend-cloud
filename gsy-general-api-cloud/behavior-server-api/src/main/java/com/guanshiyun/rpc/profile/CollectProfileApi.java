@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class CollectProfileApi  implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     //主键id
-    private BigInteger id;
+    private Long id;
     //商品 id
     private ProductApiVO product;
     //收集时间

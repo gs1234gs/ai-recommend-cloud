@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class UserCollectMongodb extends BasePojo implements Serializable {
     private static final long serialVersionUID = 1L;
     // id
     @Id
-    private BigInteger id;
+    private Long id;
     //商品id
     private ProductApiVO product;
     //收藏时间

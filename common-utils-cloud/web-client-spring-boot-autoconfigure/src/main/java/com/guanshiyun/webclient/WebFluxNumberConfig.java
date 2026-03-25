@@ -16,7 +16,7 @@ import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 import java.io.IOException;
-import java.math.BigInteger;
+
 
 @Configuration
 public class WebFluxNumberConfig implements WebFluxConfigurer {
@@ -35,7 +35,7 @@ public class WebFluxNumberConfig implements WebFluxConfigurer {
         // 序列化：转为字符串
         module.addSerializer(Long.class, ToStringSerializer.instance);
         module.addSerializer(Long.TYPE, ToStringSerializer.instance); // long
-        module.addSerializer(BigInteger.class, ToStringSerializer.instance);
+        module.addSerializer(Long.class, ToStringSerializer.instance);
 
         // 反序列化：从字符串解析
         module.addDeserializer(Long.class, new JsonDeserializer<Long>() {
@@ -52,11 +52,11 @@ public class WebFluxNumberConfig implements WebFluxConfigurer {
                 return text.isEmpty() ? 0L : Long.parseLong(text);
             }
         });
-        module.addDeserializer(BigInteger.class, new JsonDeserializer<BigInteger>() {
+        module.addDeserializer(Long.class, new JsonDeserializer<Long>() {
             @Override
-            public BigInteger deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+            public Long deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
                 String text = p.getText().trim();
-                return text.isEmpty() ? null : new BigInteger(text);
+                return text.isEmpty() ? null : new Long(text);
             }
         });
 

@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 
@@ -24,13 +24,13 @@ public class SearchContentApi implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     //搜索内容id
-    private BigInteger id;
+    private Long id;
     //商品最低价格
     private BigDecimal minPrice;
     //商品最高价格
     private BigDecimal maxPrice;
     //品牌id等
-    private BigInteger brandId;
+    private Long brandId;
     //搜索内容
     private String searchContent;
     //搜索时间

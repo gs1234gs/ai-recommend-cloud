@@ -3,22 +3,22 @@ package com.guanshiyun.service.click.impl;
 import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.behaviorenums.GuestEnum;
-import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.click.UserClickMongodb;
 import com.guanshiyun.controller.click.vo.UserClickSaveVO;
 import com.guanshiyun.controller.click.vo.UserClickVO;
 import com.guanshiyun.feedback.Feedback;
 import com.guanshiyun.gorseenum.GorseFeedbackEnum;
 import com.guanshiyun.goser.GorseClient;
+import com.guanshiyun.mylong.MyLong;
+import com.guanshiyun.profile.CategoryApiVO;
+import com.guanshiyun.profile.SKUApiVO;
+import com.guanshiyun.profile.TagApiVO;
 import com.guanshiyun.repository.click.UserClickMongodbRepository;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.rowAffected.RowAffected;
 import com.guanshiyun.rpc.goodsapi.category.CategoryApiService;
 import com.guanshiyun.rpc.goodsapi.sku.SkuApiService;
 import com.guanshiyun.rpc.goodsapi.tag.TagApiService;
-import com.guanshiyun.profile.CategoryApiVO;
-import com.guanshiyun.profile.SKUApiVO;
-import com.guanshiyun.profile.TagApiVO;
 import com.guanshiyun.service.click.UserClickService;
 import com.guanshiyun.snowflake.SnowflakePermanent;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
@@ -34,7 +34,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuples;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -64,7 +63,7 @@ public class UserClickServiceImpl implements UserClickService {
     private final SnowflakePermanent snowflakePermanent;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
     private final GorseClient gorseClient;
-    private final MyBigInteger  myBigInteger;
+    private final MyLong myLong;
 
 
     /**
@@ -78,20 +77,20 @@ public class UserClickServiceImpl implements UserClickService {
      * 5. 区分登录用户与游客用户
      *
      * @param userClickVO 前端点击记录
-     * @return Mono<BigInteger> 返回保存成功的记录 ID
+     * @return Mono<Long> 返回保存成功的记录 ID
      */
     @Override
-    public Mono<BigInteger> save(UserClickSaveVO userClickVO) {
+    public Mono<Long> save(UserClickSaveVO userClickVO) {
         // 将前端 VO 转换成 MongoDB 实体
         UserClickMongodb userClickMongodb = BeanConvertUtil.toBean(userClickVO, UserClickMongodb.class);
         LocalDateTime now = LocalDateTime.now();
         // 全局唯一 ID
-        BigInteger nextId = snowflakePermanent.nextId();
+        Long nextId = snowflakePermanent.nextId();
 
         return Mono.deferContextual(ctx -> {
             // ====================== 登录用户逻辑 ======================
             if (ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
-                BigInteger userId =
+                Long userId =
                         ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
                 // 填充基础字段
                 userClickMongodb.setId(nextId)
@@ -99,7 +98,7 @@ public class UserClickServiceImpl implements UserClickService {
                         .setCreateTime(now)
                         .setCreator(userId);
 
-                BigInteger productId = userClickMongodb.getProduct().getId();
+                Long productId = userClickMongodb.getProduct().getId();
 
                 // 异步 RPC 获取商品维度信息
                 Mono<ResultT<List<CategoryApiVO>>> categoryApiServiceByProductId =
@@ -148,7 +147,7 @@ public class UserClickServiceImpl implements UserClickService {
                     .setClickTime(now)
                     .setCreateTime(now);
 
-            BigInteger productId = userClickMongodb.getProduct().getId();
+            Long productId = userClickMongodb.getProduct().getId();
 
             // 异步 RPC 获取商品维度信息
             Mono<ResultT<List<CategoryApiVO>>> categoryApiServiceByProductId =
@@ -210,8 +209,8 @@ public class UserClickServiceImpl implements UserClickService {
             int limit =(Objects.isNull( rows) || rows <= ConstNumber.INT_ZERO)  ? ConstNumber.INTEGER_TEN : rows;
 
             // 获取用户 ID
-            BigInteger userId =
-                    myBigInteger.bigIntegerOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId =
+                    myLong.LongOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
             // 构造 MongoDB 查询
             Query query = new Query()

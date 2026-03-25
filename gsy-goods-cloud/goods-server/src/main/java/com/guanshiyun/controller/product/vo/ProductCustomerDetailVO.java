@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class ProductCustomerDetailVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     //商品id
-    private BigInteger id;
+    private Long id;
     //商品名称
     private String name;
     //视频

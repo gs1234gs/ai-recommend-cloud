@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.*;
 import lombok.experimental.Accessors;
 
-import java.math.BigInteger;
+
 
 /**
  * 提供泛型的分页结果类
@@ -20,7 +20,7 @@ import java.math.BigInteger;
 @Accessors(chain = true)
 public class PageResultT<T> {
     //pageNum
-    private BigInteger pageNum;
+    private Long pageNum;
     //pageSize
     private Integer pageSize;
     //总数

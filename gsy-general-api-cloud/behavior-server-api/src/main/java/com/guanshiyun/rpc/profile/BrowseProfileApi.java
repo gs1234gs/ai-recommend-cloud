@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class BrowseProfileApi implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     /** 主键ID */
-    private BigInteger id;
+    private Long id;
     //sku id
     private ProductApiVO product;
     //浏览开始时间

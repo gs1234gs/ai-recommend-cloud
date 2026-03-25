@@ -17,16 +17,14 @@
     <packaging>pom</packaging>
     <modules>
         <module>gsy-ai-cloud</module>
-        <module>gsy-erp-cloud</module>
-        <module>gsy-recommend-cloud</module>
-        <module>gsy-statistical-cloud</module>
+<!--        <module>gsy-statistical-cloud</module>-->
         <module>gsy-system-cloud</module>
         <module>gsy-gateway-cloud</module>
         <module>gsy-goods-cloud</module>
-        <module>gsy-shopping-card-cloud</module>
+<!--        <module>gsy-shopping-card-cloud</module>-->
         <module>gsy-general-api-cloud</module>
         <module>gsy-order-cloud</module>
-        <module>gsy-pay-cloud</module>
+<!--        <module>gsy-pay-cloud</module>-->
         <module>gsy-behavior-cloud</module>
         <module>gsy-upload-cloud</module>
     </modules>

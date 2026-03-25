@@ -13,7 +13,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 @Slf4j
 @Service
@@ -25,7 +25,7 @@ public class PurchaseOrderServiceApiImpl implements PurchaseOrderServiceApi {
      * 获取订单列表
      * */
     @Override
-    public Mono<ResultT<List<PurchaseOrderVOApi>>> findByUserId(BigInteger userId) {
+    public Mono<ResultT<List<PurchaseOrderVOApi>>> findByUserId(Long userId) {
         return webClientRpc
                 .webClient()
                 .get()

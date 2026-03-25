@@ -1,11 +1,11 @@
 package com.guanshiyun.service.chat.impl;
 
 import com.guanshiyun.base.BasePojo;
-import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.cahetutil.SmartTitleExtractor;
 import com.guanshiyun.chathistory.FormatChatHistory;
 import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.content.ContentText;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.mymongodb.ChatRecordContent;
 import com.guanshiyun.repositorymongodb.chat.ChatRecordContentMongodbRepository;
 import com.guanshiyun.req.AllReqChat;
@@ -35,7 +35,6 @@ import reactor.util.context.ContextView;
 import reactor.util.function.Tuple2;
 import reactor.util.function.Tuples;
 
-import java.math.BigInteger;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -60,7 +59,7 @@ public class ChatServiceImpl implements ChatService {
     private final ChatClient chatClient;
     private final ChatRecordContentMongodbRepository chatRecordContentMongodbRepository;
     private final SnowflakePermanent snowflakePermanent;
-    private final MyBigInteger myBigInteger;
+    private final MyLong myLong;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
 
 
@@ -82,7 +81,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Flux<String> chatAll(ReqChat reqChat) {
         //获取会话id
-        BigInteger conversationId = reqChat.getConversationId();
+        Long conversationId = reqChat.getConversationId();
         //获取聊天内容
         String content = reqChat.getContent();
         LocalDateTime now = LocalDateTime.now();
@@ -91,12 +90,12 @@ public class ChatServiceImpl implements ChatService {
             //创建会话标题
             String title = SmartTitleExtractor.extractFromSingle(content);
             //生成会话唯一id
-            BigInteger chatId = snowflakePermanent.nextId();
+            Long chatId = snowflakePermanent.nextId();
             /**
              * 插入会话记录
              * */
             return Flux.deferContextual(ctx -> {
-                BigInteger userId = myBigInteger.bigInteger(
+                Long userId = myLong.myLong(
                         ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
                 );
                 // 保存会话记录my sql
@@ -123,7 +122,7 @@ public class ChatServiceImpl implements ChatService {
                                     .delFlag((short) 0)
                                     .createTime(now)
                                     .senderId(userId)
-                                    .receiverId(BigInteger.ONE)
+                                    .receiverId(ConstNumber.LONG_ONE)
                                     .updateTime(now)
                                     .build();
                             //保存会话记录
@@ -141,7 +140,7 @@ public class ChatServiceImpl implements ChatService {
         //如果不是第一次对话，就从数据库中获取会话记录
         // 已存在会话，追加内容
         return Flux.deferContextual(ctx -> {
-                    BigInteger userId = myBigInteger.bigInteger(
+                    Long userId = myLong.myLong(
                             ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
                     );
                     return chatClient.prompt()
@@ -185,14 +184,14 @@ public class ChatServiceImpl implements ChatService {
      * @return Flux<String> AI 回复内容流
      */
     @Override
-    public Mono<Tuple2<Flux<String>, BigInteger>> chatFlux(ReqChat reqChat) {
+    public Mono<Tuple2<Flux<String>, Long>> chatFlux(ReqChat reqChat) {
         String content = reqChat.getContent();
-        BigInteger conversationId = reqChat.getConversationId();
+        Long conversationId = reqChat.getConversationId();
 
         return Mono.deferContextual(ctx -> {
             // 1. 用户身份校验
             boolean isLoggedIn = ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
-            BigInteger userId = isLoggedIn ? myBigInteger.bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) : null;
+            Long userId = isLoggedIn ? myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) : null;
 
             // 策略：未登录允许对话，但不持久化（或仅内存处理，这里沿用原逻辑：不保存记录，直接返回流）
             if (!isLoggedIn) {
@@ -215,8 +214,8 @@ public class ChatServiceImpl implements ChatService {
     /**
      * 处理未登录用户的临时对话（不保存）
      */
-    private Mono<Tuple2<Flux<String>, BigInteger>> createNewUnsavedStream(String content) {
-        BigInteger tempId = snowflakePermanent.nextId();
+    private Mono<Tuple2<Flux<String>, Long>> createNewUnsavedStream(String content) {
+        Long tempId = snowflakePermanent.nextId();
         Flux<String> stream = chatClient.prompt()
                 .system(SHORT_ANSWER_SYSTEM_PROMPT)
                 .user(content)
@@ -228,8 +227,8 @@ public class ChatServiceImpl implements ChatService {
     /**
      * 处理首次对话 (创建新文档)
      */
-    private Mono<Tuple2<Flux<String>, BigInteger>> handleFirstConversation(BigInteger userId, String content) {
-        BigInteger chatId = snowflakePermanent.nextId();
+    private Mono<Tuple2<Flux<String>, Long>> handleFirstConversation(Long userId, String content) {
+        Long chatId = snowflakePermanent.nextId();
         String title = SmartTitleExtractor.extractFromSingle(content);
         LocalDateTime now = LocalDateTime.now();
 
@@ -261,7 +260,7 @@ public class ChatServiceImpl implements ChatService {
                             .updateTime(now)
                             .delFlag((short) 0)
                             .senderId(userId)
-                            .receiverId(BigInteger.ONE) // 假设系统ID为1
+                            .receiverId(ConstNumber.LONG_ONE) // 假设系统ID为1
                             .contentTexts(List.of(
                                     ContentText.builder()
                                             .id(snowflakePermanent.nextId())
@@ -286,7 +285,7 @@ public class ChatServiceImpl implements ChatService {
     /**
      * 处理已有会话 (查询 -> 构建上下文 -> 流式回答 -> 追加记录)
      */
-    private Mono<Tuple2<Flux<String>, BigInteger>> handleExistingConversation(BigInteger userId, BigInteger conversationId, String content) {
+    private Mono<Tuple2<Flux<String>, Long>> handleExistingConversation(Long userId, Long conversationId, String content) {
 
         // 1. 从 MongoDB 查询会话记录
         return chatRecordContentMongodbRepository.findById(conversationId)
@@ -373,7 +372,7 @@ public class ChatServiceImpl implements ChatService {
      */
     @Override
     public Mono<Long> deleteChatById(Object id) {
-        BigInteger chatId = myBigInteger.bigInteger(id);
+        Long chatId = myLong.myLong(id);
 
         // 构建查询条件：根据 ID 查找且当前未删除
         Query query = Query.query(
@@ -397,11 +396,11 @@ public class ChatServiceImpl implements ChatService {
 
 
     @Override
-    public Mono<Tuple2<Flux<String>, BigInteger>> chatFluxRecommend(ReqChat reqChat) {
+    public Mono<Tuple2<Flux<String>, Long>> chatFluxRecommend(ReqChat reqChat) {
         return Mono.deferContextual(ctx -> {
-            BigInteger conversationId = reqChat.getConversationId();
+            Long conversationId = reqChat.getConversationId();
             String userInput = reqChat.getContent();
-            BigInteger chatId = conversationId != null ? conversationId : snowflakePermanent.nextId();
+            Long chatId = conversationId != null ? conversationId : snowflakePermanent.nextId();
             StringBuilder collectedText = new StringBuilder();
 
             return buildPrompt( userInput)
@@ -475,7 +474,7 @@ public class ChatServiceImpl implements ChatService {
         return Mono.just(prompt);
     }
 
-    private Mono<Void> saveChatRecord(BigInteger chatId,
+    private Mono<Void> saveChatRecord(Long chatId,
                                       String userContent,
                                       String aiContent,
                                       ContextView ctx) {
@@ -484,7 +483,7 @@ public class ChatServiceImpl implements ChatService {
             return Mono.empty();
         }
 
-        BigInteger userId = myBigInteger.bigInteger(
+        Long userId = myLong.myLong(
                 ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
         );
 
@@ -508,7 +507,7 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Mono<AllReqChat> recommend(ReqChat reqChat) {
         String content = reqChat.getContent();
-        BigInteger chatId = snowflakePermanent.nextId();
+        Long chatId = snowflakePermanent.nextId();
         Prompt prompt = new Prompt(List.of(
                 new SystemMessage("""
                         你是一个专业的电商购物助手。
@@ -540,7 +539,7 @@ public class ChatServiceImpl implements ChatService {
             }
 
             // 提取商品 ID
-            List<BigInteger> productIds = extractProductIds(finalContent);
+            List<Long> productIds = extractProductIds(finalContent);
             String naturalLanguageOnly = removeJsonLine(finalContent);
             return AllReqChat.builder()
                     .conversationId(chatId)
@@ -579,7 +578,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     //  提取方法：兼容 JSON 在任意位置（但优先匹配最后一个）
-    private List<BigInteger> extractProductIds(String response) {
+    private List<Long> extractProductIds(String response) {
         if (response == null || response.isEmpty()) {
             return Collections.emptyList();
         }
@@ -597,7 +596,7 @@ public class ChatServiceImpl implements ChatService {
             return Arrays.stream(lastMatch.split(","))
                     .map(String::trim)
                     .filter(s -> s.matches("\\d+"))
-                    .map(BigInteger::new)
+                    .map(Long::valueOf)
                     .collect(Collectors.toList());
         }
         return Collections.emptyList();

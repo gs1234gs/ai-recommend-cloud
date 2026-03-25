@@ -2,10 +2,10 @@ package com.guanshiyun.service.embedding.impl;
 
 import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.behaviorenums.GuestEnum;
-import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.embedding.ActiveSimilarityThresholdConfiguration;
 import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import com.guanshiyun.goser.GorseClient;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.repository.embedding.ActiveSimilarityThresholdConfigurationRepository;
 import com.guanshiyun.service.embedding.EmbeddingProductService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
@@ -19,7 +19,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -48,7 +47,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class EmbeddingProductServiceImpl implements EmbeddingProductService {
     private final VectorStore vectorStore;// 向量存储服务
-    private final MyBigInteger myBigInteger;// BigInteger 工具
+    private final MyLong myLong;// Long 工具
     private final GorseClient gorseClient;// Gorse 推荐客户端
     private final ActiveSimilarityThresholdConfigurationRepository activeSimilarityThresholdConfigurationRepository;
 
@@ -90,7 +89,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
      * @return Mono<Void>
      */
     @Override
-    public Mono<Void> deleteById(List<BigInteger> idList) {
+    public Mono<Void> deleteById(List<Long> idList) {
         List<String> vectorIds = idList.stream()
                 .map(this::generateVectorId) // 使用统一生成逻辑
                 .toList();
@@ -113,10 +112,10 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
      *
      * @param recentProducts 用户最近浏览商品列表
      * @param topK           返回商品数量
-     * @return Mono<List < BigInteger>> 推荐商品 ID 列表
+     * @return Mono<List < Long>> 推荐商品 ID 列表
      */
     @Override
-    public Mono<List<BigInteger>> recommendForUser(List<ProductForEmbeddingApVO> recentProducts, int topK) {
+    public Mono<List<Long>> recommendForUser(List<ProductForEmbeddingApVO> recentProducts, int topK) {
         return Mono.deferContextual(ctx -> {
             boolean hasKey = ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
 
@@ -125,7 +124,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
                 return gorseClient(GuestEnum.GUEST_USER_ID.getValue(), topK);
             }
 
-            BigInteger userId = myBigInteger.bigIntegerOrNull(
+            Long userId = myLong.LongOrNull(
                     ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
             // 无行为：直接走 Gorse
@@ -150,7 +149,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
                             vectorSearch(fusedQuery, (int)(topK * 2)),
                             gorseClient.getRecommend(userId.toString(), (int)(topK * 2))
                                     .map(ids -> ids.stream()
-                                            .map(myBigInteger::bigInteger)
+                                            .map(myLong::myLong)
                                             .toList())
                                     .onErrorReturn(Collections.emptyList())
                     )
@@ -162,9 +161,9 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
     /**
      * 向量搜索
      */
-    private Mono<List<BigInteger>> vectorSearch(String query, int topK) {
+    private Mono<List<Long>> vectorSearch(String query, int topK) {
         return activeSimilarityThresholdConfigurationRepository
-                .findById(BigInteger.ONE)
+                .findById(ConstNumber.LONG_ONE)
                 .map(ActiveSimilarityThresholdConfiguration::getSimilarityThreshold)
                 .defaultIfEmpty(0.6)
                 .flatMapMany(threshold -> {
@@ -192,7 +191,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
 
                     return list.stream()
                             .limit(topK)
-                            .map(document -> myBigInteger.bigInteger(
+                            .map(document -> myLong.myLong(
                                     document.getMetadata().get(ProductForEmbeddingApVO.Fields.id)))
                             .collect(Collectors.toList());
                 })
@@ -200,7 +199,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
 //                .sort(Comparator.comparing(Document::getScore,
 //                        Comparator.nullsLast(Comparator.reverseOrder())))
 //                .take(topK)
-//                .map(document -> myBigInteger.bigInteger(
+//                .map(document -> myLong.Long(
 //                        document.getMetadata().get(ProductForEmbeddingApVO.Fields.id)))
 //                .collectList()
 //                .onErrorReturn(Collections.emptyList());
@@ -209,12 +208,12 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
     /**
      * 融合结果（向量优先 + Gorse 补充）
      */
-    private List<BigInteger> mergeResults(
-            List<BigInteger> vectorResults,
-            List<BigInteger> gorseResults,
+    private List<Long> mergeResults(
+            List<Long> vectorResults,
+            List<Long> gorseResults,
             int topK) {
 
-        Set<BigInteger> merged = new LinkedHashSet<>(vectorResults);
+        Set<Long> merged = new LinkedHashSet<>(vectorResults);
 
         gorseResults.stream()
                 .filter(id -> !merged.contains(id))
@@ -223,7 +222,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
         return merged.stream().limit(topK).toList();
     }
 //    @Override
-//    public Mono<List<BigInteger>> recommendForUser(List<ProductForEmbeddingApVO> recentProducts, int topK) {
+//    public Mono<List<Long>> recommendForUser(List<ProductForEmbeddingApVO> recentProducts, int topK) {
 //        //有行为，优先大模型推荐，解决商品冷启动，新商品需要语义检索推荐
 //        return Mono.deferContextual(ctx -> {
 //                    boolean hasKey =
@@ -232,7 +231,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
 //                    if (!hasKey) {
 //                        return gorseClient(GuestEnum.GUEST_USER_ID.getValue(), topK);
 //                    }
-//                    BigInteger userId = myBigInteger.bigIntegerOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+//                    Long userId = myLong.LongOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 //
 //
 //                    // ================== 无行为：直接走 Gorse ==================
@@ -249,7 +248,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
 //                        return gorseClient(userId.toString(), topK);
 //                    }
 //                    return activeSimilarityThresholdConfigurationRepository
-//                            .findById(BigInteger.ONE)
+//                            .findById(Long.ONE)
 //                            .map(ActiveSimilarityThresholdConfiguration::getSimilarityThreshold)
 //                            .defaultIfEmpty(0.0)
 //                            .flatMap(threshold -> {
@@ -285,7 +284,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
 //                                            );
 //                                        })
 //                                        .take(topK)    // 最终返回 topK
-//                                        .map(document -> myBigInteger.bigInteger(
+//                                        .map(document -> myLong.Long(
 //                                                document.getMetadata().get(ProductForEmbeddingApVO.Fields.id))
 //                                        )
 //                                        .collectList()
@@ -298,9 +297,9 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
 //                                            if (!productIdList.isEmpty() && productIdList.size() < topK) {
 //                                                return gorseClient.getRecommend(userId.toString(), topK - productIdList.size())
 //                                                        .map(productIds -> {
-//                                                            ArrayList<BigInteger> cloneProductIdList = new ArrayList<>(productIdList);
+//                                                            ArrayList<Long> cloneProductIdList = new ArrayList<>(productIdList);
 //                                                            productIds.forEach(productId ->
-//                                                                    cloneProductIdList.add(myBigInteger.bigInteger(productId))
+//                                                                    cloneProductIdList.add(myLong.Long(productId))
 //                                                            );
 //                                                            return cloneProductIdList;
 //                                                        });
@@ -342,7 +341,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
 //////                    return s2.compareTo(s1);    // 降序：s2 > s1 → 负数？不，compareTo 是 s2 - s1
 ////                    })
 ////                    .take(topK)    // 最终返回 topK
-////                    .map(document -> myBigInteger.bigInteger(
+////                    .map(document -> myLong.Long(
 ////                            document.getMetadata().get(ProductForEmbeddingApVO.Fields.id))
 ////                    )
 ////                    .collectList()
@@ -355,9 +354,9 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
 ////                        if (!productIdList.isEmpty() && productIdList.size() < topK) {
 ////                            return gorseClient.getRecommend(userId.toString(), topK - productIdList.size())
 ////                                    .map(productIds -> {
-////                                        ArrayList<BigInteger> cloneProductIdList = new ArrayList<>(productIdList);
+////                                        ArrayList<Long> cloneProductIdList = new ArrayList<>(productIdList);
 ////                                        productIds.forEach(productId ->
-////                                                cloneProductIdList.add(myBigInteger.bigInteger(productId))
+////                                                cloneProductIdList.add(myLong.Long(productId))
 ////                                        );
 ////                                        return cloneProductIdList;
 ////                                    });
@@ -374,14 +373,13 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
      *
      * @param userId 用户 ID
      * @param topK   推荐数量
-     * @return Mono<List < BigInteger>> 推荐商品 ID
+     * @return Mono<List < Long>> 推荐商品 ID
      */
-    private Mono<List<BigInteger>> gorseClient(String userId, Integer topK) {
+    private Mono<List<Long>> gorseClient(String userId, Integer topK) {
         return gorseClient.getRecommend(userId, topK)
                 .flatMap(productIds ->
                         Flux.fromIterable(productIds)
-                                .map(myBigInteger::bigInteger
-                                )
+                                .map(myLong::myLong)
                                 .collectList()
                 );
     }
@@ -398,7 +396,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
     }
 
     @Override
-    public Mono<List<BigInteger>> searchByKeyword(String keyword, int topK) {
+    public Mono<List<Long>> searchByKeyword(String keyword, int topK) {
                     SearchRequest request = SearchRequest.builder()
                             .similarityThreshold(0.3)
                             .query(keyword)
@@ -406,8 +404,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
                             .build();
                     return Flux.fromIterable(vectorStore.similaritySearch(request))
                             .map(document ->
-                                    myBigInteger
-                                            .bigInteger(document
+                                    myLong.myLong(document
                                                     .getMetadata()
                                                     .get(ProductForEmbeddingApVO
                                                             .Fields.id)
@@ -423,7 +420,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
 //                .topK(topK)
 //                .build();
 //        return Flux.fromIterable(vectorStore.similaritySearch(request))
-//                .map(document -> myBigInteger.bigInteger(document.getMetadata().get(ProductForEmbeddingApVO.Fields.id)))
+//                .map(document -> myLong.Long(document.getMetadata().get(ProductForEmbeddingApVO.Fields.id)))
 //                .collectList();
 
 
@@ -431,7 +428,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
 
 
     @Override
-    public List<BigInteger> searchKeyword(String keyword, int topK) {
+    public List<Long> searchKeyword(String keyword, int topK) {
         SearchRequest request = SearchRequest.builder()
                 .query(keyword)
                 .similarityThreshold(0.4)
@@ -439,13 +436,15 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
                 .build();
         return vectorStore.similaritySearch(request)
                 .stream()
-                .map(document -> myBigInteger.bigInteger(document.getMetadata().get(ProductForEmbeddingApVO.Fields.id)))
+                .map(document -> myLong.myLong(
+                        document.getMetadata().get(ProductForEmbeddingApVO.Fields.id))
+                )
                 .collect(Collectors.toList());
 
 
     }
 
-    private String generateVectorId(BigInteger productId) {
+    private String generateVectorId(Long productId) {
         return UUID.nameUUIDFromBytes(productId.toString().getBytes(StandardCharsets.UTF_8)).toString();
     }
 }

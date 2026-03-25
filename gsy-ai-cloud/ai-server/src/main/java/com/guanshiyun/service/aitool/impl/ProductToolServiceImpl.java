@@ -11,7 +11,7 @@ import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.math.BigInteger;
+
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,7 +30,7 @@ public class ProductToolServiceImpl implements ProductToolService {
 //            name = "searchProduct",
 //            description = "根据关键词搜索商品（10字内），返回最多5个商品ID"
 //    )
-//    public List<BigInteger> searchProduct(String content) {
+//    public List<Long> searchProduct(String content) {
 //        if (!StringUtils.hasText(content)) {
 //            return List.of();
 //        }
@@ -51,12 +51,12 @@ public class ProductToolServiceImpl implements ProductToolService {
             name = "searchProduct",
             description = "根据关键词搜索商品（10字内），返回最多5个商品ID"
     )
-    public List<BigInteger> searchProduct(@ToolParam(description = "用户需求描述") String content) {
+    public List<Long> searchProduct(@ToolParam(description = "用户需求描述") String content) {
         if (!StringUtils.hasText(content)) {
             return List.of();
         }
         log.info("触发商品id获取: {}", content); // ← 关键
-        List<BigInteger> productList = embeddingProductService.searchKeyword(content.trim(), 5);
+        List<Long> productList = embeddingProductService.searchKeyword(content.trim(), 5);
         return productList;
     }
 
@@ -65,7 +65,7 @@ public class ProductToolServiceImpl implements ProductToolService {
             name = "toolProductList",
             description = "根据商品ID列表获取商品列表"
     )
-    public List<ProductCustomerApiVO> toolProductList(List<BigInteger> productList) {
+    public List<ProductCustomerApiVO> toolProductList(List<Long> productList) {
         log.info("🔹 [TOOL SYNC] 开始同步获取商品列表: {}", productList);
 
         try {

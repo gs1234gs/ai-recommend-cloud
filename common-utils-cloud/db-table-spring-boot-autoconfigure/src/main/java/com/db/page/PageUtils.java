@@ -5,7 +5,7 @@ import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.requestpojo.RequestPage;
 import lombok.extern.slf4j.Slf4j;
 
-import java.math.BigInteger;
+
 import java.util.Objects;
 
 /**
@@ -26,7 +26,7 @@ public class PageUtils {
         return Objects.isNull(requestPage) ?
                 //如果为空，则返回一个默认的RequestPage对象
                 RequestPage.<T>builder()
-                        .pageNum(BigInteger.ZERO)
+                        .pageNum(0L)
                         .pageSize(ConstNumber.INT_ZERO)
                         .condition(condition)
                         .build()
@@ -68,22 +68,22 @@ public class PageUtils {
 
     //判断pageNum和pageSize是否合法
     //获取pageNum
-    public static BigInteger pageNum(BigInteger pageNum) {
+    public static Long pageNum(Long pageNum) {
 
         try {
             return (
                     pageNum != null
                             &&
-                            pageNum.compareTo(BigInteger.ZERO)
+                            pageNum.compareTo(0L)
                                     >
                                     ConstNumber.INT_ZERO
             )
                     ?
-                    pageNum : BigInteger.ONE;
+                    pageNum : 0L;
         } catch (Exception e) {
             log.error("获取pageNum失败", e);
         }
-        return BigInteger.ONE;
+        return 0L;
     }
 
     //获取pageSize

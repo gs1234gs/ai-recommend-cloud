@@ -8,7 +8,7 @@ import lombok.experimental.FieldNameConstants;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.math.BigInteger;
+
 
 @Data
 @Builder
@@ -19,9 +19,9 @@ import java.math.BigInteger;
 public class SysRoleMenu {
     //主键id
     @Id
-    private BigInteger id;
+    private Long id;
     //角色id
-    private BigInteger roleId;
+    private Long roleId;
     //菜单id
-    private BigInteger menuId;
+    private Long menuId;
 }

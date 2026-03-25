@@ -22,7 +22,7 @@ public class JsonUtils {
         a) 一行加粗标题：**{name}**
         b) 5~6行简介
         c) 紧接着单独一行：一个紧凑 JSON 对象，格式为：
-           <!--PRODUCT_START-->{"product": { "id": <BigInteger>, ... }}<!--PRODUCT_END-->
+           <!--PRODUCT_START-->{"product": { "id": <Long>, ... }}<!--PRODUCT_END-->
            (注意：JSON 前后必须包裹上述标记)
         d) 商品之间用两个换行分隔（\\n\\n）
 

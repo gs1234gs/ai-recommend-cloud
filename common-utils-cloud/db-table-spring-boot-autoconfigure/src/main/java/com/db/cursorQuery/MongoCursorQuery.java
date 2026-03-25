@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -139,7 +139,7 @@ public class MongoCursorQuery<T> {
     }
 
     public Flux<T> list() {
-        BigInteger lastId = validatedPage.getLastId();
+        Long lastId = validatedPage.getLastId();
         int pageSize = validatedPage.getPageSize();
 
         Criteria cursorCriteria = criteria;

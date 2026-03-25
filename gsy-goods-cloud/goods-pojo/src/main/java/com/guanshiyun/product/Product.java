@@ -14,7 +14,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 /**
@@ -33,7 +33,7 @@ public class Product extends BasePojo implements Serializable {
     private static final long serialVersionUID = 1L;
     //商品id
     @Id
-    private BigInteger id;
+    private Long id;
     //商品名称
     private String name;
     //商品描述

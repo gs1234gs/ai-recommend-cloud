@@ -12,7 +12,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Service
@@ -22,7 +22,7 @@ public class SkuApiServiceImpl implements SkuApiService {
 
     //根据商品id获取SKU列表
     @Override
-    public Mono<ResultT<List<SKUApiVO>>> findByProductId(BigInteger productId) {
+    public Mono<ResultT<List<SKUApiVO>>> findByProductId(Long productId) {
         return goodsWebClientRpc
                 .webClient()
                 .get()
@@ -49,7 +49,7 @@ public class SkuApiServiceImpl implements SkuApiService {
     }
 
     @Override
-    public Mono<ResultT<List<SKUApiVO>>> findBySkuIds(List<BigInteger> skuIds) {
+    public Mono<ResultT<List<SKUApiVO>>> findBySkuIds(List<Long> skuIds) {
         return goodsWebClientRpc.webClient()
                 .get()
                 .uri(builder-> builder.path(GoodsApiUrl.SKU_FIND_BY_SKU_IDS)
@@ -61,7 +61,7 @@ public class SkuApiServiceImpl implements SkuApiService {
     }
 
     @Override
-    public Mono<ResultT<SKUApiVO>> findBySkuId(BigInteger skuId) {
+    public Mono<ResultT<SKUApiVO>> findBySkuId(Long skuId) {
         return goodsWebClientRpc.webClient()
                 .get()
                 .uri(builder-> builder.path(GoodsApiUrl.SKU_FIND_BY_ID)
@@ -72,7 +72,7 @@ public class SkuApiServiceImpl implements SkuApiService {
     }
 
     @Override
-    public Mono<ResultT<Boolean>> reduceStockAndAddSales(BigInteger skuId, Integer count) {
+    public Mono<ResultT<Boolean>> reduceStockAndAddSales(Long skuId, Integer count) {
         return goodsWebClientRpc.webClient()
                 .put()
                 .uri(builder-> builder.path(GoodsApiUrl.SKU_ADD_SALES_BY_ID)

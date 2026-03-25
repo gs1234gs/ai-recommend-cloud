@@ -1,6 +1,6 @@
 package com.guanshiyun.consts;
 
-import java.math.BigInteger;
+
 
 public class ConstNumber {
     //Long类型
@@ -12,9 +12,6 @@ public class ConstNumber {
     //Short类型
     public static final Short SHORT_ONE = 1;
     public static final Short SHORT_ZERO = 0;
-    //BigInteger类型
-    public static final BigInteger BIG_INTEGER_ONE = BigInteger.ONE;
-    public static final BigInteger BIG_INTEGER_ZERO = BigInteger.ZERO;
     //int
     public static final int INT_ONE = 1;
     public static final int INT_ZERO = 0;

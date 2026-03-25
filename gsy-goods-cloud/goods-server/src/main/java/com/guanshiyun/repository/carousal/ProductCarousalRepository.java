@@ -5,10 +5,10 @@ import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
 
-import java.math.BigInteger;
 
 
-public interface ProductCarousalRepository extends R2dbcRepository<ProductCarousal, BigInteger> {
+
+public interface ProductCarousalRepository extends R2dbcRepository<ProductCarousal, Long> {
 
     /**
      * 根据类型查询轮播图

@@ -10,7 +10,7 @@ import lombok.experimental.FieldNameConstants;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -23,7 +23,7 @@ public class UserBrowseSaveVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     //主键id
-    private BigInteger id;
+    private Long id;
     //商品id
 
     private ProductApiVO product;
@@ -36,5 +36,5 @@ public class UserBrowseSaveVO implements Serializable {
     //设备类型
     private String deviceType;
     //浏览时长,单位毫秒
-    private BigInteger browseDuration;
+    private Long browseDuration;
 }

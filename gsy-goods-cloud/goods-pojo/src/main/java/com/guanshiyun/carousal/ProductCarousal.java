@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.math.BigInteger;
+
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -24,7 +24,7 @@ import java.math.BigInteger;
 public class ProductCarousal extends BasePojo {
     //id
     @Id
-    private BigInteger id;
+    private Long id;
     //轮播标题
     private String title;
     //图片路径

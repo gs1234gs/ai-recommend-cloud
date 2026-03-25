@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @RestController
@@ -47,7 +47,7 @@ public class SysRoleMenuController {
     }
     //删除角色菜单
     @DeleteMapping("/delete")
-    public Mono<ResultT<Long>> deleteRoleMenu(@RequestParam BigInteger roleId, @RequestParam List<BigInteger> menuIds) {
+    public Mono<ResultT<Long>> deleteRoleMenu(@RequestParam Long roleId, @RequestParam List<Long> menuIds) {
         return sysRoleMenuService.deleteRoleMenu(roleId, menuIds)
                 .map(deleteCount -> ResultT.<Long>builder()
                         .code(HttpCodeConst.OK)

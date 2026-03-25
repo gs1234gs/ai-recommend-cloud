@@ -9,7 +9,7 @@ import lombok.experimental.Accessors;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 
 @Data
 @Builder
@@ -24,7 +24,7 @@ public class ProductSearchSaveVO implements Serializable {
     //商品最高价格
     private BigDecimal maxPrice;
     //分类id
-    private BigInteger categoryId;
+    private Long categoryId;
     //搜索内容
     private String searchContent;
 

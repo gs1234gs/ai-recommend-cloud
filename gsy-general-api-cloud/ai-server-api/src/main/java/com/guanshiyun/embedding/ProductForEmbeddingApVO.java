@@ -9,7 +9,7 @@ import lombok.experimental.FieldNameConstants;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +24,7 @@ import java.util.Objects;
 public class ProductForEmbeddingApVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private BigInteger id;           // 商品ID
+    private Long id;           // 商品ID
     private String title;            // 商品标题
     private String description;      // 商品描述（不进 embedding）
     private String brand;            // 品牌

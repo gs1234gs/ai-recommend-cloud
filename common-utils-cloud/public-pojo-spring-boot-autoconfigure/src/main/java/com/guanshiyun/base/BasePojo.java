@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 /**
  * 基础实体对象
@@ -28,11 +28,11 @@ public class BasePojo {
      * 创建者，目前使用 SysUser 的 id 编号
      *
      */
-    private BigInteger creator;
+    private Long creator;
     /**
      * 更新者，目前使用 SysUser 的 id 编号
      */
-    private BigInteger updater;
+    private Long updater;
     /**
      * 创建时间
      */

@@ -3,9 +3,9 @@ package com.guanshiyun.service.search.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.base.BasePojo;
-import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.controller.search.vo.UserSearchSaveVO;
 import com.guanshiyun.controller.search.vo.UserSearchVO;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.repository.search.UserSearchMongodbRepository;
 import com.guanshiyun.search.UserSearchMongodb;
 import com.guanshiyun.service.search.UserSearchService;
@@ -20,7 +20,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -32,24 +31,24 @@ public class UserSearchServiceImpl implements UserSearchService {
     private final UserSearchMongodbRepository userSearchMongodbRepository;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
     private final SnowflakePermanent snowflakePermanent;
-    private final MyBigInteger myBigInteger;
+    private final MyLong myLong;
 
     /**
      * @param userSearchVO
-     * @return BigInteger
+     * @return Long
      * 保存用户搜索记录
      */
     @Override
-    public Mono<BigInteger> save(UserSearchSaveVO userSearchVO) {
+    public Mono<Long> save(UserSearchSaveVO userSearchVO) {
 
         return Mono.deferContextual(ctx -> {
             UserSearchMongodb userSearchMongodb =
                     BeanUtil.toBean(userSearchVO, UserSearchMongodb.class);
-            BigInteger id = snowflakePermanent.nextId();
+            Long id = snowflakePermanent.nextId();
             LocalDateTime now = LocalDateTime.now();
             userSearchMongodb.setId(id).setCreateTime(now);
             if (ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
-                BigInteger creator = myBigInteger.bigIntegerOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+                Long creator = myLong.LongOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
                 userSearchMongodb.setCreator(creator);
             }
 
@@ -92,8 +91,8 @@ public class UserSearchServiceImpl implements UserSearchService {
             }
 
             int limit = (Objects.isNull(rows) || rows <= ConstNumber.INT_ZERO) ? ConstNumber.INTEGER_TEN : rows;
-            BigInteger userId =
-                    myBigInteger.bigIntegerOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId =
+                    myLong.LongOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
             Query query = new Query()
                     .with(Sort.by(Sort.Order.desc(BasePojo.Fields.createTime))) // 最近搜索在前

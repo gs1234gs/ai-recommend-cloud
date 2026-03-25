@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @Accessors(chain = true)
 public class ProductCustomerVO {
     //商品id
-    private BigInteger id;
+    private Long id;
     //商品名称
     private String name;
     //商品原价

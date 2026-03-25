@@ -11,7 +11,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.math.BigInteger;
+
 
 /**
  *
@@ -28,7 +28,7 @@ import java.math.BigInteger;
 public class Category extends BasePojo {
     /** 分类主键ID */
     @Id
-    private BigInteger id;
+    private Long id;
 
     /** 分类名称 */
     private String name;

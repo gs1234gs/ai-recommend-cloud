@@ -5,7 +5,6 @@ import com.db.dbnumber.ConstNumber;
 import com.db.page.CursorPageUtil;
 import com.db.query.SafeCriteria;
 import com.guanshiyun.behaviorenums.GuestEnum;
-import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.controller.product.vo.ProductCustomerDetailVO;
 import com.guanshiyun.controller.product.vo.ProductCustomerVO;
 import com.guanshiyun.controller.product.vo.ProductSearchSaveVO;
@@ -15,6 +14,7 @@ import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import com.guanshiyun.embedding.RequestBodyProductForEmbeddingApVO;
 import com.guanshiyun.gorseenum.GorseFeedbackEnum;
 import com.guanshiyun.goser.GorseClient;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.product.Product;
 import com.guanshiyun.profile.CategoryApiVO;
 import com.guanshiyun.profile.ProductApiVO;
@@ -62,7 +62,6 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -94,7 +93,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
     private final PurchaseOrderServiceApi purchaseOrderServiceApi;
     private final UserBrowseServiceApi userBrowseServiceApi;
     private final ProductRepository productRepository;
-    private final MyBigInteger myBigInteger;
+    private final MyLong myLong;
     private final UtilsService utilsService;
     private final SKURepository sKURepository;
     private final ProductCategoryRepository productCategoryRepository;
@@ -130,7 +129,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 return gorseClient.getRecommend(GuestEnum.GUEST_USER_ID.getValue(), 20)
                         .map(Flux::fromIterable)
                         .flatMapMany(Function.identity())
-                        .mapNotNull(myBigInteger::bigIntegerOrNull)
+                        .mapNotNull(myLong::LongOrNull)
                         .collectList()
                         .flatMap(ids ->
                                 buildResultFromAiProductIds(ids, validate, condition)
@@ -140,20 +139,20 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                             return Mono.just(
                                     CursorPageResult.<List<ProductCustomerVO>>builder()
                                             .rows(Collections.emptyList())
-                                            .cursor(BigInteger.ZERO)
+                                            .cursor(ConstNumber.LONG_ZERO)
                                             .hasNext(false)
                                             .build()
                             );
                         });
             }
             // 如果没有搜索内容，直接走传统查询（AI 不适用）
-            BigInteger userId = myBigInteger.bigIntegerOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong.LongOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
             if (!StringUtils.hasText(searchContent)) {
                 //先走gorse
                 return gorseClient.getRecommend(userId.toString(), 20)
                         .map(Flux::fromIterable)
                         .flatMapMany(Function.identity())
-                        .mapNotNull(myBigInteger::bigIntegerOrNull)
+                        .mapNotNull(myLong::LongOrNull)
                         .collectList()
                         .flatMap(ids ->
                                 buildResultFromAiProductIds(ids, validate, condition)
@@ -163,7 +162,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                             return Mono.just(
                                     CursorPageResult.<List<ProductCustomerVO>>builder()
                                             .rows(Collections.emptyList())
-                                            .cursor(BigInteger.ZERO)
+                                            .cursor(ConstNumber.LONG_ZERO)
                                             .hasNext(false)
                                             .build()
                             );
@@ -173,7 +172,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
             return aiChatClientRecommendServiceApi
                     .searchByKeyword(searchContent.trim(), 20) // 获取最多 20 个候选 ID
                     .map(result -> {
-                                List<BigInteger> data = result.getData();
+                                List<Long> data = result.getData();
                                 log.info("AI 搜索服务返回结果：{}", result);
                                 return data;
                             }
@@ -217,7 +216,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
             RequestCursorPage<ProductSearchSaveVO> validate,
             ProductSearchSaveVO condition) {
 
-        BigInteger lastId = validate.getLastId();
+        Long lastId = validate.getLastId();
         Integer pageSize = validate.getPageSize();
         BigDecimal maxPrice = condition.getMaxPrice();
         BigDecimal minPrice = condition.getMinPrice();
@@ -244,7 +243,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 .map(list -> {
                     boolean hasNext = list.size() > pageSize;
                     List<ProductCustomerVO> rows = hasNext ? list.subList(0, pageSize) : list;
-                    BigInteger cursor = rows.isEmpty() ? BigInteger.ZERO : rows.getLast().getId();
+                    Long cursor = rows.isEmpty() ? ConstNumber.LONG_ZERO : rows.getLast().getId();
                     return CursorPageResult.<List<ProductCustomerVO>>builder()
                             .rows(rows)
                             .cursor(cursor)
@@ -257,7 +256,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
      * 根据 AI 返回的商品 ID 列表 + 游标分页参数，构建最终结果
      */
     private Mono<CursorPageResult<List<ProductCustomerVO>>> buildResultFromAiProductIds(
-            List<BigInteger> aiProductIds,
+            List<Long> aiProductIds,
             RequestCursorPage<ProductSearchSaveVO> validate,
             ProductSearchSaveVO condition) {
 
@@ -265,13 +264,13 @@ public class RecommendProductServiceImpl implements RecommendProductService {
             return Mono.just(
                     CursorPageResult.<List<ProductCustomerVO>>builder()
                             .rows(Collections.emptyList())
-                            .cursor(BigInteger.ZERO)
+                            .cursor(ConstNumber.LONG_ZERO)
                             .hasNext(false)
                             .build()
             );
         }
 
-        BigInteger lastId = validate.getLastId();
+        Long lastId = validate.getLastId();
         Integer pageSize = validate.getPageSize();
         BigDecimal maxPrice = condition.getMaxPrice();
         BigDecimal minPrice = condition.getMinPrice();
@@ -285,7 +284,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
             }
         }
         // 过滤掉 <= lastId 的 ID（游标分页要求）
-        List<BigInteger> filteredIds = aiProductIds.stream()
+        List<Long> filteredIds = aiProductIds.stream()
                 .skip(startIndex)
                 .limit(pageSize + 1L)
                 .toList();
@@ -294,7 +293,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
             return Mono.just(
                     CursorPageResult.<List<ProductCustomerVO>>builder()
                             .rows(Collections.emptyList())
-                            .cursor(BigInteger.ZERO)
+                            .cursor(ConstNumber.LONG_ZERO)
                             .hasNext(false)
                             .build()
             );
@@ -319,7 +318,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 .collectList()
                 .map(list -> {
                     // 按 filteredIds 顺序排序（保持 AI 推荐顺序）
-                    Map<BigInteger, ProductCustomerVO> map = list.stream()
+                    Map<Long, ProductCustomerVO> map = list.stream()
                             .collect(Collectors.toMap(ProductCustomerVO::getId, Function.identity()));
                     List<ProductCustomerVO> ordered = filteredIds.stream()
                             .map(map::get)
@@ -328,7 +327,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
 
                     boolean hasNext = ordered.size() > pageSize;
                     List<ProductCustomerVO> rows = hasNext ? ordered.subList(0, pageSize) : ordered;
-                    BigInteger cursor = rows.isEmpty() ? BigInteger.ZERO : rows.getLast().getId();
+                    Long cursor = rows.isEmpty() ? ConstNumber.LONG_ZERO : rows.getLast().getId();
                     return CursorPageResult.<List<ProductCustomerVO>>builder()
                             .rows(rows)
                             .cursor(cursor)
@@ -355,7 +354,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
             if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                 return Mono.error(new Exception("请先登陆"));
             }
-            BigInteger userId = myBigInteger.bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
             // 封装默认返回方法
             Supplier<Mono<List<ProductCustomerVO>>> defaultProducts = () ->
@@ -366,9 +365,9 @@ public class RecommendProductServiceImpl implements RecommendProductService {
 
             return gorseClient.getRecommend(userId.toString(), 20)
                     .flatMap(productIds -> {
-                        List<BigInteger> productIdList = productIds.stream()
+                        List<Long> productIdList = productIds.stream()
                                 .filter(id -> StringUtils.hasText(id) && id.matches("\\d+"))
-                                .map(myBigInteger::bigInteger)
+                                .map(myLong::myLong)
                                 .toList();
 
                         if (productIdList.isEmpty()) {
@@ -382,7 +381,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                         return defaultProducts.get();
                                     }
                                     // 保持 AI 推荐顺序
-                                    Map<BigInteger, Product> map = list.stream()
+                                    Map<Long, Product> map = list.stream()
                                             .collect(Collectors.toMap(Product::getId, Function.identity()));
 
                                     List<ProductCustomerVO> ordered = productIdList.stream()
@@ -412,7 +411,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 return getFallbackProducts(limit);
             }
 
-            BigInteger userId = myBigInteger.bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
             String redisKey = ProductKey.REC_LIKE_KEY_PREFIX + userId;
 
             // 如果 refresh 为 true，强制重建候选池
@@ -455,7 +454,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
     /**
      * 重建候选池：调用 Gorse -> 写入 Redis -> 返回第一页数据
      */
-    private Mono<List<String>> rebuildCandidatePool(BigInteger userId, String redisKey, int limit) {
+    private Mono<List<String>> rebuildCandidatePool(Long userId, String redisKey, int limit) {
         return gorseClient.getRecommend(userId.toString(), ProductKey.PRE_LOAD_SIZE)
                 .flatMap(productIds -> {
                     // 过滤非法 ID
@@ -487,15 +486,15 @@ public class RecommendProductServiceImpl implements RecommendProductService {
             return Mono.just(Collections.emptyList());
         }
 
-        List<BigInteger> productIdList = idStrings.stream()
-                .map(myBigInteger::bigInteger)
+        List<Long> productIdList = idStrings.stream()
+                .map(myLong::myLong)
                 .toList();
 
         return productRepository.findAllById(productIdList)
                 .collectList()
                 .map(dbList -> {
                     // 构建 Map 以便快速查找
-                    Map<BigInteger, Product> productMap = dbList.stream()
+                    Map<Long, Product> productMap = dbList.stream()
                             .collect(Collectors.toMap(Product::getId, Function.identity()));
 
                     // 按照原始 ID 顺序重组，过滤掉数据库中不存在的商品（如下架商品）
@@ -529,7 +528,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
      * @since 2025-12-20 10:13
      */
     @Override
-    public Mono<ProductCustomerDetailVO> detail(BigInteger id) {
+    public Mono<ProductCustomerDetailVO> detail(Long id) {
         return Mono.deferContextual(ctx -> {
             if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                 return Mono.error(new Exception("请先登陆"));
@@ -537,7 +536,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
             Mono<Product> productMono = productRepository.findById(id);
             Mono<List<TagVO>> tagListMono = utilsService.findTagByProductId(id);
             Mono<List<SKU>> skuListMono = sKURepository.findAllByProductId(id).collectList();
-            BigInteger userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+            Long userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
             return Mono.zip(productMono, tagListMono, skuListMono)
                     .flatMap(tuple -> {
                         Product product = tuple.getT1();
@@ -594,7 +593,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
     }
 
     @Override
-    public Mono<List<ProductCustomerVO>> findByIds(List<BigInteger> ids) {
+    public Mono<List<ProductCustomerVO>> findByIds(List<Long> ids) {
         if (CollectionUtils.isEmpty(ids)) {
             return Mono.just(Collections.emptyList());
         }
@@ -616,7 +615,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                     }
 
                     // 提取所有商品ID（去重）
-                    List<BigInteger> productIds = purchaseOrderVOApis.stream()
+                    List<Long> productIds = purchaseOrderVOApis.stream()
                             .map(PurchaseOrderVOApi::getProductId)
                             .filter(Objects::nonNull)
                             .distinct()
@@ -641,7 +640,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                 List<ProductCategory> productCategories = tuple.getT2();
 
                                 // 提取所有分类ID
-                                List<BigInteger> categoryIds = productCategories.stream()
+                                List<Long> categoryIds = productCategories.stream()
                                         .map(ProductCategory::getCategoryId)
                                         .filter(Objects::nonNull)
                                         .distinct()
@@ -683,11 +682,11 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                                             List<CategoryApiVO> categories) {
 
         // 构建商品ID到商品对象的映射
-        Map<BigInteger, Product> productMap = products.stream()
+        Map<Long, Product> productMap = products.stream()
                 .collect(Collectors.toMap(Product::getId, Function.identity(), (v1, v2) -> v1));
 
         // 构建商品ID到分类列表的映射
-        Map<BigInteger, List<CategoryApiVO>> productCategoryMap = productCategories.stream()
+        Map<Long, List<CategoryApiVO>> productCategoryMap = productCategories.stream()
                 .collect(Collectors.groupingBy(
                         ProductCategory::getProductId,
                         Collectors.mapping(
@@ -702,7 +701,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
         // 融合购买记录、商品信息和分类信息
         return orders.stream()
                 .peek(order -> {
-                    BigInteger productId = order.getProductId();
+                    Long productId = order.getProductId();
 
                     // 融合商品信息
                     Product product = productMap.get(productId);
@@ -724,8 +723,8 @@ public class RecommendProductServiceImpl implements RecommendProductService {
      * 从点击记录构建推荐输入对象
      */
     private ProductForEmbeddingApVO buildProductForEmbeddingFromClick(ClickProfileApi clickProfileApi,
-                                                                      Map<BigInteger, Double> ratioMap) {
-        BigInteger productId = clickProfileApi.getProduct().getId();
+                                                                      Map<Long, Double> ratioMap) {
+        Long productId = clickProfileApi.getProduct().getId();
 
         // 则默认给 1.0 (最高权重)
         Double score = 1.0;
@@ -760,9 +759,9 @@ public class RecommendProductServiceImpl implements RecommendProductService {
      * 从收藏记录构建推荐输入对象
      */
     private ProductForEmbeddingApVO buildProductForEmbeddingFromCollect(CollectProfileApi collectProfileApi,
-                                                                        Map<BigInteger, Double> ratioMap) {
+                                                                        Map<Long, Double> ratioMap) {
 
-        BigInteger productId =collectProfileApi.getProduct().getId();
+        Long productId =collectProfileApi.getProduct().getId();
 
         // 则默认给 1.0 (最高权重)
         Double score = 1.0;
@@ -798,8 +797,8 @@ public class RecommendProductServiceImpl implements RecommendProductService {
      * 从购买记录构建推荐输入对象（新增）
      */
     private ProductForEmbeddingApVO buildProductForEmbeddingFromPurchase(PurchaseOrderVOApi order,
-                                                                         Map<BigInteger, Double> ratioMap) {
-        BigInteger productId = order.getProductId();
+                                                                         Map<Long, Double> ratioMap) {
+        Long productId = order.getProductId();
 
         // 则默认给 1.0 (最高权重)
         Double score = 1.0;
@@ -842,13 +841,13 @@ public class RecommendProductServiceImpl implements RecommendProductService {
             List<CategoryApiVO> categoryList,
             List<TagApiVO> tagList,
             List<SKUApiVO> skuList,
-            Map<BigInteger, Double> ratioMap) {
+            Map<Long, Double> ratioMap) {
 
         if (productApiVO == null || productApiVO.getId() == null) {
             return null;
         }
 
-        BigInteger productId = productApiVO.getId();
+        Long productId = productApiVO.getId();
 
         // 则默认给 1.0 (最高权重)
         Double score = 1.0;
@@ -926,7 +925,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                     List<BrowseProfileApi> browseProfileApiList = Optional.ofNullable(tuple.getT5().getData()).orElse(List.of());
 
                     // === 合并所有行为的商品 ID 列表 (点击 + 收藏 + 购买 + 浏览) ===
-                    List<BigInteger> productIdList = Stream.concat(
+                    List<Long> productIdList = Stream.concat(
                                     Stream.concat(
                                             Stream.concat(
                                                     // 1. 点击商品 ID
@@ -956,7 +955,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                     final int totalIds = totalProductId == ConstNumber.INT_ZERO ? ConstNumber.INT_ONE : totalProductId;
 
                     // 计算每个商品 ID 的占比（点击+收藏+购买+浏览）
-                    Map<BigInteger, Double> productRatioMap = productIdList.stream()
+                    Map<Long, Double> productRatioMap = productIdList.stream()
                             .collect(Collectors.groupingBy(
                                     Function.identity(),
                                     Collectors.collectingAndThen(
@@ -967,8 +966,8 @@ public class RecommendProductServiceImpl implements RecommendProductService {
 
 
                     // 取占比排名前三的商品
-                    Map<BigInteger, Double> top3ProductRatioMap = productRatioMap.entrySet().stream()
-                            .sorted(Map.Entry.<BigInteger, Double>comparingByValue().reversed())
+                    Map<Long, Double> top3ProductRatioMap = productRatioMap.entrySet().stream()
+                            .sorted(Map.Entry.<Long, Double>comparingByValue().reversed())
                             .limit(ConstNumber.INT_THREE)
                             .collect(Collectors.toMap(
                                     Map.Entry::getKey,
@@ -977,7 +976,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                     LinkedHashMap::new
                             ));
 
-                    Set<BigInteger> top3ProductIdSet = top3ProductRatioMap.keySet();
+                    Set<Long> top3ProductIdSet = top3ProductRatioMap.keySet();
 
                     // 构造用于大模型推荐的输入数据
                     List<ProductForEmbeddingApVO> productForEmbeddingApVOList = new ArrayList<>();
@@ -1073,7 +1072,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                             .map(ProductCustomerVO::toVO)
                                             .collectList();
                                 }
-                                List<BigInteger> recommendIds = recommendProductIds.getData();
+                                List<Long> recommendIds = recommendProductIds.getData();
 
                                 return productRepository.findAllById(recommendIds)
                                         .collectMap(Product::getId)
@@ -1092,7 +1091,6 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                     return Mono.empty();
                 });
     }
-
     @Override
     public Mono<List<ProductCustomerVO>> hot() {
         return utilsService
@@ -1102,7 +1100,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                         return Mono.just(Collections.emptyList());
                     }
 
-                    List<BigInteger> idList = ids.subList(0, Math.min(ids.size(), ConstNumber.INT_FOUR));
+                    List<Long> idList = ids.subList(0, Math.min(ids.size(), ConstNumber.INT_FOUR));
 
                     // 查询这些 ID 对应的商品
                     return productRepository.findAllById(idList)
@@ -1110,7 +1108,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                             .collectList()
                             // 保持输入 ID 顺序
                             .map(list -> {
-                                Map<BigInteger, ProductCustomerVO> map = list.stream()
+                                Map<Long, ProductCustomerVO> map = list.stream()
                                         .collect(Collectors.toMap(ProductCustomerVO::getId, Function.identity()));
                                 return idList.stream()
                                         .map(map::get)
@@ -1197,7 +1195,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
 
                     // 5. 确定下一个游标 (nextCursor)
                     // 如果有下一页，取当前列表最后一个元素的 ID 作为下一次查询的 lastId
-                    BigInteger nextCursor = BigInteger.ZERO;
+                    Long nextCursor = ConstNumber.LONG_ZERO;
                     if (!voList.isEmpty()) {
                         // 假设 VO 或 Product 有 getId() 方法
                         nextCursor = voList.getLast().getId();
@@ -1227,7 +1225,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 return gorseClient.getRecommend(GuestEnum.GUEST_USER_ID.getValue(), size)
                         .map(Flux::fromIterable)
                         .flatMapMany(Function.identity())
-                        .mapNotNull(myBigInteger::bigIntegerOrNull)
+                        .mapNotNull(myLong::LongOrNull)
                         .collectList()
                         .flatMap(this::buildResultFromAiProductIds)
                         .onErrorResume(e -> {
@@ -1235,14 +1233,14 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                             return loadDefaultProducts(size)
                                     .map(list -> CursorPageResult.<List<ProductCustomerVO>>builder()
                                             .rows(list)
-                                            .cursor(BigInteger.ZERO)
+                                            .cursor(ConstNumber.LONG_ZERO)
                                             .hasNext(false)
                                             .build());
                         });
             }
 
             // 【已登录用户】
-            BigInteger userId = myBigInteger.bigInteger(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
             String userKey = userId.toString();
             String poolKey = ProductKey.RECOMMEND_POOL_KEY_PREFIX + userKey;
 
@@ -1280,7 +1278,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                         return loadDefaultProducts(pageSize)
                                 .map(list -> CursorPageResult.<List<ProductCustomerVO>>builder()
                                         .rows(list)
-                                        .cursor(list.isEmpty() ? BigInteger.ZERO : list.getLast().getId())
+                                        .cursor(list.isEmpty() ? ConstNumber.LONG_ZERO : list.getLast().getId())
                                         .hasNext(false)
                                         .build());
                     }
@@ -1288,14 +1286,14 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                     // 从 Redis 弹出 ID
                     return Flux.range(0, pageSize)
                             .concatMap(i -> reactiveRedisUtil.rPop(poolKey))
-                            .mapNotNull(myBigInteger::bigIntegerOrNull)
+                            .mapNotNull(myLong::LongOrNull)
                             .collectList()
                             .flatMap(ids -> {
                                 if (ids.isEmpty()) {
                                     return loadDefaultProducts(pageSize)
                                             .map(list -> CursorPageResult.<List<ProductCustomerVO>>builder()
                                                     .rows(list)
-                                                    .cursor(list.isEmpty() ? BigInteger.ZERO : list.getLast().getId())
+                                                    .cursor(list.isEmpty() ? ConstNumber.LONG_ZERO : list.getLast().getId())
                                                     .hasNext(false)
                                                     .build());
                                 }
@@ -1307,13 +1305,13 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                                 return loadDefaultProducts(pageSize)
                                                         .map(defaultList -> CursorPageResult.<List<ProductCustomerVO>>builder()
                                                                 .rows(defaultList)
-                                                                .cursor(defaultList.isEmpty() ? BigInteger.ZERO : defaultList.getLast().getId())
+                                                                .cursor(defaultList.isEmpty() ? ConstNumber.LONG_ZERO : defaultList.getLast().getId())
                                                                 .hasNext(false)
                                                                 .build());
                                             }
 
                                             // 1. 保持 ID 顺序映射 VO (暂时)
-                                            Map<BigInteger, Product> map = list.stream()
+                                            Map<Long, Product> map = list.stream()
                                                     .collect(Collectors.toMap(Product::getId, Function.identity()));
 
                                             // 使用 ArrayList 以便后续 shuffle
@@ -1328,11 +1326,11 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                             return reactiveRedisUtil.lLen(poolKey)
                                                     .defaultIfEmpty(0L)
                                                     .map(remaining -> {
-//                                                        BigInteger cursorVal =
+//                                                        Long cursorVal =
 //                                                                ordered.isEmpty() ?
-//                                                                        BigInteger.ZERO :
+//                                                                        ConstNumber.LONG_ZERO :
 //                                                                        ordered.getLast().getId();
-                                                        BigInteger cursorVal = BigInteger.ZERO;
+                                                        Long cursorVal = ConstNumber.LONG_ZERO;
                                                         if (!ordered.isEmpty()) {
                                                             // 获取最后一个元素的 ID 作为游标
                                                             cursorVal = ordered.getLast().getId();
@@ -1443,7 +1441,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                     .build());
                         } else {
                             // 其他类型用商品ID构造
-                            BigInteger productId = br.getProductId();
+                            Long productId = br.getProductId();
                             // 从原数据中获取商品详情（此处简化，实际需根据类型构造）
                             ProductForEmbeddingApVO vo = buildProductForEmbeddingFromBehavior(br);
                             if (vo != null) embeddingInput.add(vo);
@@ -1451,13 +1449,13 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                     });
 
                     // 2. 从剩余数据中按权重取Top3（排除前2条的商品ID）
-                    List<BigInteger> excludedIds = top2Behavior.stream()
+                    List<Long> excludedIds = top2Behavior.stream()
                             .map(BehaviorRecord::getProductId)
                             .filter(Objects::nonNull)
                             .toList();
 
                     // 重新计算权重（排除前2条的商品ID）
-                    List<BigInteger> allProductIds = Stream.of(
+                    List<Long> allProductIds = Stream.of(
                                     // 1. 点击流
                                     clickList.stream().map(c -> Objects.nonNull(c.getProduct()) ? c.getProduct().getId() : null),
                                     // 2. 收藏流
@@ -1469,19 +1467,19 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                             .filter(Objects::nonNull)
                                             .map(b -> b.getProduct().getId())
                             )
-                            .flatMap(s -> s) // 将 Stream<Stream<BigInteger>> 展平为 Stream<BigInteger>
+                            .flatMap(s -> s) // 将 Stream<Stream<Long>> 展平为 Stream<Long>
                             .filter(Objects::nonNull)
                             .filter(id -> !excludedIds.contains(id))
                             .distinct()
                             .toList();
 
                     int totalIds = allProductIds.isEmpty() ? 1 : allProductIds.size();
-                    Map<BigInteger, Double> ratioMap = allProductIds.stream()
+                    Map<Long, Double> ratioMap = allProductIds.stream()
                             .collect(Collectors.groupingBy(Function.identity(),
                                     Collectors.collectingAndThen(Collectors.counting(), c -> c * 1.0 / totalIds)));
 
-                    Map<BigInteger, Double> top3RatioMap = ratioMap.entrySet().stream()
-                            .sorted(Map.Entry.<BigInteger, Double>comparingByValue().reversed())
+                    Map<Long, Double> top3RatioMap = ratioMap.entrySet().stream()
+                            .sorted(Map.Entry.<Long, Double>comparingByValue().reversed())
                             .limit(3)
                             .collect(Collectors.toMap(
                                     Map.Entry::getKey,
@@ -1490,7 +1488,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                     LinkedHashMap::new)
                             );
 
-                    Set<BigInteger> top3Ids = top3RatioMap.keySet();
+                    Set<Long> top3Ids = top3RatioMap.keySet();
 
                     // 3. 后3条（按权重取的）-> 从剩余数据中取Top3
                     // 点击
@@ -1508,7 +1506,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                             .filter(browse -> browse.getProduct() != null) // 2. 【关键】过滤掉 product 为 null 的记录，防止 NPE
                             .filter(browse -> {
                                 // 3. 安全地检查 ID 是否在 Top3 中
-                                BigInteger id = browse.getProduct().getId();
+                                Long id = browse.getProduct().getId();
                                 return id != null && top3Ids.contains(id);
                             })
                             .forEach(browse -> {
@@ -1545,12 +1543,12 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                 int hotCount = (int) (totalSize * 0.25);
                                 int newCount = totalSize - aiCount - hotCount;
 
-                                List<BigInteger> validAiIds = aiIds.stream().limit(aiCount).toList();
-                                List<BigInteger> finalPoolIds = new ArrayList<>(validAiIds);
+                                List<Long> validAiIds = aiIds.stream().limit(aiCount).toList();
+                                List<Long> finalPoolIds = new ArrayList<>(validAiIds);
 
                                 if (finalPoolIds.size() < totalSize) {
                                     // 补充热门商品
-                                    Mono<List<BigInteger>> hotMono = utilsService
+                                    Mono<List<Long>> hotMono = utilsService
                                             .findProductIdsByTotalSalesGreaterThan(ConstNumber.INT_HUNDRED)
                                             .defaultIfEmpty(Collections.emptyList())
                                             .map(list -> list.stream()
@@ -1559,7 +1557,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                                     .toList()
                                             );
 
-                                    Mono<List<BigInteger>> newMono = productRepository.findAll()
+                                    Mono<List<Long>> newMono = productRepository.findAll()
                                             .sort(Comparator.comparing(Product::getPublishTime).reversed())
                                             .map(Product::getId)
                                             .collectList()
@@ -1588,17 +1586,17 @@ public class RecommendProductServiceImpl implements RecommendProductService {
     /**
      * 【修改点 2】：写入 Redis 前，再次确保彻底打乱
      */
-    private Mono<Void> writeIdsToPoolInternal(String poolKey, List<BigInteger> rawIds) {
+    private Mono<Void> writeIdsToPoolInternal(String poolKey, List<Long> rawIds) {
         if (rawIds == null || rawIds.isEmpty()) {
             log.warn("尝试写入空的推荐列表到池子: {}", poolKey);
             return Mono.empty();
         }
 
         // 去重
-        List<BigInteger> distinctIds = new ArrayList<>(new LinkedHashSet<>(rawIds));
+        List<Long> distinctIds = new ArrayList<>(new LinkedHashSet<>(rawIds));
 
 //        Collections.shuffle(distinctIds);
-        shuffleInGroups(distinctIds);
+//        shuffleInGroups(distinctIds);
 
         if (distinctIds.size() > ProductKey.RECOMMEND_POOL_SIZE) {
             distinctIds = distinctIds.subList(0, ProductKey.RECOMMEND_POOL_SIZE);
@@ -1627,11 +1625,11 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                 .map(ProductCustomerVO::toVO)
                                 .collectList();
                     }
-                    List<BigInteger> limitedIds = ids.stream().limit(limit).toList();
+                    List<Long> limitedIds = ids.stream().limit(limit).toList();
                     return productRepository.findAllById(limitedIds)
                             .collectList()
                             .map(list -> {
-                                Map<BigInteger, ProductCustomerVO> map = list.stream()
+                                Map<Long, ProductCustomerVO> map = list.stream()
                                         .map(ProductCustomerVO::toVO)
                                         .collect(Collectors.toMap(ProductCustomerVO::getId, Function.identity(), (v1, v2) -> v1));
                                 return limitedIds.stream().map(map::get).filter(Objects::nonNull).toList();
@@ -1643,11 +1641,11 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 });
     }
 
-    private Mono<CursorPageResult<List<ProductCustomerVO>>> buildResultFromAiProductIds(List<BigInteger> ids) {
+    private Mono<CursorPageResult<List<ProductCustomerVO>>> buildResultFromAiProductIds(List<Long> ids) {
         if (Objects.isNull(ids) || ids.isEmpty()) {
             return Mono.just(CursorPageResult.<List<ProductCustomerVO>>builder()
                     .rows(Collections.emptyList())
-                    .cursor(BigInteger.ZERO)
+                    .cursor(ConstNumber.LONG_ZERO)
                     .hasNext(false)
                     .build());
         }
@@ -1655,7 +1653,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
         return productRepository.findAllById(ids)
                 .collectList()
                 .map(list -> {
-                    Map<BigInteger, Product> map = list.stream().collect(Collectors.toMap(Product::getId, Function.identity()));
+                    Map<Long, Product> map = list.stream().collect(Collectors.toMap(Product::getId, Function.identity()));
                     List<ProductCustomerVO> vos = new ArrayList<>(ids.stream()
                             .map(map::get)
                             .filter(Objects::nonNull)
@@ -1663,7 +1661,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                             .toList());
                     return CursorPageResult.<List<ProductCustomerVO>>builder()
                             .rows(vos)
-                            .cursor(vos.isEmpty() ? BigInteger.ZERO : vos.getLast().getId())
+                            .cursor(vos.isEmpty() ? ConstNumber.LONG_ZERO : vos.getLast().getId())
                             .hasNext(false)
                             .build();
                 });
@@ -1695,7 +1693,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
         return null;
     }
 
-    private void shuffleInGroups(List<BigInteger> list) {
+    private void shuffleInGroups(List<Long> list) {
         int groupSize = ConstNumber.INT_FIVE;
         if (list == null || list.size() <= 1 || groupSize <= 1) {
             return;

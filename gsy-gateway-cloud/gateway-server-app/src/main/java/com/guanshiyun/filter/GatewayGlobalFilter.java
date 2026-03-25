@@ -4,11 +4,11 @@ package com.guanshiyun.filter;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.nacos.shaded.io.grpc.netty.shaded.io.netty.util.internal.StringUtil;
 import com.aliyun.oss.JwtUtils;
-import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.consts.ConstClassNickName;
 import com.guanshiyun.consts.ConstHeaderLocals;
 import com.guanshiyun.consts.ConstMapClassNickName;
 import com.guanshiyun.consts.PublicEndpoints;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.reactiveredis.ReactiveRedisUtil;
 import com.guanshiyun.responsepojo.Result;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
@@ -25,7 +25,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +36,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class GatewayGlobalFilter implements GlobalFilter, Ordered {
     private final ReactiveRedisUtil reactiveRedisUtil;
-    private final MyBigInteger myBigInteger;
+    private final MyLong myLong;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -103,7 +102,7 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
             ));
         }
         //获取用户id
-        BigInteger userId = myBigInteger.bigInteger(claims.getSubject());
+        Long userId = myLong.myLong(claims.getSubject());
         Object obj = map.get(ConstMapClassNickName.MAP_USERTYPE_KEY);
         short userType = obj != null ? ((Number) obj).shortValue() : 0;
         return reactiveRedisUtil.hGet(

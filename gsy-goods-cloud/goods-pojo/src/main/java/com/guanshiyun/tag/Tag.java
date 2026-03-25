@@ -12,7 +12,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
+
 import java.time.LocalDateTime;
 
 
@@ -30,7 +30,7 @@ import java.time.LocalDateTime;
 public class Tag extends BasePojo {
     /** 标签主键ID */
     @Id
-    private BigInteger id;
+    private Long id;
 
     /** 标签名称 */
     private String name;

@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
@@ -42,14 +42,14 @@ public class RecommendProductController {
     }
 //    //获取商品详情
     @GetMapping("/detail/{id}")
-    public Mono<ResultT<ProductCustomerDetailVO>> detail(@PathVariable BigInteger id){
+    public Mono<ResultT<ProductCustomerDetailVO>> detail(@PathVariable Long id){
         return recommendProductService.detail(id)
                 .map(ResultT::success);
     }
 
     //根据推荐商品id列表获取商品
     @GetMapping("/recommendByIds")
-    public Mono<ResultT<List<ProductCustomerVO>>> recommendByIds(@RequestParam List<BigInteger> ids ){
+    public Mono<ResultT<List<ProductCustomerVO>>> recommendByIds(@RequestParam List<Long> ids ){
         return recommendProductService.findByIds(ids)
                 .map(ResultT::success)
                 .onErrorResume(e -> {

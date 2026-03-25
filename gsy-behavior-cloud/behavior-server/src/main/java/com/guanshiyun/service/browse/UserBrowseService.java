@@ -7,7 +7,7 @@ import com.guanshiyun.responsepojo.CursorPageResult;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 /**
  * UserBrowseService
@@ -27,9 +27,9 @@ public interface UserBrowseService {
      * - 可支持批量保存
      *
      * @param userBrowseSaveVOList 前端传来的用户浏览记录列表
-     * @return Mono<List<BigInteger>> 保存成功后的记录 ID 列表（异步）
+     * @return Mono<List<Long>> 保存成功后的记录 ID 列表（异步）
      */
-    Mono<List<BigInteger>> save(List<UserBrowseSaveVO> userBrowseSaveVOList);
+    Mono<List<Long>> save(List<UserBrowseSaveVO> userBrowseSaveVOList);
     /**
      * 查询用户浏览记录
      *

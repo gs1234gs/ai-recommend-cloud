@@ -3,10 +3,10 @@ package com.guanshiyun.service.chat.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.db.page.PageUtils;
-import com.guanshiyun.biginteger.MyBigInteger;
 import com.guanshiyun.chat.ChatRecord;
 import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.controller.chat.vo.ChatRecordVO;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.mymongodb.ChatRecordContent;
 import com.guanshiyun.repositorymongodb.chat.ChatRecordContentMongodbRepository;
 import com.guanshiyun.requestpojo.RequestCursorPage;
@@ -18,14 +18,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +45,7 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class ChatRecordServiceImpl implements ChatRecordService {
     private final ChatRecordContentMongodbRepository chatRecordContentMongodbRepository;
-    private final MyBigInteger myBigInteger;
+    private final MyLong myLong;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
 
 
@@ -58,7 +57,7 @@ public class ChatRecordServiceImpl implements ChatRecordService {
     public Mono<PageResultT<List<ChatRecordVO>>> findPageChat(RequestPage<ChatRecordVO> requestPage) {
         // 校验参数
         RequestPage<ChatRecordVO> validRequestPage = PageUtils.pageValidation(requestPage, ChatRecordVO.class);
-        BigInteger pageNum = validRequestPage.getPageNum();
+        Long pageNum = validRequestPage.getPageNum();
         Integer pageSize = PageUtils.pageSize(validRequestPage.getPageSize());
 
         // 提取查询条件中的标题
@@ -73,7 +72,7 @@ public class ChatRecordServiceImpl implements ChatRecordService {
                                 .build());
                     }
 
-                    BigInteger userId = myBigInteger.bigInteger(
+                    Long userId = myLong.myLong(
                             ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
                     );
 
@@ -100,9 +99,7 @@ public class ChatRecordServiceImpl implements ChatRecordService {
                     }
 
                     // 计算 offset
-                    long offset = pageNum.subtract(BigInteger.ONE)
-                            .multiply(BigInteger.valueOf(pageSize))
-                            .longValue();
+                    long offset = (pageNum-1)  * pageSize;
 
                     // --- 总数查询 ---
                     Query countQuery = Query.query(criteria);
@@ -147,7 +144,7 @@ public class ChatRecordServiceImpl implements ChatRecordService {
      * 保存聊天记录
      */
     @Override
-    public Mono<BigInteger> save(ChatRecordContent chatRecord) {
+    public Mono<Long> save(ChatRecordContent chatRecord) {
         chatRecord.setUpdateTime(LocalDateTime.now());
         // 如果是新建，设置创建时间和默认未删除
         if (chatRecord.getCreateTime() == null) {
@@ -158,13 +155,13 @@ public class ChatRecordServiceImpl implements ChatRecordService {
         }
 
         return Mono.deferContextual(ctx -> {
-            BigInteger userId = myBigInteger.bigInteger(
+            Long userId = myLong.myLong(
                     ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
             );
 
             if (Objects.isNull(userId)) {
                 // 游客模式可能不允许保存，或者保存为特定 ID，这里按原逻辑返回 0
-                return Mono.just(ConstNumber.BIG_INTEGER_ZERO);
+                return Mono.just(ConstNumber.LONG_ZERO);
             }
 
             chatRecord.setUpdater(userId);
@@ -176,7 +173,7 @@ public class ChatRecordServiceImpl implements ChatRecordService {
                     .map(saved -> saved.getId())
                     .onErrorResume(throwable -> {
                         log.error("保存会话记录到 MongoDB 失败", throwable);
-                        return Mono.just(ConstNumber.BIG_INTEGER_ZERO);
+                        return Mono.just(ConstNumber.LONG_ZERO);
                     });
         });
     }
@@ -196,7 +193,7 @@ public class ChatRecordServiceImpl implements ChatRecordService {
                 return Flux.error(new RuntimeException("用户未登录"));
             }
 
-            BigInteger userId = myBigInteger.bigInteger(
+            Long userId = myLong.myLong(
                     ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
             );
 

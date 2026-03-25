@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.math.BigInteger;
+
 
 
 /**
@@ -26,7 +26,7 @@ import java.math.BigInteger;
 public class Warehouse extends BasePojo {
     /** 主键ID */
     @Id
-    private BigInteger id;
+    private Long id;
     /** 仓库名称 */
     private String name;
     /** 仓库地址 */
@@ -36,5 +36,5 @@ public class Warehouse extends BasePojo {
     /** 状态,是否禁用（0=启用，1=禁用） */
     private short status;
     /** 仓库管理员ID */
-    private BigInteger adminId;
+    private Long adminId;
 }

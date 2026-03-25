@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class SysUserController {
 
     //删除用户
     @DeleteMapping("deleteById/{id}")
-    public Mono<ResultT<Long>> deleteUserById(@PathVariable BigInteger id) {
+    public Mono<ResultT<Long>> deleteUserById(@PathVariable Long id) {
         return sysUserService.deleteUserById(id)
                 .map(deleteCount ->
                     ResultT.<Long>builder()
@@ -58,7 +58,7 @@ public class SysUserController {
 
     //批量删除用户
     @DeleteMapping("deleteUserByIds")
-    public Mono<ResultT<Long>> deleteUserByIds(@RequestBody Collection<BigInteger> ids) {
+    public Mono<ResultT<Long>> deleteUserByIds(@RequestBody Collection<Long> ids) {
         return sysUserService.deleteUserByIds(ids)
                 .map(deleteCount -> {
                             return ResultT.<Long>builder()
@@ -100,7 +100,7 @@ public class SysUserController {
                                 .data(null)
                                 .build()
                 );
-            BigInteger id = contextView.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+            Long id = contextView.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
             return sysUserService.findById(id)
                     .map(sysUser ->
                             ResultT.<SysUserVO>builder()
@@ -131,7 +131,7 @@ public class SysUserController {
 
     //获取单个用户信息
     @GetMapping("findById/{id}")
-    public Mono<ResultT<SysUserVO>> find(@PathVariable BigInteger id) {
+    public Mono<ResultT<SysUserVO>> find(@PathVariable Long id) {
         return sysUserService.findById(id)
                 .map(sysUser ->
                         ResultT.<SysUserVO>builder()
@@ -161,10 +161,10 @@ public class SysUserController {
 
     //修改用户
     @PutMapping("updateUserById")
-    public Mono<ResultT<BigInteger>> updateUserById(@RequestBody SysUserVO sysUser) {
+    public Mono<ResultT<Long>> updateUserById(@RequestBody SysUserVO sysUser) {
         return sysUserService.updateUserById(sysUser)
                 .map(id ->
-                        ResultT.<BigInteger>builder()
+                        ResultT.<Long>builder()
                                 .code(HttpCodeConst.OK)
                                 .msg("修改用户成功")
                                 .data(id)
@@ -172,7 +172,7 @@ public class SysUserController {
                 )
                 .switchIfEmpty(
                         Mono.just(
-                                ResultT.<BigInteger>builder()
+                                ResultT.<Long>builder()
                                         .code(HttpCodeConst.NOT_FOUND)
                                         .msg("用户不存在")
                                         .data(null)
@@ -180,7 +180,7 @@ public class SysUserController {
                         )
                 ).onErrorResume(throwable -> {
                     log.error("修改用户失败", throwable);
-                    return Mono.just(ResultT.<BigInteger>builder()
+                    return Mono.just(ResultT.<Long>builder()
                             .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                             .msg("修改用户失败")
                             .data(null)
@@ -191,11 +191,11 @@ public class SysUserController {
 
     //添加用户
     @PostMapping("save")
-    public Mono<ResultT<BigInteger>> addUser(@RequestBody SysUserSaveVO sysUserSaveVO) {
+    public Mono<ResultT<Long>> addUser(@RequestBody SysUserSaveVO sysUserSaveVO) {
         return sysUserService.save(sysUserSaveVO)
                 .flatMap(id ->
                         Mono.just(
-                                ResultT.<BigInteger>builder()
+                                ResultT.<Long>builder()
                                         .code(HttpCodeConst.OK)
                                         .msg("成功")
                                         .data(id)
@@ -204,7 +204,7 @@ public class SysUserController {
                 )
                 .switchIfEmpty(
                         Mono.just(
-                                ResultT.<BigInteger>builder()
+                                ResultT.<Long>builder()
                                         .code(HttpCodeConst.NOT_FOUND)
                                         .msg("失败")
                                         .data(null)
@@ -213,7 +213,7 @@ public class SysUserController {
                 )
                 .onErrorResume(throwable -> {
                     log.error("添加用户失败", throwable);
-                    return Mono.just(ResultT.<BigInteger>builder()
+                    return Mono.just(ResultT.<Long>builder()
                             .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
                             .msg("服务器错误")
                             .data(null)

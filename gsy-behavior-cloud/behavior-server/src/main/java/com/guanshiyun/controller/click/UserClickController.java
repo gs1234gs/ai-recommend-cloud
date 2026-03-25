@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.math.BigInteger;
+
 import java.util.List;
 
 @Slf4j
@@ -20,7 +20,7 @@ public class UserClickController {
     private final UserClickService userClickService;
     //保存点击记录
     @RequestMapping("save")
-    public Mono<ResultT<BigInteger>> save(@RequestBody UserClickSaveVO userClickVO){
+    public Mono<ResultT<Long>> save(@RequestBody UserClickSaveVO userClickVO){
         return userClickService.save(userClickVO)
                 .map(ResultT::success)
                 .onErrorReturn(ResultT.error());

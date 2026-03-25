@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder(toBuilder = true)
@@ -20,7 +20,7 @@ import java.math.BigInteger;
 public class ProductCarousalVO extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private BigInteger id;
+    private Long id;
     //轮播标题
     private String title;
     //图片路径

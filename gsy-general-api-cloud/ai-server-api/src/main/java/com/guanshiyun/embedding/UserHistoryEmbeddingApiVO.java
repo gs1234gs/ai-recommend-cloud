@@ -9,7 +9,7 @@ import lombok.experimental.FieldNameConstants;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.math.BigInteger;
+
 
 @Builder
 @AllArgsConstructor
@@ -20,5 +20,5 @@ import java.math.BigInteger;
 public class UserHistoryEmbeddingApiVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
-    private BigInteger id;
+    private Long id;
 }
