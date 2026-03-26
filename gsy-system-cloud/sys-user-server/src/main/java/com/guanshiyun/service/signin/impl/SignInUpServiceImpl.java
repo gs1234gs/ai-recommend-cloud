@@ -132,13 +132,11 @@ public class SignInUpServiceImpl implements SignInUpService {
 
         return sysUserRoleService.findRoleIdsByUserId(userId)
                 .collectList()
-                .flatMapMany(roleIds ->
-                        sysRoleMenuService.findMenuIdsByRoleId(roleIds)
+                .flatMapMany(sysRoleMenuService::findMenuIdsByRoleId
                 )
                 .distinct()
                 .collectList()
-                .flatMapMany(menuIds ->
-                        sysMenuService.findByIds(menuIds));
+                .flatMapMany(sysMenuService::findByIds);
     }
 
 }

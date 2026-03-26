@@ -28,7 +28,7 @@ public class PromotionEvent extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    // 活动ID ⭐
+    // 活动ID
     @Id
     private Long id;
 

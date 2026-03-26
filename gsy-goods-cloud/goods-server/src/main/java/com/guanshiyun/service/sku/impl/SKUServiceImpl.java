@@ -193,7 +193,7 @@ public class SKUServiceImpl implements SKUService {
 
         Long pageNum = requestPage.getPageNum();
         int pageSize = requestPage.getPageSize();
-        long offset = pageNum * pageSize;
+        long offset = (pageNum-1) * pageSize;
 
         // 1. 分页查 productId
         Mono<List<Long>> productIdPageMono =
