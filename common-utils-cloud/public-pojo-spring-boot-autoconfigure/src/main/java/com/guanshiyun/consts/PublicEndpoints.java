@@ -20,5 +20,12 @@ public class PublicEndpoints {
             "/webjars/**");
     public static final List<String> PERMISSION_WHITE_PREFIX_LIST = List.of(
             "/goods-api/product/carousal/findByType/",
-            "/v3/api-docs/");
+            "/v3/api-docs/"
+            );
+
+    public static final List<String> RECOMMEND_WHITE_LIST = List.of(
+            "/goods-api/product/carousal/findByType/",
+            "/v3/api-docs/",
+            "/goods-api/recommendProduct/"
+    );
 }

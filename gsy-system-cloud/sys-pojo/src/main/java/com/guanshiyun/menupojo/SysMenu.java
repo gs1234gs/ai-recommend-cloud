@@ -1,26 +1,31 @@
 package com.guanshiyun.menupojo;
 
+import com.guanshiyun.base.BasePojo;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-
-import java.time.LocalDateTime;
+import java.io.Serial;
+import java.io.Serializable;
 
 /**
  * 菜单实体类
  * */
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldNameConstants
 @Table("sys_menu")
-public class SysMenu {
+public class SysMenu extends BasePojo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     //菜单id
    @Id
    private Long id;
@@ -52,14 +57,6 @@ public class SysMenu {
     private String perms;
     //图标
     private String icon;
-    //创建者id
-    private Long creatorId;
-    //创建时间
-    private LocalDateTime createTime;
-    //更新者id
-    private Long updaterId;
-    //更新时间
-    private LocalDateTime updateTime;
     //备注
     private String remark;
 }

@@ -48,7 +48,7 @@ class SystemAppApplicationTests {
 
     @Test
     void test2() {
-        sysMenuService.findAllByParentId(Long.TWO)
+        sysMenuService.findAllByParentId(Long.valueOf(2L))
                 .collectList()
                 .subscribe(list -> {
                     log.info("====================");

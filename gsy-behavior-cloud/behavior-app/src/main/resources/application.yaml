@@ -16,3 +16,7 @@ logging:
     org.springframework.r2dbc.core: DEBUG   # Spring R2DBC 核心模板日志
     com.zaxxer.r2dbc: DEBUG       # 如果使用 HikariR2DBC（不常见）
     com.alibaba.nacos.client: DEBUG
+      # 开启 MongoDB 操作日志
+    org.springframework.data.mongodb.core: DEBUG
+      # 或者更详细
+    org.springframework.data.mongodb.core.MongoTemplate: DEBUG

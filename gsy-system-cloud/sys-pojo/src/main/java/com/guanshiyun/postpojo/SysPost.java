@@ -1,23 +1,30 @@
 package com.guanshiyun.postpojo;
 
+import com.guanshiyun.base.BasePojo;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
+import java.io.Serial;
+import java.io.Serializable;
 
 
 /**
  * 岗位实体
  * */
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Table("sys_post")
-public class SysPost {
+public class SysPost extends BasePojo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     //岗位ID
     @Id
@@ -30,16 +37,6 @@ public class SysPost {
     private int sort;
     //岗位状态
     private short status;
-    //创建者id
-    private Long creatorId;
-    //创建时间
-    private String createTime;
-    //更新者id
-    private Long updaterId;
-    //更新时间
-    private String updateTime;
-    //删除标识,0-正常,1-删除
-    private short delFlag;
     //备注
     private String remark;
 

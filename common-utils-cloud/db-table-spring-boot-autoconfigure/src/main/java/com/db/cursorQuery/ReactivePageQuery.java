@@ -75,11 +75,11 @@ public class ReactivePageQuery<T> {
     public Flux<T> list(){
         Long pageNum = validatedPage.getPageNum();
         Integer pageSize = validatedPage.getPageSize();
-        long multiply = pageNum * pageSize;
+        long offset = (pageNum - 1) * pageSize;
         Query limit = Query.query(criteria)
                 .sort(Sort.by(order))
                 .limit(pageSize)
-                .offset(multiply);
+                .offset(offset);
         return r2dbcEntityTemplate.select(limit, entityClass);
     }
 

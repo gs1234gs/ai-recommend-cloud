@@ -1,21 +1,22 @@
 package com.guanshiyun.controller.sysrole.vo;
 
+import com.guanshiyun.base.BasePojo;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
-
-import java.time.LocalDateTime;
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder(toBuilder = true)
 @FieldNameConstants
 @AllArgsConstructor
 @NoArgsConstructor
-public class SysRoleVO implements Serializable {
+public class SysRoleVO extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     private Long id;
@@ -33,16 +34,6 @@ public class SysRoleVO implements Serializable {
     private short deptCheckStrictly;
     // 角色状态（1：停用，0：启用）
     private short status;
-    // 删除标志（1：删除，0：未删除）
-    private short delFlag;
-    // 创建者id
-    private Long creatorId;
-    // 创建时间
-    private LocalDateTime createTime;
-    // 更新者id
-    private Long updaterId;
-    // 更新时间
-    private LocalDateTime updateTime;
     // 备注
     private String remark;
 }

@@ -22,7 +22,7 @@ public interface UserCollectMongodbRepository extends ReactiveMongoRepository<Us
      * 3. 返回类型可以是 Flux (流式) 或 Mono<List> (配合 collectList)
      */
     @Query("{ 'creator': ?0 }") // 假设数据库字段名是 'creator'，对应参数 creatorId
-    Flux<UserCollectMongodb> findByCreatorId(Long creatorId, Pageable pageable);
+    Flux<UserCollectMongodb> findByCreator(Long creator, Pageable pageable);
 
     /**
      * 统计总数
@@ -31,6 +31,5 @@ public interface UserCollectMongodbRepository extends ReactiveMongoRepository<Us
      * 2. 参数必须和查询方法的过滤条件一致 (这里是 creatorId)
      * 3. 不需要 Pageable 参数
      */
-    Mono<Long> countByCreator(Long creatorId);
-    // 或者如果不写 @Query，直接利用命名推导: countByCreatorId
+    Mono<Long> countByCreator(Long creator);
 }

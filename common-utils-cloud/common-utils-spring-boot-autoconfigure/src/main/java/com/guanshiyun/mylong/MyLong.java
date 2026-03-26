@@ -10,7 +10,7 @@ public class MyLong {
     public Long myLong(Object number) {
         Long mylong = null;;
         try {
-            mylong = Long.getLong(number.toString().trim());
+            mylong = Long.parseLong(number.toString().trim());
         } catch (Exception e) {
             log.error("转换Long异常，number：{}", number);
             throw new RuntimeException("转换Long异常", e);

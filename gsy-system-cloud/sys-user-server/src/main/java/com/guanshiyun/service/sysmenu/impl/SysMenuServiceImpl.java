@@ -190,11 +190,11 @@ public Mono<Long> deleteById(Long id) {
             );
             if(Objects.isNull(sysMenu.getId())){
                 sysMenu.setCreateTime(LocalDateTime.now());
-                sysMenu.setCreatorId(userId);
+                sysMenu.setCreator(userId);
               return sysMenuRepository.save(sysMenu)
                         .map(save->sysMenu.getId());
             }
-            sysMenu.setUpdaterId(userId);
+            sysMenu.setUpdater(userId);
             sysMenu.setUpdateTime(LocalDateTime.now());
             return r2dbcUpdateHelper.updateIgnoreNull(
                     EntityTableNameUtils.getName(SysMenu.class),

@@ -79,11 +79,11 @@ public class EmbeddingTest {
     void test2() {
         embeddingProductService.recommendForUser(List.of(
                 ProductForEmbeddingApVO.builder()
-                        .id(Long.ONE)
+                        .id(0L)
                         .title("vivo智能耳机 Pro + 无线降噪")
                         .build(),
                 ProductForEmbeddingApVO.builder()
-                        .id(Long.TWO)
+                        .id(2L)
                         .title("Midea 美的一匹半 变频冷暖壁挂空调")
                         .build()
         ),5)

@@ -190,13 +190,17 @@ public class UserCollectServiceImpl implements UserCollectService {
             }
             Long userId = myLong.LongOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
             // 2. 创建 Pageable (页码从 0 开始)
-            // 建议加上排序，例如按创建时间倒序，防止翻页数据重复
-            Pageable pageable = PageRequest.of(finalPageNum - 1, finalPageSize, Sort.by("createTime").descending());
+            Pageable pageable = PageRequest.of(
+                    finalPageNum - 1,
+                    finalPageSize,
+                    Sort.by(BasePojo.Fields.createTime)
+                            .descending()
+            );
 
             // 3. 构建两个 Mono
             // A. 查询列表
             Mono<List<UserCollectVO>> listMono = userCollectMongodbRepository
-                    .findByCreatorId(userId, pageable) // 传入 creatorId 和 pageable
+                    .findByCreator(userId, pageable) // 传入 creatorId 和 pageable
                     .map(entity -> BeanConvertUtil.toBean(entity, UserCollectVO.class))   // 转 VO
                     .collectList();                       // 转 List
 

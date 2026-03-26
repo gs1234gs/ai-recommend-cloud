@@ -1,25 +1,27 @@
 package com.guanshiyun.rolepojo;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.guanshiyun.base.BasePojo;
+import lombok.*;
 import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
-
-import java.time.LocalDateTime;
+import java.io.Serial;
+import java.io.Serializable;
 /**
  * 角色实体
  * */
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder(toBuilder = true)
 @FieldNameConstants
 @AllArgsConstructor
 @NoArgsConstructor
 @Table("sys_role")
-public class SysRole {
+public class SysRole extends BasePojo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     // 角色id
     @Id
     private Long id;
@@ -37,16 +39,6 @@ public class SysRole {
     private short deptCheckStrictly;
     // 角色状态（1：停用，0：启用）
     private short status;
-    // 删除标志（1：删除，0：未删除）
-    private short delFlag;
-    // 创建者id
-    private Long creatorId;
-    // 创建时间
-    private LocalDateTime createTime;
-    // 更新者id
-    private Long updaterId;
-    // 更新时间
-    private LocalDateTime updateTime;
     // 备注
     private String remark;
 }

@@ -7,6 +7,7 @@ import com.db.constsql.SqlConst;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
+import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.sysuser.vo.SysUserSaveVO;
 import com.guanshiyun.controller.sysuser.vo.SysUserVO;
 import com.guanshiyun.mylong.MyLong;
@@ -79,7 +80,7 @@ public class SysUserServiceImpl implements SysUserService {
         // 数据查询：ORDER BY id DESC（推荐主键排序）
         Query dataQuery = Query.query(criteria)
                 .sort(Sort.by(
-                        Sort.Order.desc(SysUser.Fields.createTime),
+                        Sort.Order.desc(BasePojo.Fields.createTime),
                         Sort.Order.desc(SysUser.Fields.id))) // 推荐用 id 排序
                 .offset(offset)
                 .limit(pageSize);
@@ -182,7 +183,7 @@ public class SysUserServiceImpl implements SysUserService {
                     myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
             SysUser sysUser = BeanUtil.toBean(sysUserSaveVO, SysUser.class);
             if (Objects.isNull(sysUserSaveVO.getId())) {
-                sysUser.setCreatorId(userId);
+                sysUser.setCreator(userId);
                 sysUser.setCreateTime(LocalDateTime.now());
                 return sysUserRepository.save(sysUser)
                         .flatMap(sysUserSave ->
@@ -205,7 +206,7 @@ public class SysUserServiceImpl implements SysUserService {
                         })
                         .transform(transactionalOperator::transactional);
             }
-            sysUser.setUpdaterId(userId);
+            sysUser.setUpdater(userId);
             sysUser.setUpdateTime(LocalDateTime.now());
             return r2dbcUpdateHelper.updateIgnoreNull(
                     EntityTableNameUtils.getName(SysUser.class),

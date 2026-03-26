@@ -185,7 +185,7 @@ public class SKUController {
 
     //根据ids获取SKU
     @GetMapping("findBySkuIds")
-    public Mono<ResultT<List<SKUVO>>> findBySkuIds(@RequestParam List<Long> skuIds) {
+    public Mono<ResultT<List<SKUVO>>> findBySkuIds(@RequestParam(value = "skuIds") List<Long> skuIds) {
        return skuService.findAllByIds(skuIds)
                .map(ResultT::success)
                .onErrorResume(e->Mono.just(ResultT.error()));

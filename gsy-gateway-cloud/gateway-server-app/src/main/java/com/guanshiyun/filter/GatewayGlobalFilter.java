@@ -65,6 +65,12 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
         log.info("黑名单：{}", path);
         String token = extractToken(request);
         if (StringUtil.isNullOrEmpty(token)) {
+            for (String prefix : PublicEndpoints.RECOMMEND_WHITE_LIST) {
+                if (path.startsWith(prefix)) {
+                    log.info("白名单（前缀匹配）:{}", path);
+                    return chain.filter(exchange);
+                }
+            }
             log.warn("token为空：{},未登陆", token);
             ServerHttpResponse response = exchange.getResponse();
             return response.writeWith(Mono.just(

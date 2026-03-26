@@ -7,6 +7,7 @@ import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.db.tablename.MyStringUtils;
+import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.sysrole.vo.SysRoleSaveVO;
 import com.guanshiyun.controller.sysrole.vo.SysRoleVO;
 import com.guanshiyun.relationpojo.SysRoleMenu;
@@ -61,7 +62,7 @@ public class SysRoleServiceImpl implements SysRoleService {
             // 新增角色
             if (sysRole.getId() == null) {
                 sysRole.setCreateTime(now);
-                sysRole.setUpdaterId(userId);
+                sysRole.setUpdater(userId);
                 return sysRoleRepository.save(sysRole)
                         .flatMap(savedRole -> {
                             List<SysRoleMenu> menusToInsert = sysRoleSaveVO.getMenuIdList().stream()
@@ -77,7 +78,7 @@ public class SysRoleServiceImpl implements SysRoleService {
             }
 
             // 更新角色信息
-            sysRole.setUpdaterId(userId);
+            sysRole.setUpdater(userId);
             sysRole.setUpdateTime(now);
 
             return r2dbcUpdateHelper.updateIgnoreNull(
@@ -132,7 +133,7 @@ public class SysRoleServiceImpl implements SysRoleService {
         // 数据查询：按 createTime 降序，推荐加上 id 作为二级排序
         Query dataQuery = Query.query(criteria)
                 .sort(Sort.by(
-                        Sort.Order.desc(MyStringUtils.camelToUnderlineSmart(SysRole.Fields.createTime)),
+                        Sort.Order.desc(MyStringUtils.camelToUnderlineSmart(BasePojo.Fields.createTime)),
                         Sort.Order.desc(SysRole.Fields.id) // 防止 createTime 重复导致数据错位
                 ))
                 .offset(offset.longValue())

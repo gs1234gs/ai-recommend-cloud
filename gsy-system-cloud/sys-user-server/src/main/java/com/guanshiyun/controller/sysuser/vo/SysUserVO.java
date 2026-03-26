@@ -1,21 +1,20 @@
 package com.guanshiyun.controller.sysuser.vo;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.guanshiyun.base.BasePojo;
+import lombok.*;
 import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
-
 import java.time.LocalDateTime;
+@EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldNameConstants
-public class SysUserVO implements Serializable {
+public class SysUserVO extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     private Long id;
@@ -42,18 +41,9 @@ public class SysUserVO implements Serializable {
 
     //账号状态（0正常 1停用）
     private short status;
-    //删除状态(0,表示未删除，1表示已经删除)
-    private short delFlag;
     //登陆时间
     private LocalDateTime loginTime;
-    //创建时间
-    private LocalDateTime createTime;
-    //创建者
-    private Long creatorId;
-    //更新者
-    private Long updaterId;
-    //更新时间
-    private LocalDateTime updateTime;
+
 
     //角色id
     private Long roleId;
