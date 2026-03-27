@@ -1,11 +1,11 @@
 package com.guanshiyun.controller.service.impl;
 
 import com.aliyun.oss.AliOSSUtils;
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.service.UploadService;
 import com.guanshiyun.responsepojo.ResultT;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.codec.multipart.FilePartEvent;
 import org.springframework.http.codec.multipart.PartEvent;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class UploadServiceImpl implements UploadService {
                   log.info("上传成功: {}", list);
                   return Mono.just(
                           ResultT.<List<String>>builder()
-                          .code(HttpCodeConst.OK)
+                          .code(HttpStatus.OK.value())
                           .msg("上传成功")
                           .data(list)
                           .build()
@@ -57,7 +57,7 @@ public class UploadServiceImpl implements UploadService {
                   log.error("上传失败：未接收到任何文件");
                   return Mono.just(
                           ResultT.<List<String>>builder()
-                                  .code(HttpCodeConst.BAD_REQUEST) // 建议用 400，不是 500
+                                      .code(HttpStatus.BAD_REQUEST.value()) // 建议用 400，不是 500
                                   .msg("上传失败：未接收到文件")
                                   .data(Collections.emptyList())
                                   .build()
@@ -67,7 +67,7 @@ public class UploadServiceImpl implements UploadService {
                   log.error("上传失败：", throwable);
                   return Mono.just(
                           ResultT.<List<String>>builder()
-                                  .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                  .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                   .msg("上传失败：" + throwable.getMessage())
                                   .data(Collections.emptyList())
                                   .build()

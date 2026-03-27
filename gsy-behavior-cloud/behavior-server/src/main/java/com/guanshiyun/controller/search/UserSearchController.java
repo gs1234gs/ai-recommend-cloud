@@ -26,7 +26,7 @@ public class UserSearchController {
                 .map(ResultT::success)
                 .onErrorResume(e -> Mono.just(ResultT
                                 .<Long>builder()
-                                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                 .msg("保存失败")
                                 .build()
                         )
@@ -41,7 +41,7 @@ public class UserSearchController {
                     log.error("e",e);
                           return   Mono.just(ResultT
                                     .<List<UserSearchVO>>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("查询失败")
                                     .build());
                         }

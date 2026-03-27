@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @Accessors(chain = true)
 public class TagApiVO extends BasePojo implements Serializable {
     @Serial

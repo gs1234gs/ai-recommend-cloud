@@ -1,7 +1,6 @@
 package com.guanshiyun.controller.category;
 
 import com.guanshiyun.category.Category;
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.category.vo.CategorySaveVO;
 import com.guanshiyun.controller.category.vo.CategoryVO;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -10,9 +9,9 @@ import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.category.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
 
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class CategoryController {
                 .map(id->{
                     log.info("保存成功，id为{}",id);
                     return ResultT.<Long>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("保存成功")
                             .data(id)
                             .build();
@@ -38,7 +37,7 @@ public class CategoryController {
                     log.error("保存失败", throwable);
                     return Mono.just(
                             ResultT.<Long>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("系统错误")
                                     .build()
                     );
@@ -51,7 +50,7 @@ public class CategoryController {
                 .then(Mono.fromCallable(() -> {
                     log.info("删除成功，id为{}",id);
                     return ResultT.<Void>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("删除成功")
                             .build();
                 }))
@@ -59,7 +58,7 @@ public class CategoryController {
                     log.error("删除失败", throwable);
                     return Mono.just(
                             ResultT.<Void>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("系统错误")
                                     .build()
                     );
@@ -72,7 +71,7 @@ public class CategoryController {
                 .map(categorySaveVO ->{
                     log.info("查询成功，id为{}",id);
                     return ResultT.<Category>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("查询成功")
                             .data(categorySaveVO)
                             .build();
@@ -80,7 +79,7 @@ public class CategoryController {
                     log.error("查询失败", throwable);
                     return Mono.just(
                             ResultT.<Category>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("系统错误")
                                     .build()
                     );
@@ -93,7 +92,7 @@ public class CategoryController {
                 .map(pageResultT ->{
 //                    log.info("查询成功 : {}",pageResultT);
                     return ResultT.<PageResultT<List<CategoryVO>>>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("查询成功")
                             .data(pageResultT)
                             .build();
@@ -101,7 +100,7 @@ public class CategoryController {
                     log.error("查询失败", e);
                     return Mono.just(
                             ResultT.<PageResultT<List<CategoryVO>>>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("系统错误")
                                     .build()
                     );
@@ -114,7 +113,7 @@ public class CategoryController {
                 .map(category ->{
                     log.info("查询成功");
                     return ResultT.<List<CategoryVO>>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("查询成功")
                             .data(category)
                             .build();
@@ -122,7 +121,7 @@ public class CategoryController {
                     log.error("查询失败", e);
                     return Mono.just(
                             ResultT.<List<CategoryVO>>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("系统错误")
                                     .build()
                     );
@@ -135,7 +134,7 @@ public class CategoryController {
                 .map(category ->{
                     log.info("查询成功");
                     return ResultT.<List<CategoryVO>>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("查询成功")
                             .data(category)
                             .build();
@@ -143,7 +142,7 @@ public class CategoryController {
                     log.error("查询失败", e);
                     return Mono.just(
                             ResultT.<List<CategoryVO>>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("系统错误")
                                     .build()
                     );

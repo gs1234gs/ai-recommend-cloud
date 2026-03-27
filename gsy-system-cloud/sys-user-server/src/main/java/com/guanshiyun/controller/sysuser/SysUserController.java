@@ -1,7 +1,6 @@
 package com.guanshiyun.controller.sysuser;
 
 import com.db.dbnumber.ConstNumber;
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.sysuser.vo.SysUserSaveVO;
 import com.guanshiyun.controller.sysuser.vo.SysUserVO;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -12,9 +11,9 @@ import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.userpojo.SysUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
 
 import java.util.Collection;
 import java.util.List;
@@ -33,14 +32,14 @@ public class SysUserController {
         return sysUserService.deleteUserById(id)
                 .map(deleteCount ->
                     ResultT.<Long>builder()
-                            .code(deleteCount.equals(ConstNumber.LONG_ZERO) ? HttpCodeConst.INTERNAL_SERVER_ERROR : HttpCodeConst.OK)
+                            .code(deleteCount.equals(ConstNumber.LONG_ZERO) ? HttpStatus.INTERNAL_SERVER_ERROR.value() : HttpStatus.OK.value())
                             .msg(deleteCount.equals(ConstNumber.LONG_ZERO) ? "删除用户失败" : "删除用户成功")
                             .data(deleteCount)
                             .build()
                 )
                 .switchIfEmpty(
                         Mono.just(ResultT.<Long>builder()
-                                .code(HttpCodeConst.NOT_FOUND)
+                                .code(HttpStatus.NOT_FOUND.value())
                                 .msg("删除用户失败")
                                 .data(null)
                                 .build()
@@ -49,7 +48,7 @@ public class SysUserController {
                 .onErrorResume(throwable -> {
                     log.error("删除用户失败", throwable);
                     return Mono.just(ResultT.<Long>builder()
-                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .msg("删除用户失败")
                             .data(null)
                             .build());
@@ -62,7 +61,7 @@ public class SysUserController {
         return sysUserService.deleteUserByIds(ids)
                 .map(deleteCount -> {
                             return ResultT.<Long>builder()
-                                    .code(HttpCodeConst.OK)
+                                    .code(HttpStatus.OK.value())
                                     .msg("批量删除用户成功")
                                     .data(deleteCount)
                                     .build();
@@ -71,7 +70,7 @@ public class SysUserController {
                 )
                 .switchIfEmpty(
                         Mono.just(ResultT.<Long>builder()
-                                .code(HttpCodeConst.NOT_FOUND)
+                                .code(HttpStatus.NOT_FOUND.value())
                                 .msg("批量删除用户失败")
                                 .data(null)
                                 .build()
@@ -80,7 +79,7 @@ public class SysUserController {
                 .onErrorResume(throwable -> {
                     log.error("批量删除用户失败", throwable);
                     return Mono.just(ResultT.<Long>builder()
-                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .msg("批量删除用户失败")
                             .data(null)
                             .build()
@@ -95,7 +94,7 @@ public class SysUserController {
             if (!contextView.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
                 return Mono.just(
                         ResultT.<SysUserVO>builder()
-                                .code(HttpCodeConst.NOT_FOUND)
+                                .code(HttpStatus.NOT_FOUND.value())
                                 .msg("用户不存在")
                                 .data(null)
                                 .build()
@@ -104,14 +103,14 @@ public class SysUserController {
             return sysUserService.findById(id)
                     .map(sysUser ->
                             ResultT.<SysUserVO>builder()
-                                    .code(HttpCodeConst.OK)
+                                    .code(HttpStatus.OK.value())
                                     .msg("获取用户成功")
                                     .data(sysUser)
                                     .build()
                     )
                     .switchIfEmpty(
                             Mono.just(ResultT.<SysUserVO>builder()
-                                    .code(HttpCodeConst.NOT_FOUND)
+                                    .code(HttpStatus.NOT_FOUND.value())
                                     .msg("用户不存在")
                                     .data(null)
                                     .build()
@@ -120,7 +119,7 @@ public class SysUserController {
                     .onErrorResume(throwable -> {
                         log.error("获取用户失败", throwable);
                         return Mono.just(ResultT.<SysUserVO>builder()
-                                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                 .msg("获取用户失败")
                                 .data(null)
                                 .build()
@@ -135,14 +134,14 @@ public class SysUserController {
         return sysUserService.findById(id)
                 .map(sysUser ->
                         ResultT.<SysUserVO>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("获取用户成功")
                                 .data(sysUser)
                                 .build()
                 )
                 .switchIfEmpty(
                         Mono.just(ResultT.<SysUserVO>builder()
-                                .code(HttpCodeConst.NOT_FOUND)
+                                .code(HttpStatus.NOT_FOUND.value())
                                 .msg("用户不存在")
                                 .data(null)
                                 .build()
@@ -151,7 +150,7 @@ public class SysUserController {
                 .onErrorResume(throwable -> {
                     log.error("获取用户失败", throwable);
                     return Mono.just(ResultT.<SysUserVO>builder()
-                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .msg("获取用户失败")
                             .data(null)
                             .build()
@@ -165,7 +164,7 @@ public class SysUserController {
         return sysUserService.updateUserById(sysUser)
                 .map(id ->
                         ResultT.<Long>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("修改用户成功")
                                 .data(id)
                                 .build()
@@ -173,7 +172,7 @@ public class SysUserController {
                 .switchIfEmpty(
                         Mono.just(
                                 ResultT.<Long>builder()
-                                        .code(HttpCodeConst.NOT_FOUND)
+                                        .code(HttpStatus.NOT_FOUND.value())
                                         .msg("用户不存在")
                                         .data(null)
                                         .build()
@@ -181,7 +180,7 @@ public class SysUserController {
                 ).onErrorResume(throwable -> {
                     log.error("修改用户失败", throwable);
                     return Mono.just(ResultT.<Long>builder()
-                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .msg("修改用户失败")
                             .data(null)
                             .build()
@@ -196,7 +195,7 @@ public class SysUserController {
                 .flatMap(id ->
                         Mono.just(
                                 ResultT.<Long>builder()
-                                        .code(HttpCodeConst.OK)
+                                        .code(HttpStatus.OK.value())
                                         .msg("成功")
                                         .data(id)
                                         .build()
@@ -205,7 +204,7 @@ public class SysUserController {
                 .switchIfEmpty(
                         Mono.just(
                                 ResultT.<Long>builder()
-                                        .code(HttpCodeConst.NOT_FOUND)
+                                        .code(HttpStatus.NOT_FOUND.value())
                                         .msg("失败")
                                         .data(null)
                                         .build()
@@ -214,7 +213,7 @@ public class SysUserController {
                 .onErrorResume(throwable -> {
                     log.error("添加用户失败", throwable);
                     return Mono.just(ResultT.<Long>builder()
-                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .msg("服务器错误")
                             .data(null)
                             .build());
@@ -229,7 +228,7 @@ public class SysUserController {
         return sysUserService.findPage(requestPage)
                 .map(pageResult ->
                         ResultT.<PageResultT<List<SysUser>>>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("获取用户列表成功")
                                 .data(pageResult)
                                 .build()
@@ -237,7 +236,7 @@ public class SysUserController {
                 .onErrorResume(throwable -> {
                     log.error("获取用户列表失败", throwable);
                     return Mono.just(ResultT.<PageResultT<List<SysUser>>>builder()
-                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .msg("获取用户列表失败")
                             .data(null)
                             .build());

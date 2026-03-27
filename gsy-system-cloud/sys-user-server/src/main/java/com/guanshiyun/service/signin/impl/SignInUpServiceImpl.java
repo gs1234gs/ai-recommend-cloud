@@ -2,7 +2,6 @@ package com.guanshiyun.service.signin.impl;
 
 
 import com.alibaba.fastjson2.JSON;
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.consts.ConstClassNickName;
 import com.guanshiyun.menupojo.SysMenu;
 import com.guanshiyun.repository.signin.SignInUpRepository;
@@ -17,6 +16,7 @@ import com.guanshiyun.signinpojo.SignUser;
 import com.guanshiyun.userpojo.SysUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -60,7 +59,7 @@ public class SignInUpServiceImpl implements SignInUpService {
                 .build();
         return signInUpRepository.findByUsername(signUser.getUsername())
                 .flatMap(existUser -> Mono.just(ResultT.<String>builder()
-                                .code(HttpCodeConst.BAD_REQUEST)
+                                .code(HttpStatus.BAD_REQUEST.value())
                                 .msg("用户已存在,请重新注册")
                                 .data(null)
                                 .build()
@@ -74,7 +73,7 @@ public class SignInUpServiceImpl implements SignInUpService {
                                             log.info("注册成功: {}", result);
                                                     return
                                                             ResultT.<String>builder()
-                                                                    .code(HttpCodeConst.OK)
+                                                                    .code(HttpStatus.OK.value())
                                                                     .msg("注册成功")
                                                                     .data(null)
                                                                     .build()

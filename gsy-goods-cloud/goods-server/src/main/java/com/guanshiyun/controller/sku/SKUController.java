@@ -1,6 +1,5 @@
 package com.guanshiyun.controller.sku;
 
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.sku.vo.SKUFindVO;
 import com.guanshiyun.controller.sku.vo.SKUGroupByProductIdVO;
 import com.guanshiyun.controller.sku.vo.SKUSaveVO;
@@ -11,9 +10,9 @@ import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.sku.SKUService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
 
 import java.util.List;
 
@@ -30,7 +29,7 @@ public class SKUController {
                 .map(id->{
                     log.info("添加成功，id为{}",id);
                     return ResultT.<Long>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("添加成功")
                             .data(id)
                             .build();
@@ -39,7 +38,7 @@ public class SKUController {
                     log.error("添加sku失败", e);
                     return Mono.just(
                             ResultT.<Long>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("添加失败")
                                     .build());
                 });
@@ -51,7 +50,7 @@ public class SKUController {
                 .then(Mono.fromCallable(() -> {
                     log.info("删除成功，id为{}",id);
                     return ResultT.<Void>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("删除成功")
                             .build();
                 }))
@@ -59,7 +58,7 @@ public class SKUController {
                     log.error("删除失败", throwable);
                     return Mono.just(
                             ResultT.<Void>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("删除失败")
                                     .build());
                 });
@@ -69,7 +68,7 @@ public class SKUController {
         return skuService.findById(id)
                 .map(sku ->
                         ResultT.<SKUVO>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("查询成功")
                                 .data(sku)
                                 .build()
@@ -78,7 +77,7 @@ public class SKUController {
                     log.error("查询失败", throwable);
                     return Mono.just(
                             ResultT.<SKUVO>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("查询失败")
                                     .build()
                     );
@@ -91,7 +90,7 @@ public class SKUController {
                 .map(pageResultT ->{
                     log.info("查询成功");
                     return ResultT.<PageResultT<List<SKUGroupByProductIdVO>>>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("查询成功")
                             .data(pageResultT)
                             .build();
@@ -100,7 +99,7 @@ public class SKUController {
                     log.error("查询失败", throwable);
                     return Mono.just(
                             ResultT.<PageResultT<List<SKUGroupByProductIdVO>>>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("查询失败")
                                     .build()
                     );
@@ -115,7 +114,7 @@ public class SKUController {
                 .collectList()
                 .map(skus ->
                         ResultT.<List<SKUVO>>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("查询成功")
                                 .data(skus)
                                 .build()
@@ -124,7 +123,7 @@ public class SKUController {
                     log.error("查询失败", throwable);
                     return Mono.just(
                             ResultT.<List<SKUVO>>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("查询失败")
                                     .build()
                     );
@@ -137,7 +136,7 @@ public class SKUController {
                 .then(Mono.fromCallable(() -> {
                     log.info("批量删除成功，ids为{}",ids);
                     return ResultT.<Void>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("批量删除成功")
                             .build();
                 }))
@@ -145,7 +144,7 @@ public class SKUController {
                             log.error("批量删除失败", throwable);
                             return Mono.just(
                                     ResultT.<Void>builder()
-                                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                             .msg("批量删除失败")
                                             .build()
                             );
@@ -161,7 +160,7 @@ public class SKUController {
                     log.error("修改库存失败", throwable);
                     return Mono.just(
                             ResultT.<Boolean>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("修改库存失败")
                                     .build()
                     );
@@ -176,7 +175,7 @@ public class SKUController {
                     log.error("修改库存失败", throwable);
                     return Mono.just(
                             ResultT.<Boolean>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("修改库存失败")
                                     .build()
                     );
@@ -200,7 +199,7 @@ public class SKUController {
                     log.error("修改销量失败", throwable);
                     return Mono.just(
                             ResultT.<Boolean>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("修改销量失败")
                                     .build()
                     );

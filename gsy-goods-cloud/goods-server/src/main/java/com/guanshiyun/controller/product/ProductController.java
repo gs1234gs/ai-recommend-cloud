@@ -1,6 +1,5 @@
 package com.guanshiyun.controller.product;
 
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.product.vo.ProductSaveVO;
 import com.guanshiyun.controller.product.vo.ProductVO;
 import com.guanshiyun.requestpojo.RequestCursorPage;
@@ -11,10 +10,10 @@ import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
 
 import java.util.List;
 
@@ -33,14 +32,14 @@ public class ProductController {
                 {
                     log.info("保存商品成功，商品ID为：{}", productId);
                     return ResultT.<Long>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("保存成功")
                             .data(productId)
                             .build();
                 })
                 .onErrorResume(throwable ->
                         Mono.just(ResultT.<Long>builder()
-                                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                 .msg("保存失败")
                                 .build())
                 );
@@ -55,7 +54,7 @@ public class ProductController {
                 .map(deleteCount -> {
                     log.info("删除商品成功，删除数量为：{}", deleteCount);
                     return ResultT.<Long>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("删除成功")
                             .data(deleteCount)
                             .build();
@@ -64,7 +63,7 @@ public class ProductController {
                     log.info("删除商品失败", throwable);
                     return Mono.just(
                             ResultT.<Long>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("删除失败")
                                     .build()
                     );
@@ -82,7 +81,7 @@ public class ProductController {
                     log.info("查询失败", throwable);
                     return Mono.just(
                             ResultT.<PageResultT<List<ProductVO>>>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("系统错误")
                                     .build()
                     );
@@ -99,7 +98,7 @@ public class ProductController {
 
                        log.info("查询成功，商品列表为：{}", productVOList);
                       return   ResultT.<CursorPageResult<List<ProductVO>>>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("查询成功")
                                 .data(productVOList)
                                 .build() ;
@@ -108,7 +107,7 @@ public class ProductController {
                 .onErrorResume(throwable -> {
                             log.info("查询失败", throwable);
                             return Mono.just(ResultT.<CursorPageResult<List<ProductVO>>>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("系统错误")
                                     .build()
                             );
@@ -122,7 +121,7 @@ public class ProductController {
         return productService.deleteAllById(ids)
                 .map(deleteCount ->
                         ResultT.<Void>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("删除成功")
                                 .data(deleteCount)
                                 .build()
@@ -131,7 +130,7 @@ public class ProductController {
                     log.info("删除失败", throwable);
                     return Mono.just(
                             ResultT.<Void>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("删除失败")
                                     .build()
                     );
@@ -143,7 +142,7 @@ public class ProductController {
         return productService.findById(id)
                 .map(productVO ->
                         ResultT.<ProductVO>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("查询成功")
                                 .data(productVO)
                                 .build()
@@ -152,7 +151,7 @@ public class ProductController {
                     log.info("查询失败", throwable);
                     return Mono.just(
                             ResultT.<ProductVO>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("查询失败")
                                     .build()
                     );

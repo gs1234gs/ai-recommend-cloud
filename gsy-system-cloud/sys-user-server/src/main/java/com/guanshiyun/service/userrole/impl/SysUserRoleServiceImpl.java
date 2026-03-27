@@ -1,6 +1,5 @@
 package com.guanshiyun.service.userrole.impl;
 
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.relation.SysRelationRequest;
 import com.guanshiyun.relationpojo.SysUserRole;
@@ -9,11 +8,11 @@ import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.userrole.SysUserRoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 
 import java.util.List;
 
@@ -42,7 +41,7 @@ public class SysUserRoleServiceImpl implements SysUserRoleService {
                                     .map(userRole -> {
                                         log.info("添加用户角色关系成功: {}", userRole);
                                                return ResultT.<SysUserRole>builder()
-                                                        .code(HttpCodeConst.OK)
+                                                        .code(HttpStatus.OK.value())
                                                         .msg("添加成功")
                                                         .data(userRole)
                                                         .build();

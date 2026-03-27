@@ -1,6 +1,5 @@
 package com.guanshiyun.controller.order;
 
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.order.vo.PurChaseOrderSaveVO;
 import com.guanshiyun.controller.order.vo.PurChaseOrderVO;
 import com.guanshiyun.controller.order.vo.PurchaseOrderDetailVO;
@@ -12,9 +11,9 @@ import com.guanshiyun.rpc.order.vo.PurchaseOrderVOApi;
 import com.guanshiyun.service.order.PurChaseOrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
 
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class PurChaseOrderController {
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
                     log.error("添加订单失败", throwable);
-                    return Mono.just(ResultT.error(HttpCodeConst.INTERNAL_SERVER_ERROR, "添加订单失败"));
+                    return Mono.just(ResultT.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "添加订单失败"));
                 });
     }
 
@@ -46,7 +45,7 @@ public class PurChaseOrderController {
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
                     log.error("修改订单失败", throwable);
-                    return Mono.just(ResultT.error(HttpCodeConst.INTERNAL_SERVER_ERROR, "修改订单失败"));
+                    return Mono.just(ResultT.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "修改订单失败"));
                 });
     }
 
@@ -59,7 +58,7 @@ public class PurChaseOrderController {
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
                     log.error("查询订单失败", throwable);
-                    return Mono.just(ResultT.error(HttpCodeConst.INTERNAL_SERVER_ERROR, "查询订单失败"));
+                    return Mono.just(ResultT.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "查询订单失败"));
                 });
     }
     @PostMapping("findByUserIdPage")
@@ -69,7 +68,7 @@ public class PurChaseOrderController {
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
                     log.error("查询订单失败", throwable);
-                    return Mono.just(ResultT.error(HttpCodeConst.INTERNAL_SERVER_ERROR, "查询订单失败"));
+                    return Mono.just(ResultT.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "查询订单失败"));
                 });
     }
 
@@ -82,7 +81,7 @@ public class PurChaseOrderController {
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
                     log.error("查询订单失败", throwable);
-                    return Mono.just(ResultT.error(HttpCodeConst.INTERNAL_SERVER_ERROR, "查询订单失败"));
+                    return Mono.just(ResultT.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "查询订单失败"));
                 });
     }
     //根据订单id查询订单
@@ -92,7 +91,7 @@ public class PurChaseOrderController {
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
                     log.error("查询订单失败", throwable);
-                    return Mono.just(ResultT.error(HttpCodeConst.INTERNAL_SERVER_ERROR, "查询订单失败"));
+                    return Mono.just(ResultT.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "查询订单失败"));
                 });
     }
     @PostMapping("findPage")
@@ -102,7 +101,7 @@ public class PurChaseOrderController {
                 .onErrorResume(throwable -> {
                     log.error("查询订单失败", throwable);
                     return Mono.just(ResultT.error(
-                            HttpCodeConst.INTERNAL_SERVER_ERROR,
+                            HttpStatus.INTERNAL_SERVER_ERROR.value(),
                             "查询订单失败")
                     );
                 });
@@ -115,7 +114,7 @@ public class PurChaseOrderController {
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
                     log.error("查询订单失败", throwable);
-                    return Mono.just(ResultT.error(HttpCodeConst.INTERNAL_SERVER_ERROR, "查询订单失败"));
+                    return Mono.just(ResultT.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "查询订单失败"));
                 });
             }
     //根据删除订单

@@ -1,6 +1,5 @@
 package com.guanshiyun.controller.warehouse;
 
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.warehouse.vo.WarehouseSaveVO;
 import com.guanshiyun.controller.warehouse.vo.WarehouseVO;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -9,9 +8,9 @@ import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.warehouse.WarehouseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
 
 import java.util.Collection;
 import java.util.List;
@@ -30,7 +29,7 @@ public class WarehouseController {
                 {
                     log.info("保存仓库成功，仓库ID为：{}",warehouseId);
                     return ResultT.<Long>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("保存成功")
                             .data(warehouseId)
                             .build();
@@ -38,7 +37,7 @@ public class WarehouseController {
                 .onErrorResume(throwable ->{
                     log.info("保存仓库失败", throwable);
                     return Mono.just(ResultT.<Long>builder()
-                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .msg("保存失败")
                             .build());
                 });
@@ -50,7 +49,7 @@ public class WarehouseController {
     public Mono<ResultT<Long>> deleteById(@PathVariable Long id){
         return warehouseService.deleteById(id)
                 .map(deleteCount->ResultT.<Long>builder()
-                        .code(HttpCodeConst.OK)
+                        .code(HttpStatus.OK.value())
                         .msg("删除成功")
                         .data(deleteCount)
                         .build())
@@ -58,7 +57,7 @@ public class WarehouseController {
                     log.info("删除仓库失败", throwable);
                     return Mono.just(
                             ResultT.<Long>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("删除失败")
                                     .build()
                     );
@@ -71,7 +70,7 @@ public class WarehouseController {
     public Mono<ResultT<Long>> deleteByIds(@RequestBody Collection<Long> ids){
         return warehouseService.deleteAllById(ids)
                 .map(deleteCount->ResultT.<Long>builder()
-                        .code(HttpCodeConst.OK)
+                        .code(HttpStatus.OK.value())
                         .msg("删除成功")
                         .data(deleteCount)
                         .build())
@@ -79,7 +78,7 @@ public class WarehouseController {
                     log.info("批量删除仓库失败", throwable);
                     return Mono.just(
                             ResultT.<Long>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("批量删除失败")
                                     .build()
                     );
@@ -95,7 +94,7 @@ public class WarehouseController {
                 {
                     log.info("分页查询仓库成功");
                     return ResultT.<PageResultT<List<WarehouseVO>>>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("查询成功")
                             .data(warehousePageResultT)
                             .build();
@@ -104,7 +103,7 @@ public class WarehouseController {
                     log.info("分页查询仓库失败", throwable);
                     return Mono.just(
                             ResultT.<PageResultT<List<WarehouseVO>>>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("分页查询失败")
                                     .build()
                     );
@@ -117,7 +116,7 @@ public class WarehouseController {
                 {
                     log.info("查询仓库成功");
                     return ResultT.<WarehouseVO>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("查询成功")
                             .data(warehouseVO)
                             .build();
@@ -126,7 +125,7 @@ public class WarehouseController {
                     log.info("查询仓库失败", e);
                     return Mono.just(
                             ResultT.<WarehouseVO>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("查询失败")
                                     .build()
                     );
@@ -139,7 +138,7 @@ public class WarehouseController {
                 {
                     log.info("查询仓库成功");
                     return ResultT.<List<WarehouseVO>>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("查询成功")
                             .data(warehouseVOList)
                             .build();
@@ -148,7 +147,7 @@ public class WarehouseController {
                     log.info("查询仓库失败", e);
                     return Mono.just(
                             ResultT.<List<WarehouseVO>>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("查询失败")
                                     .build()
                     );

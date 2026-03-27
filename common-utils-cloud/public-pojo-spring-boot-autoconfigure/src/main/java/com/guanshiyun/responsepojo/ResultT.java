@@ -1,12 +1,12 @@
 package com.guanshiyun.responsepojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.guanshiyun.code.HttpCodeConst;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.springframework.http.HttpStatus;
 
 
 /**
@@ -40,7 +40,7 @@ public class ResultT<T> {
     private T data;
     public static <T> ResultT<T> success(T data){
         return ResultT.<T>builder()
-                .code(HttpCodeConst.OK)
+                .code(HttpStatus.OK.value())
                 .msg("OK")
                 .data(data)
                 .build();
@@ -48,14 +48,14 @@ public class ResultT<T> {
 
     public static <T> ResultT<T> success(){
         return ResultT.<T>builder()
-                .code(HttpCodeConst.OK)
+                .code(HttpStatus.OK.value())
                 .msg("OK")
                 .build();
     }
 
     public static <T> ResultT<T> success(String msg){
         return ResultT.<T>builder()
-                .code(HttpCodeConst.OK)
+                .code(HttpStatus.OK.value())
                 .msg(msg)
                 .build();
     }
@@ -80,13 +80,13 @@ public class ResultT<T> {
     }
     public static <T> ResultT <T> error(String msg){
         return ResultT.<T>builder()
-                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .msg(msg)
                 .build();
     }
     public static <T> ResultT<T> error(String msg, T data){
         return ResultT.<T>builder()
-                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .msg(msg)
                 .data(data)
                 .build();
@@ -94,7 +94,7 @@ public class ResultT<T> {
 
     public static <T> ResultT<T> error(){
         return ResultT.<T>builder()
-                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .msg("系统错误")
                 .build();
     }

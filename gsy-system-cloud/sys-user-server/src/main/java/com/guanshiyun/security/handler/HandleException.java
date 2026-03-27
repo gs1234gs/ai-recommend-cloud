@@ -1,8 +1,8 @@
 package com.guanshiyun.security.handler;
 
 import cn.hutool.json.JSONUtil;
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.responsepojo.ResultT;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.web.server.ServerAuthenticationEntryPoint;
 import org.springframework.security.web.server.authorization.ServerAccessDeniedHandler;
 import reactor.core.publisher.Mono;
@@ -14,7 +14,7 @@ public class HandleException {
         return (exchange, e) -> exchange.getResponse().writeWith(Mono.just(
                 exchange.getResponse().bufferFactory().wrap(
                         JSONUtil.toJsonStr(ResultT.builder()
-                                        .code(HttpCodeConst.FORBIDDEN)
+                                        .code(HttpStatus.FORBIDDEN.value())
                                         .msg("未授权")
                                         .data(null))
                                 .getBytes(StandardCharsets.UTF_8)
@@ -27,7 +27,7 @@ public class HandleException {
                 exchange.getResponse().bufferFactory().wrap(
                         JSONUtil.toJsonStr(
                                 ResultT.builder()
-                                        .code(HttpCodeConst.FORBIDDEN)
+                                        .code(HttpStatus.FORBIDDEN.value())
                                         .msg("访问被拒绝")
                                         .data(null)
                                         .build()

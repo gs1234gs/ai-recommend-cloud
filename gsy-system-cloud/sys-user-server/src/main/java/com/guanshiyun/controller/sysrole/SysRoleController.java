@@ -1,19 +1,17 @@
 package com.guanshiyun.controller.sysrole;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.sysrole.vo.SysRoleSaveVO;
 import com.guanshiyun.controller.sysrole.vo.SysRoleVO;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.sysrole.SysRoleService;
-//import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
 
 import java.util.List;
 
@@ -32,7 +30,7 @@ public class SysRoleController {
                 .flatMap(id ->
                         Mono.just(
                                 ResultT.<Long>builder()
-                                        .code(HttpCodeConst.OK)
+                                        .code(HttpStatus.OK.value())
                                         .msg("成功")
                                         .data(id)
                                         .build()
@@ -41,7 +39,7 @@ public class SysRoleController {
                 .switchIfEmpty(
                         Mono.just(
                                 ResultT.<Long>builder()
-                                        .code(HttpCodeConst.OK)
+                                        .code(HttpStatus.OK.value())
                                         .msg("失败")
                                         .data(null)
                                         .build()
@@ -52,7 +50,7 @@ public class SysRoleController {
                             log.error("添加角色失败", throwable);
                             return Mono.just(
                                     ResultT.<Long>builder()
-                                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                             .msg("服务器错误")
                                             .data(null)
                                             .build()
@@ -67,7 +65,7 @@ public class SysRoleController {
         return sysRoleService.deleteRoleById(id)
                 .map(result ->
                         ResultT.<Long>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("删除成功")
                                 .data(result)
                                 .build()
@@ -75,7 +73,7 @@ public class SysRoleController {
                 .switchIfEmpty(
                         Mono.just(
                                 ResultT.<Long>builder()
-                                        .code(HttpCodeConst.UNAUTHORIZED)
+                                        .code(HttpStatus.UNAUTHORIZED.value())
                                         .msg("删除失败")
                                         .data(null)
                                         .build()
@@ -84,7 +82,7 @@ public class SysRoleController {
                 .onErrorResume(throwable -> {
                     log.error("删除角色失败", throwable);
                     return Mono.just(ResultT.<Long>builder()
-                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .msg("删除角色失败,系统错误")
                             .data(null)
                             .build()
@@ -99,7 +97,7 @@ public class SysRoleController {
                 .flatMap(id ->
                         Mono.just(
                                 ResultT.<Long>builder()
-                                        .code(HttpCodeConst.OK)
+                                        .code(HttpStatus.OK.value())
                                         .msg("修改成功")
                                         .data(id)
                                         .build()
@@ -108,7 +106,7 @@ public class SysRoleController {
                 .switchIfEmpty(
                         Mono.just(
                                 ResultT.<Long>builder()
-                                        .code(HttpCodeConst.OK)
+                                        .code(HttpStatus.OK.value())
                                         .msg("修改失败")
                                         .data(null)
                                         .build()
@@ -119,7 +117,7 @@ public class SysRoleController {
                             log.error("修改角色失败", throwable);
                             return Mono.just(
                                     ResultT.<Long>builder()
-                                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                             .msg("修改角色失败")
                                             .data(null)
                                             .build()
@@ -136,7 +134,7 @@ public class SysRoleController {
         return sysRoleService.findPage(requestPage)
                 .map(pageResult ->
                         ResultT.<PageResultT<List<SysRoleVO>>>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("获取用户列表成功")
                                 .data(pageResult)
                                 .build()
@@ -144,7 +142,7 @@ public class SysRoleController {
                 .onErrorResume(throwable -> {
                     log.error("获取用户列表失败", throwable);
                     return Mono.just(ResultT.<PageResultT<List<SysRoleVO>>>builder()
-                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .msg("获取用户列表失败")
                             .data(null)
                             .build());
@@ -159,7 +157,7 @@ public class SysRoleController {
                 .collectList()
                 .map(roleList ->
                         ResultT.<List<SysRoleVO>>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("获取角色列表成功")
                                 .data(roleList)
                                 .build()
@@ -167,7 +165,7 @@ public class SysRoleController {
                 .switchIfEmpty(
                         Mono.just(
                                 ResultT.<List<SysRoleVO>>builder()
-                                        .code(HttpCodeConst.OK)
+                                        .code(HttpStatus.OK.value())
                                         .msg("获取角色列表失败")
                                         .data(null)
                                         .build()
@@ -178,7 +176,7 @@ public class SysRoleController {
                             log.error("获取角色列表失败", throwable);
                             return Mono.just(
                                     ResultT.<List<SysRoleVO>>builder()
-                                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                             .msg("获取角色列表失败")
                                             .data(null)
                                             .build()
@@ -191,7 +189,7 @@ public class SysRoleController {
         return sysRoleService.findById(id)
                 .map(role ->
                         ResultT.<SysRoleVO>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("获取角色成功")
                                 .data(role)
                                 .build()
@@ -199,7 +197,7 @@ public class SysRoleController {
                 .switchIfEmpty(
                         Mono.just(
                                 ResultT.<SysRoleVO>builder()
-                                        .code(HttpCodeConst.OK)
+                                        .code(HttpStatus.OK.value())
                                         .msg("获取角色失败")
                                         .data(null)
                                         .build()
@@ -210,7 +208,7 @@ public class SysRoleController {
                             log.error("获取角色失败", throwable);
                             return Mono.just(
                                     ResultT.<SysRoleVO>builder()
-                                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                             .msg("获取角色失败")
                                             .data(null)
                                             .build()

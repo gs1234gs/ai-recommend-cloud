@@ -1,19 +1,17 @@
 package com.guanshiyun.requestpojo;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
+import lombok.experimental.Accessors;
 
 
 /**
  * 游标
  * */
-@Getter
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 public class RequestCursorPage< T> {
     private Long lastId;
     @Builder.Default
@@ -21,20 +19,4 @@ public class RequestCursorPage< T> {
     @Builder.Default
     private String order = "DESC";
     private T condition;
-    public RequestCursorPage<T> setLastId(Long lastId){
-        this.lastId = lastId;
-        return this;
-    }
-    public RequestCursorPage< T> setPageSize(Integer pageSize){
-        this.pageSize = pageSize;
-        return this;
-    }
-    public RequestCursorPage< T> setOrder(String order){
-        this.order = order;
-        return this;
-    }
-    public RequestCursorPage< T> setCondition(T condition){
-        this.condition = condition;
-        return this;
-    }
 }

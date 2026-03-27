@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @Accessors(chain = true)
 public class WarehouseApiVO extends BasePojo implements Serializable {
     @Serial

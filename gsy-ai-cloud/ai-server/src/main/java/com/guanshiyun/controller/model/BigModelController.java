@@ -2,16 +2,15 @@ package com.guanshiyun.controller.model;
 
 import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.bigmodel.BigModel;
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.model.BigModelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class BigModelController {
         return bigModelService.sava(bigModel)
                 .map(saveId ->
                         ResultT.<Long>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .data(saveId)
                                 .build());
     }
@@ -39,13 +38,13 @@ public class BigModelController {
         return bigModelService.deleteById(id)
                 .map(deleteCount -> {
                     return ResultT.<Long>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .data(deleteCount)
                             .build();
                 }).onErrorResume(throwable -> {
                     log.error("删除大模型失败", throwable);
                     return Mono.just(ResultT.<Long>builder()
-                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .data(ConstNumber.LONG_ZERO)
                             .build());
                 });
@@ -57,7 +56,7 @@ public class BigModelController {
         return bigModelService.findPage(requestPage)
                 .map(pageResultT ->
                         ResultT.<PageResultT<List<BigModel>>>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .data(pageResultT)
                                 .build()
                 )
@@ -65,7 +64,7 @@ public class BigModelController {
                     log.error("查询大模型失败", throwable);
                     return Mono.just(
                             ResultT.<PageResultT<List<BigModel>>>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .data(null)
                                     .build()
                     );
@@ -78,20 +77,20 @@ public class BigModelController {
         return bigModelService.findById(id)
                 .map(bigModel ->
                         ResultT.<BigModel>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .data(bigModel)
                                 .build()
                         )
                 .switchIfEmpty(
                         Mono.just(ResultT.<BigModel>builder()
-                                .code(HttpCodeConst.NOT_FOUND)
+                                .code(HttpStatus.NOT_FOUND.value())
                                 .data(null)
                                 .build())
                 )
                 .onErrorResume(throwable -> {
                     log.error("查询大模型失败", throwable);
                     return Mono.just(ResultT.<BigModel>builder()
-                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .data(null)
                             .build());
                 });

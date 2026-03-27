@@ -27,7 +27,7 @@ public class UserCollectController {
                 .map(ResultT::success)
                 .onErrorReturn(
                         ResultT.<Long>builder()
-                                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                 .msg("保存失败")
                                 .build()
                 );
@@ -39,7 +39,7 @@ public class UserCollectController {
                 .collectList()
                 .map(ResultT::success)
                 .onErrorReturn(ResultT.<List<UserCollectVO>>builder()
-                                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                 .msg("查询失败")
                                 .build()
                 );

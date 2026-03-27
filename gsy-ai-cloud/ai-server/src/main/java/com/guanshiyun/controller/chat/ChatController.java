@@ -3,7 +3,6 @@ package com.guanshiyun.controller.chat;
 import com.alibaba.fastjson2.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guanshiyun.chat.ChatRecord;
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.chat.vo.ChatRecordVO;
 import com.guanshiyun.mymongodb.ChatRecordContent;
 import com.guanshiyun.req.AllReqChat;
@@ -17,6 +16,7 @@ import com.guanshiyun.service.chat.impl.ChatRecordServiceImpl;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +24,6 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
-
 
 import java.util.List;
 
@@ -45,14 +44,14 @@ public class ChatController {
 
         return chatService.chatAll(reqChat)
                 .map(content-> ResultT.<String>builder()
-                        .code(HttpCodeConst.OK)
+                        .code(HttpStatus.OK.value())
                         .msg("对话成功")
                         .data( content)
                         .build()
                 )
                 .onErrorResume(throwable ->
                     Mono.just(ResultT.<String>builder()
-                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .msg("对话失败")
                             .build())
                 );
@@ -72,7 +71,7 @@ public class ChatController {
                     // 返回一个错误事件，前端可监听
                     String errorEvent = "event: error\ndata: " +
                             JSON.toJSONString(ResultT.<String>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("对话失败: " + throwable.getMessage())
                                     .build()) + "\n\n";
                     return Mono.just(errorEvent);
@@ -86,7 +85,7 @@ public class ChatController {
                 .map(ResultT::success)
                 .onErrorResume(throwable ->{
                     log.error("",throwable);
-                    return Mono.just(ResultT.<AllReqChat>builder().code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                    return Mono.just(ResultT.<AllReqChat>builder().code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .msg("服务器错误")
                             .build());
                 });
@@ -117,7 +116,7 @@ public class ChatController {
         return chatService.deleteChatById(id)
                 .map(deleteCount ->{
                     return ResultT.<Long>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("删除成功")
                             .data(deleteCount)
                             .build();
@@ -125,7 +124,7 @@ public class ChatController {
                 .onErrorResume(throwable ->{
                     log.info("删除失败", throwable);
                     return Mono.just(ResultT.<Long>builder()
-                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .msg("删除失败")
                             .build());
                 });
@@ -137,7 +136,7 @@ public class ChatController {
         return chatRecordService.findPageChat(requestPage)
                 .map(pageResultT ->{
                     return ResultT.<PageResultT<List<ChatRecordVO>>>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("获取成功")
                             .data(pageResultT)
                             .build();
@@ -145,7 +144,7 @@ public class ChatController {
                 .onErrorResume(throwable ->{
                     log.info("获取失败", throwable);
                     return Mono.just(ResultT.<PageResultT<List<ChatRecordVO>>>builder()
-                            .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                            .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .msg("获取失败")
                             .build());
                 });
@@ -156,7 +155,7 @@ public class ChatController {
    return chatRecordService.save(chatRecord)
            .map(saveId ->{
                return ResultT.<Long>builder()
-                       .code(HttpCodeConst.OK)
+                       .code(HttpStatus.OK.value())
                        .msg("保存成功")
                        .data(saveId)
                        .build();

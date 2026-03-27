@@ -2,7 +2,6 @@ package com.guanshiyun.security.handler;
 
 import cn.hutool.json.JSONUtil;
 import com.db.dbnumber.ConstNumber;
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.consts.ConstClassNickName;
 import com.guanshiyun.consts.ConstMapClassNickName;
 import com.guanshiyun.responsepojo.ResultT;
@@ -11,6 +10,7 @@ import com.guanshiyun.security.redisConfig.ReactiveRedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -62,7 +62,7 @@ public class RewriteLoginSuccessHandler {
 //                                    userMap.put(ConstMapClassNickName.MAP_TOKEN_RESPONSE_KEY, token);
                                     return Mono.just(ResultT
                                             .<String>builder()
-                                            .code(HttpCodeConst.OK)
+                                            .code(HttpStatus.OK.value())
                                             .msg("登录成功")
                                             .data(token)
                                             .build());
@@ -70,7 +70,7 @@ public class RewriteLoginSuccessHandler {
                     })
                     .onErrorResume(throwable -> {
                         return Mono.just(ResultT.<String>builder()
-                                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                 .msg("登录失败")
                                 .data("")
                                 .build());

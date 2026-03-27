@@ -22,7 +22,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @Accessors(chain = true)
 public class SKUApiVO extends BasePojo implements Serializable {
     @Serial

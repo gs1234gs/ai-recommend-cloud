@@ -1,7 +1,6 @@
 package com.guanshiyun.controller.signinup;
 
 
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.security.handler.RewriteLoginSuccessHandler;
 import com.guanshiyun.security.reponse.CustomReactiveAuthenticationManager;
@@ -9,6 +8,7 @@ import com.guanshiyun.service.signin.SignInUpService;
 import com.guanshiyun.userpojo.SysUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +36,7 @@ public class SignInUpController {
                                 log.error("登录失败：", throwable);
                               return   Mono.just(
                                         ResultT.<String>builder()
-                                                .code(HttpCodeConst.FORBIDDEN)
+                                                 .code(HttpStatus.FORBIDDEN.value())
                                                 .msg("登录失败，用户名或密码错误！")
                                                 .build()
                                 );

@@ -1,16 +1,15 @@
 package com.guanshiyun.controller.userrole;
 
 import com.guanshiyun.consts.ConstNumber;
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.relation.SysRelationRequest;
 import com.guanshiyun.relationpojo.SysUserRole;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.userrole.SysUserRoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
 
 import java.util.List;
 import java.util.Objects;
@@ -28,20 +27,20 @@ public class SysUserRoleController {
             ){
         return sysUserRoleService.addUserRole(sysRelationRequest)
                 .map(addUserRole -> ResultT.<SysUserRole>builder()
-                        .code(HttpCodeConst.OK)
+                        .code(HttpStatus.OK.value())
                         .msg("添加用户角色关系成功")
                         .data(addUserRole)
                         .build())
                 .switchIfEmpty(
                         Mono.just(ResultT.<SysUserRole>builder()
-                                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                 .msg("添加用户角色关系失败")
                                 .data(null)
                                 .build())
                 )
                 .onErrorResume(throwable -> Mono.just(
                         ResultT.<SysUserRole>builder()
-                                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                 .msg("添加用户角色关系失败")
                                 .data(null)
                                 .build()
@@ -54,7 +53,7 @@ public class SysUserRoleController {
             @RequestParam (required = false) List<Long> roleId){
         if(Objects.isNull(roleId) || Objects.isNull(userId))
             return Mono.just(ResultT.<Long>builder()
-                    .code(HttpCodeConst.BAD_REQUEST)
+                    .code(HttpStatus.BAD_REQUEST.value())
                     .msg("参数错误")
                     .data(ConstNumber.LONG_ZERO)
                     .build());
@@ -62,12 +61,12 @@ public class SysUserRoleController {
                 .map(deleteCount -> {
                     if(deleteCount.equals(ConstNumber.LONG_ZERO))
                         return ResultT.<Long>builder()
-                                .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                 .msg("删除用户角色关系失败")
                                 .data(deleteCount)
                                 .build();
                     return ResultT.<Long>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("删除用户角色关系成功")
                             .data(deleteCount)
                             .build();
@@ -77,7 +76,7 @@ public class SysUserRoleController {
                         throwable -> {
                             log.error("删除用户角色关系失败", throwable);
                             return Mono.just(ResultT.<Long>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("删除用户角色关系失败")
                                     .data(ConstNumber.LONG_ZERO)
                                     .build());
@@ -93,12 +92,12 @@ public class SysUserRoleController {
                 .flatMap(roleIds ->{
                     if(roleIds.isEmpty())
                         return Mono.just(ResultT.<List<Long>>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("查询用户角色关系成功")
                                 .data(roleIds)
                                 .build());
                     return Mono.just(ResultT.<List<Long>>builder()
-                            .code(HttpCodeConst.OK)
+                            .code(HttpStatus.OK.value())
                             .msg("查询用户角色关系成功")
                             .data(roleIds)
                             .build());

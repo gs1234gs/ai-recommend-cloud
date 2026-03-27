@@ -1,7 +1,6 @@
 package com.guanshiyun.controller.address;
 
 
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.controller.address.vo.OrderAddressSaveVO;
 import com.guanshiyun.controller.address.vo.OrderAddressVO;
 import com.guanshiyun.mylong.MyLong;
@@ -11,6 +10,7 @@ import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.address.OrderAddressService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -39,7 +39,7 @@ public class OrderAddressController {
         return orderAddressService.deleteById(id)
                 .then(Mono.just(
                         ResultT.<Void>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("删除成功")
                                 .build()
                 ))
@@ -47,7 +47,7 @@ public class OrderAddressController {
                     log.error("删除地址失败", throwable);
                     return Mono.just(
                             ResultT.<Void>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("删除地址失败")
                                     .build()
                     );
@@ -96,7 +96,7 @@ public class OrderAddressController {
                     log.error("查询地址失败", throwable);
                     return Mono.just(
                             ResultT.<OrderAddressVO>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("查询地址失败")
                                     .build()
                     );
@@ -110,7 +110,7 @@ public class OrderAddressController {
                     log.error("查询地址失败", throwable);
                     return Mono.just(
                             ResultT.<PageResultT<List<OrderAddressVO>>>builder()
-                                    .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("查询地址失败")
                                     .build()
                     );

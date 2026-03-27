@@ -2,7 +2,6 @@ package com.guanshiyun.controller.sysmenu;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.guanshiyun.consts.ConstNumber;
-import com.guanshiyun.code.HttpCodeConst;
 import com.guanshiyun.menupojo.SysMenu;
 import com.guanshiyun.menupojo.reponse.SysMenuResponse;
 import com.guanshiyun.menuutil.MenuTreeUtils;
@@ -11,9 +10,9 @@ import com.guanshiyun.service.sysmenu.SysMenuService;
 import com.guanshiyun.tree.TreeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
-
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class SysMenuController {
                         {
                             log.info("获取菜单成功：{}", menuList.size());
                             return ResultT.<List<SysMenuResponse>>builder()
-                                    .code(HttpCodeConst.OK)
+                                    .code(HttpStatus.OK.value())
                                     .msg("成功")
                                     .data(menuList)
                                     .build();
@@ -51,7 +50,7 @@ public class SysMenuController {
         return sysMenuService.findById(id)
                 .map(menu ->
                         ResultT.<SysMenuResponse>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("成功")
                                 .data(menu)
                                 .build()
@@ -59,7 +58,7 @@ public class SysMenuController {
                 .onErrorResume(throwable -> {
                     log.warn("获取菜单失败", throwable);
                     return Mono.just(ResultT.<SysMenuResponse>builder()
-                            .code(HttpCodeConst.UNAUTHORIZED)
+                            .code(HttpStatus.UNAUTHORIZED.value())
                             .msg("获取菜单失败")
                             .build()
                     );
@@ -81,7 +80,7 @@ public class SysMenuController {
                         {
                             log.info("获取菜单成功：{}", menuList.size());
                             return ResultT.<List<SysMenuResponse>>builder()
-                                    .code(HttpCodeConst.OK)
+                                    .code(HttpStatus.OK.value())
                                     .msg("成功")
                                     .data(menuList)
                                     .build();
@@ -99,7 +98,7 @@ public class SysMenuController {
                 .flatMap(menuList ->
                         Mono.just(
                                 ResultT.<List<SysMenuResponse>>builder()
-                                        .code(HttpCodeConst.OK)
+                                        .code(HttpStatus.OK.value())
                                         .msg("成功")
                                         .data(TreeUtil.buildTree(
                                                 menuList,
@@ -120,13 +119,13 @@ public class SysMenuController {
                 .map(result ->
                         result >= ConstNumber.INT_ONE ?
                                 ResultT.<Long>builder()
-                                        .code(HttpCodeConst.OK)
+                                        .code(HttpStatus.OK.value())
                                         .msg("删除成功")
                                         .data(result)
                                         .build()
                                 :
                                 ResultT.<Long>builder()
-                                        .code(HttpCodeConst.UNAUTHORIZED)
+                                        .code(HttpStatus.UNAUTHORIZED.value())
                                         .msg("删除失败，该菜单不能删除")
                                         .data(result)
                                         .build()
@@ -134,7 +133,7 @@ public class SysMenuController {
                 .onErrorResume(throwable -> {
                     log.warn("删除菜单失败", throwable);
                     return Mono.just(ResultT.<Long>builder()
-                            .code(HttpCodeConst.UNAUTHORIZED)
+                            .code(HttpStatus.UNAUTHORIZED.value())
                             .msg("删除失败")
                             .build()
                     );
@@ -147,7 +146,7 @@ public class SysMenuController {
         return sysMenuService.save(sysMenu)
                 .map(id ->
                         ResultT.<Long>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("成功")
                                 .data(id)
                                 .build()
@@ -155,7 +154,7 @@ public class SysMenuController {
                 .switchIfEmpty(
                         Mono.just(
                                 ResultT.<Long>builder()
-                                        .code(HttpCodeConst.UNAUTHORIZED)
+                                        .code(HttpStatus.UNAUTHORIZED.value())
                                         .msg("添加失败")
                                         .data(null)
                                         .build()
@@ -164,7 +163,7 @@ public class SysMenuController {
                 .onErrorResume(throwable ->
                         Mono.just(
                                 ResultT.<Long>builder()
-                                        .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                        .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                         .msg("系统错误")
                                         .data(null)
                                         .build()
@@ -178,7 +177,7 @@ public class SysMenuController {
         return sysMenuService.updateById(sysMenu)
                 .map(id ->
                         ResultT.<Long>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("成功")
                                 .data(id)
                                 .build()
@@ -186,7 +185,7 @@ public class SysMenuController {
                 .switchIfEmpty(
                         Mono.just(
                                 ResultT.<Long>builder()
-                                        .code(HttpCodeConst.UNAUTHORIZED)
+                                        .code(HttpStatus.UNAUTHORIZED.value())
                                         .msg("修改失败")
                                         .data(null)
                                         .build()
@@ -195,7 +194,7 @@ public class SysMenuController {
                 .onErrorResume(throwable ->
                         Mono.just(
                                 ResultT.<Long>builder()
-                                        .code(HttpCodeConst.INTERNAL_SERVER_ERROR)
+                                        .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                         .msg("系统错误")
                                         .data(null)
                                         .build()
@@ -214,14 +213,14 @@ public class SysMenuController {
                 )
                 .map(menuList ->
                         ResultT.<List<SysMenuResponse>>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("成功")
                                 .data(menuList)
                                 .build()
                 ).onErrorResume(throwable ->
                         Mono.just(
                                 ResultT.<List<SysMenuResponse>>builder()
-                                        .code(HttpCodeConst.UNAUTHORIZED)
+                                        .code(HttpStatus.UNAUTHORIZED.value())
                                         .msg("获取菜单树失败")
                                         .data(null)
                                         .build()
@@ -230,7 +229,7 @@ public class SysMenuController {
                 .switchIfEmpty(
                         Mono.just(
                                 ResultT.<List<SysMenuResponse>>builder()
-                                        .code(HttpCodeConst.UNAUTHORIZED)
+                                        .code(HttpStatus.UNAUTHORIZED.value())
                                         .msg("获取菜单树失败")
                                         .data(null)
                                         .build()
@@ -254,14 +253,14 @@ public class SysMenuController {
                 )
                 .map(menuList ->
                         ResultT.<List<SysMenuResponse>>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("成功")
                                 .data(menuList)
                                 .build()
                 ).onErrorResume(throwable ->
                         Mono.just(
                                 ResultT.<List<SysMenuResponse>>builder()
-                                        .code(HttpCodeConst.UNAUTHORIZED)
+                                        .code(HttpStatus.UNAUTHORIZED.value())
                                         .msg("获取菜单树失败")
                                         .data(null)
                                         .build()
@@ -270,7 +269,7 @@ public class SysMenuController {
                 .switchIfEmpty(
                         Mono.just(
                                 ResultT.<List<SysMenuResponse>>builder()
-                                        .code(HttpCodeConst.UNAUTHORIZED)
+                                        .code(HttpStatus.UNAUTHORIZED.value())
                                         .msg("获取菜单树失败")
                                         .data(null)
                                         .build()
@@ -285,7 +284,7 @@ public class SysMenuController {
                 .collectList()
                 .map(menuList ->
                         ResultT.<List<SysMenuResponse>>builder()
-                                .code(HttpCodeConst.OK)
+                                .code(HttpStatus.OK.value())
                                 .msg("成功")
                                 .data(TreeUtil.buildTree(menuList,
                                         SysMenuResponse.Fields.id,
@@ -298,7 +297,7 @@ public class SysMenuController {
                 .onErrorResume(throwable ->{
                     return Mono.just(
                             ResultT.<List<SysMenuResponse>>builder()
-                                    .code(HttpCodeConst.UNAUTHORIZED)
+                                    .code(HttpStatus.UNAUTHORIZED.value())
                                     .msg("获取菜单树失败")
                                     .data(null)
                                     .build()
