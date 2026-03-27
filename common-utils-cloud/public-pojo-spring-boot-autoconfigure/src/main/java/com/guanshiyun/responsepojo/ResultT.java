@@ -20,8 +20,6 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)// 表示序列化时，如果属性值为 null，则不进行序列化
-//@JsonDeserialize(builder = ResultT.ResultTBuilder.class)  // 关键注解：告诉 Jackson 用 Builder 反序列
-//@JsonPOJOBuilder(withPrefix = "")
 @Accessors(chain = true)
 public class ResultT<T> {
     /**

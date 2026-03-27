@@ -2,12 +2,13 @@ package com.guanshiyun.requestpojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 
-
-@Getter
+@Data
+@Accessors(chain = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,16 +19,4 @@ public class RequestPage<T> {
     private Integer pageSize;
     // 查询条件
     private T condition;
-    public RequestPage< T> setPageNum(Long pageNum){
-        this.pageNum = pageNum;
-        return this;
-    }
-    public RequestPage< T> setPageSize(Integer pageSize){
-        this.pageSize = pageSize;
-        return this;
-    }
-    public RequestPage< T> setCondition(T condition){
-        this.condition = condition;
-        return this;
-    }
 }
