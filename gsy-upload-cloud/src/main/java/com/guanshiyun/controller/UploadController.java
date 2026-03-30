@@ -23,4 +23,9 @@ public class UploadController {
     public Mono<ResultT<List<String>>> uploadImage(@RequestBody Flux<PartEvent> partEventFlux) {
         return uploadService.uploadFile(partEventFlux);
     }
+    @PostMapping("/upload")
+    public Mono<ResultT<String>> uploadFile(@RequestBody Flux<PartEvent> partEventFlux) {
+        return uploadService.uploadImage(partEventFlux);
+    }
+
 }

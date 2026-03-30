@@ -9,5 +9,7 @@ import java.util.List;
 
 public interface UploadService {
     Mono<ResultT<List<String>>> uploadFile(Flux<PartEvent> partEventFlux);
-    Flux<ResultT< String>> deleteFile(String url);
+    Mono<ResultT< Void>> deleteFile(String url);
+
+    Mono<ResultT<String>> uploadImage(Flux<PartEvent> partEventFlux);
 }

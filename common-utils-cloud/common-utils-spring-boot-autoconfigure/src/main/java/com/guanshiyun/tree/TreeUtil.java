@@ -57,9 +57,11 @@ public class TreeUtil {
                 })
                 .collect(Collectors.toList());
         // 自定义比较器
-        @SuppressWarnings("unchecked")
+
         Comparator<T> comparator = (o1, o2) -> {
+            @SuppressWarnings("unchecked")
             Comparable<Object> c1 = (Comparable<Object>) getFieldValue(o1, sortField);
+            @SuppressWarnings("unchecked")
             Comparable<Object> c2 = (Comparable<Object>) getFieldValue(o2, sortField);
             if (c1 == null && c2 == null) return 0;
             if (c1 == null) return -1;

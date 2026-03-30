@@ -76,7 +76,25 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public Flux<ResultT<String>> deleteFile(String url) {
-        return null;
+    public Mono<ResultT<Void>> deleteFile(String url) {
+        return aliOSSUtils.deleteByObjectKey(url)
+                .then(Mono.fromCallable(() -> ResultT.<Void>builder()
+                         .code(HttpStatus.OK.value())
+                         .msg("删除成功")
+                         .data(null)
+                         .build()));
+    }
+
+    @Override
+    public Mono<ResultT<String>> uploadImage(Flux<PartEvent> partEventFlux) {
+        return uploadFile(partEventFlux)
+                .map(images->{
+                    return ResultT.<String>builder()
+                            .code(HttpStatus.OK.value())
+                            .msg("上传成功")
+                            .data(images.getData().getFirst())
+                            .build();
+                });
+
     }
 }

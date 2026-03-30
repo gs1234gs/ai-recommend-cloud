@@ -28,16 +28,6 @@ public class SystemStartPrintln {
                 DEEP_SPACE + "         ╚═╝╚═╩╩═╝╩══╩╝ " + SINGULARITY + "v̸o̸i̸d̸-̸e̸a̸r̸t̸h̸.̸1̸.̸0̸"
         };
 
-        // 三维地球绘制
-        String[] earthRender = {
-                "  " + QUANTUM_BLUE + "    ▗▄▄▄▄▄▄▄▄▄▖    ",
-                " " + QUANTUM_BLUE + " ▄█████████████████▄ ",
-                QUANTUM_BLUE + "▐" + MATRIX_GREEN + "■■■■" + QUANTUM_BLUE + "████" + DARK_ENERGY + "◌" + QUANTUM_BLUE + "████" + MATRIX_GREEN + "■■■■" + QUANTUM_BLUE + "▌",
-                QUANTUM_BLUE + "█" + MATRIX_GREEN + "■■■■■■" + QUANTUM_BLUE + "███" + DARK_ENERGY + "◍" + QUANTUM_BLUE + "███" + MATRIX_GREEN + "■■■■■■" + QUANTUM_BLUE + "█",
-                QUANTUM_BLUE + "█" + MATRIX_GREEN + "■■■■■■■" + QUANTUM_BLUE + "██" + DARK_ENERGY + "◎" + QUANTUM_BLUE + "██" + MATRIX_GREEN + "■■■■■■■" + QUANTUM_BLUE + "█",
-                " " + QUANTUM_BLUE + " ▀█████████████████▀ ",
-                "  " + QUANTUM_BLUE + "    ▝▀▀▀▀▀▀▀▀▀▘    "
-        };
 
         for (String line : voidEarth) {
             System.out.println(line);

@@ -19,7 +19,6 @@ import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.rolepojo.SysRole;
 import com.guanshiyun.service.sysrole.SysRoleService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
-import com.guanshiyun.userpojo.SysUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -31,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.reactive.TransactionalOperator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -126,17 +124,17 @@ public class SysRoleServiceImpl implements SysRoleService {
         String name = requestPage.getCondition().getName();
         //不为空，模糊查询
         if (StrUtil.isNotBlank(name)) {
-            criteria = criteria.and(SysUser.Fields.username).like(SqlConst.PERCENT + name + SqlConst.PERCENT);
+            criteria = criteria.and(SysRole.Fields.name).like(SqlConst.PERCENT + name + SqlConst.PERCENT);
         }
-        Long offset =
-                pageNum*pageSize;
+        long offset =
+                (pageNum -1)*pageSize;
         // 数据查询：按 createTime 降序，推荐加上 id 作为二级排序
         Query dataQuery = Query.query(criteria)
                 .sort(Sort.by(
                         Sort.Order.desc(MyStringUtils.camelToUnderlineSmart(BasePojo.Fields.createTime)),
                         Sort.Order.desc(SysRole.Fields.id) // 防止 createTime 重复导致数据错位
                 ))
-                .offset(offset.longValue())
+                .offset(offset)
                 .limit(pageSize);
         // 总数查询
         Query countQuery = Query.query(criteria);
