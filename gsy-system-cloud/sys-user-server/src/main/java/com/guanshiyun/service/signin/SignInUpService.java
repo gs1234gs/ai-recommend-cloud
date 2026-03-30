@@ -1,6 +1,5 @@
 package com.guanshiyun.service.signin;
 
-import com.guanshiyun.responsepojo.Result;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.signinpojo.SignUser;
 import com.guanshiyun.userpojo.SysUser;
@@ -13,4 +12,6 @@ public interface SignInUpService {
 
     //注册
     Mono<ResultT<String>> signUp(SysUser signUser);
+
+
 }

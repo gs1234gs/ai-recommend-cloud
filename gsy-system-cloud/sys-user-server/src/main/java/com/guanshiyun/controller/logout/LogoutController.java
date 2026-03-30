@@ -1,7 +1,7 @@
 package com.guanshiyun.controller.logout;
 
 import com.guanshiyun.responsepojo.ResultT;
-import com.guanshiyun.security.handler.RewriteLogoutSuccessHandler;
+import com.guanshiyun.service.logout.LogoutService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,11 +15,11 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @RequestMapping("/logout")
 public class LogoutController {
-    private final RewriteLogoutSuccessHandler rewriteLogoutSuccessHandler;
+    private final LogoutService logoutService;
     //退出登陆
     @PostMapping("/logout")
     public Mono<ResultT<Long>> logout( ){
-        return rewriteLogoutSuccessHandler.onLogoutSuccess()
+        return logoutService.logout()
                 .map(aLong ->
                         ResultT.<Long>builder()
                                 .code(HttpStatus.OK.value())
