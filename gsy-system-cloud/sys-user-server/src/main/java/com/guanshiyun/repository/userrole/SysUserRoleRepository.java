@@ -7,6 +7,7 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 
 
 public interface SysUserRoleRepository extends ReactiveCrudRepository<SysUserRole, Long> {
@@ -17,4 +18,8 @@ public interface SysUserRoleRepository extends ReactiveCrudRepository<SysUserRol
     //根据用户id删除用户角色关联
     @Query("DELETE FROM sys_user_role WHERE user_id = :id")
     Mono<Void> deleteAllByUserId(Long id);
+
+    Flux<SysUserRole> findSysUserRoleByUserId(Long userId);
+
+    Mono<Void> deleteByUserIdAndRoleIdIn(Long userId, List<Long> toDeleteIds);
 }

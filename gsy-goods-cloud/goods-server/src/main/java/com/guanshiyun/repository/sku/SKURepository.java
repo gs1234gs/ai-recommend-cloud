@@ -57,4 +57,15 @@ public interface SKURepository extends ReactiveCrudRepository<SKU, Long> {
                  HAVING SUM(sales_volume) > :salesVolume
             """)
     Flux<Long> findProductIdsByTotalSalesGreaterThan(@Param("salesVolume") Integer salesVolume);
+
+    //统计销量
+    @Query("""
+select sum(sales_volume) from sku
+""")
+    Mono<Long> countTotalSales();
+    //统计商品总数
+    @Query("""
+    select sum(stock) from sku
+""")
+    Mono<Long> countTotalStock();
 }

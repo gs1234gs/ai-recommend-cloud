@@ -129,7 +129,7 @@ public class ProductServiceImpl implements ProductService {
                                 .publishOn(Schedulers.boundedElastic())
                                 .doOnSuccess(productId -> {
                                     // 异步调用 LongMono，但不阻塞主链
-                                    LongMono(productId, categoryIds, tagIds, product)
+                                    embedding(productId, categoryIds, tagIds, product)
                                             .contextWrite(ctxb -> ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
                                             .subscribe(
                                                     ignored -> log.info("异步处理完成: {}", productId),
@@ -177,7 +177,7 @@ public class ProductServiceImpl implements ProductService {
                                                 .publishOn(Schedulers.boundedElastic())
                                                 .doOnSuccess(OK -> {
                                                     // 异步调用 LongMono，但不阻塞主链
-                                                    LongMono(productId, categoryIds, tagIds, product)
+                                                   embedding(productId, categoryIds, tagIds, product)
                                                             .contextWrite(ctxb -> ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
                                                             .subscribe(
                                                                     ignored -> log.info("异步处理完成: {}", productId),
@@ -264,7 +264,7 @@ public class ProductServiceImpl implements ProductService {
                                 .publishOn(Schedulers.boundedElastic())
                                 .doOnSuccess(productId -> {
                                     // 异步向量化处理（不阻塞主流程）
-                                    LongMono(productId, categoryIds, tagIds, product)
+                                    embedding(productId, categoryIds, tagIds, product)
                                             .contextWrite(ctxb -> ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
                                             .subscribeOn(Schedulers.parallel())
                                             .subscribe(
@@ -287,8 +287,10 @@ public class ProductServiceImpl implements ProductService {
                                 )
                                 .flatMap(productId -> {
                                     // 查询旧的分类关系
-                                    Mono<List<Long>> tagIdsMono = productTagRepository.findTagIdByProductId(productId).collectList();
-                                    Mono<List<Long>> categoryIdsMono = productCategoryRepository.findByProductId(productId)
+                                    Mono<List<Long>> tagIdsMono = productTagRepository
+                                            .findTagIdByProductId(productId).collectList();
+                                    Mono<List<Long>> categoryIdsMono = productCategoryRepository
+                                            .findByProductId(productId)
                                             .map(ProductCategory::getCategoryId)
                                             .collectList();
                                     return Mono.zip(tagIdsMono, categoryIdsMono)
@@ -352,7 +354,7 @@ public class ProductServiceImpl implements ProductService {
                                 .transform(transactionalOperator::transactional)
                                 .publishOn(Schedulers.boundedElastic())
                                 .doOnSuccess(productId -> {
-                                    LongMono(productId, categoryIds, tagIds, product)
+                                    embedding(productId, categoryIds, tagIds, product)
                                             .contextWrite(ctxb -> ctxb.put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId))
                                             .subscribeOn(Schedulers.parallel())
                                             .subscribe(
@@ -373,7 +375,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @NonNull
-    private Mono<Long> LongMono(Long productIdSave, List<Long> categoryIds, List<Long> tagIds, Product product) {
+    private Mono<Long> embedding(Long productIdSave, List<Long> categoryIds, List<Long> tagIds, Product product) {
         log.info("更新商品信息成功：{}", productIdSave);
 
         if (Objects.isNull(productIdSave) || productIdSave.equals(ConstNumber.LONG_ZERO)) {

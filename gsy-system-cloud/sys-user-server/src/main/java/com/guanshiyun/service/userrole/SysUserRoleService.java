@@ -1,11 +1,10 @@
 package com.guanshiyun.service.userrole;
 
-import com.guanshiyun.relation.SysRelationRequest;
+import com.guanshiyun.controller.userrole.vo.SysUserRoleVO;
 import com.guanshiyun.relationpojo.SysUserRole;
 import com.guanshiyun.responsepojo.ResultT;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 
 import java.util.List;
 
@@ -17,5 +16,5 @@ public interface SysUserRoleService {
 
     Mono<Long> deleteUserRoleByRoleId(List<Long> roleId, Long userId);
 
-    Mono<SysUserRole> addUserRole(SysRelationRequest sysRelationRequest);
+    Mono<SysUserRole> addUserRole(SysUserRoleVO sysUserRoleVO);
 }

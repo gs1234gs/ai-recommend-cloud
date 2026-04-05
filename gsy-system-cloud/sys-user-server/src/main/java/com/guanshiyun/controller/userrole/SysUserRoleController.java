@@ -1,7 +1,7 @@
 package com.guanshiyun.controller.userrole;
 
 import com.guanshiyun.consts.ConstNumber;
-import com.guanshiyun.relation.SysRelationRequest;
+import com.guanshiyun.controller.userrole.vo.SysUserRoleVO;
 import com.guanshiyun.relationpojo.SysUserRole;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.userrole.SysUserRoleService;
@@ -23,9 +23,9 @@ public class SysUserRoleController {
     //添加用户角色关系
     @PostMapping("save")
     public Mono<ResultT<SysUserRole>> save(
-            @RequestBody SysRelationRequest sysRelationRequest
+            @RequestBody SysUserRoleVO sysUserRoleVO
             ){
-        return sysUserRoleService.addUserRole(sysRelationRequest)
+        return sysUserRoleService.addUserRole(sysUserRoleVO)
                 .map(addUserRole -> ResultT.<SysUserRole>builder()
                         .code(HttpStatus.OK.value())
                         .msg("添加用户角色关系成功")

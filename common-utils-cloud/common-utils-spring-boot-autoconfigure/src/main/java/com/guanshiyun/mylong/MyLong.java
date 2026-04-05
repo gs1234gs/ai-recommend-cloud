@@ -1,7 +1,8 @@
 package com.guanshiyun.mylong;
 
+import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import lombok.extern.slf4j.Slf4j;
-
+import reactor.util.context.ContextView;
 
 
 @Slf4j
@@ -26,5 +27,8 @@ public class MyLong {
             log.error("转换Long异常", e);
         }
         return mylong;
+    }
+    public Long findId(ContextView contextView) {
+        return  myLong(contextView.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
     }
 }

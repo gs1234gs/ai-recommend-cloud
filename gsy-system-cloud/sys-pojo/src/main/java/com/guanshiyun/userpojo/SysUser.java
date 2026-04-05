@@ -52,4 +52,6 @@ public class SysUser extends BasePojo implements Serializable {
     private LocalDateTime loginTime;
     //备注
     private String remark;
+//    //租户id
+//    private Long tenantId;
 }

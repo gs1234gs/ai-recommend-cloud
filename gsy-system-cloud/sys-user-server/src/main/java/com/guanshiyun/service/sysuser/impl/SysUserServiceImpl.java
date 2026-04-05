@@ -19,6 +19,7 @@ import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.sysuser.SysUserService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.userpojo.SysUser;
+import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -223,6 +224,38 @@ public class SysUserServiceImpl implements SysUserService {
                                 .build()))
                         .then(Mono.just(id));
             });
+        });
+    }
+
+    @Override
+    public Mono<SysUserVO> updateSignInUser(SysUserSaveVO sysUserSaveVO) {
+        SysUser sysUser = BeanConvertUtil.toBean(sysUserSaveVO, SysUser.class);
+        LocalDateTime now = LocalDateTime.now();
+        sysUser.setUpdateTime(now)
+                .setUpdateTime(now);
+        return Mono.deferContextual(ctx->{
+            if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
+                return Mono.error(new Throwable("请先登录"));
+            }
+            Long id = myLong.findId(ctx);
+            sysUser.setId(id);
+           return r2dbcUpdateHelper.updateIgnoreNull(EntityTableNameUtils.getName(SysUser.class),sysUser,SysUser.Fields.id)
+                   .flatMap(sysUserRepository::findById)
+                   .map(user->{
+                      return BeanConvertUtil.toBean(user, SysUserVO.class);
+                   });
+        });
+    }
+
+    @Override
+    public Mono<SysUserVO> findById() {
+        return Mono.deferContextual(ctx->{
+            if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
+                return Mono.error(new Throwable("请先登录"));
+            }
+            Long id = myLong.findId(ctx);
+          return   sysUserRepository.findById(id)
+                  .map(sysUser->BeanConvertUtil.toBean(sysUser, SysUserVO.class));
         });
     }
 }

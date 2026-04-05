@@ -5,10 +5,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.db.dbnumber.ConstNumber;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
-import com.guanshiyun.controller.sku.vo.SKUFindVO;
-import com.guanshiyun.controller.sku.vo.SKUGroupByProductIdVO;
-import com.guanshiyun.controller.sku.vo.SKUSaveVO;
-import com.guanshiyun.controller.sku.vo.SKUVO;
+import com.guanshiyun.controller.sku.vo.*;
 import com.guanshiyun.product.Product;
 import com.guanshiyun.repository.sku.SKURepository;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -355,5 +352,11 @@ public class SKUServiceImpl implements SKUService {
                     log.error("增加销量失败", e);
                     return Mono.just(Boolean.FALSE);
                 });
+    }
+
+    @Override
+    public Mono<SkuStatisticsVO> totalStatistics() {
+       Mono<Long> totalSales =  skuRepository.countTotalSales();
+       return null;
     }
 }

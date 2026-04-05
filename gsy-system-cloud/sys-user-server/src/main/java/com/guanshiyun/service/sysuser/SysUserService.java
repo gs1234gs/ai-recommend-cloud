@@ -7,7 +7,6 @@ import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.userpojo.SysUser;
 import reactor.core.publisher.Mono;
 
-
 import java.util.Collection;
 import java.util.List;
 
@@ -24,4 +23,8 @@ public interface SysUserService {
     Mono<Long> updateUserById(SysUserVO sysUserVO);
 
     Mono<Long> save(SysUserSaveVO sysUserSaveVO);
+
+    Mono<SysUserVO> updateSignInUser(SysUserSaveVO sysUserSaveVO);
+
+    Mono<SysUserVO> findById();
 }

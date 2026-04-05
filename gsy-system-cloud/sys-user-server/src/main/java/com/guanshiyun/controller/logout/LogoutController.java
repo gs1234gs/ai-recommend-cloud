@@ -5,7 +5,7 @@ import com.guanshiyun.service.logout.LogoutService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
 public class LogoutController {
     private final LogoutService logoutService;
     //退出登陆
-    @PostMapping("/logout")
+    @GetMapping()
     public Mono<ResultT<Long>> logout( ){
         return logoutService.logout()
                 .map(aLong ->

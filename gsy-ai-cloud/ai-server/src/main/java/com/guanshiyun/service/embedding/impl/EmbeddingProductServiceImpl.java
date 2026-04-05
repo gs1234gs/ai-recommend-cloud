@@ -196,13 +196,6 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
                             .collect(Collectors.toList());
                 })
                 .onErrorReturn(Collections.emptyList());
-//                .sort(Comparator.comparing(Document::getScore,
-//                        Comparator.nullsLast(Comparator.reverseOrder())))
-//                .take(topK)
-//                .map(document -> myLong.Long(
-//                        document.getMetadata().get(ProductForEmbeddingApVO.Fields.id)))
-//                .collectList()
-//                .onErrorReturn(Collections.emptyList());
     }
 
     /**
@@ -221,152 +214,6 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
 
         return merged.stream().limit(topK).toList();
     }
-//    @Override
-//    public Mono<List<Long>> recommendForUser(List<ProductForEmbeddingApVO> recentProducts, int topK) {
-//        //有行为，优先大模型推荐，解决商品冷启动，新商品需要语义检索推荐
-//        return Mono.deferContextual(ctx -> {
-//                    boolean hasKey =
-//                            ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
-//                    // ================== 游客处理 ==================
-//                    if (!hasKey) {
-//                        return gorseClient(GuestEnum.GUEST_USER_ID.getValue(), topK);
-//                    }
-//                    Long userId = myLong.LongOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
-//
-//
-//                    // ================== 无行为：直接走 Gorse ==================
-//                    if (Objects.isNull(recentProducts) || recentProducts.isEmpty()) {
-//                        return gorseClient(userId.toString(), topK);
-//                    }
-//                    // ===== 构造融合 Query（例如：拼接最近商品的语义文本）=====
-//                    String fusedQuery = recentProducts.stream()
-//                            .limit(6) // 取最近 3 个避免过长
-//                            .map(ProductForEmbeddingApVO::recommendEmbeddingText)
-//                            .filter(Objects::nonNull)
-//                            .collect(Collectors.joining(" "));
-//                    if (fusedQuery.isBlank()) {
-//                        return gorseClient(userId.toString(), topK);
-//                    }
-//                    return activeSimilarityThresholdConfigurationRepository
-//                            .findById(Long.ONE)
-//                            .map(ActiveSimilarityThresholdConfiguration::getSimilarityThreshold)
-//                            .defaultIfEmpty(0.0)
-//                            .flatMap(threshold -> {
-//                                SearchRequest request = SearchRequest.builder()
-//                                        .query(fusedQuery)
-//                                        .similarityThreshold(threshold)
-//                                        .topK(topK) // 多取一点，留去重空间
-//                                        .build();
-//                                return Flux.fromIterable(vectorStore.similaritySearch(request))
-//                                        // ===== 去重：保留最高分 =====
-//                                        .collectMultimap(Document::getId)
-//                                        .flatMapMany(idToDocsMap ->
-//                                                Flux.fromIterable(idToDocsMap.entrySet())
-//                                                        .map(entry ->
-//                                                                entry.getValue()
-//                                                                        .stream()
-//                                                                        .max(Comparator.comparing(Document::getScore,
-//                                                                                        Comparator.nullsLast(Comparator.naturalOrder())
-//                                                                                )
-//                                                                        )
-//                                                                        .orElseThrow()
-//                                                        )
-//                                        )
-//                                        // ===== 按 score 降序 =====
-//                                        .sort((d1, d2) -> {
-//                                            Double s1 = d1.getScore();
-//                                            Double s2 = d2.getScore();
-//                                            return Objects.isNull(s1) &&
-//                                                    Objects.isNull(s2) ?
-//                                                    ConstNumber.INT_ZERO : (Objects.isNull(s1) ?
-//                                                    ConstNumber.INT_ONE : Objects.isNull(s2) ?
-//                                                    ConstNumber.INT_MINUS_ONE : s2.compareTo(s1)
-//                                            );
-//                                        })
-//                                        .take(topK)    // 最终返回 topK
-//                                        .map(document -> myLong.Long(
-//                                                document.getMetadata().get(ProductForEmbeddingApVO.Fields.id))
-//                                        )
-//                                        .collectList()
-//                                        .flatMap(productIdList -> {
-//                                            // 如果返回不足 topK，调用 Gorse 补充推荐
-//                                            if (productIdList.size() == topK) {
-//                                                return Mono.just(productIdList);
-//                                            }
-//                                            //1.有推荐，但是没有返回topK
-//                                            if (!productIdList.isEmpty() && productIdList.size() < topK) {
-//                                                return gorseClient.getRecommend(userId.toString(), topK - productIdList.size())
-//                                                        .map(productIds -> {
-//                                                            ArrayList<Long> cloneProductIdList = new ArrayList<>(productIdList);
-//                                                            productIds.forEach(productId ->
-//                                                                    cloneProductIdList.add(myLong.Long(productId))
-//                                                            );
-//                                                            return cloneProductIdList;
-//                                                        });
-//                                            }
-//                                            // 新用户冷启动
-//                                            return gorseClient(userId.toString(), topK);
-//                                        });
-//                            })
-//                            .defaultIfEmpty(Collections.emptyList());
-//
-////            return Flux.fromIterable(vectorStore.similaritySearch(request))
-////                    // ===== 去重：保留最高分 =====
-////                    .collectMultimap(Document::getId)
-////                    .flatMapMany(idToDocsMap ->
-////                            Flux.fromIterable(idToDocsMap.entrySet())
-////                                    .map(entry ->
-////                                            entry.getValue()
-////                                                    .stream()
-////                                                    .max(Comparator.comparing(Document::getScore,
-////                                                                    Comparator.nullsLast(Comparator.naturalOrder())
-////                                                            )
-////                                                    )
-////                                                    .orElseThrow()
-////                                    )
-////                    )
-////                    // ===== 按 score 降序 =====
-////                    .sort((d1, d2) -> {
-////                        Double s1 = d1.getScore();
-////                        Double s2 = d2.getScore();
-////                        return Objects.isNull(s1) &&
-////                                Objects.isNull(s2) ?
-////                                ConstNumber.INT_ZERO : (Objects.isNull(s1) ?
-////                                ConstNumber.INT_ONE : Objects.isNull(s2) ?
-////                                ConstNumber.INT_MINUS_ONE : s2.compareTo(s1)
-////                        );
-//////                    if (Objects.isNull(s1) && Objects.isNull(s2)) return ConstNumber.INT_ZERO;
-//////                    if (Objects.isNull(s1)) return ConstNumber.INT_ONE;   // null 放后面
-//////                    if (Objects.isNull(s2)) return ConstNumber.INT_MINUS_ONE;  // null 放后面
-//////                    return s2.compareTo(s1);    // 降序：s2 > s1 → 负数？不，compareTo 是 s2 - s1
-////                    })
-////                    .take(topK)    // 最终返回 topK
-////                    .map(document -> myLong.Long(
-////                            document.getMetadata().get(ProductForEmbeddingApVO.Fields.id))
-////                    )
-////                    .collectList()
-////                    .flatMap(productIdList -> {
-////                        // 如果返回不足 topK，调用 Gorse 补充推荐
-////                        if (productIdList.size() == topK) {
-////                            return Mono.just(productIdList);
-////                        }
-////                        //1.有推荐，但是没有返回topK
-////                        if (!productIdList.isEmpty() && productIdList.size() < topK) {
-////                            return gorseClient.getRecommend(userId.toString(), topK - productIdList.size())
-////                                    .map(productIds -> {
-////                                        ArrayList<Long> cloneProductIdList = new ArrayList<>(productIdList);
-////                                        productIds.forEach(productId ->
-////                                                cloneProductIdList.add(myLong.Long(productId))
-////                                        );
-////                                        return cloneProductIdList;
-////                                    });
-////                        }
-////                        // 新用户冷启动
-////                        return gorseClient(userId.toString(), topK);
-////                    });
-//                }
-//        );
-//    }
 
     /**
      * 内部方法：调用 Gorse 推荐
@@ -431,7 +278,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
     public List<Long> searchKeyword(String keyword, int topK) {
         SearchRequest request = SearchRequest.builder()
                 .query(keyword)
-                .similarityThreshold(0.4)
+                .similarityThreshold(0.3)
                 .topK(topK)
                 .build();
         return vectorStore.similaritySearch(request)

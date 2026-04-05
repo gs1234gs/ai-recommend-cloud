@@ -243,4 +243,18 @@ public class SysUserController {
                 });
     }
 
+    @PutMapping("updateSignInUser")
+    public Mono<ResultT<SysUserVO>> updateSignInUser(@RequestBody SysUserSaveVO sysUserSaveVO) {
+        return sysUserService.updateSignInUser(sysUserSaveVO)
+                .map(ResultT::success)
+                .onErrorResume(Mono::error);
+
+    }
+
+    @GetMapping("findBySignInUserId")
+    public Mono<ResultT<SysUserVO>> findBySignInUserId(){
+        return sysUserService.findById()
+                .map(ResultT::success)
+                .onErrorResume(Mono::error);
+    }
 }

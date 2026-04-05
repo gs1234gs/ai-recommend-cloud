@@ -1,9 +1,6 @@
 package com.guanshiyun.service.sku;
 
-import com.guanshiyun.controller.sku.vo.SKUFindVO;
-import com.guanshiyun.controller.sku.vo.SKUGroupByProductIdVO;
-import com.guanshiyun.controller.sku.vo.SKUSaveVO;
-import com.guanshiyun.controller.sku.vo.SKUVO;
+import com.guanshiyun.controller.sku.vo.*;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import reactor.core.publisher.Flux;
@@ -37,5 +34,8 @@ Mono<PageResultT<List<SKUGroupByProductIdVO>>> findAllByPage(RequestPage<SKUFind
     Mono<List<SKUVO>> findAllByIds(List<Long> skuIds);
 
     Mono<Boolean> addSalesById(Long id, Integer count);
+
+    //统计总销售与营收
+    Mono<SkuStatisticsVO> totalStatistics();
 
 }
