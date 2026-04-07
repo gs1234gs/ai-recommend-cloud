@@ -1,20 +1,18 @@
 package com.guanshiyun.rpc.goodsapi.product.impl;
 
 import com.guanshiyun.goodsenum.GoodsApiUrl;
+import com.guanshiyun.profile.ProductApiVO;
+import com.guanshiyun.profile.ProductCustomerApiVO;
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.responsepojo.CursorPageResult;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.rpc.config.GoodsWebClientRpc;
 import com.guanshiyun.rpc.goodsapi.product.ProductApiService;
-import com.guanshiyun.profile.ProductApiVO;
-import com.guanshiyun.profile.ProductCustomerApiVO;
-import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
 
 import java.util.List;
 @Slf4j
@@ -57,7 +55,7 @@ public class ProductApiServiceImpl implements ProductApiService {
                 .uri(builder->builder.path(GoodsApiUrl.RECOMMEND_PRODUCT_FIND_BY_IDS)
                         .queryParam("ids", ids)
                         .build())
-                .header(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY,ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY)
+//                .header(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY,ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<ResultT<List<ProductCustomerApiVO>>>() {});
     }
@@ -70,7 +68,7 @@ public class ProductApiServiceImpl implements ProductApiService {
                 .uri(builder->builder.path(GoodsApiUrl.RECOMMEND_PRODUCT_FIND_BY_IDS)
                         .queryParam("ids", ids)
                         .build())
-                .header(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY,ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY)
+//                .header(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY,ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<ResultT<List<ProductApiVO>>>() {});
     }

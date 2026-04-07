@@ -124,12 +124,12 @@ public class RecommendProductServiceImpl implements RecommendProductService {
         return Mono.deferContextual(ctx -> {
 
             // 登录校验
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+            if (!myLong.hasKey(ctx)) {
                 //先走gorse
                 return gorseClient.getRecommend(GuestEnum.GUEST_USER_ID.getValue(), 20)
                         .map(Flux::fromIterable)
                         .flatMapMany(Function.identity())
-                        .mapNotNull(myLong::LongOrNull)
+                        .mapNotNull(myLong::longOrNull)
                         .collectList()
                         .flatMap(ids ->
                                 buildResultFromAiProductIds(ids, validate, condition)
@@ -146,13 +146,13 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                         });
             }
             // 如果没有搜索内容，直接走传统查询（AI 不适用）
-            Long userId = myLong.LongOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong.findUserId(ctx);
             if (!StringUtils.hasText(searchContent)) {
                 //先走gorse
                 return gorseClient.getRecommend(userId.toString(), 20)
                         .map(Flux::fromIterable)
                         .flatMapMany(Function.identity())
-                        .mapNotNull(myLong::LongOrNull)
+                        .mapNotNull(myLong::longOrNull)
                         .collectList()
                         .flatMap(ids ->
                                 buildResultFromAiProductIds(ids, validate, condition)
@@ -351,10 +351,10 @@ public class RecommendProductServiceImpl implements RecommendProductService {
     @Override
     public Mono<List<ProductCustomerVO>> like() {
         return Mono.deferContextual(ctx -> {
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+            if (!myLong.hasKey(ctx)) {
                 return Mono.error(new Exception("请先登陆"));
             }
-            Long userId = myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong.findUserId(ctx);
 
             // 封装默认返回方法
             Supplier<Mono<List<ProductCustomerVO>>> defaultProducts = () ->
@@ -406,12 +406,12 @@ public class RecommendProductServiceImpl implements RecommendProductService {
     public Mono<List<ProductCustomerVO>> likePool(Integer offset, int limit, Boolean refresh) {
         return Mono.deferContextual(ctx -> {
             // 1. 用户鉴权
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+            if (!myLong.hasKey(ctx)) {
                 log.info("用户未登录，返回热门商品兜底");
                 return getFallbackProducts(limit);
             }
 
-            Long userId = myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong.findUserId(ctx);
             String redisKey = ProductKey.REC_LIKE_KEY_PREFIX + userId;
 
             // 如果 refresh 为 true，强制重建候选池
@@ -530,13 +530,13 @@ public class RecommendProductServiceImpl implements RecommendProductService {
     @Override
     public Mono<ProductCustomerDetailVO> detail(Long id) {
         return Mono.deferContextual(ctx -> {
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+            if (!myLong.hasKey(ctx)) {
                 return Mono.error(new Exception("请先登陆"));
             }
             Mono<Product> productMono = productRepository.findById(id);
             Mono<List<TagVO>> tagListMono = utilsService.findTagByProductId(id);
             Mono<List<SKU>> skuListMono = sKURepository.findAllByProductId(id).collectList();
-            Long userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+            Long userId = myLong.findUserId(ctx);
             return Mono.zip(productMono, tagListMono, skuListMono)
                     .flatMap(tuple -> {
                         Product product = tuple.getT1();
@@ -1220,12 +1220,12 @@ public class RecommendProductServiceImpl implements RecommendProductService {
 
         return Mono.deferContextual(ctx -> {
             // 【未登录用户】：直接走 Gorse，不经过池化
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+            if (!myLong.hasKey(ctx)) {
                 log.debug("用户未登录，直接请求 Gorse 推荐");
                 return gorseClient.getRecommend(GuestEnum.GUEST_USER_ID.getValue(), size)
                         .map(Flux::fromIterable)
                         .flatMapMany(Function.identity())
-                        .mapNotNull(myLong::LongOrNull)
+                        .mapNotNull(myLong::longOrNull)
                         .collectList()
                         .flatMap(this::buildResultFromAiProductIds)
                         .onErrorResume(e -> {
@@ -1240,7 +1240,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
             }
 
             // 【已登录用户】
-            Long userId = myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong.findUserId(ctx);
             String userKey = userId.toString();
             String poolKey = ProductKey.RECOMMEND_POOL_KEY_PREFIX + userKey;
 
@@ -1286,7 +1286,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                     // 从 Redis 弹出 ID
                     return Flux.range(0, pageSize)
                             .concatMap(i -> reactiveRedisUtil.rPop(poolKey))
-                            .mapNotNull(myLong::LongOrNull)
+                            .mapNotNull(myLong::longOrNull)
                             .collectList()
                             .flatMap(ids -> {
                                 if (ids.isEmpty()) {

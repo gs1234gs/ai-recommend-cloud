@@ -99,6 +99,6 @@ public class R2dbcUpdateHelper {
         final Object idValueTemp = idValue;
         return spec.fetch()
                 .rowsUpdated()
-                .flatMap(rowsUpdated -> rowsUpdated > 0 ? Mono.just(myLong.LongOrNull(idValueTemp)) : Mono.empty());
+                .flatMap(rowsUpdated -> rowsUpdated > 0 ? Mono.just(myLong.longOrNull(idValueTemp)) : Mono.empty());
     }
 }

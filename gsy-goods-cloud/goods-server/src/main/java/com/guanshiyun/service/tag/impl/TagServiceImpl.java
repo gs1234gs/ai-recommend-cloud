@@ -7,6 +7,7 @@ import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.controller.tag.vo.TagSaveVO;
 import com.guanshiyun.controller.tag.vo.TagVO;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.repository.relation.ProductTagRepository;
 import com.guanshiyun.repository.tag.TagRepository;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -14,13 +15,11 @@ import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.tag.TagService;
 import com.guanshiyun.snowflake.SnowflakePermanent;
 import com.guanshiyun.tag.Tag;
-import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,15 +34,18 @@ public class TagServiceImpl implements TagService {
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
     private final ProductTagRepository productTagRepository;
     private final SnowflakePermanent snowflakePermanent;
+    private final MyLong myLong;
 
     @Override
     public Mono<Long> save(TagSaveVO tagSaveVO) {
         Tag tag = BeanUtil.toBean(tagSaveVO, Tag.class);
         LocalDateTime now = LocalDateTime.now();
         return Mono.deferContextual(ctx -> {
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
+            if (!myLong.hasKey(ctx))
                 return Mono.error(new Throwable("用户未登录"));
-            Long userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+            Long userId = myLong.findUserId(ctx);
+            Long tenantId = myLong.findTenantId(ctx);
+            tag.setTenantId(tenantId);
             if (Objects.isNull(tag.getId())) {
                 String code = snowflakePermanent.stringNextId();
                 tag.setCode(code)
@@ -79,39 +81,48 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Mono<PageResultT<List<TagVO>>> findAllByPage(RequestPage<TagVO> requestPage) {
-        return ReactivePageQuery.of(
-                        r2dbcEntityTemplate,
-                        Tag.class,
-                        RequestPage.<Tag>builder()
-                                .condition(BeanUtil.toBean(
-                                        requestPage.getCondition(),
-                                        Tag.class)
+        return Mono.deferContextual(ctx->{
+            if(!myLong.hasKey(ctx)){
+                return Mono.error(new Throwable("未登录"));
+            }
+            Long userId = myLong.findUserId(ctx);
+            Long tenantId = myLong.findTenantId(ctx);
+            return   ReactivePageQuery.of(
+                            r2dbcEntityTemplate,
+                            Tag.class,
+                            RequestPage.<Tag>builder()
+                                    .condition(BeanUtil.toBean(
+                                            requestPage.getCondition(),
+                                            Tag.class)
+                                    )
+                                    .pageNum(requestPage.getPageNum())
+                                    .pageSize(requestPage.getPageSize())
+                                    .build())
+                    .eq(Tag.Fields.tenantId, tenantId)
+                    .page()
+                    .map(page -> {
+                        log.info("查询成功");
+                        return PageResultT.<List<TagVO>>builder()
+                                .pageNum(page.getPageNum())
+                                .pageSize(page.getPageSize())
+                                .total(page.getTotal())
+                                .rows(page.getRows().stream()
+                                        .map(tag -> BeanUtil.toBean(tag, TagVO.class))
+                                        .toList()
                                 )
+                                .build();
+                    })
+                    .onErrorResume(e -> {
+                        log.error("查询失败", e);
+                        return Mono.just(PageResultT.<List<TagVO>>builder()
                                 .pageNum(requestPage.getPageNum())
                                 .pageSize(requestPage.getPageSize())
-                                .build())
-                .page()
-                .map(page -> {
-                    log.info("查询成功");
-                    return PageResultT.<List<TagVO>>builder()
-                            .pageNum(page.getPageNum())
-                            .pageSize(page.getPageSize())
-                            .total(page.getTotal())
-                            .rows(page.getRows().stream()
-                                    .map(tag -> BeanUtil.toBean(tag, TagVO.class))
-                                    .toList()
-                            )
-                            .build();
-                })
-                .onErrorResume(e -> {
-                    log.error("查询失败", e);
-                    return Mono.just(PageResultT.<List<TagVO>>builder()
-                            .pageNum(requestPage.getPageNum())
-                            .pageSize(requestPage.getPageSize())
-                            .total(ConstNumber.LONG_ZERO)
-                            .rows(List.of())
-                            .build());
-                });
+                                .total(ConstNumber.LONG_ZERO)
+                                .rows(List.of())
+                                .build());
+                    });
+        });
+
     }
 
     @Override

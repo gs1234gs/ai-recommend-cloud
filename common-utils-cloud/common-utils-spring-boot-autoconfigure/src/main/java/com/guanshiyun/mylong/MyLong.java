@@ -19,7 +19,7 @@ public class MyLong {
         return mylong;
     }
     //重载，允许返回null
-    public Long LongOrNull(Object number) {
+    public Long longOrNull(Object number) {
         Long mylong = null;;
         try {
             mylong = Long.parseLong(number.toString().trim());
@@ -28,7 +28,15 @@ public class MyLong {
         }
         return mylong;
     }
-    public Long findId(ContextView contextView) {
+    public Long findUserId(ContextView contextView) {
         return  myLong(contextView.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+    }
+
+    public Long findTenantId(ContextView contextView) {
+        return  myLong(contextView.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TENANT_ID_KEY));
+    }
+
+    public Boolean hasKey(ContextView contextView) {
+        return contextView.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
     }
 }

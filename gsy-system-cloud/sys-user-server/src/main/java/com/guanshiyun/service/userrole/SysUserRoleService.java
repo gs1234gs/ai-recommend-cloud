@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface SysUserRoleService {
     //添加用户角色关系
-    Mono<ResultT<SysUserRole>> addUserRole(Long userId, Long roleId);
+    Mono<ResultT<SysUserRole>> addUserRole(Long userId, List<Long> roleIds);
     //根据用户id查询角色关系
     Flux<Long> findRoleIdsByUserId(Long userId);
 

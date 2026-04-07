@@ -31,4 +31,6 @@ public class ProductTag extends BasePojo {
     private Long productId;
     /** 标签id */
     private Long tagId;
+    //租户id
+    private Long tenantId;
 }

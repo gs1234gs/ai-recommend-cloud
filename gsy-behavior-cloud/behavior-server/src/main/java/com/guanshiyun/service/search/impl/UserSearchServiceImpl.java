@@ -48,7 +48,7 @@ public class UserSearchServiceImpl implements UserSearchService {
             LocalDateTime now = LocalDateTime.now();
             userSearchMongodb.setId(id).setCreateTime(now);
             if (ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
-                Long creator = myLong.LongOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+                Long creator = myLong.longOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
                 userSearchMongodb.setCreator(creator);
             }
 
@@ -92,7 +92,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
             int limit = (Objects.isNull(rows) || rows <= ConstNumber.INT_ZERO) ? ConstNumber.INTEGER_TEN : rows;
             Long userId =
-                    myLong.LongOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+                    myLong.longOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
             Query query = new Query()
                     .with(Sort.by(Sort.Order.desc(BasePojo.Fields.createTime))) // 最近搜索在前

@@ -238,7 +238,7 @@ public class UserBrowseServiceImpl implements UserBrowseService {
                 return Flux.empty();
             }
 
-            Long userId = myLong.LongOrNull(
+            Long userId = myLong.longOrNull(
                     ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
             // ===== 构造查询条件 =====

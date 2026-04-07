@@ -8,15 +8,21 @@ import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.base.BasePojo;
+import com.guanshiyun.controller.sysrole.vo.SysRoleVO;
 import com.guanshiyun.controller.sysuser.vo.SysUserSaveVO;
 import com.guanshiyun.controller.sysuser.vo.SysUserVO;
+import com.guanshiyun.controller.tenant.vo.TenantVO;
 import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.relationpojo.SysUserRole;
+import com.guanshiyun.repository.sysrole.SysRoleRepository;
 import com.guanshiyun.repository.sysuser.SysUserRepository;
+import com.guanshiyun.repository.tenant.TenantRepository;
 import com.guanshiyun.repository.userrole.SysUserRoleRepository;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
+import com.guanshiyun.rolepojo.SysRole;
 import com.guanshiyun.service.sysuser.SysUserService;
+import com.guanshiyun.tenant.SysTenant;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.userpojo.SysUser;
 import com.guanshiyun.utils.BeanConvertUtil;
@@ -49,6 +55,8 @@ public class SysUserServiceImpl implements SysUserService {
     private final DatabaseClient databaseClient;
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
     private final MyLong myLong;
+    private final SysRoleRepository sysRoleRepository;
+    private final TenantRepository  tenantRepository;
 
     /**
      * Keyset分页查询SysUser
@@ -146,8 +154,27 @@ public class SysUserServiceImpl implements SysUserService {
 //           Long userId = myLong.Long(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 //           return sysUserRepository.findById(userId);
 //       });
-        return sysUserRepository.findById(id)
-                .map(SysUser -> BeanUtil.toBean(SysUser, SysUserVO.class));
+        Mono<List<Long>> roleIdMono = sysUserRoleRepository.findRoleIdByUserId(id).collectList();
+        Mono<SysUser> userMono = sysUserRepository.findById(id);
+        return Mono.zip(roleIdMono, userMono)
+                .flatMap(tuple->{
+                    List<Long> roleIds = tuple.getT1();
+                    SysUser sysUser = tuple.getT2();
+
+                    SysUserVO sysUserVO = BeanConvertUtil.toBean(sysUser, SysUserVO.class);
+
+                    Mono<SysTenant> tanantMono = tenantRepository.findById(sysUser.getTenantId());
+
+                    Mono<List<SysRole>> sysRoleMono = sysRoleRepository.findAllById(roleIds)
+                            .collectList();
+                    return Mono.zip(tanantMono, sysRoleMono)
+                            .map(tuple2->{
+                                SysTenant t1 = tuple2.getT1();
+                                List<SysRole> t2 = tuple2.getT2();
+                                List<SysRoleVO> sysRoleVOS = BeanConvertUtil.toBeanList(t2, SysRoleVO.class);
+                                return sysUserVO.setRoles(sysRoleVOS).setTenant(BeanConvertUtil.toBean(t1, TenantVO.class));
+                            });
+                });
     }
 
     @Override
@@ -163,7 +190,8 @@ public class SysUserServiceImpl implements SysUserService {
                                     )
                                     .flatMap(id ->
                                             sysUserRoleRepository
-                                                    .findExistsUserRole(id, sysUser.getRoleId())
+                                                    .findExistsUserRole(id, sysUser.getRoles().stream().map(SysRoleVO::getId)
+                                                            .toList())
                                                     .then(Mono.just(id))
 
                                     )
@@ -237,7 +265,7 @@ public class SysUserServiceImpl implements SysUserService {
             if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
                 return Mono.error(new Throwable("请先登录"));
             }
-            Long id = myLong.findId(ctx);
+            Long id = myLong.findUserId(ctx);
             sysUser.setId(id);
            return r2dbcUpdateHelper.updateIgnoreNull(EntityTableNameUtils.getName(SysUser.class),sysUser,SysUser.Fields.id)
                    .flatMap(sysUserRepository::findById)
@@ -253,9 +281,21 @@ public class SysUserServiceImpl implements SysUserService {
             if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
                 return Mono.error(new Throwable("请先登录"));
             }
-            Long id = myLong.findId(ctx);
-          return   sysUserRepository.findById(id)
-                  .map(sysUser->BeanConvertUtil.toBean(sysUser, SysUserVO.class));
+            Long id = myLong.findUserId(ctx);
+            Mono<List<Long>> roleIdMono = sysUserRoleRepository.findRoleIdByUserId(id).collectList();
+            Mono<SysUser> userMono = sysUserRepository.findById(id);
+            return Mono.zip(roleIdMono, userMono)
+                    .flatMap(tuple->{
+                        List<Long> roleIds = tuple.getT1();
+                        SysUser sysUser = tuple.getT2();
+                        SysUserVO sysUserVO = BeanConvertUtil.toBean(sysUser, SysUserVO.class);
+                        return sysRoleRepository.findAllById(roleIds)
+                                .collectList()
+                                .map(sysRole->{
+                                    List<SysRoleVO> sysRoleVOS = BeanConvertUtil.toBeanList(sysRole, SysRoleVO.class);
+                                   return sysUserVO.setRoles(sysRoleVOS);
+                                });
+                    });
         });
     }
 }

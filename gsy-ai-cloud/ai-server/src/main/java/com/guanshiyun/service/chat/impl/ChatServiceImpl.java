@@ -406,7 +406,8 @@ public class ChatServiceImpl implements ChatService {
             return buildPrompt( userInput)
                     .map(prompt -> {
 
-                        Flux<String> stream = chatClient.prompt(prompt)
+                        Flux<String> stream = chatClient
+                                .prompt(prompt)
                                 .stream()
                                 .chatResponse()
                                 .<String>handle((chatResponse, sink) -> {
@@ -479,13 +480,11 @@ public class ChatServiceImpl implements ChatService {
                                       String aiContent,
                                       ContextView ctx) {
 
-        if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+        if (!myLong.hasKey(ctx)) {
             return Mono.empty();
         }
 
-        Long userId = myLong.myLong(
-                ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
-        );
+        Long userId = myLong.findUserId(ctx);
 
         ContentText contentText = ContentText.builder()
                 .id(snowflakePermanent.nextId())

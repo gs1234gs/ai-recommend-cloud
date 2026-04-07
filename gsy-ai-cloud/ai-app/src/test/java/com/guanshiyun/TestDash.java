@@ -49,7 +49,7 @@ public class TestDash {
     public void test43() {
         ReqChat req = ReqChat.builder()
                 .conversationId(Long.valueOf(43939561600L))
-                .content("化妆品")
+                .content("机器人")
                 .flag(false)
                 .build();
 

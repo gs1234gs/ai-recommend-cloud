@@ -3,9 +3,11 @@ package com.guanshiyun.service.sku.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.db.dbnumber.ConstNumber;
+import com.db.dbsqlconst.SqlConst;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.controller.sku.vo.*;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.product.Product;
 import com.guanshiyun.repository.sku.SKURepository;
 import com.guanshiyun.requestpojo.RequestPage;
@@ -14,7 +16,6 @@ import com.guanshiyun.service.sku.SKUService;
 import com.guanshiyun.service.utils.UtilsService;
 import com.guanshiyun.sku.SKU;
 import com.guanshiyun.snowflake.SnowflakePermanent;
-import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
@@ -26,7 +27,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +44,7 @@ public class SKUServiceImpl implements SKUService {
     private final UtilsService utilsService;
     private final SnowflakePermanent snowflakePermanent;
     private final TransactionalOperator transactionalOperator;
+    private final MyLong myLong;
 
     /**
      * 解析 picList 字段（数据库里存的是 JSON 字符串）
@@ -69,9 +70,10 @@ public class SKUServiceImpl implements SKUService {
         SKU sku = BeanUtil.toBean(skuVO, SKU.class)
                 .setPicList(JSONObject.toJSONString(skuVO.getPicList()));
         return Mono.deferContextual(ctx -> {
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
+            if (!myLong.hasKey(ctx))
                 return Mono.error(new RuntimeException("用户未登录"));
-            Long userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+            Long userId = myLong.findUserId(ctx);
+            Long tenantId = myLong.findTenantId(ctx);
             Integer stockVO = skuVO.getStock();
             Integer addStockVO = skuVO.getAddStock();
             int stock = 0;
@@ -81,12 +83,14 @@ public class SKUServiceImpl implements SKUService {
             if (addStockVO != null) {
                 stock += addStockVO;
             }
+            LocalDateTime now = LocalDateTime.now();
             if (Objects.isNull(sku.getId())) {
                 String code = snowflakePermanent.stringNextId();
                 sku.setSkuCode(code)
                         .setStock(stock)
-                        .setCreator(userId);
-                sku.setCreateTime(LocalDateTime.now());
+                        .setTenantId(tenantId)
+                        .setCreator(userId)
+                        .setCreateTime(now);
                 return skuRepository.save(sku)
                         .flatMap(skuSave -> skuRepository.findAllByProductId(skuSave.getProductId()).collectList())
                         .flatMap(skuList -> {
@@ -105,7 +109,7 @@ public class SKUServiceImpl implements SKUService {
                                     .id(sku.getProductId())
                                     .minPrice(minPrice)
                                     .maxPrice(maxPrice)
-                                    .updateTime(LocalDateTime.now())
+                                    .updateTime(now)
                                     .updater(userId)
                                     .build();
                             return r2dbcUpdateHelper.updateIgnoreNull(
@@ -122,7 +126,7 @@ public class SKUServiceImpl implements SKUService {
             }
 
             sku.setUpdater(userId)
-                .setUpdateTime(LocalDateTime.now());
+                .setUpdateTime(now);
             final int stockFinal = stock;
             return skuRepository.findById(sku.getId())
                             .flatMap(skuUpdate -> {
@@ -157,7 +161,7 @@ public class SKUServiceImpl implements SKUService {
                                 .id(sku.getProductId())
                                 .minPrice(minPrice)
                                 .maxPrice(maxPrice)
-                                .updateTime(LocalDateTime.now())
+                                .updateTime(now)
                                 .updater(userId)
                                 .build();
                         return r2dbcUpdateHelper.updateIgnoreNull(
@@ -187,10 +191,16 @@ public class SKUServiceImpl implements SKUService {
     @Override
     public Mono<PageResultT<List<SKUGroupByProductIdVO>>> findAllByPage(
             RequestPage<SKUFindVO> requestPage) {
+        return Mono.deferContextual(ctx->{
+           if(!myLong.hasKey(ctx)) return Mono.error(new Throwable("登陆已经过期"));
+            Long userId = myLong.findUserId(ctx);
+            Long tenantId = myLong.findTenantId(ctx);
+
 
         Long pageNum = requestPage.getPageNum();
         int pageSize = requestPage.getPageSize();
         long offset = (pageNum-1) * pageSize;
+
 
         // 1. 分页查 productId
         Mono<List<Long>> productIdPageMono =
@@ -199,11 +209,13 @@ public class SKUServiceImpl implements SKUService {
                                     SELECT DISTINCT product_id
                                     FROM sku
                                     WHERE del_flag = 0
+                                    tenant_id = :tenantId
                                     ORDER BY product_id
                                     LIMIT :limit OFFSET :offset
                                 """)
-                        .bind("limit", pageSize)
-                        .bind("offset", offset)
+                        .bind(SqlConst.SQL_LIMIT.trim(), pageSize)
+                        .bind(SqlConst.SQL_OFFSET.trim(), offset)
+                        .bind(SKU.Fields.tenantId,tenantId)
                         .map((row, meta) -> row.get("product_id", Long.class))
                         .all()
                         .collectList();
@@ -289,6 +301,7 @@ public class SKUServiceImpl implements SKUService {
                     log.error("分页查询 SKU 失败", e);
                     return Mono.empty();
                 });
+        });
     }
 
 //    @Override

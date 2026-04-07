@@ -157,7 +157,7 @@ public class UserCollectServiceImpl implements UserCollectService {
             int limit = (Objects.isNull( rows) || rows <= ConstNumber.INT_ZERO) ? ConstNumber.INTEGER_TEN : rows;
             Long userId =
                     myLong
-                            .LongOrNull(
+                            .longOrNull(
                                     ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
             Query query = new Query()
@@ -188,7 +188,7 @@ public class UserCollectServiceImpl implements UserCollectService {
             if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                 return Mono.empty();
             }
-            Long userId = myLong.LongOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong.longOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
             // 2. 创建 Pageable (页码从 0 开始)
             Pageable pageable = PageRequest.of(
                     finalPageNum - 1,

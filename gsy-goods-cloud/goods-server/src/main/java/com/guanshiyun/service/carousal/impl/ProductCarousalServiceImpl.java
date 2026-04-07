@@ -8,7 +8,6 @@ import com.guanshiyun.controller.carousal.vo.ProductCarousalVO;
 import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.repository.carousal.ProductCarousalRepository;
 import com.guanshiyun.service.carousal.ProductCarousalService;
-import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,10 +56,10 @@ public class ProductCarousalServiceImpl implements ProductCarousalService {
     @Override
     public Mono<ProductCarousalVO> save(ProductCarousalSaveVO productCarousalSaveVO) {
         return Mono.deferContextual(ctx->{
-            if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+            if(!myLong.hasKey(ctx)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
-            Long userId = myLong.LongOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong.findUserId(ctx);
             ProductCarousal productCarousal =
                     BeanConvertUtil.toBean(productCarousalSaveVO, ProductCarousal.class);
             if(Objects.isNull(productCarousalSaveVO.getId())) {
@@ -91,7 +90,7 @@ public class ProductCarousalServiceImpl implements ProductCarousalService {
     @Override
     public Mono<Void> deleteById(Long id) {
         return Mono.deferContextual(ctx->{
-            if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+            if(!myLong.hasKey(ctx)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
             return productCarousalRepository.deleteById(id);
@@ -101,7 +100,7 @@ public class ProductCarousalServiceImpl implements ProductCarousalService {
     @Override
     public Mono<Void> deleteByIds(List<Long> ids) {
         return Mono.deferContextual(ctx->{
-            if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+            if(!myLong.hasKey(ctx)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
             return productCarousalRepository.deleteAllById(ids);

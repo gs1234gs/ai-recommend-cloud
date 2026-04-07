@@ -28,4 +28,6 @@ public class ProductCategory extends BasePojo implements Serializable {
     private Long id;
     private Long productId;
     private Long categoryId;
+    //租户id
+    private Long tenantId;
 }

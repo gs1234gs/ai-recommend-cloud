@@ -1,19 +1,28 @@
 package com.guanshiyun.controller.sysuser.vo;
 
 import com.guanshiyun.base.BasePojo;
-import lombok.*;
+import com.guanshiyun.controller.sysrole.vo.SysRoleVO;
+import com.guanshiyun.controller.tenant.vo.TenantVO;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldNameConstants
+@Accessors(chain = true)
 public class SysUserVO extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -46,7 +55,9 @@ public class SysUserVO extends BasePojo implements Serializable {
 
 
     //角色id
-    private Long roleId;
+    private List<SysRoleVO> roles;
     //备注
     private String remark;
+    //租户id
+    private TenantVO tenant;
 }

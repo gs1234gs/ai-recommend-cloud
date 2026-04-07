@@ -1,4 +1,4 @@
-package com.guanshiyun.controller.tenant;
+package com.guanshiyun.controller.tenant.vo;
 
 import com.guanshiyun.base.BasePojo;
 import lombok.AllArgsConstructor;

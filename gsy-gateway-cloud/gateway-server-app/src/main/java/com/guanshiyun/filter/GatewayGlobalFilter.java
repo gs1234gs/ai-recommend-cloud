@@ -111,6 +111,7 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
         Long userId = myLong.myLong(claims.getSubject());
         Object obj = map.get(ConstMapClassNickName.MAP_USERTYPE_KEY);
         short userType = obj != null ? ((Number) obj).shortValue() : 0;
+        Object tenantIdObj = map.getOrDefault(ConstMapClassNickName.MAP_TENANT_ID_RESPONSE_KEY, null);
         return reactiveRedisUtil.hGet(
                         ConstClassNickName.REDIS_TOKEN_KEY,
                         userId.toString()
@@ -182,6 +183,7 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
                     Map<String, Object> userInfos = hMap();
                                 userInfos.put(ConstMapClassNickName.MAP_USERID_KEY, userId);
                                 userInfos.put(ConstMapClassNickName.MAP_USERINFO_KEY, userType);
+                                userInfos.put(ConstMapClassNickName.MAP_TENANT_ID_RESPONSE_KEY,tenantIdObj);
                                 //将用户信息转化为json字符窜
                                 String userInfoJson = JSONObject.toJSONString(userInfos);
                                 //传递用户信息

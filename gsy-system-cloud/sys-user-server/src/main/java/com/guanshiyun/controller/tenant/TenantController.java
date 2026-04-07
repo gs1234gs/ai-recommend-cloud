@@ -1,10 +1,13 @@
 package com.guanshiyun.controller.tenant;
 
+import com.guanshiyun.controller.tenant.vo.PageTenantVO;
+import com.guanshiyun.controller.tenant.vo.TenantSaveVO;
+import com.guanshiyun.controller.tenant.vo.TenantVO;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.tenant.TenantService;
-import com.guanshiyun.tenant.Tenant;
+import com.guanshiyun.tenant.SysTenant;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +23,7 @@ public class TenantController {
 
     @PostMapping("save")
     public Mono<ResultT<Long>> save(@RequestBody TenantSaveVO tenantSaveVO){
-        return tenantService.save(BeanConvertUtil.toBean(tenantSaveVO, Tenant.class))
+        return tenantService.save(BeanConvertUtil.toBean(tenantSaveVO, SysTenant.class))
                 .map(ResultT::success);
     }
 

@@ -14,7 +14,6 @@ import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.category.CategoryService;
 import com.guanshiyun.snowflake.SnowflakePermanent;
-import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,9 +44,9 @@ public class CategoryServiceImpl implements CategoryService {
     public Mono<Long> save(CategorySaveVO categorySaveVO) {
         Category category = BeanUtil.toBean(categorySaveVO, Category.class).setCode(snowflakePermanent.stringNextId());
         return Mono.deferContextual(ctx->{
-            if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
+            if(!myLong.hasKey(ctx))
                 return Mono.error(new RuntimeException("用户未登录"));
-            Long userId = myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong.findUserId(ctx);
             if(Objects.nonNull(category.getId())){
                 category.setUpdater(userId);
                 category.setUpdateTime(LocalDateTime.now());

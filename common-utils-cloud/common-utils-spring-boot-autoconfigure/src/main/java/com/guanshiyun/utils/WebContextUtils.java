@@ -17,7 +17,7 @@ public class WebContextUtils {
     public <T> Mono<T> withUserContextMono(Supplier<Mono<T>> remoteCall) {
         return Mono.deferContextual(ctx -> {
             if (ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
-                Long userId = myLong.LongOrNull(
+                Long userId = myLong.longOrNull(
                         ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
                 return remoteCall.get()
                         .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId));
@@ -38,7 +38,7 @@ public class WebContextUtils {
                 if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                     return Mono.error(new RuntimeException("用户未登录"));
                 }
-                Long userId = myLong.LongOrNull(
+                Long userId = myLong.longOrNull(
                         ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
                 return remoteCall.get()
                         .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId));
@@ -50,7 +50,7 @@ public class WebContextUtils {
     public <T> Flux<T> withUserContextFlux(Supplier<Flux<T>> remoteCall) {
         return Flux.deferContextual(ctx -> {
             if (ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
-                Long userId = myLong.LongOrNull(
+                Long userId = myLong.longOrNull(
                         ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
                 return remoteCall.get()
                         .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId));
@@ -70,7 +70,7 @@ public class WebContextUtils {
                 if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                     return Mono.error(new RuntimeException("用户未登录"));
                 }
-                Long userId = myLong.LongOrNull(
+                Long userId = myLong.longOrNull(
                         ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
                 return remoteCall.get()
                         .contextWrite(Context.of(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId));

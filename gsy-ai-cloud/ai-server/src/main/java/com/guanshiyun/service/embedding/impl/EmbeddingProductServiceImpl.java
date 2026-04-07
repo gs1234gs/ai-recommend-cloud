@@ -124,7 +124,7 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
                 return gorseClient(GuestEnum.GUEST_USER_ID.getValue(), topK);
             }
 
-            Long userId = myLong.LongOrNull(
+            Long userId = myLong.longOrNull(
                     ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
             // 无行为：直接走 Gorse

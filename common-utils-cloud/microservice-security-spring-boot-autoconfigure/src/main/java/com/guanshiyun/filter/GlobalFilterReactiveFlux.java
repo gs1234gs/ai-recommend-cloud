@@ -38,7 +38,7 @@ public class GlobalFilterReactiveFlux implements WebFilter {
 
 
     @Override
-    public @NonNull Mono<Void> filter(ServerWebExchange exchange,@NonNull WebFilterChain chain) {
+    public @NonNull Mono<Void> filter(ServerWebExchange exchange, @NonNull WebFilterChain chain) {
         //获取用户信息
         RequestPath path = exchange.getRequest().getPath();
         if (PublicEndpoints.PERMSSION_WHITE_LIST.contains(path.value())) {
@@ -57,22 +57,25 @@ public class GlobalFilterReactiveFlux implements WebFilter {
         HttpHeaders headers = exchange.getRequest().getHeaders();
         String traceId = headers.getFirst(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY);
         String userIdStr = headers.getFirst(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
-        log.info("traceId : {} , userId : {}", traceId,userIdStr);
+        String tenantIdStr = headers.getFirst(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TENANT_ID_KEY);
+        log.info("traceId : {} , userId : {}", traceId, userIdStr);
         if (StringUtils.hasText(traceId) || StringUtils.hasText(userIdStr)) {
             log.info("这是特殊请求，放行：{}", path);
             return chain.filter(exchange)
                     .contextWrite(ctx -> {
                         if (StringUtils.hasText(userIdStr)) {
                             ctx = ctx.put(
-                                    ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY,
-                                    myLong.LongOrNull(userIdStr)
-                            );
+                                            ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY,
+                                            myLong.myLong(userIdStr)
+                                    )
+                                    .put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TENANT_ID_KEY, myLong.myLong(tenantIdStr));
                         }
                         if (StringUtils.hasText(traceId)) {
                             ctx = ctx.put(
-                                    ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY,
-                                    traceId
-                            );
+                                            ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY,
+                                            traceId
+                                    )
+                                    .put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TENANT_ID_KEY, myLong.myLong(tenantIdStr));
                         }
                         return ctx;
                     });
@@ -112,12 +115,17 @@ public class GlobalFilterReactiveFlux implements WebFilter {
                 userMap.get(
                         ConstMapClassNickName.MAP_USERID_KEY
                 ));
+        Long tenantId = myLong.longOrNull(
+                userMap.get(
+                        ConstMapClassNickName.MAP_TENANT_ID_RESPONSE_KEY
+                )
+        );
         //设置用户id到链路中
         return chain.filter(exchange)
                 .contextWrite(ctx -> ctx.put(
                         ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY,
                         userId
-                ));
+                ).put(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TENANT_ID_KEY, tenantId));
 
     }
 }

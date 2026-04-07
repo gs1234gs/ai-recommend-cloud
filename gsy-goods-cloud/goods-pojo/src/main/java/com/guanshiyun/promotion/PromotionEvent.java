@@ -55,4 +55,6 @@ public class PromotionEvent extends BasePojo implements Serializable {
 
     // 活动状态  使用枚举
     private short status;
+    //租户id
+    private Long tenantId;
 }

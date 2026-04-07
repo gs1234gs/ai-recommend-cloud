@@ -18,9 +18,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Data
 @SuperBuilder(toBuilder = true)
-@Table("tenant")
+@Table("sys_tenant")
 @FieldNameConstants
-public class Tenant extends BasePojo implements Serializable {
+public class SysTenant extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 

@@ -60,4 +60,6 @@ public class Tag extends BasePojo {
     private Integer shelfLife;
     /** 标签描述 */
     private String description;
+    //租户id
+    private Long tenantId;
 }

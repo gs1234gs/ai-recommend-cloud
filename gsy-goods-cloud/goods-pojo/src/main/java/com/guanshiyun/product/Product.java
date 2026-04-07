@@ -58,6 +58,8 @@ public class Product extends BasePojo implements Serializable {
     private BigDecimal minPrice;
     //最高价
     private BigDecimal maxPrice;
+    //租户id
+    private Long tenantId;
 }
 /**
  * 实体商品，仓库；

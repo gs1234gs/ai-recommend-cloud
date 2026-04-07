@@ -71,5 +71,7 @@ public class SKU extends BasePojo implements Serializable {
     private Object picList;
     //商品id
     private Long productId;
+    //租户id
+    private Long tenantId;
 
 }

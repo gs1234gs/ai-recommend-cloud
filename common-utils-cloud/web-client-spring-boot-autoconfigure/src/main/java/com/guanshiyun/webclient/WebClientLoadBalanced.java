@@ -98,17 +98,26 @@ public class WebClientLoadBalanced {
 
     public ClientRequest clientRequest(ContextView ctx, ClientRequest clientRequest) {
         // 从 Reactor Context 中取 userId
-        Object userIdObj = ctx.getOrDefault(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, "");
-        String userId = Objects.nonNull(userIdObj) ? userIdObj.toString() : "";
+        String userIdL = ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY;
+        Object userId = ctx.getOrDefault(userIdL, "");
 
         // 从 Reactor Context 中取 traceId
-        Object traceIdObj = ctx.getOrDefault(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY, "");
-        String traceId = Objects.nonNull(traceIdObj) ? traceIdObj.toString() : "";
+        String teaceId = ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY;
+        Object traceId = ctx.getOrDefault(teaceId, teaceId);
+
+        String localTenantIdKey = ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TENANT_ID_KEY;
+        Object tenantId = ctx.getOrDefault(localTenantIdKey, "1") ;
+
+        userId = Objects.nonNull(userId) ? userId : "";
+        traceId = Objects.nonNull(traceId) ? traceId : teaceId;
+        tenantId = Objects.nonNull(tenantId) ? tenantId : "1";
+
 
         // 构建新的 ClientRequest 并设置两个 header
         return ClientRequest.from(clientRequest)
-                .header(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY, userId)
-                .header(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_TRACE_ID_KEY, traceId)
+                .header(userIdL, userId.toString())
+                .header(teaceId, traceId.toString())
+                .header(localTenantIdKey, tenantId.toString())
                 .build();
     }
 

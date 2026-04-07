@@ -67,7 +67,7 @@ public class SignInUpServiceImpl implements SignInUpService {
                 )
                 .switchIfEmpty(signInUpRepository.save(sysUser)
                         .flatMap(user ->
-                                sysUserRoleService.addUserRole(sysUser.getId(), RoleIdConst.ROLE_COMMON_USER)
+                                sysUserRoleService.addUserRole(sysUser.getId(), List.of(RoleIdConst.ROLE_COMMON_USER))
                                         .map(result -> {
                                             //添加角色
                                             log.info("注册成功: {}", result);

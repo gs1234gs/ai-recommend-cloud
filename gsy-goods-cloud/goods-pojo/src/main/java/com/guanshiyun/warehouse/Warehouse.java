@@ -37,4 +37,6 @@ public class Warehouse extends BasePojo {
     private short status;
     /** 仓库管理员ID */
     private Long adminId;
+    //租户id
+    private Long tenantId;
 }

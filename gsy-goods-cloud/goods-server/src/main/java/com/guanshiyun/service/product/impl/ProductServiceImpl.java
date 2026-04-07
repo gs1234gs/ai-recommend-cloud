@@ -76,16 +76,16 @@ public class ProductServiceImpl implements ProductService {
         LocalDateTime now = LocalDateTime.now();
         List<Long> categoryIds = productSaveVO.getCategoryId();
         return Mono.deferContextual(ctx -> {
-                    if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+                    if (!myLong.hasKey(ctx)) {
                         return Mono.error(new RuntimeException("用户不存在"));
                     }
-                    Long userId = myLong.myLong(
-                            ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
-                    );
+                    Long userId = myLong.findUserId(ctx);
+                    Long tenantId = myLong.findTenantId(ctx);
                     if (Objects.isNull(tagIds))
                         return Mono.error(new RuntimeException("标签不存在"));
                     if (Objects.isNull(categoryIds))
                         return Mono.error(new RuntimeException("分类不存在"));
+                    product.setTenantId(tenantId);
                     if (Objects.isNull(product.getId())) {
                         product.setCreateTime(now);
                         product.setCreator(userId);
@@ -99,6 +99,7 @@ public class ProductServiceImpl implements ProductService {
                                                                             .id(null)
                                                                             .productId(productId)
                                                                             .creator(userId)
+                                                                            .tenantId(tenantId)
                                                                             .createTime(now)
                                                                             .categoryId(categoryId)
                                                                             .build()
@@ -112,6 +113,7 @@ public class ProductServiceImpl implements ProductService {
                                                                             .id(null)
                                                                             .productId(productId)
                                                                             .creator(userId)
+                                                                            .tenantId(tenantId)
                                                                             .createTime(now)
                                                                             .tagId(tagId)
                                                                             .build()
@@ -159,6 +161,7 @@ public class ProductServiceImpl implements ProductService {
                                                                     .productId(productId)
                                                                     .creator(userId)
                                                                     .createTime(now)
+                                                                    .tenantId(tenantId)
                                                                     .categoryId(id)
                                                                     .build())
                                                             .collect(Collectors.toList());
@@ -213,9 +216,8 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return Mono.deferContextual(ctx -> {
-                    Long userId = myLong.myLong(
-                            ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
-                    );
+                    Long userId = myLong.findUserId(ctx);
+                    Long tenantId = myLong.findTenantId(ctx);
                     if (Objects.isNull(userId)) {
                         return Mono.error(new RuntimeException("用户不存在"));
                     }
@@ -224,6 +226,7 @@ public class ProductServiceImpl implements ProductService {
                         // 新增商品
                         product.setCreateTime(now);
                         product.setCreator(userId);
+                        product.setTenantId(tenantId);
                         return r2dbcEntityTemplate.insert(product)
                                 .map(Product::getId)
                                 .flatMap(productId -> {
@@ -235,6 +238,7 @@ public class ProductServiceImpl implements ProductService {
                                                                     .productId(productId)
                                                                     .creator(userId)
                                                                     .createTime(now)
+                                                                    .tenantId(tenantId)
                                                                     .categoryId(categoryId)
                                                                     .build()
                                                     )
@@ -248,6 +252,7 @@ public class ProductServiceImpl implements ProductService {
                                                                     .productId(productId)
                                                                     .creator(userId)
                                                                     .createTime(now)
+                                                                    .tenantId(tenantId)
                                                                     .tagId(tagId)
                                                                     .build()
                                                     )
@@ -308,6 +313,7 @@ public class ProductServiceImpl implements ProductService {
                                                                 .categoryId(id)
                                                                 .creator(userId)
                                                                 .updater(userId)
+                                                                .tenantId(tenantId)
                                                                 .createTime(now)
                                                                 .build())
                                                         .collect(Collectors.toList());
@@ -319,6 +325,7 @@ public class ProductServiceImpl implements ProductService {
                                                                 .tagId(id)
                                                                 .creator(userId)
                                                                 .updater(userId)
+                                                                .tenantId(tenantId)
                                                                 .createTime(now)
                                                                 .build())
                                                         .collect(Collectors.toList());
@@ -490,13 +497,10 @@ public class ProductServiceImpl implements ProductService {
         RequestPage<Product> productRequestPage = BeanConvertUtil.toBean(recordRequestPage, Product.class);
         List<Long> categoryIds = condition.getCategoryId();
         return Mono.deferContextual(ctx -> {
-            Long userId = myLong
-                    .myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong.findUserId(ctx);
+            Long tenantId = myLong.findTenantId(ctx);
             if (Objects.isNull(userId))
-                return Mono.just(PageResultT.<List<ProductVO>>builder()
-                        .total(ConstNumber.INT_ZERO)
-                        .rows(Collections.emptyList())
-                        .build());
+                return Mono.error(new Throwable("用户未登录"));
             if (Objects.nonNull(categoryIds) && !categoryIds.isEmpty()) {
                 return productCategoryRepository.findByCategoryId(categoryIds.getFirst())
                         .map(ProductCategory::getProductId)
@@ -505,6 +509,7 @@ public class ProductServiceImpl implements ProductService {
                                 .of(r2dbcEntityTemplate, Product.class, productRequestPage)
                                 .like(Product.Fields.name, condition.getName())
                                 .in(Product.Fields.id, productIds)
+                                .eq(Product.Fields.tenantId, tenantId)
                                 .page()
                                 .map(pageResultT ->
                                         BeanConvertUtil.toBean(pageResultT, ProductVO.class)
@@ -514,6 +519,7 @@ public class ProductServiceImpl implements ProductService {
             return ReactivePageQuery
                     .of(r2dbcEntityTemplate, Product.class, productRequestPage)
                     .like(Product.Fields.name, condition.getName())
+                    .eq(Product.Fields.tenantId, tenantId)
                     .page()
                     .map(pageResultT ->
                             BeanConvertUtil.toBean(pageResultT, ProductVO.class)
@@ -525,13 +531,14 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Mono<Long> save(List<ProductSaveVO> productSaveVOList) {
         return Mono.deferContextual(ctx -> {
-            Long userId = myLong
-                    .myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong.findUserId(ctx);
+            Long tenantId = myLong.findTenantId(ctx);
             if (Objects.isNull(userId))
-                return Mono.just(ConstNumber.LONG_ZERO);
+                return Mono.error(new Throwable("用户未登录"));
             return Flux.fromIterable(productSaveVOList)
                     .concatMap(productSaveVO -> {
                         Product product = BeanUtil.toBean(productSaveVO, Product.class);
+                        product.setTenantId(tenantId);
                         return Objects.isNull(productSaveVO.getId()) ?
                                 r2dbcEntityTemplate.insert(Product.class)
                                         .using(product)

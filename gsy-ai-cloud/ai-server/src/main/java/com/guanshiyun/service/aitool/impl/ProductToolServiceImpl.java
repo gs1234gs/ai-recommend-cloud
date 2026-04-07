@@ -23,35 +23,14 @@ import java.util.List;
 public class ProductToolServiceImpl implements ProductToolService {
     private final EmbeddingProductService embeddingProductService;
     private final ProductApiService productApiService;
-//    private final Scheduler boundedElastic = Schedulers.boundedElastic();
-
-//    @Override
-//    @Tool(
-//            name = "searchProduct",
-//            description = "根据关键词搜索商品（10字内），返回最多5个商品ID"
-//    )
-//    public List<Long> searchProduct(String content) {
-//        if (!StringUtils.hasText(content)) {
-//            return List.of();
-//        }
-//        // 在 boundedElastic 线程中执行阻塞调用
-//        return Mono.fromCallable(() ->
-//                        embeddingProductService.searchByKeyword(content.trim(), 5)
-//                                .doOnSuccess(result -> {
-//                                    log.info(result.toString());
-//                                })
-//                                .block(Duration.ofSeconds(8))
-//                )
-//                .subscribeOn(boundedElastic)
-//                .onErrorReturn(List.of())
-//                .block(); // ← 这个 block 是在 boundedElastic 线程，不阻塞 Netty
-//    }
     @Override
     @Tool(
             name = "searchProduct",
-            description = "根据关键词搜索商品（10字内），返回最多5个商品ID"
+            description = "当用户想要查找某种商品（如'连衣裙'、'机械键盘'），但你不知道具体商品ID时，必须首先使用此工具。" +
+                    "它根据关键词在数据库中检索，返回最匹配的最多5个商品ID。" +
+                    "注意：此工具仅返回ID列表。如果找不到商品，将返回空列表。"
     )
-    public List<Long> searchProduct(@ToolParam(description = "用户需求描述") String content) {
+    public List<Long> searchProduct(@ToolParam(description = "用户搜索商品的关键词，例如：'夏季新款连衣裙'") String content) {
         if (!StringUtils.hasText(content)) {
             return List.of();
         }
@@ -63,9 +42,13 @@ public class ProductToolServiceImpl implements ProductToolService {
     @Override
     @Tool(
             name = "toolProductList",
-            description = "根据商品ID列表获取商品列表"
+            description = "当你已经拥有一组商品ID（例如通过 searchProduct 获取），需要获取这些商品的详细信息（名称、价格、图片、库存）以便展示给用户时，使用此工具。" +
+                    "它将商品ID列表转换为完整的商品信息对象列表。" +
+                    "如果传入的ID列表无效或商品不存在，将返回空列表。"
     )
-    public List<ProductCustomerApiVO> toolProductList(List<Long> productList) {
+    public List<ProductCustomerApiVO> toolProductList(@ToolParam(description = "需要查询详细信息的商品ID列表")
+                                                          List<Long> productList) {
+
         log.info("🔹 [TOOL SYNC] 开始同步获取商品列表: {}", productList);
 
         try {

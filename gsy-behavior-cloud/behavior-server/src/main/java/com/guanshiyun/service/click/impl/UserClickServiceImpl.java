@@ -210,7 +210,7 @@ public class UserClickServiceImpl implements UserClickService {
 
             // 获取用户 ID
             Long userId =
-                    myLong.LongOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+                    myLong.longOrNull(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
 
             // 构造 MongoDB 查询
             Query query = new Query()

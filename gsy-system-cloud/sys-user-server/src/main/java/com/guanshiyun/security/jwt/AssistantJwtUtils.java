@@ -24,6 +24,7 @@ public class AssistantJwtUtils {
             map.put(ConstMapClassNickName.MAP_USERID_KEY, userDetailsReWrite.getSysUser().getId());
             map.put(ConstMapClassNickName.MAP_USERNAME_KEY, userDetailsReWrite.getSysUser().getUsername());
             map.put(ConstMapClassNickName.MAP_USERTYPE_KEY, userDetailsReWrite.getSysUser().getType());
+            map.put(ConstMapClassNickName.MAP_TENANT_ID_RESPONSE_KEY, userDetailsReWrite.getSysUser().getTenantId());
             // 生成访问令牌（Access Token）和刷新令牌（Refresh Token）
             // 假设 JwtUtils 是一个工具类，用于生成 JWT 令牌
             String token = JwtUtils.genToken(map, userDetailsReWrite.getSysUser().getId().toString());

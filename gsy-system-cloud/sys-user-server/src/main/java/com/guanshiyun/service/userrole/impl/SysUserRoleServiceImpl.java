@@ -1,6 +1,5 @@
 package com.guanshiyun.service.userrole.impl;
 
-import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.controller.userrole.vo.SysUserRoleVO;
 import com.guanshiyun.relationpojo.SysUserRole;
 import com.guanshiyun.repository.userrole.SysUserRoleRepository;
@@ -8,16 +7,12 @@ import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.userrole.SysUserRoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -29,36 +24,72 @@ public class SysUserRoleServiceImpl implements SysUserRoleService {
     private final DatabaseClient databaseClient;
 
     @Override
-    public Mono<ResultT<SysUserRole>> addUserRole(Long userId, Long roleId) {
-        SysUserRole sysUserRole = SysUserRole.builder()
-                .id(null)
-                .userId(userId)
-                .roleId(roleId)
-                .build();
-        return sysUserRoleRepository.findExistsUserRole(userId, roleId)
-                .flatMap(existUserRole -> {
-                            if (!existUserRole.equals(ConstNumber.LONG_ZERO)) {
-                                log.info("用户已经用有次角色");
-                               return Mono.error(new Exception("用户已经用有次角色"));
-                            }
-                            return sysUserRoleRepository.save(sysUserRole)
-                                    .map(userRole -> {
-                                        log.info("添加用户角色关系成功: {}", userRole);
-                                               return ResultT.<SysUserRole>builder()
-                                                        .code(HttpStatus.OK.value())
-                                                        .msg("添加成功")
-                                                        .data(userRole)
-                                                        .build();
-                                            }
-                                    );
-                        }
+    public Mono<ResultT<SysUserRole>> addUserRole(Long userId, List<Long> roleIds) {
+        // 1. 简单校验
+        if (roleIds == null || roleIds.isEmpty()) {
+            // 如果传空列表，通常意味着清空所有角色
+            return sysUserRoleRepository.deleteAllByUserId(userId)
+                    .thenReturn(ResultT.<SysUserRole>builder().code(200).msg("清空成功").build());
+        }
 
-                )
-                .onErrorResume(throwable -> {
-                    log.error("添加用户角色失败", throwable);
-                           return Mono.error(new Exception("添加用户角色失败",throwable));
-                        }
-                );
+        return sysUserRoleRepository.findSysUserRoleByUserId(userId)
+                .collectList()
+                .flatMap(existingList -> {
+                    // 提取数据库中已有的角色ID集合
+                    Set<Long> existingIds = existingList.stream()
+                            .map(SysUserRole::getRoleId)
+                            .collect(Collectors.toSet());
+
+                    // 将传入的列表转为 Set，方便去重和快速查找
+                    Set<Long> incomingIds = new HashSet<>(roleIds);
+
+                    // --- 核心逻辑：计算差集 ---
+
+                    // 1. 需要删除的：数据库里有，但传入列表里没有 (existing - incoming)
+                    List<Long> toDeleteIds = existingIds.stream()
+                            .filter(id -> !incomingIds.contains(id))
+                            .toList();
+
+                    // 2. 需要新增的：传入列表里有，但数据库里没有 (incoming - existing)
+                    List<Long> toAddIds = incomingIds.stream()
+                            .filter(id -> !existingIds.contains(id))
+                            .toList();
+
+                    // --- 执行操作 ---
+
+                    // 执行删除 (如果没有要删的，返回空Mono)
+                    Mono<Void> deleteMono = toDeleteIds.isEmpty()
+                            ? Mono.empty()
+                            : sysUserRoleRepository.deleteByUserIdAndRoleIdIn(userId, toDeleteIds);
+
+                    // 构建新增对象并执行保存 (如果没有要加的，返回空Flux)
+                    Mono<List<SysUserRole>> saveMono = toAddIds.isEmpty()
+                            ? Mono.just(Collections.emptyList())
+                            : sysUserRoleRepository.saveAll(toAddIds.stream()
+                            .map(id -> SysUserRole.builder().userId(userId).roleId(id).build())
+                            .toList())
+                            .collectList();
+
+                    // 并行执行删除和新增
+                    return Mono.when(deleteMono, saveMono)
+                            .then(Mono.fromCallable(() -> ResultT.<SysUserRole>builder()
+                                    .code(200)
+                                    .msg("更新成功")
+                                    .build()));
+                })
+                // 处理用户原本没有任何角色的情况（直接走新增逻辑）
+                .switchIfEmpty(Mono.defer(() -> {
+                    List<SysUserRole> toAdd = roleIds.stream().distinct()
+                            .map(id -> SysUserRole.builder().userId(userId).roleId(id).build())
+                            .toList();
+                    return sysUserRoleRepository.saveAll(toAdd)
+                            .collectList()
+                            .thenReturn(ResultT.<SysUserRole>builder().code(200).msg("角色添加成功").build());
+                }))
+                .onErrorResume(e -> {
+                    log.error("更新用户角色失败", e);
+                    return Mono.error(new RuntimeException("更新用户角色失败", e));
+                });
     }
 
     @Override

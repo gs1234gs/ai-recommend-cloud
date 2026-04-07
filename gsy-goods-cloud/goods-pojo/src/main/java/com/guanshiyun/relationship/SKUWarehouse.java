@@ -34,4 +34,6 @@ public class SKUWarehouse extends BasePojo implements Serializable {
     private Long skuId;
     /** 仓库ID */
     private Long warehouseId;
+    //租户id
+    private Long tenantId;
 }

@@ -49,4 +49,6 @@ public class SysUserSaveVO extends BasePojo implements Serializable {
     private String remark;
     //角色id
     private List<Long> roleIdList;
+    //租户id
+    private Long tenantId;
 }
