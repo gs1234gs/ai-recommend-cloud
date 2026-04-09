@@ -25,7 +25,7 @@ public class RecommendProductController {
     //搜索
     @PostMapping("/search")
     public Mono<ResultT<CursorPageResult<List<ProductCustomerVO>>>> searchProduct(@RequestBody RequestCursorPage<ProductSearchSaveVO> requestCursorPage){
-       return recommendProductService.findCursor(requestCursorPage)
+       return recommendProductService.searchProduct(requestCursorPage)
                 .map(ResultT::success);
     }
     //推荐

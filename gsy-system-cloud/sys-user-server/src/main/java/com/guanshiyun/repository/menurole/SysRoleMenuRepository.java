@@ -2,15 +2,14 @@ package com.guanshiyun.repository.menurole;
 
 import com.guanshiyun.relationpojo.SysRoleMenu;
 import org.springframework.data.r2dbc.repository.Query;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 
 import java.util.Collection;
 import java.util.List;
 
-public interface SysRoleMenuRepository extends ReactiveCrudRepository<SysRoleMenu, Long> {
+public interface SysRoleMenuRepository extends R2dbcRepository<SysRoleMenu, Long> {
 
     //根据角色id获取菜单id
 

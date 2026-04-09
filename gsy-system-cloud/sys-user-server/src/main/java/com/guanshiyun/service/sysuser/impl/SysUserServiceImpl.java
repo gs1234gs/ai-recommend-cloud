@@ -23,7 +23,6 @@ import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.rolepojo.SysRole;
 import com.guanshiyun.service.sysuser.SysUserService;
 import com.guanshiyun.tenant.SysTenant;
-import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.userpojo.SysUser;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
@@ -206,10 +205,10 @@ public class SysUserServiceImpl implements SysUserService {
         sysUserSaveVO.setPassword(password);
         sysUserSaveVO.setCreateTime(LocalDateTime.now());
         return Mono.deferContextual(ctx -> {
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
+            if (!myLong.hasKey(ctx))
                 return Mono.error(new Exception("用户ID不存在"));
             Long userId =
-                    myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+                    myLong.findUserId(ctx);
             SysUser sysUser = BeanUtil.toBean(sysUserSaveVO, SysUser.class);
             if (Objects.isNull(sysUserSaveVO.getId())) {
                 sysUser.setCreator(userId);
@@ -262,7 +261,7 @@ public class SysUserServiceImpl implements SysUserService {
         sysUser.setUpdateTime(now)
                 .setUpdateTime(now);
         return Mono.deferContextual(ctx->{
-            if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
+            if(!myLong.hasKey(ctx)){
                 return Mono.error(new Throwable("请先登录"));
             }
             Long id = myLong.findUserId(ctx);
@@ -278,7 +277,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public Mono<SysUserVO> findById() {
         return Mono.deferContextual(ctx->{
-            if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
+            if(!myLong.hasKey(ctx)){
                 return Mono.error(new Throwable("请先登录"));
             }
             Long id = myLong.findUserId(ctx);
@@ -289,11 +288,16 @@ public class SysUserServiceImpl implements SysUserService {
                         List<Long> roleIds = tuple.getT1();
                         SysUser sysUser = tuple.getT2();
                         SysUserVO sysUserVO = BeanConvertUtil.toBean(sysUser, SysUserVO.class);
-                        return sysRoleRepository.findAllById(roleIds)
-                                .collectList()
-                                .map(sysRole->{
-                                    List<SysRoleVO> sysRoleVOS = BeanConvertUtil.toBeanList(sysRole, SysRoleVO.class);
-                                   return sysUserVO.setRoles(sysRoleVOS);
+                        Mono<SysTenant> tenantMono = tenantRepository.findById(sysUser.getTenantId());
+                        Mono<List<SysRole>> sysRolesMono = sysRoleRepository.findAllById(roleIds)
+                                .collectList();
+                        return Mono.zip(tenantMono, sysRolesMono)
+                                .map(tuple2->{
+                                    SysTenant sysTenant = tuple2.getT1();
+                                    List<SysRole> sysRoleList = tuple2.getT2();
+                                    List<SysRoleVO> sysRoleVOS = BeanConvertUtil.toBeanList(sysRoleList, SysRoleVO.class);
+                                   return sysUserVO.setRoles(sysRoleVOS)
+                                           .setTenant(BeanConvertUtil.toBean(sysTenant,TenantVO.class));
                                 });
                     });
         });

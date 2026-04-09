@@ -190,7 +190,7 @@ public class SysUserController {
 
     //添加用户
     @PostMapping("save")
-    public Mono<ResultT<Long>> addUser(@RequestBody SysUserSaveVO sysUserSaveVO) {
+    public Mono<ResultT<Long>> save(@RequestBody SysUserSaveVO sysUserSaveVO) {
         return sysUserService.save(sysUserSaveVO)
                 .flatMap(id ->
                         Mono.just(

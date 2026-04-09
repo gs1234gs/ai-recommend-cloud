@@ -19,7 +19,7 @@ public interface CategoryService {
 
     Mono<Category> fndById(Long id);
 
-    Mono<PageResultT<List<CategoryVO>>> findAllByPage( RequestPage<CategoryVO> requestPage);
+    Mono<PageResultT<List<CategoryVO>>> findPage( RequestPage<CategoryVO> requestPage);
 
     Mono<List<CategoryVO>> findAll();
 

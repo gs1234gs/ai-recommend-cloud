@@ -10,6 +10,7 @@ import com.db.tablename.MyStringUtils;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.sysrole.vo.SysRoleSaveVO;
 import com.guanshiyun.controller.sysrole.vo.SysRoleVO;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.relationpojo.SysRoleMenu;
 import com.guanshiyun.repository.menurole.SysRoleMenuRepository;
 import com.guanshiyun.repository.sysrole.SysRoleRepository;
@@ -18,7 +19,6 @@ import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.rolepojo.SysRole;
 import com.guanshiyun.service.sysrole.SysRoleService;
-import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -33,6 +33,8 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -44,6 +46,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     private final SysUserRoleRepository sysUserRoleRepository;
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
     private final SysRoleMenuRepository sysRoleMenuRepository;
+    private final MyLong myLong;
 
     //添加或者更新角色
     @Override
@@ -52,13 +55,13 @@ public class SysRoleServiceImpl implements SysRoleService {
         LocalDateTime now = LocalDateTime.now();
 
         return Mono.deferContextual(ctx -> {
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+            if (!myLong.hasKey(ctx)) {
                 return Mono.error(new Exception("用户ID不存在"));
             }
-            Long userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+            Long userId = myLong.findUserId(ctx);
 
             // 新增角色
-            if (sysRole.getId() == null) {
+            if (Objects.isNull(sysRole.getId())) {
                 sysRole.setCreateTime(now);
                 sysRole.setUpdater(userId);
                 return sysRoleRepository.save(sysRole)

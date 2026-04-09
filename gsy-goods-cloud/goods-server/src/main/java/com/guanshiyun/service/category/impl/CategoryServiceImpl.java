@@ -112,7 +112,7 @@ public class CategoryServiceImpl implements CategoryService {
 //                );
 //    }
 @Override
-public Mono<PageResultT<List<CategoryVO>>> findAllByPage( RequestPage<CategoryVO> requestPage) {
+public Mono<PageResultT<List<CategoryVO>>> findPage( RequestPage<CategoryVO> requestPage) {
     RequestPage<Category> page = BeanConvertUtil.toBean(requestPage, Category.class);
     return ReactivePageQuery.of(r2dbcEntityTemplate, Category.class, page)
             .like(Category.Fields.name, requestPage.getCondition().getName())

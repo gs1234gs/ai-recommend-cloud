@@ -11,7 +11,6 @@ import com.guanshiyun.repository.menurole.SysRoleMenuRepository;
 import com.guanshiyun.repository.sysmenu.SysMenuRepository;
 import com.guanshiyun.repository.userrole.SysUserRoleRepository;
 import com.guanshiyun.service.sysmenu.SysMenuService;
-import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.r2dbc.core.DatabaseClient;
@@ -45,12 +44,10 @@ public class SysMenuServiceImpl implements SysMenuService {
     @Override
     public Flux<SysMenu> findMenuByUserId() {
         return Flux.deferContextual(ctx -> {
-                    if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+                    if (!myLong.hasKey(ctx)) {
                         return Flux.error(new RuntimeException("用户未登录"));
                     }
-                    Long userId = myLong.myLong(
-                            ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
-                    );
+                    Long userId = myLong.findUserId(ctx);
                     return sysUserRoleRepository.findRoleIdByUserId(userId)
                             .collectList()
                             .flatMap(roleIds ->
@@ -182,12 +179,10 @@ public Mono<Long> deleteById(Long id) {
     public Mono<Long> save(SysMenu sysMenu) {
 
         return Mono.deferContextual(ctx->{
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+            if (!myLong.hasKey(ctx)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
-            Long userId = myLong.myLong(
-                    ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
-            );
+            Long userId = myLong.findUserId(ctx);
             if(Objects.isNull(sysMenu.getId())){
                 sysMenu.setCreateTime(LocalDateTime.now());
                 sysMenu.setCreator(userId);

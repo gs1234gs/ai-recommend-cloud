@@ -114,7 +114,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
      * @since 2025-12-20 10:13
      */
     @Override
-    public Mono<CursorPageResult<List<ProductCustomerVO>>> findCursor(
+    public Mono<CursorPageResult<List<ProductCustomerVO>>> searchProduct(
             RequestCursorPage<ProductSearchSaveVO> requestCursorPage) {
 
         RequestCursorPage<ProductSearchSaveVO> validate = CursorPageUtil.validate(requestCursorPage, ProductSearchSaveVO.class);

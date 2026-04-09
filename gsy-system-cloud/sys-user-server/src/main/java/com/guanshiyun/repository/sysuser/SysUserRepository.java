@@ -1,9 +1,9 @@
 package com.guanshiyun.repository.sysuser;
 
 import com.guanshiyun.userpojo.SysUser;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 
 
 
-public interface SysUserRepository extends ReactiveCrudRepository<SysUser, Long> {
+public interface SysUserRepository extends R2dbcRepository<SysUser, Long> {
 }

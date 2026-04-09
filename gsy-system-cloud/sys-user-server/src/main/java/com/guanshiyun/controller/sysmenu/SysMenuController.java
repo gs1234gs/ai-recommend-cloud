@@ -27,7 +27,7 @@ public class SysMenuController {
 
     //根据用户id获取菜单,用户id从当前线程获取，避免传入，影响安全
     @GetMapping("/userId")
-    public Mono<ResultT<List<SysMenuResponse>>> sysMenuByUserId() {
+    public Mono<ResultT<List<SysMenuResponse>>> findMenuByUserId() {
         return sysMenuService.findMenuByUserId()
                 .collectList()
                 .flatMap(menuList ->
@@ -90,7 +90,7 @@ public class SysMenuController {
 
     //获取菜单列表
     @GetMapping({"/findByParentId/{id}"})
-    public Mono<ResultT<List<SysMenuResponse>>> sysMenuList(
+    public Mono<ResultT<List<SysMenuResponse>>> findAllByParentId(
             @PathVariable(name = "id", required = false) Long id) {
         return sysMenuService.findAllByParentId(id)
                 .map(menu -> BeanUtil.toBean(menu, SysMenuResponse.class))
@@ -114,7 +114,7 @@ public class SysMenuController {
 
     //删除菜单
     @DeleteMapping("/deleteById/{id}")
-    public Mono<ResultT<Long>> deleteMenu(@PathVariable Long id) {
+    public Mono<ResultT<Long>> deleteById(@PathVariable Long id) {
         return sysMenuService.deleteById(id)
                 .map(result ->
                         result >= ConstNumber.INT_ONE ?
@@ -142,7 +142,7 @@ public class SysMenuController {
 
     //添加菜单或者更新菜单
     @PostMapping("/save")
-    public Mono<ResultT<Long>> addMenu(@RequestBody SysMenu sysMenu) {
+    public Mono<ResultT<Long>> save(@RequestBody SysMenu sysMenu) {
         return sysMenuService.save(sysMenu)
                 .map(id ->
                         ResultT.<Long>builder()
@@ -204,7 +204,7 @@ public class SysMenuController {
 
     //获取菜单树
     @GetMapping("/menuList")
-    public Mono<ResultT<List<SysMenuResponse>>> menuList() {
+    public Mono<ResultT<List<SysMenuResponse>>> findAllMenuList() {
         return sysMenuService.findAll()
                 .collectList()
                 .flatMap(menuList ->

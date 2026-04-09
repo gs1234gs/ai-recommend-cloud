@@ -44,7 +44,21 @@ public class SignInUpController {
     }
 
     @PostMapping("/signUp")
-    public Mono<ResultT<String>> signUp(@RequestBody SysUser signUpUser) {
-        return signInUpService.signUp(signUpUser);
+    public Mono<ResultT<Boolean>> signUp(@RequestBody SysUser signUpUser) {
+        return signInUpService.signUp(signUpUser)
+                .map(up->{
+                    if(up){
+                        ResultT.<Boolean>builder()
+                                .code(HttpStatus.OK.value())
+                                .msg("注册成功")
+                                .data(up)
+                                .build();
+                    }
+                    return ResultT.<Boolean>builder()
+                                .code(HttpStatus.BAD_REQUEST.value())
+                                .msg("用户已存在,请重新注册")
+                                .data(up)
+                                .build();
+                });
     }
 }

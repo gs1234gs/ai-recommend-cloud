@@ -19,7 +19,7 @@ public class ProductCarousalController {
     private final ProductCarousalService productCarousalService;
     //保存轮播图
     @PostMapping("/save")
-    public Mono<ResultT<ProductCarousalVO>> saveProductCarousal(@RequestBody ProductCarousalSaveVO productCarousalSaveVO) {
+    public Mono<ResultT<ProductCarousalVO>> save(@RequestBody ProductCarousalSaveVO productCarousalSaveVO) {
         return productCarousalService.save(productCarousalSaveVO)
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {

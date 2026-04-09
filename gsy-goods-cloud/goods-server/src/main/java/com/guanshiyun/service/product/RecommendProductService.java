@@ -21,7 +21,7 @@ public interface RecommendProductService {
      * @param requestCursorPage 包含搜索条件（如关键词、分类等）和游标分页参数（如游标值、每页大小）的请求对象
      * @return 返回包含商品列表及分页信息的 {@link CursorPageResult}，其中数据项为 {@link ProductCustomerVO}
      */
-    Mono<CursorPageResult<List<ProductCustomerVO>>> findCursor(RequestCursorPage<ProductSearchSaveVO> requestCursorPage);
+    Mono<CursorPageResult<List<ProductCustomerVO>>> searchProduct(RequestCursorPage<ProductSearchSaveVO> requestCursorPage);
 
 
     /**

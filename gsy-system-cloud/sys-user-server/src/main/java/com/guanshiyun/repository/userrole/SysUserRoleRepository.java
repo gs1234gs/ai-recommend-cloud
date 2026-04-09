@@ -2,15 +2,15 @@ package com.guanshiyun.repository.userrole;
 
 import com.guanshiyun.relationpojo.SysUserRole;
 import org.springframework.data.r2dbc.repository.Query;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 
-public interface SysUserRoleRepository extends ReactiveCrudRepository<SysUserRole, Long> {
+public interface SysUserRoleRepository extends R2dbcRepository<SysUserRole, Long> {
     @Query("select role_id from sys_user_role where user_id = :userId")
     Flux<Long> findRoleIdByUserId(Long userId);
     @Query("SELECT COUNT(*) FROM sys_user_role WHERE user_id = :userId AND role_id in :roleIds")

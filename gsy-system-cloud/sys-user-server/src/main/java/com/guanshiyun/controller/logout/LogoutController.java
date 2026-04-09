@@ -18,7 +18,7 @@ public class LogoutController {
     private final LogoutService logoutService;
     //退出登陆
     @GetMapping()
-    public Mono<ResultT<Long>> logout( ){
+    public Mono<ResultT<Long>> logout(){
         return logoutService.logout()
                 .map(aLong ->
                         ResultT.<Long>builder()

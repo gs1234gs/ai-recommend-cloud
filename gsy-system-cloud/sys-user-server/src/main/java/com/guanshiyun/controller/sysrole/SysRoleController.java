@@ -129,7 +129,7 @@ public class SysRoleController {
 
     //查询角色
     @PostMapping("findPage")
-    public Mono<ResultT<PageResultT<List<SysRoleVO>>>> roleList(
+    public Mono<ResultT<PageResultT<List<SysRoleVO>>>> findPage(
             @RequestBody(required = false) RequestPage<SysRoleVO> requestPage) {
         return sysRoleService.findPage(requestPage)
                 .map(pageResult ->
@@ -151,7 +151,7 @@ public class SysRoleController {
 
     //根据用户id获取角色
     @GetMapping("findRoleListByUserId/{userId}")
-    public Mono<ResultT<List<SysRoleVO>>> roleList(@PathVariable Long userId) {
+    public Mono<ResultT<List<SysRoleVO>>> findAllByUserId(@PathVariable Long userId) {
         return sysRoleService.findAllByUserId(userId)
                 .map(role -> BeanUtil.toBean(role, SysRoleVO.class))
                 .collectList()
