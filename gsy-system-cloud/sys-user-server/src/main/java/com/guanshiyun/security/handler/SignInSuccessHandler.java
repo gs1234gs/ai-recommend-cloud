@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class RewriteLoginSuccessHandler {
+public class SignInSuccessHandler {
 
     private final ReactiveRedisUtil redisUtil;
     @SneakyThrows

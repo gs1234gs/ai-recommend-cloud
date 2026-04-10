@@ -65,7 +65,7 @@ public class ChatRecordServiceImpl implements ChatRecordService {
 
         return Mono.deferContextual(ctx -> {
                     // 未登录或游客，返回空分页
-                    if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+                    if (!myLong.hasKey(ctx)) {
                         return Mono.just(PageResultT.<List<ChatRecordVO>>builder()
                                 .total(0L)
                                 .rows(Collections.emptyList())

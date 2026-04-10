@@ -30,8 +30,7 @@ public class UserClickController {
     public Mono<ResultT<List<UserClickVO>>> findAll(@RequestParam(required = false) Integer rows){
         return userClickService.findAll(rows)
                 .collectList()
-                .map(clickVOList ->
-                        ResultT.success(clickVOList)
+                .map(ResultT::success
                 )
                 .onErrorReturn(ResultT.error());
     }

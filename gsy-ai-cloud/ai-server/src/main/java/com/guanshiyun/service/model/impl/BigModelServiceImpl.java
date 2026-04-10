@@ -1,6 +1,9 @@
 package com.guanshiyun.service.model.impl;
 
 import com.db.cursorQuery.ReactivePageQuery;
+import com.db.r2dbcupdate.R2dbcUpdateHelper;
+import com.db.tablename.EntityTableNameUtils;
+import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.bigmodel.BigModel;
 import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.mylong.MyLong;
@@ -8,7 +11,6 @@ import com.guanshiyun.repository.model.BigModelRepository;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.model.BigModelService;
-import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
@@ -28,44 +30,48 @@ public class BigModelServiceImpl implements BigModelService {
     private final MyLong myLong;
     private final DatabaseClient databaseClient;
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
+    private final R2dbcUpdateHelper  r2dbcUpdateHelper;
+
     @Override
     public Mono<Long> sava(BigModel bigModel) {
-        return Mono.deferContextual(ctx ->{
-            Long userId = myLong.myLong(
-                    ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
-            if(Objects.isNull(bigModel.getId()))
-                return Mono.just(ConstNumber.LONG_ZERO);
-           if(Objects.isNull(userId)){
-               bigModel.setCreator(userId);
-               bigModel.setCreateTime(LocalDateTime.now());
-           }else{
-               bigModel.setUpdater(userId);
-               bigModel.setUpdateTime(LocalDateTime.now());
-           }
-          return bigModelRepository.save(bigModel)
-                    .flatMap(model->{
-                        log.info("保存成功");
-                        return Mono.just(model.getId());
-                    })
-                    .switchIfEmpty( Mono.fromRunnable(() -> log.info("保存失败"))
-                            .then(Mono.just(ConstNumber.LONG_ZERO))
-                    )
-                    .onErrorResume(throwable ->{
-                        log.info("保存失败", throwable);
-                        return Mono.just(ConstNumber.LONG_ZERO);
-                    });
+        return Mono.deferContextual(ctx -> {
+            Long userId = myLong.findUserId(ctx);
+            LocalDateTime now = LocalDateTime.now();
+            if (Objects.isNull(bigModel.getId())) {
+                bigModel.setCreator(userId);
+                bigModel.setCreateTime(now);
+                return bigModelRepository.save(bigModel)
+                        .flatMap(model -> {
+                            log.info("保存成功");
+                            return Mono.just(model.getId());
+                        })
+                        .onErrorResume(throwable -> {
+                            log.info("保存失败", throwable);
+                            return Mono.error(new Throwable(throwable));
+                        });
+            }
+
+            bigModel.setUpdater(userId);
+            bigModel.setUpdateTime(now);
+            return r2dbcUpdateHelper.updateIgnoreNull(
+                    EntityTableNameUtils.getName(BigModel.class),
+                    bigModel,
+                    BigModel.Fields.id
+            );
+
         });
     }
 
     @Override
     public Mono<Long> deleteById(Long id) {
-        if(Objects.isNull(id))
+        if (Objects.isNull(id))
             return Mono.just(ConstNumber.LONG_ZERO);
-        return databaseClient.sql("delete from big_model where id = :id")
+        return databaseClient.sql("UPDATE big_model SET del_flag = :delFlag where id = :id")
+                .bind(BasePojo.Fields.delFlag, ConstNumber.INT_ONE)
                 .bind(BigModel.Fields.id, id)
                 .fetch()
                 .rowsUpdated()
-                .flatMap(rowsUpdated ->{
+                .flatMap(rowsUpdated -> {
                     log.info("删除成功");
                     return Mono.just(myLong.myLong(rowsUpdated));
                 });
@@ -78,7 +84,8 @@ public class BigModelServiceImpl implements BigModelService {
 
     @Override
     public Mono<PageResultT<List<BigModel>>> findPage(RequestPage<BigModel> requestPage) {
-        return ReactivePageQuery.of(r2dbcEntityTemplate,BigModel.class,requestPage)
+        return ReactivePageQuery.of(r2dbcEntityTemplate, BigModel.class, requestPage)
+                .like(BigModel.Fields.name,requestPage.getCondition().getName())
                 .page();
     }
 }

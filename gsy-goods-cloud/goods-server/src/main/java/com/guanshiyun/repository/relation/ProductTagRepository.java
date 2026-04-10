@@ -2,15 +2,14 @@ package com.guanshiyun.repository.relation;
 
 import com.guanshiyun.relationship.ProductTag;
 import org.springframework.data.r2dbc.repository.Query;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-
 import java.util.List;
 
-public interface ProductTagRepository extends ReactiveCrudRepository<ProductTag, Long> {
+public interface ProductTagRepository extends R2dbcRepository<ProductTag, Long> {
     @Query("select product_id from product_tag where tag_id = :tagId")
     Flux<Long> findByTagId(@Param("tagId")Long tagId);
 

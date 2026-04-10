@@ -2,7 +2,7 @@ package com.guanshiyun.controller.signinup;
 
 
 import com.guanshiyun.responsepojo.ResultT;
-import com.guanshiyun.security.handler.RewriteLoginSuccessHandler;
+import com.guanshiyun.security.handler.SignInSuccessHandler;
 import com.guanshiyun.security.reponse.CustomReactiveAuthenticationManager;
 import com.guanshiyun.service.signin.SignInUpService;
 import com.guanshiyun.userpojo.SysUser;
@@ -22,7 +22,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class SignInUpController {
     private final CustomReactiveAuthenticationManager customReactiveAuthenticationManager;
-    private final RewriteLoginSuccessHandler rewriteLoginSuccessHandler;
+    private final SignInSuccessHandler signInSuccessHandler; // Changed from private final SignInSuccessHandler signInSuccessHandler;
     private final SignInUpService signInUpService;
 
     @PostMapping("/signIn")
@@ -31,7 +31,7 @@ public class SignInUpController {
         UsernamePasswordAuthenticationToken authRequest =
                 new UsernamePasswordAuthenticationToken(signUser.getUsername(), signUser.getPassword());
                     return customReactiveAuthenticationManager.authenticate(authRequest)
-                            .flatMap(rewriteLoginSuccessHandler::onAuthenticationSuccess)
+                            .flatMap(signInSuccessHandler::onAuthenticationSuccess)
                             .onErrorResume(throwable -> {
                                 log.error("登录失败：", throwable);
                               return   Mono.just(

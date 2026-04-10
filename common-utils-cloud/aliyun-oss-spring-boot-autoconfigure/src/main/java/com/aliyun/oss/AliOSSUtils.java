@@ -3,7 +3,6 @@ package com.aliyun.oss;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -22,7 +21,6 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class AliOSSUtils {
 
     private AliOSSProperties aliyunOSSProperties;
@@ -66,7 +64,7 @@ public class AliOSSUtils {
                         // 构造访问URL，endpoint去除https://或http://，根据你的endpoint格式调整
                         String cleanEndpoint = endpoint.replaceFirst("^https?://", "");
                         String url = "https://" + bucketName + "." + cleanEndpoint + "/" + fileName;
-                        System.out.println("文件上传到 OSS 的文件路径：" + url);
+                        log.info("文件上传到 OSS 的文件路径：{}",  url);
 
                         return Mono.just(url);
                     } catch (Exception e) {

@@ -2,7 +2,6 @@ package com.guanshiyun.controller.logout;
 
 import com.guanshiyun.pojo.signreqpojo.SignRequestUser;
 import com.guanshiyun.responsepojo.Result;
-import com.guanshiyun.security.handler.RewriteLogoutSuccessHandler;
 import com.guanshiyun.service.resetforget.ResetForgetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

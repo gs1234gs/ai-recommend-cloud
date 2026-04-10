@@ -1,7 +1,6 @@
 package com.guanshiyun.controller.chat;
 
 import com.alibaba.fastjson2.JSON;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guanshiyun.chat.ChatRecord;
 import com.guanshiyun.controller.chat.vo.ChatRecordVO;
 import com.guanshiyun.mymongodb.ChatRecordContent;
@@ -11,8 +10,8 @@ import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.responsepojo.ResultT;
+import com.guanshiyun.service.chat.ChatRecordService;
 import com.guanshiyun.service.chat.ChatService;
-import com.guanshiyun.service.chat.impl.ChatRecordServiceImpl;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,9 +33,7 @@ import java.util.List;
 public class ChatController {
 
     private final ChatService chatService;
-    private final ChatRecordServiceImpl chatRecordService;
-     ObjectMapper mapper = new ObjectMapper();
-
+    private final ChatRecordService chatRecordService;
 
     //一次性对话
     @PostMapping("chatAll")
@@ -111,7 +108,7 @@ public class ChatController {
 
     //删除对话
     @DeleteMapping("deleteById/{id}")
-    public Mono<ResultT<Long>> deleteChat(@PathVariable Object id){
+    public Mono<ResultT<Long>> deleteById(@PathVariable Object id){
 
         return chatService.deleteChatById(id)
                 .map(deleteCount ->{
@@ -131,7 +128,7 @@ public class ChatController {
     }
     //获取对话
     @PostMapping("findChat")
-    public Mono<ResultT<PageResultT<List<ChatRecordVO>>>> findChat(@RequestBody RequestPage<ChatRecordVO> requestPage){
+    public Mono<ResultT<PageResultT<List<ChatRecordVO>>>> findPage(@RequestBody RequestPage<ChatRecordVO> requestPage){
 
         return chatRecordService.findPageChat(requestPage)
                 .map(pageResultT ->{
@@ -151,7 +148,7 @@ public class ChatController {
     }
     //修改对话标题
     @PutMapping("saveChat")
-    public Mono<ResultT<Long>> chatSave(@RequestBody ChatRecordContent chatRecord){
+    public Mono<ResultT<Long>> save(@RequestBody ChatRecordContent chatRecord){
    return chatRecordService.save(chatRecord)
            .map(saveId ->{
                return ResultT.<Long>builder()

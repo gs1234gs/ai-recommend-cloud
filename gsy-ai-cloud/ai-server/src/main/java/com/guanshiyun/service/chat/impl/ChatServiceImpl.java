@@ -13,7 +13,6 @@ import com.guanshiyun.req.ReqChat;
 import com.guanshiyun.service.chat.ChatService;
 import com.guanshiyun.service.chat.impl.utils.JsonUtils;
 import com.guanshiyun.snowflake.SnowflakePermanent;
-import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -95,9 +94,7 @@ public class ChatServiceImpl implements ChatService {
              * 插入会话记录
              * */
             return Flux.deferContextual(ctx -> {
-                Long userId = myLong.myLong(
-                        ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
-                );
+                Long userId = myLong.findUserId(ctx);
                 // 保存会话记录my sql
                 return chatClient.prompt()
                         .user(content)
@@ -140,9 +137,7 @@ public class ChatServiceImpl implements ChatService {
         //如果不是第一次对话，就从数据库中获取会话记录
         // 已存在会话，追加内容
         return Flux.deferContextual(ctx -> {
-                    Long userId = myLong.myLong(
-                            ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
-                    );
+                    Long userId = myLong.findUserId(ctx);
                     return chatClient.prompt()
                             .user(content)
                             .stream()
@@ -190,8 +185,8 @@ public class ChatServiceImpl implements ChatService {
 
         return Mono.deferContextual(ctx -> {
             // 1. 用户身份校验
-            boolean isLoggedIn = ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
-            Long userId = isLoggedIn ? myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) : null;
+            boolean isLoggedIn = myLong.hasKey(ctx);
+            Long userId = isLoggedIn ? myLong.findUserId(ctx) : null;
 
             // 策略：未登录允许对话，但不持久化（或仅内存处理，这里沿用原逻辑：不保存记录，直接返回流）
             if (!isLoggedIn) {

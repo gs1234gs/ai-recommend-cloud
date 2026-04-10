@@ -1,5 +1,6 @@
 package com.guanshiyun.service.product.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.CursorQuery;
 import com.db.dbnumber.ConstNumber;
 import com.db.page.CursorPageUtil;
@@ -25,7 +26,9 @@ import com.guanshiyun.relationship.ProductCategory;
 import com.guanshiyun.repository.category.CategoryRepository;
 import com.guanshiyun.repository.product.ProductRepository;
 import com.guanshiyun.repository.relation.ProductCategoryRepository;
+import com.guanshiyun.repository.relation.ProductTagRepository;
 import com.guanshiyun.repository.sku.SKURepository;
+import com.guanshiyun.repository.tag.TagRepository;
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.responsepojo.CursorPageResult;
 import com.guanshiyun.responsepojo.ResultT;
@@ -42,7 +45,6 @@ import com.guanshiyun.rpc.profile.ClickProfileApi;
 import com.guanshiyun.rpc.profile.CollectProfileApi;
 import com.guanshiyun.rpc.profile.SearchContentApi;
 import com.guanshiyun.service.product.RecommendProductService;
-import com.guanshiyun.service.utils.UtilsService;
 import com.guanshiyun.sku.SKU;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.utils.BeanConvertUtil;
@@ -94,11 +96,13 @@ public class RecommendProductServiceImpl implements RecommendProductService {
     private final UserBrowseServiceApi userBrowseServiceApi;
     private final ProductRepository productRepository;
     private final MyLong myLong;
-    private final UtilsService utilsService;
     private final SKURepository sKURepository;
     private final ProductCategoryRepository productCategoryRepository;
     private final CategoryRepository categoryRepository;
     private final ReactiveRedisUtil reactiveRedisUtil;
+    private final TagRepository tagRepository;
+    private final ProductTagRepository productTagRepository;
+    private final SKURepository skuRepository;
 
 
     /**
@@ -464,7 +468,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
 
                     if (validIds.isEmpty()) {
                         log.warn("Gorse 返回空推荐列表，用户：{}", userId);
-                        return Mono.empty();
+                        return Mono.just(List.<String>of());
                     }
 
                     // 写入 Redis 并设置过期时间
@@ -474,7 +478,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 })
                 .onErrorResume(e -> {
                     log.error("调用 Gorse 重建候选池失败", e);
-                    return Mono.empty();
+                    return Mono.error(new Throwable(e));
                 });
     }
 
@@ -534,7 +538,13 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 return Mono.error(new Exception("请先登陆"));
             }
             Mono<Product> productMono = productRepository.findById(id);
-            Mono<List<TagVO>> tagListMono = utilsService.findTagByProductId(id);
+            Mono<List<TagVO>> tagListMono = productTagRepository.findTagIdByProductId(id)
+                    .flatMap(tagRepository::findById)
+                    .collectList()
+                    .map(tags -> tags.stream()
+                            .map(tag -> BeanUtil.toBean(tag, TagVO.class))
+                            .toList()
+                    );
             Mono<List<SKU>> skuListMono = sKURepository.findAllByProductId(id).collectList();
             Long userId = myLong.findUserId(ctx);
             return Mono.zip(productMono, tagListMono, skuListMono)
@@ -761,7 +771,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
     private ProductForEmbeddingApVO buildProductForEmbeddingFromCollect(CollectProfileApi collectProfileApi,
                                                                         Map<Long, Double> ratioMap) {
 
-        Long productId =collectProfileApi.getProduct().getId();
+        Long productId = collectProfileApi.getProduct().getId();
 
         // 则默认给 1.0 (最高权重)
         Double score = 1.0;
@@ -1091,31 +1101,32 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                     return Mono.empty();
                 });
     }
+
     @Override
     public Mono<List<ProductCustomerVO>> hot() {
-        return utilsService
-                .findProductIdsByTotalSalesGreaterThan(ConstNumber.INT_ONE)
-                .flatMap(ids -> {
-                    if (ids.isEmpty()) {
-                        return Mono.just(Collections.emptyList());
-                    }
+        return
+                findProductIdsByTotalSalesGreaterThan(ConstNumber.INT_ONE)
+                        .flatMap(ids -> {
+                            if (ids.isEmpty()) {
+                                return Mono.just(Collections.emptyList());
+                            }
 
-                    List<Long> idList = ids.subList(0, Math.min(ids.size(), ConstNumber.INT_FOUR));
+                            List<Long> idList = ids.subList(0, Math.min(ids.size(), ConstNumber.INT_FOUR));
 
-                    // 查询这些 ID 对应的商品
-                    return productRepository.findAllById(idList)
-                            .map(ProductCustomerVO::toVO)
-                            .collectList()
-                            // 保持输入 ID 顺序
-                            .map(list -> {
-                                Map<Long, ProductCustomerVO> map = list.stream()
-                                        .collect(Collectors.toMap(ProductCustomerVO::getId, Function.identity()));
-                                return idList.stream()
-                                        .map(map::get)
-                                        .filter(Objects::nonNull)
-                                        .toList();
-                            });
-                });
+                            // 查询这些 ID 对应的商品
+                            return productRepository.findAllById(idList)
+                                    .map(ProductCustomerVO::toVO)
+                                    .collectList()
+                                    // 保持输入 ID 顺序
+                                    .map(list -> {
+                                        Map<Long, ProductCustomerVO> map = list.stream()
+                                                .collect(Collectors.toMap(ProductCustomerVO::getId, Function.identity()));
+                                        return idList.stream()
+                                                .map(map::get)
+                                                .filter(Objects::nonNull)
+                                                .toList();
+                                    });
+                        });
     }
 
     @Override
@@ -1548,8 +1559,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
 
                                 if (finalPoolIds.size() < totalSize) {
                                     // 补充热门商品
-                                    Mono<List<Long>> hotMono = utilsService
-                                            .findProductIdsByTotalSalesGreaterThan(ConstNumber.INT_HUNDRED)
+                                    Mono<List<Long>> hotMono = findProductIdsByTotalSalesGreaterThan(ConstNumber.INT_HUNDRED)
                                             .defaultIfEmpty(Collections.emptyList())
                                             .map(list -> list.stream()
                                                     .filter(id -> !finalPoolIds
@@ -1616,29 +1626,32 @@ public class RecommendProductServiceImpl implements RecommendProductService {
     }
 
     private Mono<List<ProductCustomerVO>> loadDefaultProducts(int limit) {
-        return utilsService.findProductIdsByTotalSalesGreaterThan(ConstNumber.INT_HUNDRED)
-                .defaultIfEmpty(Collections.emptyList())
-                .flatMap(ids -> {
-                    if (ids.isEmpty()) {
-                        return productRepository.findAll()
-                                .take(limit)
-                                .map(ProductCustomerVO::toVO)
-                                .collectList();
-                    }
-                    List<Long> limitedIds = ids.stream().limit(limit).toList();
-                    return productRepository.findAllById(limitedIds)
-                            .collectList()
-                            .map(list -> {
-                                Map<Long, ProductCustomerVO> map = list.stream()
+        return
+
+
+                findProductIdsByTotalSalesGreaterThan(ConstNumber.INT_HUNDRED)
+                        .defaultIfEmpty(Collections.emptyList())
+                        .flatMap(ids -> {
+                            if (ids.isEmpty()) {
+                                return productRepository.findAll()
+                                        .take(limit)
                                         .map(ProductCustomerVO::toVO)
-                                        .collect(Collectors.toMap(ProductCustomerVO::getId, Function.identity(), (v1, v2) -> v1));
-                                return limitedIds.stream().map(map::get).filter(Objects::nonNull).toList();
-                            });
-                })
-                .onErrorResume(e -> {
-                    log.error("加载默认商品失败", e);
-                    return productRepository.findAll().take(limit).map(ProductCustomerVO::toVO).collectList();
-                });
+                                        .collectList();
+                            }
+                            List<Long> limitedIds = ids.stream().limit(limit).toList();
+                            return productRepository.findAllById(limitedIds)
+                                    .collectList()
+                                    .map(list -> {
+                                        Map<Long, ProductCustomerVO> map = list.stream()
+                                                .map(ProductCustomerVO::toVO)
+                                                .collect(Collectors.toMap(ProductCustomerVO::getId, Function.identity(), (v1, v2) -> v1));
+                                        return limitedIds.stream().map(map::get).filter(Objects::nonNull).toList();
+                                    });
+                        })
+                        .onErrorResume(e -> {
+                            log.error("加载默认商品失败", e);
+                            return productRepository.findAll().take(limit).map(ProductCustomerVO::toVO).collectList();
+                        });
     }
 
     private Mono<CursorPageResult<List<ProductCustomerVO>>> buildResultFromAiProductIds(List<Long> ids) {
@@ -1695,7 +1708,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
 
     private void shuffleInGroups(List<Long> list) {
         int groupSize = ConstNumber.INT_FIVE;
-        if (list == null || list.size() <= 1 || groupSize <= 1) {
+        if (list == null || list.size() <= 1) {
             return;
         }
 
@@ -1711,4 +1724,16 @@ public class RecommendProductServiceImpl implements RecommendProductService {
             }
         }
     }
+
+    public Mono<List<Long>> findProductIdsByTotalSalesGreaterThan(Integer salesVolume) {
+        return skuRepository
+                .findProductIdsByTotalSalesGreaterThan(salesVolume)
+                .collectList()
+                .map(ids -> {
+                    Collections.shuffle(ids);
+                    return ids;
+                });
+
+    }
+
 }

@@ -1,8 +1,8 @@
 package com.guanshiyun.security.handler;
 
 import com.guanshiyun.consts.ConstClassNickName;
+import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.security.redisConfig.ReactiveRedisUtil;
-import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -16,17 +16,18 @@ import reactor.core.publisher.Mono;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class RewriteLogoutSuccessHandler {
+public class LogoutSuccessHandler {
     private final ReactiveRedisUtil reactiveRedisUtil;
+    private final MyLong myLong;
 
     public Mono<Long> onLogoutSuccess() {
 
         return Mono.deferContextual(ctx ->{
-            if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
+            if(!myLong.hasKey(ctx)){
                 log.error("用户id为空 ：null");
                 return Mono.empty();
             }
-            Long id =  ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);
+            Long id =  myLong.findUserId(ctx);
           return   reactiveRedisUtil.hDel(ConstClassNickName.REDIS_TOKEN_KEY, id.toString())
                     .then(reactiveRedisUtil.hDel(ConstClassNickName.REDIS_AUTHORITY_KEY, id.toString()));
                 }

@@ -9,11 +9,11 @@ import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.controller.sku.vo.*;
 import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.product.Product;
+import com.guanshiyun.repository.product.ProductRepository;
 import com.guanshiyun.repository.sku.SKURepository;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.sku.SKUService;
-import com.guanshiyun.service.utils.UtilsService;
 import com.guanshiyun.sku.SKU;
 import com.guanshiyun.snowflake.SnowflakePermanent;
 import lombok.RequiredArgsConstructor;
@@ -41,10 +41,10 @@ public class SKUServiceImpl implements SKUService {
     private final SKURepository skuRepository;
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
-    private final UtilsService utilsService;
     private final SnowflakePermanent snowflakePermanent;
     private final TransactionalOperator transactionalOperator;
     private final MyLong myLong;
+    private final ProductRepository productRepository;
 
     /**
      * 解析 picList 字段（数据库里存的是 JSON 字符串）
@@ -196,8 +196,10 @@ public class SKUServiceImpl implements SKUService {
             Long userId = myLong.findUserId(ctx);
             Long tenantId = myLong.findTenantId(ctx);
 
+//            RequestPage<SKU> skuRequestPage = BeanConvertUtil.toBean(requestPage, SKU.class);
+//            return ReactivePageQuery.of(r2dbcEntityTemplate, SKU.class, skuRequestPage)
 
-        Long pageNum = requestPage.getPageNum();
+            Long pageNum = requestPage.getPageNum();
         int pageSize = requestPage.getPageSize();
         long offset = (pageNum-1) * pageSize;
 
@@ -209,7 +211,7 @@ public class SKUServiceImpl implements SKUService {
                                     SELECT DISTINCT product_id
                                     FROM sku
                                     WHERE del_flag = 0
-                                    tenant_id = :tenantId
+                                    and tenant_id = :tenantId
                                     ORDER BY product_id
                                     LIMIT :limit OFFSET :offset
                                 """)
@@ -256,7 +258,7 @@ public class SKUServiceImpl implements SKUService {
 
                     // 4. 批量查 Product
                     Mono<List<Product>> productMono =
-                            utilsService.findProductByProductId(productIds);
+                            productRepository.findAllById(productIds).collectList();
 
                     return Mono.zip(skuMono, productMono)
                             .map(data -> {
@@ -303,17 +305,6 @@ public class SKUServiceImpl implements SKUService {
                 });
         });
     }
-
-//    @Override
-//    public Mono<PageResultT<List<Map<Long, SKUVO>>>> findAllPage(RequestPage<ProductSearchVO> requestPage) {
-//        Long pageNum = PageUtils.pageNum(requestPage.getPageNum());
-//        Integer pageSize = PageUtils.pageSize(requestPage.getPageSize());
-//        ProductSearchVO condition = requestPage.getCondition();
-//        if (condition == null) {
-//            condition = ProductSearchVO.builder().build();
-//        }
-//        return utilsService.findProductPage(pageNum, pageSize, condition);
-//    }
 
     @Override
     public Flux<SKUVO> findByProductId(Long productId) {
