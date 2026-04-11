@@ -43,6 +43,7 @@ public class AliOSSProperties {
      * 获取
      * @return region
      */
+    private String region;
 
     public String toString() {
         return "AliOSSProperties{endpoint = " +

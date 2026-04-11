@@ -24,6 +24,7 @@ aliyun:
     bucketName: gsy-ai-recommend-cloud
     accessKeyId: LTAI5tNC3nPEEfGJ2P56wTvG
     accessKeySecret: 5VeOsZIVmOSGPsBVWvIcyhE4y4MUbE
+    region: cn-beijing
 
 logging:
   level:

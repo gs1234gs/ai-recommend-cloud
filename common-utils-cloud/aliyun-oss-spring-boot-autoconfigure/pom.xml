@@ -45,28 +45,33 @@
 			<version>${jjwt-impl.version}</version>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>${jaxbapi.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.activation</groupId>
-			<artifactId>activation</artifactId>
-			<version>${jafx.version}</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>javax.xml.bind</groupId>-->
+<!--			<artifactId>jaxb-api</artifactId>-->
+<!--			<version>${jaxbapi.version}</version>-->
+<!--		</dependency>-->
+<!--		<dependency>-->
+<!--			<groupId>javax.activation</groupId>-->
+<!--			<artifactId>activation</artifactId>-->
+<!--			<version>${jafx.version}</version>-->
+<!--		</dependency>-->
 		<!-- no more than 2.3.3-->
-		<dependency>
-			<groupId>org.glassfish.jaxb</groupId>
-			<artifactId>jaxb-runtime</artifactId>
-			<version>${jaxbr.version}</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.glassfish.jaxb</groupId>-->
+<!--			<artifactId>jaxb-runtime</artifactId>-->
+<!--			<version>${jaxbr.version}</version>-->
+<!--		</dependency>-->
 		<!--
 		aliyun oss依赖
 		-->
+
+<!--		<dependency>-->
+<!--			<groupId>com.aliyun.oss</groupId>-->
+<!--			<artifactId>aliyun-sdk-oss</artifactId>-->
+<!--		</dependency>-->
 		<dependency>
-			<groupId>com.aliyun.oss</groupId>
-			<artifactId>aliyun-sdk-oss</artifactId>
+			<groupId>com.aliyun</groupId>
+			<artifactId>alibabacloud-oss-v2</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba.fastjson2</groupId>
