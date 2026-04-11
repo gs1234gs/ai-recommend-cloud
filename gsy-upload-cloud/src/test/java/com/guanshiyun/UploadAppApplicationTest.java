@@ -44,7 +44,7 @@ public class UploadAppApplicationTest {
         Flux<DataBuffer> dataBufferFlux = partEventFlux
                 .flatMap(part -> {
                     DataBuffer content = part.content();
-                    return content != null ? Mono.just(content) : Mono.empty();
+                    return Mono.just(content);
                 });
 
         String result = aliOSSUtils.uploadReactive("龙女妹妹.png", dataBufferFlux)

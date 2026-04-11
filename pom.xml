@@ -49,17 +49,17 @@
         <snapshotName>0.0.1-SNAPSHOT</snapshotName>
         <r2dbc.mysql.version>1.4.1</r2dbc.mysql.version>
         <junit.version>4.13.2</junit.version>
-        <hutool.version>5.8.43</hutool.version>
+        <hutool.version>5.8.44</hutool.version>
         <spring-ai.version>1.1.4</spring-ai.version>
         <spring-alibaba-ai.version>1.1.2.2</spring-alibaba-ai.version>
 <!--        <mcp.version>0.17.0</mcp.version>-->
 <!--        <mcp.webflux.version>0.8.0</mcp.webflux.version>-->
         <aliyun.core.version>4.7.8</aliyun.core.version>
         <gorse.version>0.5.0</gorse.version>
-        <all.dash.version>2.22.9</all.dash.version>
+        <all.dash.version>2.22.14</all.dash.version>
         <common.version>2.1</common.version>
 <!--        <reactive.feign.version>4.2.1</reactive.feign.version>-->
-        <jaxb.api.version>2.3.1</jaxb.api.version>
+<!--        <jaxb.api.version>2.3.1</jaxb.api.version>-->
         <powerjob.version>5.1.2</powerjob.version>
     </properties>
     <dependencyManagement>

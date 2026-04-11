@@ -53,7 +53,7 @@
         <jackson.version>2.19.3</jackson.version>
         <gson.version>2.13.2</gson.version>
         <lang3.version>3.20.0</lang3.version>
-        <databind.version>2.21.1</databind.version>
+<!--        <databind.version>2.21.1</databind.version>-->
         <maven.compiler.target>21</maven.compiler.target>
         <jjwt-impl.version>0.13.0</jjwt-impl.version>
 <!--        <sdk.oss.version>3.18.5</sdk.oss.version>-->
