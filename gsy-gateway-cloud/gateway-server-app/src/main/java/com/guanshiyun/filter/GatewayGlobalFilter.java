@@ -1,9 +1,10 @@
 package com.guanshiyun.filter;
 
 
-import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.nacos.shaded.io.grpc.netty.shaded.io.netty.util.internal.StringUtil;
 import com.aliyun.oss.JwtUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guanshiyun.consts.ConstClassNickName;
 import com.guanshiyun.consts.ConstHeaderLocals;
 import com.guanshiyun.consts.ConstMapClassNickName;
@@ -14,6 +15,7 @@ import com.guanshiyun.responsepojo.Result;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -25,7 +27,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +38,9 @@ import java.util.Map;
 public class GatewayGlobalFilter implements GlobalFilter, Ordered {
     private final ReactiveRedisUtil reactiveRedisUtil;
     private final MyLong myLong;
+    private final ObjectMapper objectMapper;
 
+    @SneakyThrows
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
@@ -75,15 +78,24 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
             ServerHttpResponse response = exchange.getResponse();
             return response.writeWith(Mono.just(
                     response.bufferFactory()
-                            .wrap(JSONObject.toJSONString(
+                            .wrap(
+                                    objectMapper.writeValueAsBytes(
                                             Result
                                                     .builder()
                                                     .code(401)
                                                     .msg("未登陆")
                                                     .build()
-                                    ).getBytes(StandardCharsets.UTF_8)
+                                    )
+                                    )
+//                                    JSONObject.toJSONString(
+//                                            Result
+//                                                    .builder()
+//                                                    .code(401)
+//                                                    .msg("未登陆")
+//                                                    .build()
+//                                    ).getBytes(StandardCharsets.UTF_8)
                             )
-            ));
+            );
         }
         Claims claims = null;
         //获取map，拿到用户信息，继续验证
@@ -97,13 +109,21 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
             ServerHttpResponse response = exchange.getResponse();
             return response.writeWith(Mono.just(
                     response.bufferFactory()
-                            .wrap(JSONObject.toJSONString(
+                            .wrap(
+                                    objectMapper.writeValueAsBytes(
                                             Result
                                                     .builder()
                                                     .code(401)
                                                     .msg("登陆已经过期")
                                                     .build()
-                                    ).getBytes(StandardCharsets.UTF_8)
+                                    )
+//                                    JSONObject.toJSONString(
+//                                            Result
+//                                                    .builder()
+//                                                    .code(401)
+//                                                    .msg("登陆已经过期")
+//                                                    .build()
+//                                    ).getBytes(StandardCharsets.UTF_8)
                             )
             ));
         }
@@ -121,32 +141,56 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
                     if(StringUtil.isNullOrEmpty(redisToken)){
                         log.error("登陆已经过期: {}", userId);
                         ServerHttpResponse response = exchange.getResponse();
-                        return response.writeWith(Mono.just(
-                                response.bufferFactory()
-                                        .wrap(JSONObject.toJSONString(
-                                                        Result
-                                                                .builder()
-                                                                .code(401)
-                                                                .msg("登陆已经过期")
-                                                                .build()
-                                                ).getBytes(StandardCharsets.UTF_8)
-                                        )
-                        ));
+                        try {
+                            return response.writeWith(Mono.just(
+                                    response.bufferFactory()
+                                            .wrap(
+                                                    objectMapper.writeValueAsBytes(
+                                                            Result
+                                                                    .builder()
+                                                                    .code(401)
+                                                                    .msg("登陆已经过期")
+                                                                    .build()
+                                                    )
+    //                                                JSONObject.toJSONString(
+    //                                                        Result
+    //                                                                .builder()
+    //                                                                .code(401)
+    //                                                                .msg("登陆已经过期")
+    //                                                                .build()
+    //                                                ).getBytes(StandardCharsets.UTF_8)
+                                            )
+                            ));
+                        } catch (JsonProcessingException e) {
+                            return Mono.error(new RuntimeException(e));
+                        }
                     }
-                    if (!token.equals(JSONObject.parseObject(redisToken,String.class))) {
-                        log.error("Token与Redis中不一致，userId: {}", userId);
-                        ServerHttpResponse response = exchange.getResponse();
-                        return response.writeWith(Mono.just(
-                                response.bufferFactory()
-                                        .wrap(JSONObject.toJSONString(
-                                                        Result
-                                                                .builder()
-                                                                .code(401)
-                                                                .msg("登陆已经过期")
-                                                                .build()
-                                                ).getBytes(StandardCharsets.UTF_8)
-                                        )
-                        ));
+                    try {
+                        if (!token.equals(redisToken)) {
+                            log.error("Token与Redis中不一致，userId: {}", userId);
+                            ServerHttpResponse response = exchange.getResponse();
+                            return response.writeWith(Mono.just(
+                                    response.bufferFactory()
+                                            .wrap(
+                                                    objectMapper.writeValueAsBytes(
+                                                            Result
+                                                                    .builder()
+                                                                    .code(401)
+                                                                    .msg("登陆已经过期")
+                                                                    .build()
+                                                    )
+//                                                    JSONObject.toJSONString(
+//                                                            Result
+//                                                                    .builder()
+//                                                                    .code(401)
+//                                                                    .msg("登陆已经过期")
+//                                                                    .build()
+//                                                    ).getBytes(StandardCharsets.UTF_8)
+                                            )
+                            ));
+                        }
+                    } catch (JsonProcessingException e) {
+                        return Mono.error(new RuntimeException(e));
                     }
 //                    return reactiveRedisUtil.hGet(
 //                                    ConstClassNickName.REDIS_PERMISSION_KEY,
@@ -185,10 +229,16 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
                                 userInfos.put(ConstMapClassNickName.MAP_USERINFO_KEY, userType);
                                 userInfos.put(ConstMapClassNickName.MAP_TENANT_ID_RESPONSE_KEY,tenantIdObj);
                                 //将用户信息转化为json字符窜
-                                String userInfoJson = JSONObject.toJSONString(userInfos);
-                                //传递用户信息
-                                ServerWebExchange userInfo = exchange.mutate()
-                                        .request(builder -> builder.header(ConstHeaderLocals.USER_INFO_KEY, userInfoJson))
+                    String userInfoJson = null;
+                    try {
+                        userInfoJson = objectMapper.writeValueAsString(userInfos);
+                    } catch (JsonProcessingException e) {
+                        return Mono.error(new RuntimeException(e));
+                    }
+                    //传递用户信息
+                    String finalUserInfoJson = userInfoJson;
+                    ServerWebExchange userInfo = exchange.mutate()
+                                        .request(builder -> builder.header(ConstHeaderLocals.USER_INFO_KEY, finalUserInfoJson))
                                         .build();
                                 return chain.filter(userInfo);
                 });

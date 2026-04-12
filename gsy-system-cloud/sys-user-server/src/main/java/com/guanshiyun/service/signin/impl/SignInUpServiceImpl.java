@@ -1,12 +1,13 @@
 package com.guanshiyun.service.signin.impl;
 
 
-import com.alibaba.fastjson2.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guanshiyun.consts.ConstClassNickName;
 import com.guanshiyun.menupojo.SysMenu;
+import com.guanshiyun.reactiveredis.ReactiveRedisUtil;
 import com.guanshiyun.repository.signin.SignInUpRepository;
 import com.guanshiyun.roleId.RoleIdConst;
-import com.guanshiyun.security.redisConfig.ReactiveRedisUtil;
 import com.guanshiyun.service.signin.SignInUpService;
 import com.guanshiyun.service.sysmenu.SysMenuService;
 import com.guanshiyun.service.sysmenurole.SysRoleMenuService;
@@ -38,6 +39,7 @@ public class SignInUpServiceImpl implements SignInUpService {
     private final SysRoleMenuService sysRoleMenuService;
     private final ReactiveRedisUtil redisUtil;
     private final TransactionalOperator transactionalOperator;
+    private final ObjectMapper  objectMapper;
 
     @Override
     public Mono<SignUser> signIn(String username) {
@@ -92,11 +94,26 @@ public class SignInUpServiceImpl implements SignInUpService {
                             List<String> urlList = menus.stream()
                                     .map(SysMenu::getPath)
                                     .toList();
-                            return redisUtil.hSet(ConstClassNickName.REDIS_PERMISSION_KEY,
-                                    user.getId(),
-                                    JSON.toJSONString(urlList)
-                            ).then(redisUtil.expire(ConstClassNickName.REDIS_PERMISSION_KEY,
-                                    60));
+
+                            return Mono.fromCallable(()->objectMapper.writeValueAsString(urlList))
+                                    .flatMap(urlJson->redisUtil.hSet(ConstClassNickName.REDIS_PERMISSION_KEY,
+                                            String.valueOf(user.getId()),
+                                            urlJson
+
+                                    ).then(redisUtil.expire(ConstClassNickName.REDIS_PERMISSION_KEY,
+                                            60)))
+                                    .onErrorResume(JsonProcessingException.class, e -> {
+                                        log.error("JSON 序列化失败", e);
+                                        return Mono.error(new Throwable("JSON 序列化失败",e)); // 或者返回默认值
+                                    });
+
+//                            return redisUtil.hSet(ConstClassNickName.REDIS_PERMISSION_KEY,
+//                                    user.getId(),
+////                                    JSON.toJSONString(urlList)
+//                                    urlJson
+//
+//                            ).then(redisUtil.expire(ConstClassNickName.REDIS_PERMISSION_KEY,
+//                                    60));
                         }
                 )
                 .flatMap(menus -> {

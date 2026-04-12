@@ -44,12 +44,4 @@ public class AliOSSProperties {
      * @return region
      */
     private String region;
-
-    public String toString() {
-        return "AliOSSProperties{endpoint = " +
-                endpoint + ", bucketName = " + bucketName +
-                ", accessKeyId = " + accessKeyId +
-                ", accessKeySecret = " +
-                accessKeySecret +  "}";
-    }
 }

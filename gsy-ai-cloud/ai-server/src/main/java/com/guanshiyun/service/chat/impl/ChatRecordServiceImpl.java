@@ -3,6 +3,7 @@ package com.guanshiyun.service.chat.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.db.page.PageUtils;
+import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.chat.ChatRecord;
 import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.controller.chat.vo.ChatRecordVO;
@@ -86,9 +87,9 @@ public class ChatRecordServiceImpl implements ChatRecordService {
                     // 构建查询条件
                     Criteria criteria = new Criteria();
                     // 1. 必须匹配当前用户 (作为创建者)
-                    criteria.and(ChatRecordContent.Fields.creator).is(userId);
+                    criteria.and(BasePojo.Fields.creator).is(userId);
                     // 2. 未删除标记 (假设 delFlag 0 为正常)
-                    criteria.and(ChatRecordContent.Fields.delFlag).is((short) 0);
+                    criteria.and(BasePojo.Fields.delFlag).is((short) 0);
 
                     // 3. 标题模糊匹配 (MongoDB 使用正则)
                     if (StringUtils.hasText(title)) {
@@ -108,7 +109,7 @@ public class ChatRecordServiceImpl implements ChatRecordService {
                     // --- 数据查询 ---
                     Query dataQuery = Query.query(criteria)
                             .with(Sort.by(
-                                    Sort.Order.desc(ChatRecordContent.Fields.createTime),
+                                    Sort.Order.desc(BasePojo.Fields.createTime),
                                     Sort.Order.desc(ChatRecordContent.Fields.id)
                             ))
                             .skip(offset)
@@ -202,8 +203,8 @@ public class ChatRecordServiceImpl implements ChatRecordService {
             }
 
             Criteria criteria = new Criteria();
-            criteria.and(ChatRecordContent.Fields.creator).is(userId);
-            criteria.and(ChatRecordContent.Fields.delFlag).is((short) 0);
+            criteria.and(BasePojo.Fields.creator).is(userId);
+            criteria.and(BasePojo.Fields.delFlag).is((short) 0);
 
             // 标题模糊匹配
             if (StringUtils.hasText(title)) {
@@ -223,7 +224,7 @@ public class ChatRecordServiceImpl implements ChatRecordService {
 
             Query query = new Query(criteria)
                     .with(Sort.by(
-                            Sort.Order.desc(StringUtils.hasText(ChatRecordContent.Fields.id) ? ChatRecordContent.Fields.id : ChatRecordContent.Fields.createTime),
+                            Sort.Order.desc(StringUtils.hasText(ChatRecordContent.Fields.id) ? ChatRecordContent.Fields.id : BasePojo.Fields.createTime),
                             Sort.Order.desc(ChatRecordContent.Fields.id)
                     ))
                     .limit(requestCursorPage.getPageSize());

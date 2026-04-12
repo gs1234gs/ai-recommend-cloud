@@ -106,7 +106,6 @@ public class ChatServiceImpl implements ChatService {
                             ChatRecordContent chatRecordContent = ChatRecordContent.builder()
                                     .id(chatId)
                                     .title(title)
-                                    .creator(userId)
                                     .contentTexts(
                                             List.of(
                                                     ContentText.builder()
@@ -116,12 +115,13 @@ public class ChatServiceImpl implements ChatService {
                                                             .build()
                                             )
                                     )
-                                    .delFlag((short) 0)
-                                    .createTime(now)
                                     .senderId(userId)
                                     .receiverId(ConstNumber.LONG_ONE)
-                                    .updateTime(now)
                                     .build();
+                            chatRecordContent.setCreator(userId)
+                                    .setDelFlag((short) 0)
+                                    .setCreateTime(now)
+                                    .setUpdateTime(now);
                             //保存会话记录
                             return chatRecordContentMongodbRepository.save(chatRecordContent)
                                     .thenReturn(contents)
@@ -156,8 +156,8 @@ public class ChatServiceImpl implements ChatService {
                                 Query query = Query.query(Criteria.where(ChatRecordContent.Fields.id).is(conversationId));
                                 Update update = new Update()
                                         .push(ChatRecordContent.Fields.contentTexts, newContentText)
-                                        .set(ChatRecordContent.Fields.updateTime, now)
-                                        .set(ChatRecordContent.Fields.updater, userId);
+                                        .set(BasePojo.Fields.updateTime, now)
+                                        .set(BasePojo.Fields.updater, userId);
                                 return reactiveMongoTemplate.updateFirst(
                                                 query, update, ChatRecordContent.class
                                         )
@@ -249,11 +249,6 @@ public class ChatServiceImpl implements ChatService {
                     ChatRecordContent record = ChatRecordContent.builder()
                             .id(chatId)
                             .title(title) // 提取的标题
-                            .creator(userId)
-                            .updater(userId)
-                            .createTime(now)
-                            .updateTime(now)
-                            .delFlag((short) 0)
                             .senderId(userId)
                             .receiverId(ConstNumber.LONG_ONE) // 假设系统ID为1
                             .contentTexts(List.of(
@@ -264,6 +259,11 @@ public class ChatServiceImpl implements ChatService {
                                             .build()
                             ))
                             .build();
+                    record.setCreator(userId)
+                            .setCreateTime(now)
+                            .setUpdater(userId)
+                            .setUpdateTime(now)
+                            .setDelFlag((short) 0);
 
                     // 异步保存整条记录
                     chatRecordContentMongodbRepository.save(record)
@@ -308,8 +308,8 @@ public class ChatServiceImpl implements ChatService {
                     // 异步更新 updateTime，不等待完成即返回流
                     Query metaQuery = Query.query(Criteria.where(ChatRecordContent.Fields.id).is(conversationId));
                     Update metaUpdate = new Update()
-                            .set(ChatRecordContent.Fields.updateTime, chatRecord.getUpdateTime())
-                            .set(ChatRecordContent.Fields.updater, chatRecord.getUpdater());
+                            .set(BasePojo.Fields.updateTime, chatRecord.getUpdateTime())
+                            .set(BasePojo.Fields.updater, chatRecord.getUpdater());
 
                     reactiveMongoTemplate.updateFirst(metaQuery, metaUpdate, ChatRecordContent.class)
                             .subscribe(
@@ -339,8 +339,8 @@ public class ChatServiceImpl implements ChatService {
                                 Query query = Query.query(Criteria.where(ChatRecordContent.Fields.id).is(conversationId));
                                 Update update = new Update()
                                         .push(ChatRecordContent.Fields.contentTexts, newText) // 追加到列表
-                                        .set(ChatRecordContent.Fields.updateTime, LocalDateTime.now())
-                                        .set(ChatRecordContent.Fields.updater, userId);
+                                        .set(BasePojo.Fields.updateTime, LocalDateTime.now())
+                                        .set(BasePojo.Fields.updater, userId);
 
                                 reactiveMongoTemplate.updateFirst(query, update, ChatRecordContent.class)
                                         .subscribe(
@@ -372,13 +372,13 @@ public class ChatServiceImpl implements ChatService {
         // 构建查询条件：根据 ID 查找且当前未删除
         Query query = Query.query(
                 Criteria.where(ChatRecordContent.Fields.id).is(chatId)
-                        .and(ChatRecordContent.Fields.delFlag).is((short) 0)
+                        .and(BasePojo.Fields.delFlag).is((short) 0)
         );
 
         // 构建更新操作：将 delFlag 设置为 1 (已删除)，并更新更新时间
         Update update = new Update()
-                .set(ChatRecordContent.Fields.delFlag, (short) 1)
-                .set(ChatRecordContent.Fields.updateTime, LocalDateTime.now());
+                .set(BasePojo.Fields.delFlag, (short) 1)
+                .set(BasePojo.Fields.updateTime, LocalDateTime.now());
 
         // 执行更新操作
         return reactiveMongoTemplate.updateFirst(query, update, ChatRecordContent.class)

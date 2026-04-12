@@ -1,7 +1,8 @@
 package com.guanshiyun.filter;
 
 
-import com.alibaba.fastjson2.JSONObject;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guanshiyun.consts.ConstHeaderLocals;
 import com.guanshiyun.consts.ConstMapClassNickName;
 import com.guanshiyun.consts.PublicEndpoints;
@@ -11,6 +12,7 @@ import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.utils.OnDisableBusinessWebFilterCondition;
 import io.netty.util.internal.StringUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.http.HttpHeaders;
@@ -24,7 +26,6 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
 
@@ -35,8 +36,10 @@ import java.util.Objects;
 public class GlobalFilterReactiveFlux implements WebFilter {
 
     private final MyLong myLong;
+    private final ObjectMapper objectMapper;
 
 
+    @SneakyThrows
     @Override
     public @NonNull Mono<Void> filter(ServerWebExchange exchange, @NonNull WebFilterChain chain) {
         //获取用户信息
@@ -88,14 +91,23 @@ public class GlobalFilterReactiveFlux implements WebFilter {
             ServerHttpResponse response = exchange.getResponse();
             return response.writeWith(Mono.just(
                     response.bufferFactory()
-                            .wrap(JSONObject.toJSONString(
+                            .wrap(
+                                    objectMapper.writeValueAsBytes(
                                             ResultT
-                                                    .<Object>builder()
+                                                    .<String>builder()
                                                     .code(401)
                                                     .msg("未登陆")
                                                     .data(userJson)
                                                     .build()
-                                    ).getBytes(StandardCharsets.UTF_8)
+                                    )
+//                                    JSONObject.toJSONString(
+//                                            ResultT
+//                                                    .<Object>builder()
+//                                                    .code(401)
+//                                                    .msg("未登陆")
+//                                                    .data(userJson)
+//                                                    .build()
+//                                    ).getBytes(StandardCharsets.UTF_8)
                             )
             ));
         }
@@ -105,7 +117,8 @@ public class GlobalFilterReactiveFlux implements WebFilter {
 //            return chain.filter(exchange);
 //        }
         log.info("用户信息：{}", userJson);
-        var userMap = JSONObject.parseObject(userJson, Map.class);
+//        var userMap = JSONObject.parseObject(userJson, Map.class);
+        Map<String,Object> userMap = objectMapper.readValue(userJson,new TypeReference<Map<String, Object>>() {});
         if (Objects.isNull(userMap)) {
             log.warn("用户信息为空：{}", userJson);
             //不放行

@@ -56,6 +56,11 @@
         </dependency>
         <dependency>
             <groupId>com.guanshiyun</groupId>
+            <artifactId>redis-utils-spring-boot-starter</artifactId>
+            <version>${snapshotName}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.guanshiyun</groupId>
             <artifactId>public-pojo-spring-boot-starter</artifactId>
             <version>${snapshotName}</version>
         </dependency>

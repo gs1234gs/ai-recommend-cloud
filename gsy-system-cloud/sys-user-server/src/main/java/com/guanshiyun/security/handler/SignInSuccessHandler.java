@@ -4,9 +4,9 @@ import cn.hutool.json.JSONUtil;
 import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.consts.ConstClassNickName;
 import com.guanshiyun.consts.ConstMapClassNickName;
+import com.guanshiyun.reactiveredis.ReactiveRedisUtil;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.security.jwt.AssistantJwtUtils;
-import com.guanshiyun.security.redisConfig.ReactiveRedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +45,7 @@ public class SignInSuccessHandler {
 //                        log.info("保存权限：{}", auth);
                         Mono<Boolean> saveAuthority = redisUtil.hSet(
                                         ConstClassNickName.REDIS_AUTHORITY_KEY,
-                                        id,
+                                        String.valueOf(id),
                                         JSONUtil.toJsonStr(auth))
                                 .then(redisUtil.expire(
                                         ConstClassNickName.REDIS_AUTHORITY_KEY,

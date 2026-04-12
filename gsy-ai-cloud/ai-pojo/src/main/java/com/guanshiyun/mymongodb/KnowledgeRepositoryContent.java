@@ -1,49 +1,36 @@
 package com.guanshiyun.mymongodb;
 
+import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.content.ContentText;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
-import java.time.LocalDateTime;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 知识库
  * */
+@EqualsAndHashCode(callSuper = true)
 @Document("knowledge_repository_content")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Builder
+@SuperBuilder(toBuilder = true)
 @FieldNameConstants
-public class KnowledgeRepositoryContent {
+public class KnowledgeRepositoryContent extends BasePojo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
     //知识库id
     @Id
     private Long id;
     //知识库内容
     private List<ContentText> contentTexts;
-    /**
-     * 创建者，目前使用 SysUser 的 id 编号
-     *
-     */
-    public Long creator;
-    /**
-     * 更新者，目前使用 SysUser 的 id 编号
-     */
-    public Long updater;
-    /**
-     * 创建时间
-     */
-    public LocalDateTime createTime;
-    /**
-     * 最后更新时间
-     */
-    public LocalDateTime updateTime;
-    /**
-     * 是否删除，删除标记,0-未删除，1-已删除
-     */
-    public short delFlag;
 }

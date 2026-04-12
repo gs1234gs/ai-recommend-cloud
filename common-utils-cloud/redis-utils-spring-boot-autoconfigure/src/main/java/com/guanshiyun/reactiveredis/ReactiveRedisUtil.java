@@ -1,21 +1,21 @@
 package com.guanshiyun.reactiveredis;
 
 
-import com.alibaba.fastjson2.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
-import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 
-@Component
 @RequiredArgsConstructor
 public class ReactiveRedisUtil {
 
     private final ReactiveRedisTemplate<String, String> redisTemplate;
+    private final ObjectMapper objectMapper;
 
     /** 设置值 */
     public Mono<Boolean> set(String key, String value) {
@@ -23,17 +23,27 @@ public class ReactiveRedisUtil {
     }
 
     /** 设置值并指定过期时间 */
+
     public Mono<Void> setWithExpire(String key, Object valueObject, long timeoutSeconds) {
-        String value = JSONObject.toJSONString(valueObject);
-        return redisTemplate.opsForValue().set(key, value, Duration.ofSeconds(timeoutSeconds))
-                .then();
+//        String value = JSONObject.toJSONString(valueObject);
+//        String value = objectMapper.writeValueAsString(valueObject);
+//        return redisTemplate.opsForValue().set(key, value, Duration.ofSeconds(timeoutSeconds))
+//                .then();
+        return Mono.fromCallable(()->objectMapper.writeValueAsString(valueObject))
+                .flatMap(values->
+                    redisTemplate.opsForValue().set(key, values, Duration.ofSeconds(timeoutSeconds))
+                .then()
+                )
+                .onErrorResume(Mono::error);
     }
 
     /** 获取值（JSON 转换） */
     public <T> Mono<T> get(String key, Class<T> clazz) {
         return redisTemplate.opsForValue()
                 .get(key)
-                .map(json -> JSONObject.parseObject(json, clazz));
+                .flatMap(json -> Mono.fromCallable(()->objectMapper.readValue(json, clazz)))
+                .onErrorResume(Mono::error);
+//                .map(json -> JSONObject.parseObject(json, clazz));
     }
 
     /** 获取原始字符串值 */
@@ -108,5 +118,43 @@ public class ReactiveRedisUtil {
     /** 获取列表长度 */
     public Mono<Long> lLen(String key) {
         return redisTemplate.opsForList().size(key);
+    }
+
+
+    /**
+     * 获取列表指定范围的元素 (用于分页下拉)
+     * @param key Redis Key
+     * @param start 起始索引 (包含)
+     * @param end 结束索引 (包含)
+     * @return 元素列表
+     */
+    public Mono<List<String>> lRange(String key, long start, long end) {
+        return redisTemplate.opsForList().range(key, start, end).collectList();
+    }
+
+    /**
+     * 批量向右推送列表元素 (用于初始化/更新候选池)
+     * @param key Redis Key
+     * @param values 元素集合
+     * @return 操作完成信号
+     */
+    public Mono<Void> rPushAll(String key, List<String> values) {
+        if (values == null || values.isEmpty()) {
+            return Mono.empty();
+        }
+        return Flux.fromIterable(values)
+                .flatMap(val -> redisTemplate.opsForList().rightPush(key, val))
+                .then();
+    }
+
+    /**
+     * 删除旧列表并重新写入 (原子性较差，但在推荐场景可接受，或者使用 Lua 脚本优化)
+     * 这里采用先删后写的方式重置候选池
+     */
+    public Mono<Void> refreshList(String key, List<String> values) {
+        return redisTemplate.delete(key)
+                .thenMany(Flux.fromIterable(values))
+                .flatMap(val -> redisTemplate.opsForList().rightPush(key, val))
+                .then();
     }
 }

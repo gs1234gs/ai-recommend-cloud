@@ -1,6 +1,6 @@
 package com.guanshiyun.controller.chat;
 
-import com.alibaba.fastjson2.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guanshiyun.chat.ChatRecord;
 import com.guanshiyun.controller.chat.vo.ChatRecordVO;
 import com.guanshiyun.mymongodb.ChatRecordContent;
@@ -34,6 +34,7 @@ public class ChatController {
 
     private final ChatService chatService;
     private final ChatRecordService chatRecordService;
+    private final ObjectMapper objectMapper;
 
     //一次性对话
     @PostMapping("chatAll")
@@ -66,12 +67,17 @@ public class ChatController {
                 .onErrorResume(throwable -> {
                     log.error("对话失败", throwable);
                     // 返回一个错误事件，前端可监听
-                    String errorEvent = "event: error\ndata: " +
-                            JSON.toJSONString(ResultT.<String>builder()
+//                    String errorEvent = "event: error\ndata: " +
+//                            objectMapper.writeValueAsString(ResultT.<String>builder()
+//                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+//                                    .msg("对话失败: " + throwable.getMessage())
+//                                    .build()) + "\n\n";
+                    return Mono.fromCallable(()->"event: error\ndata: " +
+                            objectMapper.writeValueAsString(ResultT.<String>builder()
                                     .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                                     .msg("对话失败: " + throwable.getMessage())
-                                    .build()) + "\n\n";
-                    return Mono.just(errorEvent);
+                                    .build()) + "\n\n");
+//                    return Mono.just(errorEvent);
                 });
     }
 

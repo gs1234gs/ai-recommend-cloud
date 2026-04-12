@@ -1,7 +1,7 @@
 package com.guanshiyun.webutils;
 
 
-import com.alibaba.fastjson2.TypeReference;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.core.ParameterizedTypeReference;
 
 
@@ -19,7 +19,7 @@ public class WebClientUtils {
         }
         return longNum;
     }
-    public static <T> TypeReference<T> typeRefFastJson2() {
-        return new TypeReference<>() {};
+    public static <T> TypeReference<T> typeRefFastJson() {
+        return new TypeReference<T>() {};
     }
 }

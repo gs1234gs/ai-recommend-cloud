@@ -2,7 +2,7 @@ package com.guanshiyun.security.handler;
 
 import com.guanshiyun.consts.ConstClassNickName;
 import com.guanshiyun.mylong.MyLong;
-import com.guanshiyun.security.redisConfig.ReactiveRedisUtil;
+import com.guanshiyun.reactiveredis.ReactiveRedisUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -28,10 +28,13 @@ public class LogoutSuccessHandler {
                 return Mono.empty();
             }
             Long id =  myLong.findUserId(ctx);
-          return   reactiveRedisUtil.hDel(ConstClassNickName.REDIS_TOKEN_KEY, id.toString())
-                    .then(reactiveRedisUtil.hDel(ConstClassNickName.REDIS_AUTHORITY_KEY, id.toString()));
+          return   reactiveRedisUtil.hDelField(ConstClassNickName.REDIS_TOKEN_KEY, id.toString())
+                  .flatMap(bol->reactiveRedisUtil.hDelField(ConstClassNickName.REDIS_AUTHORITY_KEY, id.toString()))
+                  .doOnNext(bol->{
+                      log.info("退出登陆成功: {}",id);
+                  })
+                    .then(Mono.just(id));
                 }
-
         );
     }
 }

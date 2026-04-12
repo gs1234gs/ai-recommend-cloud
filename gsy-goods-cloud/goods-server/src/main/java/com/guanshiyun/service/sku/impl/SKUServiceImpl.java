@@ -1,11 +1,12 @@
 package com.guanshiyun.service.sku.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.alibaba.fastjson2.JSONObject;
 import com.db.dbnumber.ConstNumber;
 import com.db.dbsqlconst.SqlConst;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guanshiyun.controller.sku.vo.*;
 import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.product.Product;
@@ -17,6 +18,7 @@ import com.guanshiyun.service.sku.SKUService;
 import com.guanshiyun.sku.SKU;
 import com.guanshiyun.snowflake.SnowflakePermanent;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Criteria;
@@ -45,10 +47,12 @@ public class SKUServiceImpl implements SKUService {
     private final TransactionalOperator transactionalOperator;
     private final MyLong myLong;
     private final ProductRepository productRepository;
+    private final ObjectMapper objectMapper;
 
     /**
      * 解析 picList 字段（数据库里存的是 JSON 字符串）
      */
+    @SneakyThrows
     private List<String> parsePicList(Object picListObj) {
         if (picListObj == null) {
             return List.of();
@@ -56,19 +60,21 @@ public class SKUServiceImpl implements SKUService {
 
         // 如果已经是 String（数据库读出来的就是 String）
         if (picListObj instanceof String s) {
-            return JSONObject.parseObject(s, List.class);
+//            return JSONObject.parseObject(s, List.class);
+            return objectMapper.readValue(s, new TypeReference<List<String>>() {});
         }
 
         // 其他类型（防止未来改成其他类型）
-        String json = JSONObject.toJSONString(picListObj);
-        return JSONObject.parseObject(json, List.class);
+        String json = objectMapper.writeValueAsString(picListObj);
+        return objectMapper.readValue(json, new TypeReference<List<String>>() {});
     }
 
+    @SneakyThrows
     @Override
     public Mono<Long> save(SKUSaveVO skuVO) {
 
         SKU sku = BeanUtil.toBean(skuVO, SKU.class)
-                .setPicList(JSONObject.toJSONString(skuVO.getPicList()));
+                .setPicList(objectMapper.writeValueAsString(skuVO.getPicList()));
         return Mono.deferContextual(ctx -> {
             if (!myLong.hasKey(ctx))
                 return Mono.error(new RuntimeException("用户未登录"));

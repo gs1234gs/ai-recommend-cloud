@@ -45,7 +45,7 @@
         <java.version>25</java.version>
         <project-version>2025.0.0.0</project-version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
-        <fastjson.version>2.0.61</fastjson.version>
+<!--        <fastjson.version>2.0.61</fastjson.version>-->
         <snapshotName>0.0.1-SNAPSHOT</snapshotName>
         <r2dbc.mysql.version>1.4.1</r2dbc.mysql.version>
         <junit.version>4.13.2</junit.version>
@@ -108,11 +108,11 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>com.alibaba.fastjson2</groupId>
-                <artifactId>fastjson2</artifactId>
-                <version>${fastjson.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.alibaba.fastjson2</groupId>-->
+<!--                <artifactId>fastjson2</artifactId>-->
+<!--                <version>${fastjson.version}</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>aliyun-spring-boot-dependencies</artifactId>

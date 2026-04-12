@@ -13,7 +13,6 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * 模型实体
@@ -42,25 +41,4 @@ public class BigModel extends BasePojo implements Serializable {
     private String description;
     //大模型版本
     private String version;
-    /**
-     * 创建者，目前使用 SysUser 的 id 编号
-     *
-     */
-    public Long creator;
-    /**
-     * 更新者，目前使用 SysUser 的 id 编号
-     */
-    public Long updater;
-    /**
-     * 创建时间
-     */
-    public LocalDateTime createTime;
-    /**
-     * 最后更新时间
-     */
-    public LocalDateTime updateTime;
-    /**
-     * 是否删除，删除标记,0-未删除，1-已删除
-     */
-    public short delFlag;
 }

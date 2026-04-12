@@ -24,6 +24,8 @@
         <module>web-client-spring-boot-starter</module>
         <module>gorse-sdk-spring-boot-autoconfigure</module>
         <module>gorse-sdk-spring-boot-starter</module>
+        <module>redis-utils-spring-boot-autoconfigure</module>
+        <module>redis-utils-spring-boot-starter</module>
     </modules>
     <groupId>com.guanshiyun</groupId>
     <artifactId>common-utils-cloud</artifactId>
@@ -57,7 +59,7 @@
         <maven.compiler.target>21</maven.compiler.target>
         <jjwt-impl.version>0.13.0</jjwt-impl.version>
 <!--        <sdk.oss.version>3.18.5</sdk.oss.version>-->
-        <fastjson.version>2.0.61</fastjson.version>
+<!--        <fastjson.version>2.0.61</fastjson.version>-->
 <!--        <jaxbr.version>2.3.9</jaxbr.version>-->
 <!--        <jaxbapi.version>2.3.1</jaxbapi.version>-->
 <!--        <jafx.version>1.1.1</jafx.version>-->
@@ -86,11 +88,11 @@
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.alibaba.fastjson2</groupId>
-                <artifactId>fastjson2</artifactId>
-                <version>${fastjson.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.alibaba.fastjson2</groupId>-->
+<!--                <artifactId>fastjson2</artifactId>-->
+<!--                <version>${fastjson.version}</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
