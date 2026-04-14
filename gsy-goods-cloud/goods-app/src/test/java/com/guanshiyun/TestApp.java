@@ -1,6 +1,7 @@
 package com.guanshiyun;
 
 import com.guanshiyun.goser.GorseClient;
+import com.guanshiyun.service.sku.SKUService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,5 +21,15 @@ public class TestApp {
                 .block();
         System.out.println(block);
 
+    }
+
+    @Autowired
+    SKUService skuService;
+    @Test
+    public void test2()
+    {
+        Long block = skuService.findTenantIdById(3L).block();
+        System.out.println("=============");
+        System.out.println(block);
     }
 }

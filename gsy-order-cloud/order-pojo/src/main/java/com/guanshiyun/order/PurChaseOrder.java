@@ -61,4 +61,6 @@ public class PurChaseOrder extends BasePojo implements Serializable {
     private Long addressId;
     //商品id
     private Long productId;
+    //租户id
+    private Long tenantId;
 }

@@ -7,11 +7,12 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-
 import java.util.Collection;
 import java.util.List;
 
+
 public interface PurChaseOrderRepository extends ReactiveCrudRepository<PurChaseOrder, Long> {
+
 
     //根据用户id查询，查询rows订单
 
@@ -28,4 +29,5 @@ public interface PurChaseOrderRepository extends ReactiveCrudRepository<PurChase
 
     @Query("update purchase_order set del_flag = 1 where id = (:id)")
     Mono<Integer> softDeleteById(Long id);
+
 }

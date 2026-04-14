@@ -83,4 +83,15 @@ public class SkuApiServiceImpl implements SkuApiService {
                 .bodyToMono(new ParameterizedTypeReference<ResultT<Boolean>>() {
                 });
     }
+
+    @Override
+    public Mono<ResultT<Long>> findTenantIdBySkuId(Long skuId) {
+        return goodsWebClientRpc.webClient()
+                .get()
+                .uri(builder-> builder.path(GoodsApiUrl.SKU_FIND_TENANT_ID)
+                        .build(skuId))
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ResultT<Long>>() {
+                });
+    }
 }

@@ -109,7 +109,7 @@ public class WarehouseController {
                     );
                 });
     }
-    @GetMapping("findById{id}")
+    @GetMapping("findById/{id}")
     public Mono<ResultT<WarehouseVO>> findById(@PathVariable Long id){
         return warehouseService.findById(id)
                 .map(warehouseVO->

@@ -48,7 +48,7 @@ public class SignInUpController {
         return signInUpService.signUp(signUpUser)
                 .map(up->{
                     if(up){
-                        ResultT.<Boolean>builder()
+                      return  ResultT.<Boolean>builder()
                                 .code(HttpStatus.OK.value())
                                 .msg("注册成功")
                                 .data(up)

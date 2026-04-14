@@ -17,6 +17,8 @@ public class GoodsApiUrl {
     public static final String SKU_ADD_SALES_BY_ID = "/sku/addSalesById";
     //获取属性列表
     public static final String SKU_FIND_PRODUCT = "/sku/findByProductId/{productId}";
+    //根据id获取租户id
+    public static final String SKU_FIND_TENANT_ID = "/sku/findTenantIdById/{id}";
     //获取标签列表
     public static final String TAG_FIND_CURSOR = "/tag/findPage";
     //获取仓库列表

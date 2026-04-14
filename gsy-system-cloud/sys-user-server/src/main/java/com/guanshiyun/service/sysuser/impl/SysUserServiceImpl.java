@@ -171,13 +171,18 @@ public class SysUserServiceImpl implements SysUserService {
                                 SysTenant t1 = tuple2.getT1();
                                 List<SysRole> t2 = tuple2.getT2();
                                 List<SysRoleVO> sysRoleVOS = BeanConvertUtil.toBeanList(t2, SysRoleVO.class);
-                                return sysUserVO.setRoles(sysRoleVOS).setTenant(BeanConvertUtil.toBean(t1, TenantVO.class));
+                                return sysUserVO.setRoles(sysRoleVOS).setTenant(BeanConvertUtil.toBean(t1, TenantVO.class))
+                                        .setPassword(null);
                             });
                 });
     }
 
     @Override
     public Mono<Long> updateUserById(SysUserVO sysUser) {
+        String password = sysUser.getPassword();
+        if(Objects.nonNull(password)){
+            sysUser.setPassword(passwordEncoder.encode(password));
+        }
         return sysUserRepository.findById(sysUser.getId())
                 .flatMap(sysUserDB -> {
                     BeanUtil.copyProperties(sysUser, sysUserDB, CopyOptions.create().ignoreNullValue());
@@ -201,15 +206,17 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public Mono<Long> save(SysUserSaveVO sysUserSaveVO) {
-        String password = passwordEncoder.encode(sysUserSaveVO.getPassword());
-        sysUserSaveVO.setPassword(password);
+        String password = sysUserSaveVO.getPassword();
+        if(Objects.nonNull(password)){
+            sysUserSaveVO.setPassword(passwordEncoder.encode(password));
+        }
         sysUserSaveVO.setCreateTime(LocalDateTime.now());
         return Mono.deferContextual(ctx -> {
             if (!myLong.hasKey(ctx))
                 return Mono.error(new Exception("用户ID不存在"));
             Long userId =
                     myLong.findUserId(ctx);
-            SysUser sysUser = BeanUtil.toBean(sysUserSaveVO, SysUser.class);
+            SysUser sysUser = BeanConvertUtil.toBean(sysUserSaveVO, SysUser.class);
             if (Objects.isNull(sysUserSaveVO.getId())) {
                 sysUser.setCreator(userId);
                 sysUser.setCreateTime(LocalDateTime.now());
@@ -260,6 +267,10 @@ public class SysUserServiceImpl implements SysUserService {
         LocalDateTime now = LocalDateTime.now();
         sysUser.setUpdateTime(now)
                 .setUpdateTime(now);
+        String password = sysUserSaveVO.getPassword();
+        if(Objects.nonNull(password)){
+            sysUser.setPassword(passwordEncoder.encode(password));
+        }
         return Mono.deferContextual(ctx->{
             if(!myLong.hasKey(ctx)){
                 return Mono.error(new Throwable("请先登录"));
@@ -297,7 +308,8 @@ public class SysUserServiceImpl implements SysUserService {
                                     List<SysRole> sysRoleList = tuple2.getT2();
                                     List<SysRoleVO> sysRoleVOS = BeanConvertUtil.toBeanList(sysRoleList, SysRoleVO.class);
                                    return sysUserVO.setRoles(sysRoleVOS)
-                                           .setTenant(BeanConvertUtil.toBean(sysTenant,TenantVO.class));
+                                           .setTenant(BeanConvertUtil.toBean(sysTenant,TenantVO.class))
+                                           .setPassword(null);
                                 });
                     });
         });

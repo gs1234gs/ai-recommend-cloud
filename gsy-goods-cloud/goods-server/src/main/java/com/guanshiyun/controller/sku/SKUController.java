@@ -205,4 +205,19 @@ public class SKUController {
                     );
                 });
     }
+
+    @GetMapping("findTenantIdById/{id}")
+    public Mono<ResultT<Long>> findTenantIdById(@PathVariable Long id) {
+        return skuService.findTenantIdById(id)
+                .map(ResultT::success)
+                .onErrorResume(throwable ->{
+                    log.error("查询租户ID失败", throwable);
+                    return Mono.just(
+                            ResultT.<Long>builder()
+                                    .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                                    .msg("查询租户ID失败")
+                                    .build()
+                    );
+                });
+    }
 }

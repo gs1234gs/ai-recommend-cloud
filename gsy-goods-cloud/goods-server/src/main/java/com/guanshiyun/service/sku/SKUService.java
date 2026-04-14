@@ -35,7 +35,7 @@ Mono<PageResultT<List<SKUGroupByProductIdVO>>> findAllByPage(RequestPage<SKUFind
 
     Mono<Boolean> addSalesById(Long id, Integer count);
 
-    //统计总销售与营收
-    Mono<SkuStatisticsVO> totalStatistics();
+    //根据id获取租户
+    Mono<Long> findTenantIdById(Long id);
 
 }

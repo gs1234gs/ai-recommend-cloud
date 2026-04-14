@@ -4,6 +4,7 @@ package com.guanshiyun.service.signin.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guanshiyun.consts.ConstClassNickName;
+import com.guanshiyun.goser.GorseClient;
 import com.guanshiyun.menupojo.SysMenu;
 import com.guanshiyun.reactiveredis.ReactiveRedisUtil;
 import com.guanshiyun.repository.signin.SignInUpRepository;
@@ -13,6 +14,7 @@ import com.guanshiyun.service.sysmenu.SysMenuService;
 import com.guanshiyun.service.sysmenurole.SysRoleMenuService;
 import com.guanshiyun.service.userrole.SysUserRoleService;
 import com.guanshiyun.signinpojo.SignUser;
+import com.guanshiyun.user.User;
 import com.guanshiyun.userpojo.SysUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Slf4j
@@ -40,6 +43,7 @@ public class SignInUpServiceImpl implements SignInUpService {
     private final ReactiveRedisUtil redisUtil;
     private final TransactionalOperator transactionalOperator;
     private final ObjectMapper  objectMapper;
+    private final GorseClient gorseClient;
 
     @Override
     public Mono<SignUser> signIn(String username) {
@@ -58,19 +62,28 @@ public class SignInUpServiceImpl implements SignInUpService {
                 .nickName(signUser.getNickName())
                 .build();
         return signInUpRepository.findByUsername(signUser.getUsername())
-                .flatMap(existUser -> Mono.just(Boolean.FALSE)
-                )
+                .map(existUser -> Boolean.FALSE)
                 .switchIfEmpty(signInUpRepository.save(sysUser)
                         .flatMap(user ->
                                 sysUserRoleService.addUserRole(sysUser.getId(), List.of(RoleIdConst.ROLE_COMMON_USER))
-                                        .map(result -> {
+                                        .flatMap(result -> {
                                                     //添加角色
                                                     log.info("注册成功: {}", result);
-                                                    return Boolean.TRUE;
+                                            LinkedHashMap<String, Object> linkedHashMap = new LinkedHashMap<>();
+                                            linkedHashMap.put(SysUser.Fields.username, signUser.getUsername());
+                                            linkedHashMap.put("school", "滇西应用技术大学");
+                                            linkedHashMap.put("location", "Dali of Yunnan in China");
+                                            User gorseUser = User.builder()
+                                                    .userId(String.valueOf(signUser.getId()))
+                                                    .labels(linkedHashMap)
+                                                    .build();
+                                            return gorseClient.saveUser(gorseUser)
+                                                    .thenReturn(Boolean.TRUE);
                                                 }
 
                                         )
                         )
+
                         .transform(transactionalOperator::transactional)
                 )
                 .onErrorResume(throwable -> {

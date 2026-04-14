@@ -30,7 +30,6 @@ import com.guanshiyun.rpc.goodsapi.tag.TagApiService;
 import com.guanshiyun.rpc.order.vo.PurchaseOrderVOApi;
 import com.guanshiyun.service.order.PurChaseOrderService;
 import com.guanshiyun.snowflake.SnowflakePermanent;
-import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -72,11 +71,10 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
     @Override
     public Mono<Long> save(PurChaseOrderSaveVO purChaseOrderSaveVO) {
         return Mono.deferContextual(ctx -> {
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+            if (!myLong.hasKey(ctx)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
-            Long userId =
-                    myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+            Long userId = myLong.findUserId(ctx);
             Long id = snowflakePermanent.nextId();
             LocalDateTime now = LocalDateTime.now();
             //订单
@@ -89,29 +87,34 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
                     .setOrderNo(snowflakePermanent.stringNextId())
                     .setCreator(userId)
                     .setCreateTime(now);
-            return r2dbcEntityTemplate.insert(purChaseOrder)
-                    .flatMap(order->
-                            skuApiService.reduceStockAndAddSales(order.getSkuId(), purChaseOrderSaveVO.getNum())
-                                    .thenReturn(order.getId())
-                    )
-                    .publishOn(Schedulers.boundedElastic())
-                    .doOnSuccess(ok->{
-                        Long productId = purChaseOrder.getProductId();
-                        gorseClient.insertFeedback(
-                                List.of(
-                                        Feedback.builder()
-                                                .itemId(productId.toString())
-                                                .feedbackType(GorseFeedbackEnum.PURCHASE.getValue())
-                                                .userId(userId.toString())
-                                                .timestamp(now.format(DateTimeFormatter.ISO_DATE_TIME))
-                                                .build()
+            return skuApiService.findTenantIdBySkuId(purChaseOrder.getSkuId())
+                    .flatMap(tenantIdR -> {
+                        Long tenantId = tenantIdR.getData();
+                        purChaseOrder.setTenantId(tenantId);
+                        return r2dbcEntityTemplate.insert(purChaseOrder)
+                                .flatMap(order ->
+                                        skuApiService.reduceStockAndAddSales(order.getSkuId(), purChaseOrderSaveVO.getNum())
+                                                .thenReturn(order.getId())
                                 )
-                        )
-                                .onErrorResume(e -> {
-                                    log.error("同步购买行为到 Gorse 失败，订单 ID: {}", productId, e);
-                                    return Mono.error(new Throwable(e)); //
-                                })
-                                .subscribe();
+                                .publishOn(Schedulers.boundedElastic())
+                                .doOnSuccess(ok -> {
+                                    Long productId = purChaseOrder.getProductId();
+                                    gorseClient.insertFeedback(
+                                                    List.of(
+                                                            Feedback.builder()
+                                                                    .itemId(productId.toString())
+                                                                    .feedbackType(GorseFeedbackEnum.PURCHASE.getValue())
+                                                                    .userId(userId.toString())
+                                                                    .timestamp(now.format(DateTimeFormatter.ISO_DATE_TIME))
+                                                                    .build()
+                                                    )
+                                            )
+                                            .onErrorResume(e -> {
+                                                log.error("同步购买行为到 Gorse 失败，订单 ID: {}", productId, e);
+                                                return Mono.error(new Throwable(e)); //
+                                            })
+                                            .subscribe();
+                                });
                     });
         });
     }
@@ -123,12 +126,10 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
     public Mono<Long> updateById(PurChaseOrderSaveVO purChaseOrderSaveVO) {
         Integer status = purChaseOrderSaveVO.getStatus();
         return Mono.deferContextual(ctx -> {
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+            if (!myLong.hasKey(ctx)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
-            Long userId = myLong.myLong(
-                    ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
-            );
+            Long userId = myLong.findUserId(ctx);
             return r2dbcUpdateHelper.updateIgnoreNull(
                             EntityTableNameUtils.getName(PurChaseOrder.class),
                             PurChaseOrder.builder()
@@ -212,12 +213,10 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
     public Mono<PageResultT<List<PurChaseOrderVO>>> findByUserIdPage(RequestPage<PurchaseOrderSearchVO> requestPage) {
         RequestPage<PurchaseOrderSearchVO> purChaseOrderVORequestPage = PageUtils.pageValidation(requestPage, PurchaseOrderSearchVO.class);
         return Mono.deferContextual(ctx -> {
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+            if (!myLong.hasKey(ctx)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
-            Long userId = myLong.myLong(
-                    ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
-            );
+            Long userId = myLong.findUserId(ctx);
             RequestPage<PurChaseOrder> orderRequestPage =
                     BeanConvertUtil.toBean(purChaseOrderVORequestPage,
                             PurChaseOrder.class);
@@ -229,6 +228,14 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
                                 List<PurChaseOrder> rows = pageResultT.getRows();
                                 List<Long> skuIdList = rows.stream().map(PurChaseOrder::getSkuId).toList();
 //                                List<Long> productIdList = rows.stream().map(PurChaseOrder::getProductId).toList();
+                        if(skuIdList.isEmpty()){
+                            return Mono.just(PageResultT.<List<PurChaseOrderVO>>builder()
+                                    .pageNum(pageResultT.getPageNum())
+                                    .pageSize(pageResultT.getPageSize())
+                                    .total(pageResultT.getTotal())
+                                    .rows(new ArrayList<>())
+                                    .build());
+                        }
                                 return skuApiService.findBySkuIds(skuIdList)
                                         .map(skuList -> {
                                             Map<Long, SKUApiVO> skuMap = skuList.getData().stream()
@@ -270,13 +277,11 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
     @Override
     public Mono<List<PurchaseOrderVOApi>> findByRows(Integer rows) {
         return Mono.deferContextual(ctx -> {
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
+            if (!myLong.hasKey(ctx)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
 
-            Long userId = myLong.myLong(
-                    ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)
-            );
+            Long userId = myLong.findUserId(ctx);
 
             return purChaseOrderRepository.findAllByUserId(userId, rows)
                     .collectList()
@@ -367,16 +372,25 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
     @Override
     public Mono<Boolean> deleteById(Long id) {
         // 构建更新操作
-        return r2dbcEntityTemplate.update(PurChaseOrder.class)
-                .matching(Query.query(
-                       Criteria.where(PurChaseOrder.Fields.id).is(id)
-                ))
-                .apply(Update.update(BasePojo.Fields.delFlag, ConstNumber.INT_ONE))
-                .then() // 转换为 Mono<Void> 表示完成
-                .thenReturn(true) // 成功后返回 true
-                .onErrorResume(e -> {
-                    log.error("删除失败", e);
-                    return Mono.just(false);
-                });
+        return Mono.deferContextual(ctx -> {
+            if (!myLong.hasKey(ctx)) {
+                return Mono.error(new RuntimeException("用户未登录"));
+            }
+            Long userId = myLong.findUserId(ctx);
+            return r2dbcEntityTemplate.update(PurChaseOrder.class)
+                    .matching(Query.query(
+                            Criteria.where(PurChaseOrder.Fields.id).is(id)
+                    ))
+                    .apply(
+                            Update.update(BasePojo.Fields.delFlag, ConstNumber.INT_ONE)
+                                    .set(BasePojo.Fields.updater, userId)
+                                    .set(BasePojo.Fields.updateTime, LocalDateTime.now()))
+                    .then() // 转换为 Mono<Void> 表示完成
+                    .thenReturn(true) // 成功后返回 true
+                    .onErrorResume(e -> {
+                        log.error("删除失败", e);
+                        return Mono.just(false);
+                    });
+        });
     }
 }

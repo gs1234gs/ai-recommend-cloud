@@ -7,7 +7,7 @@ import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface SKURepository extends ReactiveCrudRepository<SKU, Long> {
@@ -37,13 +37,14 @@ public interface SKURepository extends ReactiveCrudRepository<SKU, Long> {
             SELECT * FROM sku WHERE product_id = :productId
             """)
     Flux<SKU> findAllByProductId(Long productId);
-//根据id减库存
+
+    //根据id减库存
     @Query("UPDATE product SET stock = stock - :count WHERE id = :id AND stock >= :count")
-    Mono<Integer> reduceStockById(@Param("id") Long id,@Param("count") Integer count);
+    Mono<Integer> reduceStockById(@Param("id") Long id, @Param("count") Integer count);
 
     //添加库存
     @Query("UPDATE product SET stock = stock + :count WHERE id = :id")
-    Mono<Integer> addStockById( @Param("id")Long id,@Param("count") Integer count);
+    Mono<Integer> addStockById(@Param("id") Long id, @Param("count") Integer count);
 
     @Query("""
             SELECT * FROM sku WHERE product_id IN (:allProductIds)
@@ -51,21 +52,50 @@ public interface SKURepository extends ReactiveCrudRepository<SKU, Long> {
     Flux<SKU> findAllByProductId(List<Long> allProductIds);
 
     @Query("""
-           SELECT product_id 
-                 FROM sku 
-                 GROUP BY product_id 
-                 HAVING SUM(sales_volume) > :salesVolume
+            SELECT product_id 
+                  FROM sku 
+                  GROUP BY product_id 
+                  HAVING SUM(sales_volume) > :salesVolume
             """)
     Flux<Long> findProductIdsByTotalSalesGreaterThan(@Param("salesVolume") Integer salesVolume);
 
-    //统计销量
+    // 4. 库存预警列表 (必须保留)
     @Query("""
-select sum(sales_volume) from sku
-""")
-    Mono<Long> countTotalSales();
-    //统计商品总数
+            SELECT * FROM sku 
+            WHERE tenant_id = :tenantId 
+            AND stock < :threshold
+            ORDER BY stock ASC
+            LIMIT :limit
+            """)
+    Flux<SKU> getLowStockSKUs(
+            @Param("tenantId") Long tenantId,
+            @Param("threshold") Integer threshold,
+            @Param("limit") Integer limit);
+
+    // 5. 热销排行 (必须保留)
     @Query("""
-    select sum(stock) from sku
-""")
-    Mono<Long> countTotalStock();
+            SELECT * FROM sku 
+            WHERE tenant_id = :tenantId 
+            ORDER BY sales_volume DESC
+            LIMIT :limit
+            """)
+    Flux<SKU> getTopSellingSKUs(
+            @Param("tenantId") Long tenantId,
+            @Param("limit") Integer limit);
+
+    // 6. 滞销排行 (必须保留)
+    @Query("""
+            SELECT * FROM sku 
+            WHERE tenant_id = :tenantId 
+            AND create_time >= :startTime 
+            ORDER BY sales_volume ASC
+            LIMIT :limit
+            """)
+    Flux<SKU> getSlowMovingSKUs(
+            @Param("tenantId") Long tenantId,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("limit") Integer limit);
+
+    @Query("SELECT tenant_id FROM sku WHERE id = :id")
+    Mono<Long> findTenantIdById(Long id);
 }

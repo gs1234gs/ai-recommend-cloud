@@ -20,5 +20,6 @@ public interface SkuApiService {
     Mono<ResultT<SKUApiVO>> findBySkuId(Long skuId);
     //减少库存，增加销量
     Mono<ResultT<Boolean>> reduceStockAndAddSales(Long skuId, Integer count);
+    Mono<ResultT<Long>> findTenantIdBySkuId(Long skuId);
 
 }

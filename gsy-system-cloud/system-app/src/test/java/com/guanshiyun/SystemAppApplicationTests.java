@@ -1,15 +1,21 @@
 package com.guanshiyun;
 
 
+import com.guanshiyun.goser.GorseClient;
+import com.guanshiyun.repository.sysuser.SysUserRepository;
 import com.guanshiyun.repository.userrole.SysUserRoleRepository;
 import com.guanshiyun.service.sysmenu.SysMenuService;
 import com.guanshiyun.service.sysmenurole.SysRoleMenuService;
+import com.guanshiyun.user.User;
+import com.guanshiyun.userpojo.SysUser;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import reactor.core.publisher.Mono;
 
-
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @Slf4j
@@ -55,6 +61,37 @@ class SystemAppApplicationTests {
                    log.info("：{}",list);
                     log.info("====================");
                 });
+    }
+
+    @Resource
+    private SysUserRepository sysUserRepository;
+
+    @Resource
+    private GorseClient gorseClient;
+
+    @Test
+    void test3() {
+        sysUserRepository.findAll()
+                .flatMap(user->{
+                    System.out.println("正在同步用户: " + user.getUsername());
+                    System.out.println("===============================");
+                    LinkedHashMap<String, Object> linkedHashMap = new LinkedHashMap<>();
+                    linkedHashMap.put(SysUser.Fields.username, user.getUsername());
+                    linkedHashMap.put("school", "滇西应用技术大学");
+                    linkedHashMap.put("location", "Dali of Yunnan in China");
+                    User gorseUser = User.builder()
+                            .userId(String.valueOf(user.getId()))
+                            .labels(linkedHashMap)
+                            .build();
+                    return gorseClient.saveUser(gorseUser)
+                            .doOnSuccess(v -> System.out.println("同步成功: " + user.getUsername()))
+                            .onErrorResume(e -> {
+                                System.err.println("同步失败: " + user.getUsername());
+                                return Mono.error(e);
+                            });
+                })
+                .then()
+                .block();
     }
 
 }

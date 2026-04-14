@@ -365,8 +365,7 @@ public class SKUServiceImpl implements SKUService {
     }
 
     @Override
-    public Mono<SkuStatisticsVO> totalStatistics() {
-       Mono<Long> totalSales =  skuRepository.countTotalSales();
-       return null;
+    public Mono<Long> findTenantIdById(Long id) {
+        return skuRepository.findTenantIdById(id);
     }
 }
