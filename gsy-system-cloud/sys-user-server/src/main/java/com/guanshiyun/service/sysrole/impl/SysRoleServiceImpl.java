@@ -166,9 +166,7 @@ public class SysRoleServiceImpl implements SysRoleService {
                 .rowsUpdated()
                 .flatMap(rowsUpdated ->
                         databaseClient.sql("delete from sys_role_menu where role_id = :roleId")
-                                .bind(
-                                        SysRoleMenu.Fields.roleId
-                                , id)
+                                .bind(SysRoleMenu.Fields.roleId,id)
                                 .fetch()
                                 .rowsUpdated()
                                 .flatMap(rowsChildren ->

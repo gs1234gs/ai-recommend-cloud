@@ -25,7 +25,7 @@ public class ResetForgetServiceImpl implements ResetForgetService {
                                     Result.success("修改密码成功"));
                 })
                 .switchIfEmpty(Mono.just(
-                        Result.error("修改密码失败")
+                        Result.error("用户不存在")
                 ))
                 .onErrorResume(e->Mono.just(
                         Result.error("修改密码失败")

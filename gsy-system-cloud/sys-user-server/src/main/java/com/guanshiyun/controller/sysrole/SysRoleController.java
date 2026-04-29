@@ -135,15 +135,15 @@ public class SysRoleController {
                 .map(pageResult ->
                         ResultT.<PageResultT<List<SysRoleVO>>>builder()
                                 .code(HttpStatus.OK.value())
-                                .msg("获取用户列表成功")
+                                .msg("获取角色列表成功")
                                 .data(pageResult)
                                 .build()
                 )
                 .onErrorResume(throwable -> {
-                    log.error("获取用户列表失败", throwable);
+                    log.error("获取角色列表失败", throwable);
                     return Mono.just(ResultT.<PageResultT<List<SysRoleVO>>>builder()
                             .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                            .msg("获取用户列表失败")
+                            .msg("获取角色列表失败")
                             .data(null)
                             .build());
                 });

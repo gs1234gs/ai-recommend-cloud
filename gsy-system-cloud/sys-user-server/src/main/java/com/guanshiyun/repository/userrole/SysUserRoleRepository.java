@@ -23,5 +23,6 @@ public interface SysUserRoleRepository extends R2dbcRepository<SysUserRole, Long
 
     Mono<Void> deleteByUserIdAndRoleIdIn(Long userId, List<Long> toDeleteIds);
 
+    Mono<Long> deleteSysUserRoleByUserId(Long userId);
 
 }

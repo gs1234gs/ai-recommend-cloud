@@ -15,6 +15,7 @@ import reactor.core.publisher.Mono;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -55,9 +56,9 @@ public class SKUStatisticsServiceImpl implements SKUStatisticsService {
 
                         // 安全获取数值类型：先转为 Number，再转为具体类型
                         // 这样可以避免 BigDecimal/Long/Integer 之间的类型转换异常
-                        vo.setTotalSales(((Number) row.get("totalSales")).longValue());
-                        vo.setTotalStock(((Number) row.get("totalStock")).longValue());
-                        vo.setTotalLow(((Number) row.get("totalLow")).longValue());
+                        vo.setTotalSales(((Number) Objects.requireNonNull(row.get("totalSales"))).longValue());
+                        vo.setTotalStock(((Number) Objects.requireNonNull(row.get("totalStock"))).longValue());
+                        vo.setTotalLow(((Number) Objects.requireNonNull(row.get("totalLow"))).longValue());
                         vo.setTotalRevenue(new BigDecimal(String.valueOf(row.get("totalRevenue"))));
                         vo.setTotalValue(new BigDecimal(String.valueOf(row.get("totalValue"))));
                         vo.setTotalVolume(new BigDecimal(String.valueOf(row.get("totalVolume"))));

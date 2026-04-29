@@ -44,6 +44,10 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
+        // ⭐ 获取客户端IP
+//        String ip = getClientIp(request);
+//
+//        log.info("IP:{}", ip);
         String path = request.getPath().value();
         log.info("收到请求:{}", path);
         if (PublicEndpoints.PERMSSION_WHITE_LIST.contains(path)) {
@@ -224,7 +228,7 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
 //                                        .build();
 //                                return chain.filter(userInfo);
 //                            });
-                    Map<String, Object> userInfos = hMap();
+                    Map<String, Object> userInfos = new HashMap<>();
                                 userInfos.put(ConstMapClassNickName.MAP_USERID_KEY, userId);
                                 userInfos.put(ConstMapClassNickName.MAP_USERINFO_KEY, userType);
                                 userInfos.put(ConstMapClassNickName.MAP_TENANT_ID_RESPONSE_KEY,tenantIdObj);
@@ -276,9 +280,22 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
         return null;
     }
 
-    private Map<String, Object> hMap() {
-        return new HashMap<>();
-    }
+    private String getClientIp(ServerHttpRequest request) {
+        String ip = request.getHeaders().getFirst("X-Forwarded-For");
+        if (ip != null && !ip.isEmpty() && !"unknown".equalsIgnoreCase(ip)) {
+            return ip.split(",")[0];
+        }
 
+        ip = request.getHeaders().getFirst("X-Real-IP");
+        if (ip != null && !ip.isEmpty() && !"unknown".equalsIgnoreCase(ip)) {
+            return ip;
+        }
+
+        if (request.getRemoteAddress() != null) {
+            return request.getRemoteAddress().getAddress().getHostAddress();
+        }
+
+        return "unknown";
+    }
 
 }

@@ -2,9 +2,7 @@ package com.guanshiyun.service.sysuser.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import cn.hutool.core.util.StrUtil;
-import com.db.constsql.SqlConst;
-import com.db.page.PageUtils;
+import com.db.cursorQuery.ReactivePageQuery;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.base.BasePojo;
@@ -27,10 +25,7 @@ import com.guanshiyun.userpojo.SysUser;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
-import org.springframework.data.relational.core.query.Criteria;
-import org.springframework.data.relational.core.query.Query;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,6 +37,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -55,7 +51,8 @@ public class SysUserServiceImpl implements SysUserService {
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
     private final MyLong myLong;
     private final SysRoleRepository sysRoleRepository;
-    private final TenantRepository  tenantRepository;
+    private final TenantRepository tenantRepository;
+    private final R2dbcEntityTemplate r2dbcEntityTemplate;
 
     /**
      * Keyset分页查询SysUser
@@ -67,43 +64,13 @@ public class SysUserServiceImpl implements SysUserService {
      */
     @Override
     public Mono<PageResultT<List<SysUser>>> findPage(RequestPage<SysUser> requestPage) {
-        requestPage = PageUtils.pageValidation(requestPage, SysUser.class);
-        // 前端没传 pageSize 时默认10条
-        Long pageNum = requestPage.getPageNum();
-        int pageSize = requestPage.getPageSize();
-        // 条件
-        Criteria criteria = Criteria.empty();
-        String username = requestPage.getCondition().getUsername();
-        String nickName = requestPage.getCondition().getNickName();
-        // 用户名不为 空，模糊查询
-        if (StrUtil.isNotBlank(username))
-            criteria = criteria.and(SysUser.Fields.username).like(SqlConst.PERCENT + username + SqlConst.PERCENT);
-        // 昵称不为 空，模糊查询
-        if (StrUtil.isNotBlank(nickName))
-            criteria = criteria.and(
-                    SysUser.Fields.nickName
-            ).like(SqlConst.PERCENT + nickName + SqlConst.PERCENT);
-        // 计算 offset
-        long offset = (pageNum - 1) * pageSize;
-        // 数据查询：ORDER BY id DESC（推荐主键排序）
-        Query dataQuery = Query.query(criteria)
-                .sort(Sort.by(
-                        Sort.Order.desc(BasePojo.Fields.createTime),
-                        Sort.Order.desc(SysUser.Fields.id))) // 推荐用 id 排序
-                .offset(offset)
-                .limit(pageSize);
-        // 总数查询
-        Query countQuery = Query.query(criteria);
-        return template.select(countQuery, SysUser.class)
-                .count() // 执行 COUNT(*)
-                .flatMap(count -> template.select(dataQuery, SysUser.class)
-                        .collectList() // 查询分页数据
-                        .map(dataList -> PageResultT.<List<SysUser>>builder()
-                                .total(count)
-                                .rows(dataList)
-                                .build()
-                        )
-                );
+        RequestPage<SysUser> sysUserRequestPage = BeanConvertUtil.toBean(requestPage, SysUser.class);
+        return ReactivePageQuery.of(template, SysUser.class, sysUserRequestPage)
+                .orderByDesc(SysUser.Fields.id)
+                .like( SysUser.Fields.username,requestPage.getCondition().getUsername())
+                .like(SysUser.Fields.nickName, requestPage.getCondition().getNickName())
+                .orderByDesc(BasePojo.Fields.createTime)
+                .page();
     }
 
     /**
@@ -114,19 +81,20 @@ public class SysUserServiceImpl implements SysUserService {
      */
     @Override
     public Mono<Long> deleteUserById(Long id) {
-        return transactionalOperator.execute(status ->
-                        databaseClient.sql("delete from sys_user where id = :id")
-                                .bind(SysUser.Fields.id, id)
-                                .fetch()
-                                .rowsUpdated()
-                                .flatMap(rowsUpdated ->
-                                        databaseClient.sql("delete from sys_user_role where user_id = :id")
-                                                .bind(SysUserRole.Fields.id, id)
-                                                .fetch()
-                                                .rowsUpdated()
-                                                .thenReturn(rowsUpdated)
-                                ))
-                .single();
+//        return databaseClient.sql("delete from sys_user where id = :id")
+//                .bind(SysUser.Fields.id, id)
+//                .fetch()
+//                .rowsUpdated()
+        return sysUserRepository.deleteUserById(id)
+                .flatMap(rowsUpdated ->
+                                sysUserRoleRepository.deleteSysUserRoleByUserId(id)
+                                        .thenReturn(rowsUpdated)
+//                        databaseClient.sql("delete from sys_user_role where user_id = :id")
+//                                .bind(SysUserRole.Fields.id, id)
+//                                .fetch()
+//                                .rowsUpdated()
+//                                .thenReturn(rowsUpdated)
+                ).transform(transactionalOperator::transactional);
     }
 
     @Override
@@ -142,8 +110,7 @@ public class SysUserServiceImpl implements SysUserService {
                                 .rowsUpdated()
                                 .thenReturn(rowsUpdated)
                 )
-                .as(transaction ->
-                        transaction.as(transactionalOperator::transactional));
+                .transform(transactionalOperator::transactional);
 
     }
 
@@ -156,7 +123,7 @@ public class SysUserServiceImpl implements SysUserService {
         Mono<List<Long>> roleIdMono = sysUserRoleRepository.findRoleIdByUserId(id).collectList();
         Mono<SysUser> userMono = sysUserRepository.findById(id);
         return Mono.zip(roleIdMono, userMono)
-                .flatMap(tuple->{
+                .flatMap(tuple -> {
                     List<Long> roleIds = tuple.getT1();
                     SysUser sysUser = tuple.getT2();
 
@@ -167,7 +134,7 @@ public class SysUserServiceImpl implements SysUserService {
                     Mono<List<SysRole>> sysRoleMono = sysRoleRepository.findAllById(roleIds)
                             .collectList();
                     return Mono.zip(tanantMono, sysRoleMono)
-                            .map(tuple2->{
+                            .map(tuple2 -> {
                                 SysTenant t1 = tuple2.getT1();
                                 List<SysRole> t2 = tuple2.getT2();
                                 List<SysRoleVO> sysRoleVOS = BeanConvertUtil.toBeanList(t2, SysRoleVO.class);
@@ -180,12 +147,12 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public Mono<Long> updateUserById(SysUserVO sysUser) {
         String password = sysUser.getPassword();
-        if(Objects.nonNull(password)){
+        if (Objects.nonNull(password)) {
             sysUser.setPassword(passwordEncoder.encode(password));
         }
         return sysUserRepository.findById(sysUser.getId())
                 .flatMap(sysUserDB -> {
-                    BeanUtil.copyProperties(sysUser, sysUserDB, CopyOptions.create().ignoreNullValue());
+                            BeanUtil.copyProperties(sysUser, sysUserDB, CopyOptions.create().ignoreNullValue());
                             sysUserDB.setUpdateTime(LocalDateTime.now());
                             return r2dbcUpdateHelper.updateIgnoreNull(
                                             EntityTableNameUtils.getName(SysUser.class),
@@ -207,7 +174,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public Mono<Long> save(SysUserSaveVO sysUserSaveVO) {
         String password = sysUserSaveVO.getPassword();
-        if(Objects.nonNull(password)){
+        if (Objects.nonNull(password)) {
             sysUserSaveVO.setPassword(passwordEncoder.encode(password));
         }
         sysUserSaveVO.setCreateTime(LocalDateTime.now());
@@ -244,20 +211,21 @@ public class SysUserServiceImpl implements SysUserService {
             sysUser.setUpdater(userId);
             sysUser.setUpdateTime(LocalDateTime.now());
             return r2dbcUpdateHelper.updateIgnoreNull(
-                    EntityTableNameUtils.getName(SysUser.class),
-                    sysUser,
-                    SysUser.Fields.id
-            ).flatMap(id -> {
-                return sysUserRoleRepository.deleteAllByUserId(id)
-                        //重新插入新的的角色
-                        .thenMany(Flux.fromIterable(sysUserSaveVO.getRoleIdList()))
-                        .flatMap(roleId -> sysUserRoleRepository.save(SysUserRole.builder()
-                                .id(null)
-                                .userId(id)
-                                .roleId(roleId)
-                                .build()))
-                        .then(Mono.just(id));
-            });
+                            EntityTableNameUtils.getName(SysUser.class),
+                            sysUser,
+                            SysUser.Fields.id
+                    ).flatMap(id -> {
+                        return sysUserRoleRepository.deleteAllByUserId(id)
+                                //重新插入新的的角色
+                                .thenMany(Flux.fromIterable(sysUserSaveVO.getRoleIdList()))
+                                .flatMap(roleId -> sysUserRoleRepository.save(SysUserRole.builder()
+                                        .id(null)
+                                        .userId(id)
+                                        .roleId(roleId)
+                                        .build()))
+                                .then(Mono.just(id));
+                    })
+                    .transform(transactionalOperator::transactional);
         });
     }
 
@@ -268,34 +236,34 @@ public class SysUserServiceImpl implements SysUserService {
         sysUser.setUpdateTime(now)
                 .setUpdateTime(now);
         String password = sysUserSaveVO.getPassword();
-        if(Objects.nonNull(password)){
+        if (Objects.nonNull(password)) {
             sysUser.setPassword(passwordEncoder.encode(password));
         }
-        return Mono.deferContextual(ctx->{
-            if(!myLong.hasKey(ctx)){
+        return Mono.deferContextual(ctx -> {
+            if (!myLong.hasKey(ctx)) {
                 return Mono.error(new Throwable("请先登录"));
             }
             Long id = myLong.findUserId(ctx);
             sysUser.setId(id);
-           return r2dbcUpdateHelper.updateIgnoreNull(EntityTableNameUtils.getName(SysUser.class),sysUser,SysUser.Fields.id)
-                   .flatMap(sysUserRepository::findById)
-                   .map(user->{
-                      return BeanConvertUtil.toBean(user, SysUserVO.class);
-                   });
+            return r2dbcUpdateHelper.updateIgnoreNull(EntityTableNameUtils.getName(SysUser.class), sysUser, SysUser.Fields.id)
+                    .flatMap(sysUserRepository::findById)
+                    .map(user -> {
+                        return BeanConvertUtil.toBean(user, SysUserVO.class);
+                    });
         });
     }
 
     @Override
     public Mono<SysUserVO> findById() {
-        return Mono.deferContextual(ctx->{
-            if(!myLong.hasKey(ctx)){
+        return Mono.deferContextual(ctx -> {
+            if (!myLong.hasKey(ctx)) {
                 return Mono.error(new Throwable("请先登录"));
             }
             Long id = myLong.findUserId(ctx);
             Mono<List<Long>> roleIdMono = sysUserRoleRepository.findRoleIdByUserId(id).collectList();
             Mono<SysUser> userMono = sysUserRepository.findById(id);
             return Mono.zip(roleIdMono, userMono)
-                    .flatMap(tuple->{
+                    .flatMap(tuple -> {
                         List<Long> roleIds = tuple.getT1();
                         SysUser sysUser = tuple.getT2();
                         SysUserVO sysUserVO = BeanConvertUtil.toBean(sysUser, SysUserVO.class);
@@ -303,13 +271,13 @@ public class SysUserServiceImpl implements SysUserService {
                         Mono<List<SysRole>> sysRolesMono = sysRoleRepository.findAllById(roleIds)
                                 .collectList();
                         return Mono.zip(tenantMono, sysRolesMono)
-                                .map(tuple2->{
+                                .map(tuple2 -> {
                                     SysTenant sysTenant = tuple2.getT1();
                                     List<SysRole> sysRoleList = tuple2.getT2();
                                     List<SysRoleVO> sysRoleVOS = BeanConvertUtil.toBeanList(sysRoleList, SysRoleVO.class);
-                                   return sysUserVO.setRoles(sysRoleVOS)
-                                           .setTenant(BeanConvertUtil.toBean(sysTenant,TenantVO.class))
-                                           .setPassword(null);
+                                    return sysUserVO.setRoles(sysRoleVOS)
+                                            .setTenant(BeanConvertUtil.toBean(sysTenant, TenantVO.class))
+                                            .setPassword(null);
                                 });
                     });
         });

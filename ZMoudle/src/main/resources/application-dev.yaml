@@ -1,10 +1,21 @@
 spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      write-dates-as-timestamps: false
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017/gsy-recommend-cloud-go
   rabbitmq:
     host: localhost
     port: 5672
     username: guanshiyun
     password: 123456
     virtual-host: hello
+#  r2dbc:
+#    mongodb:
+#      uri: mongodb://127.0.0.1:27017/gsy-goods-cloud
 
 server:
   port: 10001

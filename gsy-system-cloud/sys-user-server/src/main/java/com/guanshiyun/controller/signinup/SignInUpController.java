@@ -31,16 +31,16 @@ public class SignInUpController {
         UsernamePasswordAuthenticationToken authRequest =
                 new UsernamePasswordAuthenticationToken(signUser.getUsername(), signUser.getPassword());
                     return customReactiveAuthenticationManager.authenticate(authRequest)
-                            .flatMap(signInSuccessHandler::onAuthenticationSuccess)
-                            .onErrorResume(throwable -> {
-                                log.error("登录失败：", throwable);
-                              return   Mono.just(
-                                        ResultT.<String>builder()
-                                                 .code(HttpStatus.FORBIDDEN.value())
-                                                .msg("登录失败，用户名或密码错误！")
-                                                .build()
-                                );
-                            });
+                            .flatMap(signInSuccessHandler::onAuthenticationSuccess);
+//                            .onErrorResume(throwable -> {
+//                                log.error("登录失败：", throwable);
+//                              return   Mono.just(
+//                                        ResultT.<String>builder()
+//                                                 .code(HttpStatus.FORBIDDEN.value())
+//                                                .msg("登录失败，用户名或密码错误！")
+//                                                .build()
+//                                );
+//                            });
     }
 
     @PostMapping("/signUp")

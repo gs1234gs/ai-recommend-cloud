@@ -4,10 +4,14 @@ package com.guanshiyun;
 import com.guanshiyun.goser.GorseClient;
 import com.guanshiyun.repository.sysuser.SysUserRepository;
 import com.guanshiyun.repository.userrole.SysUserRoleRepository;
+import com.guanshiyun.service.signin.SignInUpService;
 import com.guanshiyun.service.sysmenu.SysMenuService;
 import com.guanshiyun.service.sysmenurole.SysRoleMenuService;
+import com.guanshiyun.signinpojo.SignUser;
 import com.guanshiyun.user.User;
 import com.guanshiyun.userpojo.SysUser;
+import io.gorse.gorse4j.Gorse;
+import io.gorse.gorse4j.Item;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -15,8 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Mono;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @SpringBootTest
@@ -94,4 +100,22 @@ class SystemAppApplicationTests {
                 .block();
     }
 
+    @Autowired
+    SignInUpService signInUpService;
+    @Test
+    void test4() throws IOException {
+        SignUser block = signInUpService.signIn("15287218571")
+                .block();
+        System.out.println("==================================");
+        System.out.println(block);
+        Gorse client = new Gorse("http://127.0.0.1:8087", "api_key");
+        client.insertUser(new io.gorse.gorse4j.User("bob", Map.of(
+                "company", "gorse",
+                "location", "hangzhou, china"
+        )));
+        client.insertItem(new Item("gorse-io:gorse", false, Map.of(
+                "topics", List.of("recommendation", "machine-learning")
+        ), List.of("go"), "2022-02-22", "Gorse is an open-source recommender system."));
+
+    }
 }

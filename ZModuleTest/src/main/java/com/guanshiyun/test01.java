@@ -61,7 +61,6 @@ class Test02{
 
 
     public static int leftBinary(int [] arr , int a){
-
         int i = 0;
         int  j = arr.length -1;
         while(i<=j){
@@ -100,3 +99,5 @@ class Test02{
         return -1;
     }
 }
+
+

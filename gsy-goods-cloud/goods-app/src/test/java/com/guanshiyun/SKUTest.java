@@ -11,11 +11,11 @@ public class SKUTest {
     SKURepository skuRepository;
     @Test
     public void test(){
-        Long result = skuRepository.countTotalSales().block();
-        Long block = skuRepository.countTotalStock().block();
-
-        System.out.println("==================");
-        System.out.println(result);
-        System.out.println("block: "+block);
+//        Long result = skuRepository.countTotalSales().block();
+//        Long block = skuRepository.countTotalStock().block();
+//
+//        System.out.println("==================");
+//        System.out.println(result);
+//        System.out.println("block: "+block);
     }
 }

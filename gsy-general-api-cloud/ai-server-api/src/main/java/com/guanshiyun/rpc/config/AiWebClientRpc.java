@@ -12,7 +12,6 @@ public class AiWebClientRpc {
     public AiWebClientRpc(@Qualifier("aiWebClientBuilder") WebClient.Builder webClientBuilder) {
 
         this.webClient = webClientBuilder
-//                .baseUrl(AiPrefix.BASE_URL)
                 .build();
     }
 

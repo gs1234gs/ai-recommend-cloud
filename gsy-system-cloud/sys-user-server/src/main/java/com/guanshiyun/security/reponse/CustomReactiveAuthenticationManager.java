@@ -3,7 +3,6 @@ package com.guanshiyun.security.reponse;
 import com.guanshiyun.service.signin.SignInUpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,7 +24,7 @@ public class CustomReactiveAuthenticationManager implements ReactiveAuthenticati
     public Mono<Authentication> authenticate(Authentication authentication) {
 
         if (!(authentication instanceof UsernamePasswordAuthenticationToken auth)) {
-            return Mono.error(new IllegalArgumentException("无效用户"));
+            return Mono.error(new Throwable("无效用户"));
         }
 
         String username = auth.getName();
@@ -41,7 +40,7 @@ public class CustomReactiveAuthenticationManager implements ReactiveAuthenticati
 //        }
         //认证成功
         return signInUpService.signIn(username)
-                .switchIfEmpty(Mono.error(new BadCredentialsException("用户不存在")))
+                .switchIfEmpty(Mono.error(new Throwable("用户不存在")))
                 .flatMap(
                         user -> Mono.fromCallable(() -> {
                             log.info("用户名：{}", username);
@@ -51,7 +50,7 @@ public class CustomReactiveAuthenticationManager implements ReactiveAuthenticati
                                    return passwordEncoder.matches(password, user.getPassword());
                                 })
                             .filter(Boolean::booleanValue)
-                            .switchIfEmpty(Mono.error(new BadCredentialsException("用户名或密码错误")))
+                            .switchIfEmpty(Mono.error(new Throwable("用户名或密码错误")))
                             .map(matches -> new UsernamePasswordAuthenticationToken(
                                     user,
                                     password,

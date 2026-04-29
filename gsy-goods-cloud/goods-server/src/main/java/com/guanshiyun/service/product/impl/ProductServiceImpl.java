@@ -45,8 +45,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -439,11 +441,16 @@ public class ProductServiceImpl implements ProductService {
                             .map(Category::getName)
                             .filter(Objects::nonNull)
                             .collect(Collectors.toList());
-                    String timestamp = Instant.now().toString();
+                    if (categoryList.isEmpty()){
+                        return Mono.error(new Throwable("类目列表为空"));
+                    }
+                    DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+                    ZonedDateTime time = ZonedDateTime.now(ZoneId.of("+08:00"));
+                    String timestamp = time.format(outputFormatter);
                     Item gorseItem = Item.builder()
                             .itemId(productIdSave.toString())
                             .isHidden(Boolean.FALSE) // 根据业务逻辑可动态设置
-                            .labels(labelList)      // 注意：Item.labels 是 Object，但传 List<String>
+                            .labels(Map.of("topics", labelList))      // 注意：Item.labels 是 Object，但传 List<String>
                             .categories(categoryList)
                             .timestamp(timestamp)
                             .comment(comment)

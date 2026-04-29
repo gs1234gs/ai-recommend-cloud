@@ -1,6 +1,7 @@
 package com.guanshiyun.exception;
 
 
+import com.guanshiyun.responsepojo.Result;
 import com.guanshiyun.responsepojo.ResultT;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,21 +22,21 @@ public class GlobalException {
 
         return Mono.just(ResultT.builder()
                 .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .msg("服务器内部异常，请稍后重试")
-                .data(e.getMessage()) // 可返回堆栈信息（生产可删）
+                .msg(e.getMessage())
+                .data(null) // 可返回堆栈信息（生产可删）
                 .build());
     }
 
     /**
      * 捕获自定义异常
      */
-//    @ExceptionHandler(RuntimeException.class)
-//    public Mono<Result> handleRuntimeException(RuntimeException ex) {
-//        return Mono.just(Result.builder()
-//                .status(500)
-//                .msg(ex.getMessage())
-//                .data(null)
-//                .build());
-//    }
+    @ExceptionHandler(RuntimeException.class)
+    public Mono<Result> handleRuntimeException(RuntimeException ex) {
+        return Mono.just(Result.builder()
+                .code(HttpStatus.FORBIDDEN.value())
+                .msg(ex.getMessage())
+                .data(null)
+                .build());
+    }
 
 }

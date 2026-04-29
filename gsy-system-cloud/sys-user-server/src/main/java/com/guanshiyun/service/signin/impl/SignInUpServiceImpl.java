@@ -16,6 +16,7 @@ import com.guanshiyun.service.userrole.SysUserRoleService;
 import com.guanshiyun.signinpojo.SignUser;
 import com.guanshiyun.user.User;
 import com.guanshiyun.userpojo.SysUser;
+import io.gorse.gorse4j.Gorse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -47,13 +48,17 @@ public class SignInUpServiceImpl implements SignInUpService {
 
     @Override
     public Mono<SignUser> signIn(String username) {
-        return signInUpRepository.findByUsername(username)
+        return signInUpRepository.findByUsername(username.trim())
                 .switchIfEmpty(Mono.error(new UsernameNotFoundException("用户不存在")))
                 .flatMap(this::buildUserDetails);
     }
 
     @Override
     public Mono<Boolean> signUp(SysUser signUser) {
+        if(signUser.getUsername().trim().length()<6){
+            return Mono.error(new Throwable("用户名长度不能小于6"));
+        }
+
         SysUser sysUser = SysUser.builder()
                 .id(null)
                 .createTime(LocalDateTime.now())

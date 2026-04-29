@@ -5,3 +5,6 @@ spring:
     username: guanshiyun
     password: 123456
     virtual-host: hello
+  jpa:
+    hibernate:
+      ddl-auto: create
