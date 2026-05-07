@@ -10,4 +10,11 @@ public class AiApiUrl {
     public static final String EMBEDDING_PRODUCT_RECOMMEND_FOR_USER = EMBEDDING + "/product/recommendForUser";
     //关键字检索
     public static final String EMBEDDING_PRODUCT_RECOMMEND_BY_KEY_WARD = EMBEDDING + "/product/searchKeyWard";
+    //gorse
+    public static final String EMBEDDING_PRODUCT_RECOMMEND_BY_GORSE_N = EMBEDDING + "/product/gorse/{userId}/{n}";
+    public static final String EMBEDDING_PRODUCT_RECOMMEND_BY_GORSE = EMBEDDING + "/product/gorse/{userId}";
+    //gorseSave
+    public static final String EMBEDDING_PRODUCT_RECOMMEND_BY_GORSE_SAVE = EMBEDDING + "/product/gorseItem";
+    //delete
+    public static final String EMBEDDING_PRODUCT_RECOMMEND_BY_GORSE_DELETE = EMBEDDING + "/product/gorseItem/{itemId}";
 }

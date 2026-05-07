@@ -1,6 +1,8 @@
 package com.guanshiyun.service.embedding;
 
 import com.guanshiyun.embedding.ProductForEmbeddingApVO;
+import com.guanshiyun.items.Item;
+import com.guanshiyun.rowAffected.RowAffected;
 import reactor.core.publisher.Mono;
 
 
@@ -72,4 +74,9 @@ public interface EmbeddingProductService {
      Mono<List<Long>> searchByKeyword(String keyword, int topK);
      List<Long> searchKeyword(String keyword, int topK);
 
+     Mono<List<String>> gorse(String userId,int n);
+
+     Mono<RowAffected> saveGorse(Item  item);
+
+     Mono<RowAffected> deleteItem(String itemId);
 }

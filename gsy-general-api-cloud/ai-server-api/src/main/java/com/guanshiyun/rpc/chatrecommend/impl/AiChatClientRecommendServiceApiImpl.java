@@ -3,7 +3,9 @@ package com.guanshiyun.rpc.chatrecommend.impl;
 import com.guanshiyun.aienums.AiApiUrl;
 import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import com.guanshiyun.embedding.RequestBodyProductForEmbeddingApVO;
+import com.guanshiyun.items.Item;
 import com.guanshiyun.responsepojo.ResultT;
+import com.guanshiyun.rowAffected.RowAffected;
 import com.guanshiyun.rpc.chatrecommend.AiChatClientRecommendServiceApi;
 import com.guanshiyun.rpc.config.AiWebClientRpc;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +59,46 @@ public class AiChatClientRecommendServiceApiImpl implements AiChatClientRecommen
                         .build())
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<ResultT<List<Long>>>() {});
+    }
+
+    @Override
+    public Mono<ResultT<List<String>>> gorse(String userId, int n) {
+        return aiWebClientRpc.webClient()
+                .get()
+                .uri(build->build.path(AiApiUrl.EMBEDDING_PRODUCT_RECOMMEND_BY_GORSE_N)
+                        .build(userId,n))
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ResultT<List<String>>>() {});
+    }
+    @Override
+    public Mono<ResultT<List<String>>> gorse(String userId) {
+        return aiWebClientRpc.webClient()
+                .get()
+                .uri(build->build.path(AiApiUrl.EMBEDDING_PRODUCT_RECOMMEND_BY_GORSE)
+                        .build(userId))
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ResultT<List<String>>>() {});
+    }
+
+    @Override
+    public Mono<ResultT<RowAffected>> gorse(Item item) {
+        return aiWebClientRpc.webClient()
+                .post()
+                .uri(AiApiUrl.EMBEDDING_PRODUCT_RECOMMEND_BY_GORSE_SAVE)
+                .bodyValue( item)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ResultT<RowAffected>>() {});
+    }
+
+    @Override
+    public Mono<ResultT<RowAffected>> deleteGorse(String itemId) {
+        return aiWebClientRpc
+                .webClient()
+                .delete()
+                .uri(build->build.path(AiApiUrl.EMBEDDING_PRODUCT_RECOMMEND_BY_GORSE_DELETE)
+                        .build(itemId))
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<ResultT<RowAffected>>() {});
     }
 //    private final WebClientRpc webClientRpc;
 //    @Override

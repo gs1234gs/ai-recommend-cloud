@@ -5,8 +5,10 @@ import com.guanshiyun.behaviorenums.GuestEnum;
 import com.guanshiyun.embedding.ActiveSimilarityThresholdConfiguration;
 import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import com.guanshiyun.goser.GorseClient;
+import com.guanshiyun.items.Item;
 import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.repository.embedding.ActiveSimilarityThresholdConfigurationRepository;
+import com.guanshiyun.rowAffected.RowAffected;
 import com.guanshiyun.service.embedding.EmbeddingProductService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import lombok.RequiredArgsConstructor;
@@ -289,6 +291,21 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
                 .collect(Collectors.toList());
 
 
+    }
+
+    @Override
+    public Mono<List<String >> gorse(String userId,int n) {
+        return gorseClient.getRecommend(userId,n);
+    }
+
+    @Override
+    public Mono<RowAffected> saveGorse(Item item) {
+        return gorseClient.saveItem(item);
+    }
+
+    @Override
+    public Mono<RowAffected> deleteItem(String itemId) {
+        return gorseClient.deleteItem(itemId);
     }
 
     private String generateVectorId(Long productId) {

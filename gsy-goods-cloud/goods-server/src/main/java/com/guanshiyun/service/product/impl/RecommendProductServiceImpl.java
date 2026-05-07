@@ -14,7 +14,6 @@ import com.guanshiyun.controller.tag.vo.TagVO;
 import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import com.guanshiyun.embedding.RequestBodyProductForEmbeddingApVO;
 import com.guanshiyun.gorseenum.GorseFeedbackEnum;
-import com.guanshiyun.goser.GorseClient;
 import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.product.Product;
 import com.guanshiyun.profile.CategoryApiVO;
@@ -87,7 +86,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class RecommendProductServiceImpl implements RecommendProductService {
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
-    private final GorseClient gorseClient;
+//    private final GorseClient gorseClient;
     private final AiChatClientRecommendServiceApi aiChatClientRecommendServiceApi;
     private final UserClickServiceApi userClickServiceApi;
     private final UserCollectServiceApi userCollectServiceApi;
@@ -130,7 +129,8 @@ public class RecommendProductServiceImpl implements RecommendProductService {
             // 登录校验
             if (!myLong.hasKey(ctx)) {
                 //先走gorse
-                return gorseClient.getRecommend(GuestEnum.GUEST_USER_ID.getValue(), 20)
+                return aiChatClientRecommendServiceApi.gorse(GuestEnum.GUEST_USER_ID.getValue(), 20)
+                        .map(ResultT::getData)
                         .map(Flux::fromIterable)
                         .flatMapMany(Function.identity())
                         .mapNotNull(myLong::longOrNull)
@@ -153,7 +153,8 @@ public class RecommendProductServiceImpl implements RecommendProductService {
             Long userId = myLong.findUserId(ctx);
             if (!StringUtils.hasText(searchContent)) {
                 //先走gorse
-                return gorseClient.getRecommend(userId.toString(), 20)
+                return aiChatClientRecommendServiceApi.gorse(GuestEnum.GUEST_USER_ID.getValue(), 20)
+                        .map(ResultT::getData)
                         .map(Flux::fromIterable)
                         .flatMapMany(Function.identity())
                         .mapNotNull(myLong::longOrNull)
@@ -367,7 +368,8 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                             .map(ProductCustomerVO::toVO)
                             .collectList();
 
-            return gorseClient.getRecommend(userId.toString(), 20)
+            return aiChatClientRecommendServiceApi.gorse(GuestEnum.GUEST_USER_ID.getValue(), 20)
+                    .map(ResultT::getData)
                     .flatMap(productIds -> {
                         List<Long> productIdList = productIds.stream()
                                 .filter(id -> StringUtils.hasText(id) && id.matches("\\d+"))
@@ -459,7 +461,8 @@ public class RecommendProductServiceImpl implements RecommendProductService {
      * 重建候选池：调用 Gorse -> 写入 Redis -> 返回第一页数据
      */
     private Mono<List<String>> rebuildCandidatePool(Long userId, String redisKey, int limit) {
-        return gorseClient.getRecommend(userId.toString(), ProductKey.PRE_LOAD_SIZE)
+        return aiChatClientRecommendServiceApi.gorse(userId.toString(), ProductKey.PRE_LOAD_SIZE)
+                .map(ResultT::getData)
                 .flatMap(productIds -> {
                     // 过滤非法 ID
                     List<String> validIds = productIds.stream()
@@ -1233,7 +1236,8 @@ public class RecommendProductServiceImpl implements RecommendProductService {
             // 【未登录用户】：直接走 Gorse，不经过池化
             if (!myLong.hasKey(ctx)) {
                 log.debug("用户未登录，直接请求 Gorse 推荐");
-                return gorseClient.getRecommend(GuestEnum.GUEST_USER_ID.getValue(), size)
+                return aiChatClientRecommendServiceApi.gorse(GuestEnum.GUEST_USER_ID.getValue(), size)
+                        .map(ResultT::getData)
                         .map(Flux::fromIterable)
                         .flatMapMany(Function.identity())
                         .mapNotNull(myLong::longOrNull)

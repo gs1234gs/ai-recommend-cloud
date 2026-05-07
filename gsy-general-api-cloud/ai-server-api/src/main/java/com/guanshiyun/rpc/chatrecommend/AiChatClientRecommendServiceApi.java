@@ -2,7 +2,9 @@ package com.guanshiyun.rpc.chatrecommend;
 
 import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import com.guanshiyun.embedding.RequestBodyProductForEmbeddingApVO;
+import com.guanshiyun.items.Item;
 import com.guanshiyun.responsepojo.ResultT;
+import com.guanshiyun.rowAffected.RowAffected;
 import reactor.core.publisher.Mono;
 
 
@@ -19,4 +21,12 @@ public interface AiChatClientRecommendServiceApi {
      Mono<ResultT<Void>> embeddingDeleteProduct(Long productId);
      //根据关键字检索
      Mono<ResultT<List<Long>>> searchByKeyword(String keyWard, Integer topK);
+     //gorse
+     Mono<ResultT<List<String>>> gorse(String userId, int n);
+     //gorse
+     Mono<ResultT<List<String>>> gorse(String userId);
+     //gorseSave
+     Mono<ResultT<RowAffected>> gorse(Item item);
+     //deleteGorse
+     Mono<ResultT<RowAffected>> deleteGorse(String itemId);
 }

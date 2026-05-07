@@ -11,7 +11,6 @@ import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.controller.product.vo.ProductSaveVO;
 import com.guanshiyun.controller.product.vo.ProductVO;
 import com.guanshiyun.embedding.ProductForEmbeddingApVO;
-import com.guanshiyun.goser.GorseClient;
 import com.guanshiyun.items.Item;
 import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.product.Product;
@@ -69,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
     private final AiChatClientRecommendServiceApi aiChatClientRecommendServiceApi;
-    private final GorseClient gorseClient;
+//    private final GorseClient gorseClient;
 
     @Override
     public Mono<Long> save(ProductSaveVO productSaveVO) {
@@ -455,7 +454,7 @@ public class ProductServiceImpl implements ProductService {
                             .timestamp(timestamp)
                             .comment(comment)
                             .build();
-                    Mono<RowAffected> saveMono = gorseClient.saveItem(gorseItem);
+                    Mono<RowAffected> saveMono = aiChatClientRecommendServiceApi.gorse(gorseItem).map(ResultT::getData);
                     Mono<ResultT<List<String>>> embedMono =
                             aiChatClientRecommendServiceApi.embeddingProduct(
                                     List.of(productForEmbeddingApVO)
@@ -490,7 +489,7 @@ public class ProductServiceImpl implements ProductService {
                             embeddingDeleteProduct(id)
                             .thenReturn(count);
                 })
-                .flatMap(count -> gorseClient.deleteItem(id.toString())
+                .flatMap(count -> aiChatClientRecommendServiceApi.deleteGorse(id.toString())
                         .thenReturn(count))
                 //事务
                 .transform(transactionalOperator::transactional);

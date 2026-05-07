@@ -2,7 +2,9 @@ package com.guanshiyun.controller.embedding;
 
 import com.guanshiyun.embedding.ProductForEmbeddingApVO;
 import com.guanshiyun.embedding.RequestBodyProductForEmbeddingApVO;
+import com.guanshiyun.items.Item;
 import com.guanshiyun.responsepojo.ResultT;
+import com.guanshiyun.rowAffected.RowAffected;
 import com.guanshiyun.service.embedding.EmbeddingProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,4 +67,27 @@ public class EmbeddingProductController {
                 .map(ResultT::success)
                 .onErrorResume(throwable -> Mono.just(ResultT.error()));
     }
+    //gorse推荐
+    @GetMapping("gorse/{userId}/{n}")
+    public Mono<ResultT<List<String>>>  gorse(@PathVariable String userId,@PathVariable(required = false) Integer n){
+      return   embeddingProductService.gorse(userId, n)
+              .map(ResultT::success)
+              .onErrorResume(throwable -> Mono.just(ResultT.error(throwable.getMessage())));
+    }
+
+    //gorseItem保存
+    @PostMapping("/gorseItem")
+    public Mono<ResultT<RowAffected>> gorseItem(@RequestBody Item item){
+        return embeddingProductService.saveGorse( item)
+                .map(ResultT::success)
+                .onErrorResume(throwable -> Mono.just(ResultT.error(throwable.getMessage())));
+    }
+
+    @DeleteMapping("/gorseItem/{itemId}")
+    public Mono<ResultT<RowAffected>> gorseItemDelete(@PathVariable String itemId){
+        return embeddingProductService.deleteItem(itemId)
+                .map(ResultT::success)
+                .onErrorResume(throwable -> Mono.just(ResultT.error(throwable.getMessage())));
+    }
+
 }
