@@ -67,7 +67,7 @@ public class SysUserServiceImpl implements SysUserService {
         RequestPage<SysUser> sysUserRequestPage = BeanConvertUtil.toBean(requestPage, SysUser.class);
         return ReactivePageQuery.of(template, SysUser.class, sysUserRequestPage)
                 .orderByDesc(SysUser.Fields.id)
-                .like( SysUser.Fields.username,requestPage.getCondition().getUsername())
+                .like(SysUser.Fields.username, requestPage.getCondition().getUsername())
                 .like(SysUser.Fields.nickName, requestPage.getCondition().getNickName())
                 .orderByDesc(BasePojo.Fields.createTime)
                 .page();
@@ -174,6 +174,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public Mono<Long> save(SysUserSaveVO sysUserSaveVO) {
         String password = sysUserSaveVO.getPassword();
+        //密码不为空，表示修改密码，否则不修改
         if (Objects.nonNull(password)) {
             sysUserSaveVO.setPassword(passwordEncoder.encode(password));
         }
@@ -184,6 +185,7 @@ public class SysUserServiceImpl implements SysUserService {
             Long userId =
                     myLong.findUserId(ctx);
             SysUser sysUser = BeanConvertUtil.toBean(sysUserSaveVO, SysUser.class);
+            //id为空，表示新增
             if (Objects.isNull(sysUserSaveVO.getId())) {
                 sysUser.setCreator(userId);
                 sysUser.setCreateTime(LocalDateTime.now());
@@ -208,6 +210,7 @@ public class SysUserServiceImpl implements SysUserService {
                         })
                         .transform(transactionalOperator::transactional);
             }
+            //id不为空，表示修改
             sysUser.setUpdater(userId);
             sysUser.setUpdateTime(LocalDateTime.now());
             return r2dbcUpdateHelper.updateIgnoreNull(
@@ -215,14 +218,16 @@ public class SysUserServiceImpl implements SysUserService {
                             sysUser,
                             SysUser.Fields.id
                     ).flatMap(id -> {
+                        //删除所有角色
                         return sysUserRoleRepository.deleteAllByUserId(id)
                                 //重新插入新的的角色
                                 .thenMany(Flux.fromIterable(sysUserSaveVO.getRoleIdList()))
-                                .flatMap(roleId -> sysUserRoleRepository.save(SysUserRole.builder()
-                                        .id(null)
-                                        .userId(id)
-                                        .roleId(roleId)
-                                        .build()))
+                                .flatMap(roleId -> sysUserRoleRepository.save(
+                                        SysUserRole.builder()
+                                                .id(null)
+                                                .userId(id)
+                                                .roleId(roleId)
+                                                .build()))
                                 .then(Mono.just(id));
                     })
                     .transform(transactionalOperator::transactional);

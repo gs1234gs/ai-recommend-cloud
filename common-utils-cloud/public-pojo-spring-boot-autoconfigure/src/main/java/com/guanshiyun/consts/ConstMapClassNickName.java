@@ -27,6 +27,10 @@ public class ConstMapClassNickName {
     public static final String MAP_TOKEN_RESPONSE_KEY = "token";
     //租户id
     public static final String MAP_TENANT_ID_RESPONSE_KEY = "tenantId";
+    //ip
+    public static final String IP_KEY = "ip";
+    public static final String COUNT_KEY = "count";
+    public static final String TIME_KEY = "time";
 
 
 }

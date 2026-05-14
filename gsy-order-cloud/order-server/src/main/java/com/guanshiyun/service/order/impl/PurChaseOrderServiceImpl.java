@@ -66,7 +66,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
 
 
     /**
-     * 保存订单
+     * 保存订单,同时调用远程接口扣减库存
      */
     @Override
     public Mono<Long> save(PurChaseOrderSaveVO purChaseOrderSaveVO) {
@@ -91,6 +91,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
                     .flatMap(tenantIdR -> {
                         Long tenantId = tenantIdR.getData();
                         purChaseOrder.setTenantId(tenantId);
+                        //保存订单
                         return r2dbcEntityTemplate.insert(purChaseOrder)
                                 .flatMap(order ->
                                         skuApiService.reduceStockAndAddSales(order.getSkuId(), purChaseOrderSaveVO.getNum())
@@ -99,6 +100,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
                                 .publishOn(Schedulers.boundedElastic())
                                 .doOnSuccess(ok -> {
                                     Long productId = purChaseOrder.getProductId();
+                                    //同步购买行为到 Gorse
                                     gorseClient.insertFeedback(
                                                     List.of(
                                                             Feedback.builder()

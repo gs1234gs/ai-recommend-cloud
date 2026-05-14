@@ -65,6 +65,7 @@ import reactor.core.scheduler.Schedulers;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -73,10 +74,6 @@ import java.util.stream.Stream;
 
 /**
  * 商品推荐服务实现类。
- * <p>
- * 提供基于用户行为（点击、收藏、搜索）和 Gorse 协同过滤的个性化商品推荐逻辑，
- * 并支持分页查询、详情获取等基础商品服务。
- * </p>
  *
  * @author guanshiyun
  * @since 2025-12-20 10:13
@@ -86,7 +83,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class RecommendProductServiceImpl implements RecommendProductService {
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
-//    private final GorseClient gorseClient;
+    //    private final GorseClient gorseClient;
     private final AiChatClientRecommendServiceApi aiChatClientRecommendServiceApi;
     private final UserClickServiceApi userClickServiceApi;
     private final UserCollectServiceApi userCollectServiceApi;
@@ -103,6 +100,8 @@ public class RecommendProductServiceImpl implements RecommendProductService {
     private final ProductTagRepository productTagRepository;
     private final SKURepository skuRepository;
 
+    // 衰减系数 λ 可自行调参，论文固定 0.1
+    private static final double LAMBDA = 0.1;
 
     /**
      * 根据搜索条件分页查询商品列表（仅限已登录用户）。
@@ -517,7 +516,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
      * 兜底策略：返回热门商品
      */
     private Mono<List<ProductCustomerVO>> getFallbackProducts(int limit) {
-        return productRepository.findAll(Sort.by(Sort.Direction.DESC, Product.Fields.publishTime))// 假设 repository 有此方法
+        return productRepository.findAll(Sort.by(Sort.Direction.DESC, Product.Fields.publishTime))
                 .take(limit)
                 .map(ProductCustomerVO::toVO)
                 .collectList();
@@ -1039,7 +1038,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                             .forEach(order ->
                                     productForEmbeddingApVOList.add(buildProductForEmbeddingFromPurchase(order, top3ProductRatioMap))
                             );
-                    // ===【新增】将 Top3 浏览商品转为结构化推荐输入 ===
+                    // ===将 Top3 浏览商品转为结构化推荐输入 ===
                     browseProfileApiList.stream()
                             .filter(Objects::nonNull)
                             // 关键步骤：展开商品列表，但保留父对象 (BrowseProfileApi) 的引用以获取分类/标签/SKU
@@ -1105,6 +1104,9 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 });
     }
 
+    /**
+     * 热门商品
+     */
     @Override
     public Mono<List<ProductCustomerVO>> hot() {
         return
@@ -1132,6 +1134,9 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                         });
     }
 
+    /**
+     * 最新商品
+     */
     @Override
     public Mono<List<ProductCustomerVO>> mostNew() {
         @Data
@@ -1178,6 +1183,9 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 });
     }
 
+    /**
+     * 分页查询
+     */
     @Override
     public Mono<CursorPageResult<List<ProductCustomerVO>>> findCursorEnd(RequestCursorPage<ProductCustomerVO> requestCursorPage) {
         // 1. 参数校验与转换
@@ -1227,13 +1235,24 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 });
     }
 
+    /**
+     * 基于用户近期行为（点击、收藏、搜索）生成个性化商品推荐。
+     * <p>
+     * 融合用户最近 8 条点击/收藏记录和搜索关键词，提取 5 个优质行为，
+     * 构造嵌入向量请求，调用大模型推荐接口，最终返回推荐商品列表。
+     * </p>
+     *
+     * @return {@link Mono < List < ProductCustomerVO >>} 推荐的商品列表
+     * @author guanshiyun
+     * @since 2025-12-20 10:13
+     */
     @Override
     public Mono<CursorPageResult<List<ProductCustomerVO>>> recommendByPool(Integer pageSize, Boolean refresh) {
         int size = (Objects.isNull(pageSize) || pageSize <= ConstNumber.INT_ZERO) ? ConstNumber.INT_TEN : Math.min(pageSize, ConstNumber.INT_TEN);
         boolean needRefresh = Boolean.TRUE.equals(refresh);
 
         return Mono.deferContextual(ctx -> {
-            // 【未登录用户】：直接走 Gorse，不经过池化
+            // 未登录用户：直接走 Gorse，不经过池化
             if (!myLong.hasKey(ctx)) {
                 log.debug("用户未登录，直接请求 Gorse 推荐");
                 return aiChatClientRecommendServiceApi.gorse(GuestEnum.GUEST_USER_ID.getValue(), size)
@@ -1254,7 +1273,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                         });
             }
 
-            // 【已登录用户】
+            // 已登录用户
             Long userId = myLong.findUserId(ctx);
             String userKey = userId.toString();
             String poolKey = ProductKey.RECOMMEND_POOL_KEY_PREFIX + userKey;
@@ -1273,7 +1292,6 @@ public class RecommendProductServiceImpl implements RecommendProductService {
 
     /**
      * 从 Redis 池获取数据
-     * 【修改点】：在最终返回前，再次对结果列表进行随机打乱，确保无序
      */
     private Mono<CursorPageResult<List<ProductCustomerVO>>> fetchFromPool(String poolKey, int pageSize) {
 
@@ -1468,42 +1486,96 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                             .map(BehaviorRecord::getProductId)
                             .filter(Objects::nonNull)
                             .toList();
+                    // 构建带时间权重的商品得分
+                    Map<Long, Double> productScoreMap = new HashMap<>();
+                    LocalDateTime now = LocalDateTime.now();
+                    Map<String, Double> baseWeights = baseWeights();
 
-                    // 重新计算权重（排除前2条的商品ID）
-                    List<Long> allProductIds = Stream.of(
-                                    // 1. 点击流
-                                    clickList.stream().map(c -> Objects.nonNull(c.getProduct()) ? c.getProduct().getId() : null),
-                                    // 2. 收藏流
-                                    collectList.stream().map(c -> Objects.nonNull(c.getProduct()) ? c.getProduct().getId() : null),
-                                    // 3. 购买流
-                                    purchaseList.stream().map(PurchaseOrderVOApi::getProductId),
-                                    // 4. 浏览流 (需要先 flatMap 展开产品列表)
-                                    browseList.stream()
-                                            .filter(Objects::nonNull)
-                                            .map(b -> b.getProduct().getId())
-                            )
-                            .flatMap(s -> s) // 将 Stream<Stream<Long>> 展平为 Stream<Long>
-                            .filter(Objects::nonNull)
-                            .filter(id -> !excludedIds.contains(id))
-                            .distinct()
-                            .toList();
+                    // 点击行为打分
+                    for (ClickProfileApi c : clickList) {
+                        if (Objects.isNull(c.getProduct())) continue;
+                        Long pid = c.getProduct().getId();
+                        if (excludedIds.contains(pid)) continue;
+                        double timeWeight = getTimeDecayWeight(c.getClickTime(), now);
+                        productScoreMap.put(pid, productScoreMap.getOrDefault(pid, 0.0) +
+                                (baseWeights.get(GorseFeedbackEnum.CLICK.getValue()) * timeWeight));
+                    }
 
-                    int totalIds = allProductIds.isEmpty() ? 1 : allProductIds.size();
-                    Map<Long, Double> ratioMap = allProductIds.stream()
-                            .collect(Collectors.groupingBy(Function.identity(),
-                                    Collectors.collectingAndThen(Collectors.counting(), c -> c * 1.0 / totalIds)));
+                    // 收藏行为打分
+                    for (CollectProfileApi c : collectList) {
+                        if (Objects.isNull(c.getProduct())) continue;
+                        Long pid = c.getProduct().getId();
+                        if (excludedIds.contains(pid)) continue;
+                        double timeWeight = getTimeDecayWeight(c.getCollectTime(), now);
+                        productScoreMap.put(pid, productScoreMap.getOrDefault(pid, 0.0) +
+                                (baseWeights.get(GorseFeedbackEnum.COLLECT.getValue()) * timeWeight));
+                    }
 
-                    Map<Long, Double> top3RatioMap = ratioMap.entrySet().stream()
+                    // 购买行为打分
+                    for (PurchaseOrderVOApi o : purchaseList) {
+                        Long pid = o.getProductId();
+                        if (Objects.isNull(pid) || excludedIds.contains(pid)) continue;
+                        double timeWeight = getTimeDecayWeight(o.getOrderPlacementTime(), now);
+                        productScoreMap.put(pid, productScoreMap.getOrDefault(pid, 0.0) +
+                                (baseWeights.get(GorseFeedbackEnum.PURCHASE.getValue()) * timeWeight));
+                    }
+
+                    // 浏览行为打分
+                    for (BrowseProfileApi b : browseList) {
+                        if (Objects.isNull(b.getProduct())) continue;
+                        Long pid = b.getProduct().getId();
+                        if (Objects.isNull(pid) || excludedIds.contains(pid)) continue;
+                        double timeWeight = getTimeDecayWeight(b.getBrowseStartTime(), now);
+                        productScoreMap.put(pid, productScoreMap.getOrDefault(pid, 0.0) +
+                                (baseWeights.get(GorseFeedbackEnum.BROWSE.getValue()) * timeWeight));
+                    }
+
+                    // 综合得分倒序 取Top3
+                    Map<Long, Double> top3RatioMap = productScoreMap.entrySet().stream()
                             .sorted(Map.Entry.<Long, Double>comparingByValue().reversed())
                             .limit(3)
                             .collect(Collectors.toMap(
                                     Map.Entry::getKey,
                                     Map.Entry::getValue,
                                     (v1, v2) -> v1,
-                                    LinkedHashMap::new)
-                            );
-
+                                    LinkedHashMap::new
+                            ));
                     Set<Long> top3Ids = top3RatioMap.keySet();
+//                    // 重新计算权重（排除前2条的商品ID）
+//                    List<Long> allProductIds = Stream.of(
+//                                    // 1. 点击流
+//                                    clickList.stream().map(c -> Objects.nonNull(c.getProduct()) ? c.getProduct().getId() : null),
+//                                    // 2. 收藏流
+//                                    collectList.stream().map(c -> Objects.nonNull(c.getProduct()) ? c.getProduct().getId() : null),
+//                                    // 3. 购买流
+//                                    purchaseList.stream().map(PurchaseOrderVOApi::getProductId),
+//                                    // 4. 浏览流 (需要先 flatMap 展开产品列表)
+//                                    browseList.stream()
+//                                            .filter(Objects::nonNull)
+//                                            .map(b -> b.getProduct().getId())
+//                            )
+//                            .flatMap(s -> s) // 将 Stream<Stream<Long>> 展平为 Stream<Long>
+//                            .filter(Objects::nonNull)
+//                            .filter(id -> !excludedIds.contains(id))
+//                            .distinct()
+//                            .toList();
+//
+//                    int totalIds = allProductIds.isEmpty() ? 1 : allProductIds.size();
+//                    Map<Long, Double> ratioMap = allProductIds.stream()
+//                            .collect(Collectors.groupingBy(Function.identity(),
+//                                    Collectors.collectingAndThen(Collectors.counting(), c -> c * 1.0 / totalIds)));
+//
+//                    Map<Long, Double> top3RatioMap = ratioMap.entrySet().stream()
+//                            .sorted(Map.Entry.<Long, Double>comparingByValue().reversed())
+//                            .limit(3)
+//                            .collect(Collectors.toMap(
+//                                    Map.Entry::getKey,
+//                                    Map.Entry::getValue,
+//                                    (v1, v2) -> v1,
+//                                    LinkedHashMap::new)
+//                            );
+//
+//                    Set<Long> top3Ids = top3RatioMap.keySet();
 
                     // 3. 后3条（按权重取的）-> 从剩余数据中取Top3
                     // 点击
@@ -1518,7 +1590,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                     // 浏览处理逻辑
                     browseList.stream()
                             .filter(Objects::nonNull) // 1. 过滤掉 browse 记录本身为 null 的情况
-                            .filter(browse -> browse.getProduct() != null) // 2. 【关键】过滤掉 product 为 null 的记录，防止 NPE
+                            .filter(browse -> browse.getProduct() != null) //过滤掉 product 为 null 的记录，防止 NPE
                             .filter(browse -> {
                                 // 3. 安全地检查 ID 是否在 Top3 中
                                 Long id = browse.getProduct().getId();
@@ -1545,6 +1617,8 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                     .topK(ProductKey.RECOMMEND_POOL_SIZE)
                                     .data(embeddingInput)
                                     .build();
+
+                    log.info("最优行为：{}", embeddingInput.stream().map(ProductForEmbeddingApVO::getTitle).toList());
 
                     return aiChatClientRecommendServiceApi.recommendProduct(requestBody)
                             .map(resp -> Optional.ofNullable(resp.getData()).orElse(Collections.emptyList()))
@@ -1596,9 +1670,25 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 });
     }
 
+    /**
+     * 时间衰减权重计算 公式：w = e^(-λ * Δt)
+     *
+     * @param behaviorTime 行为时间
+     * @param now          当前时间
+     * @return 衰减权重
+     */
+    private double getTimeDecayWeight(LocalDateTime behaviorTime, LocalDateTime now) {
+        if (Objects.isNull(behaviorTime)) {
+            return 0.0;
+        }
+        // 计算时间差 小时
+        long hourDiff = ChronoUnit.HOURS.between(behaviorTime, now);
+        // 指数时间衰减
+        return Math.exp(-LAMBDA * hourDiff);
+    }
 
     /**
-     * 【修改点 2】：写入 Redis 前，再次确保彻底打乱
+     * 写入 Redis 前，再次确保彻底打乱
      */
     private Mono<Void> writeIdsToPoolInternal(String poolKey, List<Long> rawIds) {
         if (rawIds == null || rawIds.isEmpty()) {
@@ -1627,6 +1717,17 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                         .flatMap(id -> reactiveRedisUtil.lPush(poolKey, id.toString())))
                 .then(reactiveRedisUtil.expire(poolKey, 3600))
                 .then();
+    }
+
+    private Map<String, Double> baseWeights() {
+        // 定义行为类型的基础权重（体现“占比”和“重要性”）
+        Map<String, Double> baseWeights = new HashMap<>();
+        baseWeights.put(GorseFeedbackEnum.CLICK.getValue(), 1.0);      // 点击基础分
+        baseWeights.put(GorseFeedbackEnum.COLLECT.getValue(), 3.0);    // 收藏基础分（更强烈的兴趣）
+        baseWeights.put(GorseFeedbackEnum.PURCHASE.getValue(), 5.0);   // 购买基础分（最强的兴趣）
+        baseWeights.put(GorseFeedbackEnum.BROWSE.getValue(), 0.5);
+        // 浏览基础分（弱兴趣）
+        return baseWeights;
     }
 
     private Mono<List<ProductCustomerVO>> loadDefaultProducts(int limit) {

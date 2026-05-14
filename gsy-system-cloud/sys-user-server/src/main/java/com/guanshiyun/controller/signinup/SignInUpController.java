@@ -27,7 +27,7 @@ public class SignInUpController {
 
     @PostMapping("/signIn")
     public Mono<ResultT< String>> signIn(@RequestBody SysUser signUser) {
-        log.info("用户名：{}", signUser);
+//        log.info("用户名：{}", signUser);
         UsernamePasswordAuthenticationToken authRequest =
                 new UsernamePasswordAuthenticationToken(signUser.getUsername(), signUser.getPassword());
                     return customReactiveAuthenticationManager.authenticate(authRequest)

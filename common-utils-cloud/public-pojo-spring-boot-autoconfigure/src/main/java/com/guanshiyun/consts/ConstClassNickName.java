@@ -9,6 +9,8 @@ public class ConstClassNickName {
     public static final String REDIS_TOKEN_KEY = "guanshiyun:security:login";
     //角色存储键
     public static final String REDIS_ROLE_KEY = "guanshiyun:security:role";
+    //ip存储键
+    public static final String REDIS_IP_KEY = "guanshiyun:security:ip";
 
     //权限存储键
     public static final String REDIS_PERMISSION_KEY = "guanshiyun:security:permission";

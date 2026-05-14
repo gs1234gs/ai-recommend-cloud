@@ -12,7 +12,6 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 public interface ProductService {
-    Mono<Long> save(ProductSaveVO productSaveVO);
 
     Mono<Long> deleteById(Long id);
 

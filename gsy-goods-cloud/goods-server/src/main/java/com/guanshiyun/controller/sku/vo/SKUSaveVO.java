@@ -58,4 +58,7 @@ public class SKUSaveVO implements Serializable {
     private String detailContent;
     //商品id
     private Long productId;
+
+    //仓库id
+    private List<Long> warehouseIds;
 }

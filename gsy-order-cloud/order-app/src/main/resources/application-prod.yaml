@@ -7,9 +7,10 @@ spring:
       discovery:
         namespace: dev
   r2dbc:
-    url: r2dbc:mysql://localhost:3306/gsy-behavior-cloud
+    url: r2dbc:mysql://localhost:3306/gsy-order-cloud
     username: root
     password: 1234
+  #开启表校验
   data:
     redis:
       host: 127.0.0.1
@@ -24,31 +25,27 @@ spring:
           min-idle: 0       # 最小空闲连接数
           max-wait: -1ms    # 获取连接的最大等待时间（-1 表示无限制）
     mongodb:
-      uri: mongodb://127.0.0.1:27017/gsy-behavior-cloud
+      uri: mongodb://127.0.0.1:27017/gsy-order-cloud
   jackson:
-    date-format: yyy-MM-dd HH:mm:ss
+    date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
     serialization:
       write-dates-as-timestamps: false
   webflux:
     multipart:
-      max-in-memory-size: 2048MB
+      max-in-memory-size: 100MB
 
 gorse:
   url: 127.0.0.1:8087
   api-key: api-key
 
 server:
-  port: 9530
+  port: 9532
 
 logging:
   level:
     root: info
-    io.r2dbc.spi: debug          # R2DBC SPI 层日志
-    org.springframework.r2dbc.core: debug  # Spring R2DBC 核心模板日志
-    com.zaxxer.r2dbc: debug       # 如果使用 HikariR2DBC（不常见）
-    com.alibaba.nacos.client: debug
-    # 开启 MongoDB 操作日志
-    org.springframework.data.mongodb.core: debug
-    # 或者更详细
-    org.springframework.data.mongodb.core.MongoTemplate: debug
+    io.r2dbc.spi: info           # R2DBC SPI 层日志
+    org.springframework.r2dbc.core: info   # Spring R2DBC 核心模板日志
+    com.zaxxer.r2dbc: info       # 如果使用 HikariR2DBC（不常见）
+    com.alibaba.nacos.client: info

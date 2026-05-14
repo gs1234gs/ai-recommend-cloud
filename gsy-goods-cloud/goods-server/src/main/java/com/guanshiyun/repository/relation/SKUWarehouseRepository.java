@@ -10,5 +10,7 @@ import reactor.core.publisher.Mono;
 public interface SKUWarehouseRepository extends R2dbcRepository<SKUWarehouse, Long> {
     Flux<Long> findSkuIdByWarehouseId(Long warehouseId);
     Mono<Void> deleteAllBySkuId( Long skuId);
-    Flux<SKUWarehouse> findBySkuId(Long skuId);
+
+
+    Flux<SKUWarehouse> findAllBySkuId(Long skuId);
 }

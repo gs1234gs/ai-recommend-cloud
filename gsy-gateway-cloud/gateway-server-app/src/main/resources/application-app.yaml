@@ -1,14 +1,6 @@
 spring:
   cloud:
     gateway:
-      # 给所有路由统一加一个前缀
-#      globalcors:
-#        corsConfigurations:
-#          '[/**]':
-#            allowedOrigins: "*"
-#            allowedMethods: "*"
-#      default-filters:
-#        - StripPrefix=1 # 去掉前缀 /gateway-api
       server:
         webflux:
           routes:

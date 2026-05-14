@@ -1,0 +1,104 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+      discovery:
+        namespace: dev
+  #  qdrant:
+  #    rest-api: http://127.0.0.1:6333  # Qdrant 服务的地址
+  #    grpc-api: http://127.0.0.1:6334
+  #    api-key: qdrant-api-key
+  r2dbc:
+    mysql:
+      url: r2dbc:mysql://127.0.0.1:3306/gsy-ai-cloud
+      username: root
+      password: 1234
+    postgres:
+      url: r2dbc:postgresql://127.0.0.1:5432/gsy-embedding-cloud
+      username: postgres
+      password: 123456
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      #      password: yourpassword
+      database: 0
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 8     # 最大活跃连接数
+          max-idle: 8       # 最大空闲连接数
+          min-idle: 0       # 最小空闲连接数
+          max-wait: -1ms    # 获取连接的最大等待时间（-1 表示无限制）
+    mongodb:
+      primary:
+        uri: mongodb://127.0.0.1:27017
+        database: gsy-ai-cloud
+      secondary:
+        uri: mongodb://127.0.0.1:27017
+        #      username:
+        #      password:
+        database: gsy-embedding-cloud
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      write-dates-as-timestamps: false
+  webflux:
+    multipart:
+      max-in-memory-size: 1024MB
+  output:
+    ansi:
+      enabled: ALWAYS
+  ai:
+    dashscope:
+      api-key: sk-bd85350524b44e76b29bfbbaac2bef6c
+      chat:
+        options:
+          model: qwen-plus
+      embedding:
+        enabled: true
+      read-timeout: 60000
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        options:
+          #          model: gpt-oss:20b
+          model: qwen3:latest
+      #          model: qwen2.5:7b
+      embedding:
+        options:
+          model: dengcao/Qwen3-Embedding-4B:Q4_K_M
+      init:
+        timeout: 60000
+    #          model: dengcao/Qwen3-Embedding-8B:Q4_K_M
+    vectorstore:
+      qdrant:
+        host: 127.0.0.1
+        port: 6334
+        api-key: qdrant-api-key
+        collection-name: gsy-embedding-cloud
+        use-tls: false
+        initialize-schema: true
+
+gorse:
+  url: 127.0.0.1:8087
+  api-key: api-key
+
+
+server:
+  port: 9531
+  shutdown: graceful
+
+
+logging:
+  level:
+    com.alibaba.nacos.client: info
+    org.springframework.ai.chat.client.advisor: info
+    # sql日志级别
+    root: info
+    io.r2dbc.spi: info      # R2DBC SPI 层日志
+    org.springframework.r2dbc.core: info   # Spring R2DBC 核心模板日志
+    com.zaxxer.r2dbc: info

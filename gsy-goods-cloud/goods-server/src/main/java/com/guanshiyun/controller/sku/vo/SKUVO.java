@@ -3,6 +3,7 @@ package com.guanshiyun.controller.sku.vo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.guanshiyun.base.BasePojo;
+import com.guanshiyun.controller.warehouse.vo.WarehouseVO;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
@@ -66,4 +67,6 @@ public class SKUVO extends BasePojo implements Serializable {
     private List<String> picList;
     //商品id
     private Long productId;
+    //仓库
+    private List<WarehouseVO> warehouseList;
 }

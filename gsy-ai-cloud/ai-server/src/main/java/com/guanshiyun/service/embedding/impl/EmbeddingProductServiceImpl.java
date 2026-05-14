@@ -148,8 +148,8 @@ public class EmbeddingProductServiceImpl implements EmbeddingProductService {
 
             // 并行执行向量搜索和 Gorse 推荐
             return Mono.zip(
-                            vectorSearch(fusedQuery, (int)(topK * 2)),
-                            gorseClient.getRecommend(userId.toString(), (int)(topK * 2))
+                            vectorSearch(fusedQuery, topK * 2),
+                            gorseClient.getRecommend(userId.toString(), topK * 2)
                                     .map(ids -> ids.stream()
                                             .map(myLong::myLong)
                                             .toList())

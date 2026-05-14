@@ -63,7 +63,7 @@ server:
 logging:
   level:
     root: info
-    io.r2dbc.spi: debug           # R2DBC SPI 层日志
-    org.springframework.r2dbc.core: debug   # Spring R2DBC 核心模板日志
-    com.zaxxer.r2dbc: debug       # 如果使用 HikariR2DBC（不常见）
-    com.alibaba.nacos.client: debug
+    io.r2dbc.spi: info          # R2DBC SPI 层日志
+    org.springframework.r2dbc.core: info   # Spring R2DBC 核心模板日志
+    com.zaxxer.r2dbc: info       # 如果使用 HikariR2DBC（不常见）
+    com.alibaba.nacos.client: info

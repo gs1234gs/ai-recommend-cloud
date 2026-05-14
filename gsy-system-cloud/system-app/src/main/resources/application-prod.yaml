@@ -43,13 +43,13 @@ server:
 
 logging:
   level:
-    root: debug
-    io.r2dbc.spi: debug        # R2DBC SPI 层日志
-    org.springframework.r2dbc.core: debug   # Spring R2DBC 核心模板日志
-    org.springframework.r2dbc.connection: debug
-    io.r2dbc.mysql: debug
-    io.r2dbc.pool: debug
-    com.alibaba.nacos.client: debug
+    root: info
+    io.r2dbc.spi: info          # R2DBC SPI 层日志
+    org.springframework.r2dbc.core: info   # Spring R2DBC 核心模板日志
+    org.springframework.r2dbc.connection: info
+    io.r2dbc.mysql: info
+    io.r2dbc.pool: info
+    com.alibaba.nacos.client: info
 
 gorse:
   url: 127.0.0.1:8087

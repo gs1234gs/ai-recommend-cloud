@@ -56,7 +56,7 @@ public class SysMenuServiceImpl implements SysMenuService {
                                             .collectList()
                             );
                 })
-                .flatMap(menuIds -> sysMenuRepository.findAllById(menuIds));
+                .flatMap(sysMenuRepository::findAllById);
 //        return sysUserRoleRepository.findRoleIdByUserId(userId)
 //                .collectList()
 //                .flatMap(roleIds ->
