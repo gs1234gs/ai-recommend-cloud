@@ -1,7 +1,7 @@
 package com.guanshiyun;
 
 import com.aliyun.oss.AliOSSUtils;
-import com.guanshiyun.controller.service.UploadService;
+import com.guanshiyun.service.upload.UploadService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

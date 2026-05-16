@@ -1,7 +1,7 @@
-package com.guanshiyun.controller.service.impl;
+package com.guanshiyun.service.upload.impl;
 
 import com.aliyun.oss.AliOSSUtils;
-import com.guanshiyun.controller.service.UploadService;
+import com.guanshiyun.service.upload.UploadService;
 import com.guanshiyun.responsepojo.ResultT;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

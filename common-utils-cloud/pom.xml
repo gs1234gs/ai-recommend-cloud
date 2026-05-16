@@ -65,7 +65,7 @@
 <!--        <jafx.version>1.1.1</jafx.version>-->
         <gorse.version>0.5.0</gorse.version>
         <alibabacloud-oss-v2.version>0.3.2</alibabacloud-oss-v2.version>
-
+        <aliyun.sms.version>1.0.7</aliyun.sms.version>
     </properties>
     <repositories>
         <repository>
@@ -78,6 +78,11 @@
     <dependencyManagement>
 
         <dependencies>
+            <dependency>
+                <groupId>com.aliyun</groupId>
+                <artifactId>alibabacloud-dysmsapi20180501</artifactId>
+                <version>${aliyun.sms.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.aliyun</groupId>
                 <artifactId>alibabacloud-oss-v2</artifactId>

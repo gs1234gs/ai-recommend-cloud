@@ -61,6 +61,7 @@
 <!--        <reactive.feign.version>4.2.1</reactive.feign.version>-->
 <!--        <jaxb.api.version>2.3.1</jaxb.api.version>-->
         <powerjob.version>5.1.2</powerjob.version>
+
     </properties>
     <dependencyManagement>
         <dependencies>

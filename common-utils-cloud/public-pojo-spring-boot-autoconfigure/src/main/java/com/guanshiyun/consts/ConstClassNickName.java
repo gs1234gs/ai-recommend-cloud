@@ -27,4 +27,6 @@ public class ConstClassNickName {
 
     //访问路劲存储键
     public static final String REDIS_REQUEST_URL_KEY = "guanshiyun:security:path";
+    //邮箱存储键
+    public static final String REDIS_EMAIL_KEY = "guanshiyun:security:email";
 }

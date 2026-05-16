@@ -1,4 +1,4 @@
-package com.guanshiyun.pojo.signreqpojo;
+package com.guanshiyun.rpc.qqCode;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SignRequestUser {
-    // 用户名
-    private String username;
-    // 密码
-    private String password;
+public class QQCode {
+    //目标邮箱
+    private String email;
     //验证码
     private String code;
+    //有效时长
+    private int expire;
 }

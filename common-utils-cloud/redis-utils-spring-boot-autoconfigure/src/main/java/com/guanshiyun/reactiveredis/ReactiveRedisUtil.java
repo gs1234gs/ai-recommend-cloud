@@ -56,7 +56,11 @@ public class ReactiveRedisUtil {
         return redisTemplate.delete(key).map(count -> count > 0);
     }
 
-    /** 设置过期时间 */
+    /** 设置过期时间
+     * @param key Redis Key
+     * @param timeoutSeconds 过期时间（秒）
+     * @return 操作完成信号
+     */
     public Mono<Boolean> expire(String key, long timeoutSeconds) {
         return redisTemplate.expire(key, Duration.ofSeconds(timeoutSeconds));
     }

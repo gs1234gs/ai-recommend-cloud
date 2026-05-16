@@ -14,6 +14,7 @@ public enum ServerName {
     BEHAVIOR_APP("行为服务", "http://behavior-app/behavior-api"),
     SYSTEM_APP("系统服务", "http://system-app/sys-api"),
     ORDER_APP("订单服务", "http://order-app/order-api"),
+    UPLOAD_APP("上传服务", "http://upload-app/upload-api"),
     ;
     private final String name;
     private final String value;

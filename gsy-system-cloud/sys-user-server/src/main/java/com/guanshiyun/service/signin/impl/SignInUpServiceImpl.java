@@ -16,7 +16,6 @@ import com.guanshiyun.service.userrole.SysUserRoleService;
 import com.guanshiyun.signinpojo.SignUser;
 import com.guanshiyun.user.User;
 import com.guanshiyun.userpojo.SysUser;
-import io.gorse.gorse4j.Gorse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -54,32 +53,33 @@ public class SignInUpServiceImpl implements SignInUpService {
     }
 
     @Override
-    public Mono<Boolean> signUp(SysUser signUser) {
-        if(signUser.getUsername().trim().length()<6){
-            return Mono.error(new Throwable("用户名长度不能小于6"));
-        }
+    public Mono<Boolean> signUp(SignUser signUser) {
+//        if(signUser.getUsername().trim().length()<6){
+//            return Mono.error(new Throwable("用户名长度不能小于6"));
+//        }
+        String username = signUser.getUsername();
 
         SysUser sysUser = SysUser.builder()
                 .id(null)
                 .createTime(LocalDateTime.now())
-                .username(signUser.getUsername())
+                .username(username)
                 .password(passwordEncoder.encode(signUser.getPassword()))
                 .nickName(signUser.getNickName())
                 .build();
-        return signInUpRepository.findByUsername(signUser.getUsername())
+        return signInUpRepository.findByUsername(username)
                 .map(existUser -> Boolean.FALSE)
                 .switchIfEmpty(signInUpRepository.save(sysUser)
                         .flatMap(user ->
-                                sysUserRoleService.addUserRole(sysUser.getId(), List.of(RoleIdConst.ROLE_COMMON_USER))
+                                sysUserRoleService.addUserRole(user.getId(), List.of(RoleIdConst.ROLE_COMMON_USER))
                                         .flatMap(result -> {
                                                     //添加角色
                                                     log.info("注册成功: {}", result);
                                             LinkedHashMap<String, Object> linkedHashMap = new LinkedHashMap<>();
-                                            linkedHashMap.put(SysUser.Fields.username, signUser.getUsername());
+                                            linkedHashMap.put(SysUser.Fields.username, username);
                                             linkedHashMap.put("school", "滇西应用技术大学");
                                             linkedHashMap.put("location", "Dali of Yunnan in China");
                                             User gorseUser = User.builder()
-                                                    .userId(String.valueOf(signUser.getId()))
+                                                    .userId(String.valueOf(user.getId()))
                                                     .labels(linkedHashMap)
                                                     .build();
                                             return gorseClient.saveUser(gorseUser)

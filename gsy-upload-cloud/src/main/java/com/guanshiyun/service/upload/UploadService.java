@@ -1,4 +1,4 @@
-package com.guanshiyun.controller.service;
+package com.guanshiyun.service.upload;
 
 import com.guanshiyun.responsepojo.ResultT;
 import org.springframework.http.codec.multipart.PartEvent;

@@ -73,6 +73,15 @@
 			<groupId>com.aliyun</groupId>
 			<artifactId>alibabacloud-oss-v2</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.aliyun</groupId>
+			<artifactId>alibabacloud-dysmsapi20180501</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
 <!--		<dependency>-->
 <!--			<groupId>com.alibaba.fastjson2</groupId>-->
 <!--			<artifactId>fastjson2</artifactId>-->

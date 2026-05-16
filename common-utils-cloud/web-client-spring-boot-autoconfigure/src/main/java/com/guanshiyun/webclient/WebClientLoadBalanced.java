@@ -96,6 +96,19 @@ public class WebClientLoadBalanced {
                 ));
     }
 
+    @Bean
+    @LoadBalanced
+    @Qualifier("uploadWebClientBuilder")
+    public WebClient.Builder uploadWebClientBuilder() {
+        return WebClient.builder()
+                .baseUrl(ServerName.UPLOAD_APP.getValue())
+                .filter(ExchangeFilterFunction.ofRequestProcessor(clientRequest ->
+                        Mono.deferContextual(ctx ->
+                                Mono.just(clientRequest(ctx, clientRequest))
+                        )
+                ));
+    }
+
     public ClientRequest clientRequest(ContextView ctx, ClientRequest clientRequest) {
         // 从 Reactor Context 中取 userId
         String userIdL = ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY;

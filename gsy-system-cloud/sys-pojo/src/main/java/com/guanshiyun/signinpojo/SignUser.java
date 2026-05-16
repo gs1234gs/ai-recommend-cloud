@@ -19,6 +19,10 @@ public class SignUser implements UserDetails {
     private  String password;
     private  Collection<? extends GrantedAuthority> authorities;
     private SysUser sysUser;
+    //用户昵称
+    private String nickName;
+    //验证码
+    private String code;
 
 
     @Override

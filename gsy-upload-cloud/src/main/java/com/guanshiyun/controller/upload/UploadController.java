@@ -1,7 +1,7 @@
-package com.guanshiyun.controller;
+package com.guanshiyun.controller.upload;
 
 import com.guanshiyun.responsepojo.ResultT;
-import com.guanshiyun.controller.service.UploadService;
+import com.guanshiyun.service.upload.UploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.codec.multipart.PartEvent;
 import org.springframework.web.bind.annotation.PostMapping;
