@@ -2,11 +2,5 @@ spring:
   application:
     name: system-app
   profiles:
-#    active: dev
-    active: prod
-
-
-
-
-
-
+    active: dev
+#    active: prod

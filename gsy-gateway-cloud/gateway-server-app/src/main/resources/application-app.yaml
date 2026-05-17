@@ -3,6 +3,8 @@ spring:
     gateway:
       server:
         webflux:
+          default-filters:
+            - AddRequestHeader=origin, gateway-app
           routes:
     #      系统模块
             - id: system-app

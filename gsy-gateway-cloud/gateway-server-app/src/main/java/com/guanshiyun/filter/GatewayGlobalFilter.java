@@ -18,6 +18,7 @@ import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Configuration;
@@ -52,9 +53,16 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         // 获取客户端IP
-        String ip = getClientIp(request);
-        String path = request.getPath().value();
-        String ipPath = ip + path;
+//        String ip = getClientIp(request);
+//        String path = request.getPath().value();
+//        String ipPath = ip + path;
+//        return requestLimit(exchange, chain, ipPath, ip, request);
+        return checkToken(exchange, chain, request);
+    }
+
+    //限流
+    //
+    private @NotNull Mono<Void> requestLimit(ServerWebExchange exchange, GatewayFilterChain chain, String ipPath, String ip, ServerHttpRequest request) {
         return reactiveRedisUtil
                 .hGet(ConstClassNickName.REDIS_IP_KEY, ipPath)
                 // 1. 如果 Redis 中没有该 IP 的记录，初始化一条新数据
@@ -79,7 +87,8 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
                 }))
                 .flatMap(json -> {
                     try {
-                        Map<String, Object> mapIp = objectMapper.readValue(json, new TypeReference<Map<String, Object>>() {});
+                        Map<String, Object> mapIp = objectMapper.readValue(json, new TypeReference<Map<String, Object>>() {
+                        });
                         Object timeObj = mapIp.get(TIME_KEY);
                         LocalDateTime time;
                         if (timeObj instanceof LocalDateTime) {
@@ -107,10 +116,10 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
                         } catch (JsonProcessingException e) {
                             return Mono.error(new RuntimeException(e));
                         }
-                        return  reactiveRedisUtil.hSet(ConstClassNickName.REDIS_IP_KEY, ipPath, value)
+                        return reactiveRedisUtil.hSet(ConstClassNickName.REDIS_IP_KEY, ipPath, value)
                                 .flatMap(aVoid -> {
                                     try {
-                                        return getVoidMono(exchange, chain, request);
+                                        return checkToken(exchange, chain, request);
                                     } catch (JsonProcessingException e) {
                                         return Mono.error(new RuntimeException(e));
                                     }
@@ -120,11 +129,10 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
                         return Mono.error(e);
                     }
                 });
-//
-//        return getVoidMono(exchange, chain, request);
     }
 
-    private Mono<Void> getVoidMono(ServerWebExchange exchange, GatewayFilterChain chain, ServerHttpRequest request) throws JsonProcessingException {
+    //校验token
+    private Mono<Void> checkToken(ServerWebExchange exchange, GatewayFilterChain chain, ServerHttpRequest request) throws JsonProcessingException {
         String path = request.getPath().value();
         log.info("收到请求:{}", path);
         if (PublicEndpoints.PERMSSION_WHITE_LIST.contains(path)) {
@@ -168,13 +176,6 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
                                                             .build()
                                             )
                                     )
-//                                    JSONObject.toJSONString(
-//                                            Result
-//                                                    .builder()
-//                                                    .code(401)
-//                                                    .msg("未登陆")
-//                                                    .build()
-//                                    ).getBytes(StandardCharsets.UTF_8)
                     )
             );
         }
@@ -198,13 +199,6 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
                                                     .msg("登陆已经过期")
                                                     .build()
                                     )
-//                                    JSONObject.toJSONString(
-//                                            Result
-//                                                    .builder()
-//                                                    .code(401)
-//                                                    .msg("登陆已经过期")
-//                                                    .build()
-//                                    ).getBytes(StandardCharsets.UTF_8)
                             )
             ));
         }
@@ -233,13 +227,6 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
                                                                     .msg("登陆已经过期")
                                                                     .build()
                                                     )
-                                                    //                                                JSONObject.toJSONString(
-                                                    //                                                        Result
-                                                    //                                                                .builder()
-                                                    //                                                                .code(401)
-                                                    //                                                                .msg("登陆已经过期")
-                                                    //                                                                .build()
-                                                    //                                                ).getBytes(StandardCharsets.UTF_8)
                                             )
                             ));
                         } catch (JsonProcessingException e) {
@@ -260,13 +247,6 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
                                                                     .msg("登陆已经过期")
                                                                     .build()
                                                     )
-//                                                    JSONObject.toJSONString(
-//                                                            Result
-//                                                                    .builder()
-//                                                                    .code(401)
-//                                                                    .msg("登陆已经过期")
-//                                                                    .build()
-//                                                    ).getBytes(StandardCharsets.UTF_8)
                                             )
                             ));
                         }

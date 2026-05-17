@@ -6,6 +6,25 @@ spring:
       password: nacos
       discovery:
         namespace: dev
+
+    sentinel:
+      enabled: false
+      transport:
+        dashboard: localhost:8888
+        port: 8719
+      eager: true
+
+      datasource:
+        gw-flow:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr} # 引用上方配置，避免硬编码
+            namespace: ${spring.cloud.nacos.discovery.namespace}
+            data-id: ${spring.application.name}-gw-flow
+            group-id: DEFAULT_GROUP
+            rule-type: gw-flow # 网关流控规则类型
+            data-type: json
+
+
   data:
     redis:
       host: 127.0.0.1
@@ -25,4 +44,7 @@ logging:
   level:
     org.springframework.cloud.gateway: info
     org.springframework.web.reactive.function.client.ExchangeFunctions: info
+    com.alibaba.csp.sentinel: debug
+    com.alibaba.cloud.sentinel.gateway: debug
+    com.alibaba.cloud.sentinel.datasource: debug
 

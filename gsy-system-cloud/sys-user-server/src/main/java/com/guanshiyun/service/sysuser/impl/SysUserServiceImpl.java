@@ -173,11 +173,7 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public Mono<Long> save(SysUserSaveVO sysUserSaveVO) {
-        String password = sysUserSaveVO.getPassword();
-        //密码不为空，表示修改密码，否则不修改
-        if (Objects.nonNull(password)) {
-            sysUserSaveVO.setPassword(passwordEncoder.encode(password));
-        }
+        final String[] password = {sysUserSaveVO.getPassword()};
         sysUserSaveVO.setCreateTime(LocalDateTime.now());
         return Mono.deferContextual(ctx -> {
             if (!myLong.hasKey(ctx))
@@ -189,6 +185,11 @@ public class SysUserServiceImpl implements SysUserService {
             if (Objects.isNull(sysUserSaveVO.getId())) {
                 sysUser.setCreator(userId);
                 sysUser.setCreateTime(LocalDateTime.now());
+                //密码为空，默认密码为123456
+                if (Objects.isNull(password[0])) {
+                    password[0] = "123456";
+                }
+                sysUserSaveVO.setPassword(passwordEncoder.encode(password[0]));
                 return sysUserRepository.save(sysUser)
                         .flatMap(sysUserSave ->
                                 sysUserRoleRepository.saveAll(
@@ -213,6 +214,10 @@ public class SysUserServiceImpl implements SysUserService {
             //id不为空，表示修改
             sysUser.setUpdater(userId);
             sysUser.setUpdateTime(LocalDateTime.now());
+            //密码不为空，表示修改密码，否则不修改
+            if(Objects.nonNull(password[0])) {
+                sysUser.setPassword(passwordEncoder.encode(password[0]));
+            }
             return r2dbcUpdateHelper.updateIgnoreNull(
                             EntityTableNameUtils.getName(SysUser.class),
                             sysUser,

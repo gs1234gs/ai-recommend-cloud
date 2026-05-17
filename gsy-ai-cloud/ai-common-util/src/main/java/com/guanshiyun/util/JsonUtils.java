@@ -1,4 +1,4 @@
-package com.guanshiyun.service.chat.impl.utils;
+package com.guanshiyun.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

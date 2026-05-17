@@ -1,4 +1,6 @@
 spring:
+  jmx:
+    enabled: true
   cloud:
     nacos:
       server-addr: 127.0.0.1:8848
@@ -6,6 +8,32 @@ spring:
       password: nacos
       discovery:
         namespace: dev
+
+    sentinel:
+      transport:
+        dashboard: localhost:8888
+        port: 8719
+      eager: true
+
+      datasource:
+        ds-authority:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr} # 建议引用上方配置，避免硬编码
+            namespace: ${spring.cloud.nacos.discovery.namespace}
+            data-id: ${spring.application.name}-authority-rules
+            group-id: DEFAULT_GROUP
+            rule-type: authority
+            data-type: json
+        ds-flow:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr}
+            namespace: ${spring.cloud.nacos.discovery.namespace} # 【必须添加】同上
+            data-id: ${spring.application.name}-flow-rules
+            group-id: DEFAULT_GROUP
+            rule-type: flow
+            data-type: json
+      enabled: false
+
   r2dbc:
     url: r2dbc:mysql://localhost:3306/gsy-sys-cloud
     username: root
@@ -43,13 +71,17 @@ server:
 
 logging:
   level:
-    root: debug
+    root: info
     io.r2dbc.spi: debug        # R2DBC SPI 层日志
     org.springframework.r2dbc.core: debug   # Spring R2DBC 核心模板日志
     org.springframework.r2dbc.connection: debug
     io.r2dbc.mysql: debug
     io.r2dbc.pool: debug
     com.alibaba.nacos.client: debug
+    com.alibaba.csp.sentinel: debug
+    com.alibaba.cloud.sentinel.gateway: debug
+    com.alibaba.cloud.sentinel.datasource: debug
+
 
 gorse:
   url: 127.0.0.1:8087

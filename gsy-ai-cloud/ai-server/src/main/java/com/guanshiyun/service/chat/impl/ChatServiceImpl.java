@@ -11,7 +11,7 @@ import com.guanshiyun.repositorymongodb.chat.ChatRecordContentMongodbRepository;
 import com.guanshiyun.req.AllReqChat;
 import com.guanshiyun.req.ReqChat;
 import com.guanshiyun.service.chat.ChatService;
-import com.guanshiyun.service.chat.impl.utils.JsonUtils;
+import com.guanshiyun.util.JsonUtils;
 import com.guanshiyun.snowflake.SnowflakePermanent;
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;

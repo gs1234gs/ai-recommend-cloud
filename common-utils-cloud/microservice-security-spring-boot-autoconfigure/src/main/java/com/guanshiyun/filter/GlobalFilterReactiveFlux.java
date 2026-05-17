@@ -42,6 +42,9 @@ public class GlobalFilterReactiveFlux implements WebFilter {
     @SneakyThrows
     @Override
     public @NonNull Mono<Void> filter(ServerWebExchange exchange, @NonNull WebFilterChain chain) {
+        if(true){
+            return chain.filter(exchange);
+        }
         //获取用户信息
         RequestPath path = exchange.getRequest().getPath();
         if (PublicEndpoints.PERMSSION_WHITE_LIST.contains(path.value())) {

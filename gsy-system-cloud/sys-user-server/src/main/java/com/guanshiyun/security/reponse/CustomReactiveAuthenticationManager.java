@@ -88,7 +88,10 @@ public class CustomReactiveAuthenticationManager implements ReactiveAuthenticati
                                 }
                                 return Mono.just("验证码发送成功");
                             })
-                            .onErrorResume(e -> Mono.error(new RuntimeException("验证码发送失败", e)));
+                            .onErrorResume(e -> {
+                                log.error("Failed to send email verification code", e);
+                                return Mono.error(new RuntimeException("验证码发送失败", e));
+                            });
                 });
     }
     //校验验证码

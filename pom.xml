@@ -61,10 +61,22 @@
 <!--        <reactive.feign.version>4.2.1</reactive.feign.version>-->
 <!--        <jaxb.api.version>2.3.1</jaxb.api.version>-->
         <powerjob.version>5.1.2</powerjob.version>
+        <sentinel.version>1.8.9</sentinel.version>
 
     </properties>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-spring-webflux-adapter</artifactId>
+                <version>${sentinel.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-datasource-nacos</artifactId>
+                <version>${sentinel.version}</version> <!-- 与你 Dashboard 版本一致 -->
+            </dependency>
             <dependency>
                 <groupId>tech.powerjob</groupId>
                 <artifactId>powerjob-worker-spring-boot-starter</artifactId>

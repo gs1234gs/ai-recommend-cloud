@@ -41,4 +41,6 @@ public class BigModel extends BasePojo implements Serializable {
     private String description;
     //大模型版本
     private String version;
+    //模型id
+    private String modelId;
 }

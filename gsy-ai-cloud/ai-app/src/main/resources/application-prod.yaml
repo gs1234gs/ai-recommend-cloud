@@ -6,6 +6,30 @@ spring:
       password: nacos
       discovery:
         namespace: dev
+    sentinel:
+      enabled: false
+      transport:
+        dashboard: localhost:8888
+        port: 8719
+      eager: true
+
+      datasource:
+        ds-authority:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr} # 建议引用上方配置，避免硬编码
+            namespace: dev # 【必须添加】必须与 discovery.namespace 完全一致！
+            data-id: ${spring.application.name}-authority-rules
+            group-id: DEFAULT_GROUP
+            rule-type: authority
+            data-type: json
+        ds-flow:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr}
+            namespace: ${spring.cloud.nacos.discovery.namespace}
+            data-id: ${spring.application.name}-flow-rules
+            group-id: DEFAULT_GROUP
+            rule-type: flow
+            data-type: json
   #  qdrant:
   #    rest-api: http://127.0.0.1:6333  # Qdrant 服务的地址
   #    grpc-api: http://127.0.0.1:6334

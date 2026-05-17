@@ -6,6 +6,30 @@ spring:
       password: nacos
       discovery:
         namespace: dev
+    sentinel:
+      transport:
+        dashboard: localhost:8888
+        port: 8719
+      eager: true
+
+      datasource:
+        ds-authority:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr} # 建议引用上方配置，避免硬编码
+            namespace: ${spring.cloud.nacos.discovery.namespace}
+            data-id: ${spring.application.name}-authority-rules
+            group-id: DEFAULT_GROUP
+            rule-type: authority
+            data-type: json
+        ds-flow:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr}
+            namespace: ${spring.cloud.nacos.discovery.namespace} # 【必须添加】同上
+            data-id: ${spring.application.name}-flow-rules
+            group-id: DEFAULT_GROUP
+            rule-type: flow
+            data-type: json
+      enabled: false
   r2dbc:
     url: r2dbc:mysql://localhost:3306/gsy-goods-cloud
     username: root

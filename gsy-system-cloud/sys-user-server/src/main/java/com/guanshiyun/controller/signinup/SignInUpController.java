@@ -36,23 +36,14 @@ public class SignInUpController {
         String code = signUser.getCode();
         UsernamePasswordAuthenticationToken authRequest =
                 new UsernamePasswordAuthenticationToken(username, password);
-        //固定用户，不走验证码
-        if(getFixedUsers().contains(username)){
+        //非邮箱用户，不走验证码,支持旧用户密码登录
+        if(QQEmailUtil.isNotValidEmail(username)){
             return customReactiveAuthenticationManager.authenticate(authRequest)
                     .flatMap(signInSuccessHandler::onAuthenticationSuccess);
         }
         return customReactiveAuthenticationManager.checkCode(username, code)
                 .flatMap(check -> customReactiveAuthenticationManager.authenticate(authRequest))
                 .flatMap(signInSuccessHandler::onAuthenticationSuccess);
-//                            .onErrorResume(throwable -> {
-//                                log.error("登录失败：", throwable);
-//                              return   Mono.just(
-//                                        ResultT.<String>builder()
-//                                                 .code(HttpStatus.FORBIDDEN.value())
-//                                                .msg("登录失败，用户名或密码错误！")
-//                                                .build()
-//                                );
-//                            });
     }
 
     @PostMapping("/signUp")

@@ -30,26 +30,6 @@ spring:
             rule-type: flow
             data-type: json
       enabled: false
-  r2dbc:
-    url: r2dbc:mysql://localhost:3306/gsy-order-cloud
-    username: root
-    password: 1234
-  #开启表校验
-  data:
-    redis:
-      host: 127.0.0.1
-      port: 6379
-      #      password: yourpassword
-      database: 0
-      timeout: 5000ms
-      lettuce:
-        pool:
-          max-active: 8     # 最大活跃连接数
-          max-idle: 8       # 最大空闲连接数
-          min-idle: 0       # 最小空闲连接数
-          max-wait: -1ms    # 获取连接的最大等待时间（-1 表示无限制）
-    mongodb:
-      uri: mongodb://127.0.0.1:27017/gsy-order-cloud
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
@@ -58,18 +38,39 @@ spring:
   webflux:
     multipart:
       max-in-memory-size: 100MB
+  mail:
+    host: smtp.qq.com             # QQ邮箱的SMTP服务器地址
+    port: 587                     # 端口号（也可以用465并配合开启SSL）
+    username: 2167162427@qq.com      # 你的QQ邮箱完整地址
+    password: rnsiyliiwkfreaic       # 注意！这里填授权码，不是QQ登录密码
+    default-encoding: utf-8       # 默认编码，防止中文乱码
+    properties:
+      mail:
+        smtp:
+          auth: true              # 开启身份认证
+          starttls:
+            enable: true          # 开启TLS加密
+            required: true        # 必须使用TLS加密
 
-gorse:
-  url: 127.0.0.1:8087
-  api-key: api-key
-
-server:
-  port: 9532
+#aliyun-oss
+aliyun:
+  oss:
+    endpoint: https://oss-cn-beijing.aliyuncs.com
+    bucketName: gsy-ai-recommend-cloud
+    accessKeyId: LTAI5tNC3nPEEfGJ2P56wTvG
+    accessKeySecret: 5VeOsZIVmOSGPsBVWvIcyhE4y4MUbE
+    region: cn-beijing
+  sms:
+    access-key-id: LTAI5tNC3nPEEfGJ2P56wTvG
+    access-key-secret: 5VeOsZIVmOSGPsBVWvIcyhE4y4MUbE
+    region: cn-hangzhou
+    sign-name: 阿里云
+    template-code: SMS_123456789 # 你的验证码模板CODE
+    endpoint: dysmsapi.aliyuncs.com
 
 logging:
   level:
-    root: info
-    io.r2dbc.spi: debug           # R2DBC SPI 层日志
-    org.springframework.r2dbc.core: debug   # Spring R2DBC 核心模板日志
-    com.zaxxer.r2dbc: debug       # 如果使用 HikariR2DBC（不常见）
-    com.alibaba.nacos.client: debug
+    com.alibaba.nacos.client: DEBUG
+
+server:
+  port: 9529
