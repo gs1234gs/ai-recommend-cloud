@@ -24,7 +24,10 @@ public class UserBrowseController {
     public Mono<ResultT<List<Long>>> save(@RequestBody List<UserBrowseSaveVO> userBrowseVO) {
         return userBrowseService.save(userBrowseVO)
                 .map(ResultT::success)
-                .onErrorReturn(ResultT.error());
+                .onErrorResume(throwable -> {
+                    log.error("保存用户浏览记录失败：", throwable);
+                    return Mono.just(ResultT.error());
+                });
     }
 
     @GetMapping("findByRows")

@@ -133,7 +133,11 @@ public class UserCollectServiceImpl implements UserCollectService {
                                 });
 
                     });
-                    });
+                    })
+                .onErrorResume(e->{
+                    log.error("保存click ： ",e);
+                    return Mono.error(new Throwable("保存失败", e));
+                });
 
     }
 

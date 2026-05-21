@@ -32,5 +32,8 @@ public class ConstMapClassNickName {
     public static final String COUNT_KEY = "count";
     public static final String TIME_KEY = "time";
 
+    public static final String MAP_AI_CHAT_ID_KEY = "aiChatId";
+    public static final String MAP_AI_USER_ID_KEY = "aiUserId";
+
 
 }

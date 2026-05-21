@@ -11,8 +11,8 @@ import com.guanshiyun.repositorymongodb.chat.ChatRecordContentMongodbRepository;
 import com.guanshiyun.req.AllReqChat;
 import com.guanshiyun.req.ReqChat;
 import com.guanshiyun.service.chat.ChatService;
-import com.guanshiyun.util.JsonUtils;
 import com.guanshiyun.snowflake.SnowflakePermanent;
+import com.guanshiyun.util.JsonUtils;
 import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +60,6 @@ public class ChatServiceImpl implements ChatService {
     private final SnowflakePermanent snowflakePermanent;
     private final MyLong myLong;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
-
 
     private static final String SHORT_ANSWER_SYSTEM_PROMPT = """
             你是一个高效的智能助手。
@@ -400,10 +399,8 @@ public class ChatServiceImpl implements ChatService {
             String userInput = reqChat.getContent();
             Long chatId = conversationId != null ? conversationId : snowflakePermanent.nextId();
             StringBuilder collectedText = new StringBuilder();
-
             return buildPrompt( userInput)
                     .map(prompt -> {
-
                         Flux<String> stream = chatClient
                                 .prompt(prompt)
                                 .stream()
@@ -456,7 +453,11 @@ public class ChatServiceImpl implements ChatService {
                                 })
                                 .publishOn(Schedulers.boundedElastic())
                                 .doFinally(signal ->
-                                        saveChatRecord(chatId, userInput, collectedText.toString(), ctx).subscribe());
+                                        {
+                                            log.info("Chat record saved for: {}", signal);
+                                            saveChatRecord(chatId, userInput, collectedText.toString(), ctx).subscribe();
+                                        }
+                                );
 
 
                         return Tuples.of(stream, chatId);
@@ -471,6 +472,9 @@ public class ChatServiceImpl implements ChatService {
         String prompt = JsonUtils.PROMPT_TEMPLATE + "\n\n用户最新消息: " + userInput;
 
         return Mono.just(prompt);
+    }
+    private Mono<ChatRecordContent> findById(Long id) {
+        return reactiveMongoTemplate.findById(id, ChatRecordContent.class);
     }
 
     private Mono<Void> saveChatRecord(Long chatId,
@@ -490,14 +494,26 @@ public class ChatServiceImpl implements ChatService {
                 .senderContent(aiContent)
                 .build();
 
+        LocalDateTime now = LocalDateTime.now();
         return reactiveMongoTemplate.updateFirst(
                 Query.query(Criteria.where(ChatRecordContent.Fields.id).is(chatId)),
                 new Update()
                         .push(ChatRecordContent.Fields.contentTexts, contentText)
-                        .set(BasePojo.Fields.updateTime, LocalDateTime.now())
+                        .set(BasePojo.Fields.updateTime, now)
                         .set(BasePojo.Fields.updater, userId),
-                ChatRecordContent.class
-        ).then();
+                        ChatRecordContent.class
+        ).flatMap(r->{
+            if (r.getMatchedCount() == 0) {
+                // 如果没匹配到，说明会话文档不存在，尝试插入一条新文档
+                ChatRecordContent newRecord = new ChatRecordContent();
+                newRecord.setId(chatId);
+                newRecord.setContentTexts(List.of(contentText));
+                newRecord.setCreateTime(now);
+                newRecord.setCreator(userId);
+                return reactiveMongoTemplate.insert(newRecord);
+            }
+            return Mono.just(r);
+        }).then();
     }
 
 

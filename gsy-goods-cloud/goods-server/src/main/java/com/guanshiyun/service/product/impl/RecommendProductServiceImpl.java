@@ -44,6 +44,7 @@ import com.guanshiyun.rpc.profile.ClickProfileApi;
 import com.guanshiyun.rpc.profile.CollectProfileApi;
 import com.guanshiyun.rpc.profile.SearchContentApi;
 import com.guanshiyun.service.product.RecommendProductService;
+import com.guanshiyun.service.product.help.HelpUtil;
 import com.guanshiyun.sku.SKU;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.utils.BeanConvertUtil;
@@ -65,7 +66,6 @@ import reactor.core.scheduler.Schedulers;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -83,7 +83,6 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class RecommendProductServiceImpl implements RecommendProductService {
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
-    //    private final GorseClient gorseClient;
     private final AiChatClientRecommendServiceApi aiChatClientRecommendServiceApi;
     private final UserClickServiceApi userClickServiceApi;
     private final UserCollectServiceApi userCollectServiceApi;
@@ -100,8 +99,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
     private final ProductTagRepository productTagRepository;
     private final SKURepository skuRepository;
 
-    // 衰减系数 λ 可自行调参，论文固定 0.1
-    private static final double LAMBDA = 0.1;
+
 
     /**
      * 根据搜索条件分页查询商品列表（仅限已登录用户）。
@@ -1515,7 +1513,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                         if (Objects.isNull(c.getProduct())) continue;
                         Long pid = c.getProduct().getId();
                         if (excludedIds.contains(pid)) continue;
-                        double timeWeight = getTimeDecayWeight(c.getClickTime(), now);
+                        double timeWeight = HelpUtil.getTimeDecayWeight(c.getClickTime(), now);
                         productScoreMap.put(pid, productScoreMap.getOrDefault(pid, 0.0) +
                                 (baseWeights.get(GorseFeedbackEnum.CLICK.getValue()) * timeWeight));
                     }
@@ -1525,7 +1523,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                         if (Objects.isNull(c.getProduct())) continue;
                         Long pid = c.getProduct().getId();
                         if (excludedIds.contains(pid)) continue;
-                        double timeWeight = getTimeDecayWeight(c.getCollectTime(), now);
+                        double timeWeight = HelpUtil.getTimeDecayWeight(c.getCollectTime(), now);
                         productScoreMap.put(pid, productScoreMap.getOrDefault(pid, 0.0) +
                                 (baseWeights.get(GorseFeedbackEnum.COLLECT.getValue()) * timeWeight));
                     }
@@ -1534,7 +1532,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                     for (PurchaseOrderVOApi o : purchaseList) {
                         Long pid = o.getProductId();
                         if (Objects.isNull(pid) || excludedIds.contains(pid)) continue;
-                        double timeWeight = getTimeDecayWeight(o.getOrderPlacementTime(), now);
+                        double timeWeight = HelpUtil.getTimeDecayWeight(o.getOrderPlacementTime(), now);
                         productScoreMap.put(pid, productScoreMap.getOrDefault(pid, 0.0) +
                                 (baseWeights.get(GorseFeedbackEnum.PURCHASE.getValue()) * timeWeight));
                     }
@@ -1544,7 +1542,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                         if (Objects.isNull(b.getProduct())) continue;
                         Long pid = b.getProduct().getId();
                         if (Objects.isNull(pid) || excludedIds.contains(pid)) continue;
-                        double timeWeight = getTimeDecayWeight(b.getBrowseStartTime(), now);
+                        double timeWeight = HelpUtil.getTimeDecayWeight(b.getBrowseStartTime(), now);
                         productScoreMap.put(pid, productScoreMap.getOrDefault(pid, 0.0) +
                                 (baseWeights.get(GorseFeedbackEnum.BROWSE.getValue()) * timeWeight));
                     }
@@ -1554,7 +1552,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                         if (Objects.isNull(s.getSearchContent())) continue;
                         Long pid = s.getId();
                         if(Objects.isNull(pid)) continue;
-                        double timeWeight = getTimeDecayWeight(s.getSearchTime(), now);
+                        double timeWeight = HelpUtil.getTimeDecayWeight(s.getSearchTime(), now);
                         productScoreMap.put(pid, productScoreMap.getOrDefault(pid, 0.0) +
                                 (baseWeights.get(GorseFeedbackEnum.SEARCH.getValue()) * timeWeight));
 
@@ -1571,41 +1569,6 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                     LinkedHashMap::new
                             ));
                     Set<Long> top3Ids = top3RatioMap.keySet();
-//                    // 重新计算权重（排除前2条的商品ID）
-//                    List<Long> allProductIds = Stream.of(
-//                                    // 1. 点击流
-//                                    clickList.stream().map(c -> Objects.nonNull(c.getProduct()) ? c.getProduct().getId() : null),
-//                                    // 2. 收藏流
-//                                    collectList.stream().map(c -> Objects.nonNull(c.getProduct()) ? c.getProduct().getId() : null),
-//                                    // 3. 购买流
-//                                    purchaseList.stream().map(PurchaseOrderVOApi::getProductId),
-//                                    // 4. 浏览流 (需要先 flatMap 展开产品列表)
-//                                    browseList.stream()
-//                                            .filter(Objects::nonNull)
-//                                            .map(b -> b.getProduct().getId())
-//                            )
-//                            .flatMap(s -> s) // 将 Stream<Stream<Long>> 展平为 Stream<Long>
-//                            .filter(Objects::nonNull)
-//                            .filter(id -> !excludedIds.contains(id))
-//                            .distinct()
-//                            .toList();
-//
-//                    int totalIds = allProductIds.isEmpty() ? 1 : allProductIds.size();
-//                    Map<Long, Double> ratioMap = allProductIds.stream()
-//                            .collect(Collectors.groupingBy(Function.identity(),
-//                                    Collectors.collectingAndThen(Collectors.counting(), c -> c * 1.0 / totalIds)));
-//
-//                    Map<Long, Double> top3RatioMap = ratioMap.entrySet().stream()
-//                            .sorted(Map.Entry.<Long, Double>comparingByValue().reversed())
-//                            .limit(3)
-//                            .collect(Collectors.toMap(
-//                                    Map.Entry::getKey,
-//                                    Map.Entry::getValue,
-//                                    (v1, v2) -> v1,
-//                                    LinkedHashMap::new)
-//                            );
-//
-//                    Set<Long> top3Ids = top3RatioMap.keySet();
 
                     // 3. 后3条（按权重取的）-> 从剩余数据中取Top3
                     // 点击
@@ -1702,22 +1665,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                 });
     }
 
-    /**
-     * 时间衰减权重计算 公式：w = e^(-λ * Δt)
-     *
-     * @param behaviorTime 行为时间
-     * @param now          当前时间
-     * @return 衰减权重
-     */
-    private double getTimeDecayWeight(LocalDateTime behaviorTime, LocalDateTime now) {
-        if (Objects.isNull(behaviorTime)) {
-            return 0.0;
-        }
-        // 计算时间差 小时
-        long hourDiff = ChronoUnit.HOURS.between(behaviorTime, now);
-        // 指数时间衰减
-        return Math.exp(-LAMBDA * hourDiff);
-    }
+
 
     /**
      * 写入 Redis 前，再次确保彻底打乱
@@ -1842,25 +1790,6 @@ public class RecommendProductServiceImpl implements RecommendProductService {
             );
         }
         return null;
-    }
-
-    private void shuffleInGroups(List<Long> list) {
-        int groupSize = ConstNumber.INT_FIVE;
-        if (list == null || list.size() <= 1) {
-            return;
-        }
-
-        int size = list.size();
-        for (int i = 0; i < size; i += groupSize) {
-            // 计算当前组的结束位置
-            int end = Math.min(i + groupSize, size);
-
-            // 如果组内元素大于 1 个，则打乱该子列表
-            if (end - i > 1) {
-                // subList 返回的是视图，直接 shuffle 会影响原 list
-                Collections.shuffle(list.subList(i, end));
-            }
-        }
     }
 
     public Mono<List<Long>> findProductIdsByTotalSalesGreaterThan(Integer salesVolume) {

@@ -184,7 +184,11 @@ public class UserClickServiceImpl implements UserClickService {
                         return Mono.zip(rowAffectedMono, save)
                                 .map(t -> t.getT2().getId());
                     });
-        });
+        })
+                .onErrorResume(e->{
+                    log.error("保存click ： ",e);
+                    return Mono.error(new Throwable("保存失败", e));
+                });
     }
 
     /**
