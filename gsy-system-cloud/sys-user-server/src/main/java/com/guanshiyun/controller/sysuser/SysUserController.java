@@ -223,11 +223,11 @@ public class SysUserController {
 
     //获取用户列表
     @PostMapping("findPage")
-    public Mono<ResultT<PageResultT<List<SysUser>>>> findPage(
-            @RequestBody(required = false) RequestPage<SysUser> requestPage) {
+    public Mono<ResultT<PageResultT<List<SysUserVO>>>> findPage(
+            @RequestBody(required = false) RequestPage<SysUserVO> requestPage) {
         return sysUserService.findPage(requestPage)
                 .map(pageResult ->
-                        ResultT.<PageResultT<List<SysUser>>>builder()
+                        ResultT.<PageResultT<List<SysUserVO>>>builder()
                                 .code(HttpStatus.OK.value())
                                 .msg("获取用户列表成功")
                                 .data(pageResult)
@@ -235,7 +235,7 @@ public class SysUserController {
                 )
                 .onErrorResume(throwable -> {
                     log.error("获取用户列表失败", throwable);
-                    return Mono.just(ResultT.<PageResultT<List<SysUser>>>builder()
+                    return Mono.just(ResultT.<PageResultT<List<SysUserVO>>>builder()
                             .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
                             .msg("获取用户列表失败")
                             .data(null)

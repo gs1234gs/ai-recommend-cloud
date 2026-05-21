@@ -2,11 +2,11 @@ package com.guanshiyun.service.address.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.ReactivePageQuery;
-import com.db.dbnumber.ConstNumber;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.address.OrderAddress;
+import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.address.vo.OrderAddressSaveVO;
 import com.guanshiyun.controller.address.vo.OrderAddressVO;
 import com.guanshiyun.mylong.MyLong;
@@ -15,7 +15,6 @@ import com.guanshiyun.repository.order.PurChaseOrderRepository;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.address.OrderAddressService;
-import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,10 +44,10 @@ public class OrderAddressServiceImpl implements OrderAddressService {
     public Mono<Long> save(OrderAddressSaveVO orderAddressSaveVO) {
         OrderAddress orderAddress = BeanUtil.toBean(orderAddressSaveVO, OrderAddress.class);
         return Mono.deferContextual(ctx -> {
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
+            if (!myLong.hasKey(ctx))
                 return Mono.error(new RuntimeException("用户未登录"));
             Long userId =
-                    myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+                    myLong.findUserId(ctx);
 
             if (Objects.isNull(orderAddress.getId())) {
                 orderAddress.setCreator(userId);
@@ -76,18 +75,20 @@ public class OrderAddressServiceImpl implements OrderAddressService {
     @Override
     public Mono<Void> deleteById(Long id) {
         return Mono.deferContextual(ctx -> {
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
+            if (!myLong.hasKey(ctx))
                 return Mono.error(new RuntimeException("用户未登录"));
             Long userId =
-                    myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+                    myLong.findUserId(ctx);
+            String name = EntityTableNameUtils.getName(OrderAddress.class);;
+            OrderAddress orderAddress = OrderAddress.builder()
+                    .id(id)
+                    .updater(userId)
+                    .updateTime(LocalDateTime.now())
+                    .delFlag((short) 1)
+                    .build();
             return r2dbcUpdateHelper.updateIgnoreNull(
-                            EntityTableNameUtils.getName(OrderAddress.class),
-                            OrderAddress.builder()
-                                    .id(id)
-                                    .updater(userId)
-                                    .updateTime(LocalDateTime.now())
-                                    .delFlag(ConstNumber.SHORT_ONE)
-                                    .build(),
+                            name,
+                            orderAddress,
                             OrderAddress.Fields.id)
                     .then()
                     .onErrorResume(throwable -> {
@@ -125,10 +126,10 @@ public class OrderAddressServiceImpl implements OrderAddressService {
     @Override
     public Mono<List<OrderAddressVO>> findByUserId() {
         return Mono.deferContextual(ctx -> {
-            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY))
+            if (!myLong.hasKey(ctx))
                 return Mono.error(new RuntimeException("用户未登录"));
             Long userId =
-                    myLong.myLong(ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY));
+                    myLong.findUserId(ctx);
 
             return orderAddressRepository.findByUserId(userId)
                     .map(orderAddress ->
@@ -168,15 +169,21 @@ public class OrderAddressServiceImpl implements OrderAddressService {
         RequestPage<OrderAddressVO> orderAddressVORequestPage = PageUtils.pageValidation(requestPage, OrderAddressVO.class);
         RequestPage<OrderAddress> page = BeanConvertUtil.toBean(orderAddressVORequestPage, OrderAddress.class);
 
-        return ReactivePageQuery.of(r2dbcEntityTemplate, OrderAddress.class, page)
-                .page()
-                .map(pageResultT -> PageResultT.<List<OrderAddressVO>>builder()
-                        .pageNum(pageResultT.getPageNum())
-                        .pageSize(pageResultT.getPageSize())
-                        .total(pageResultT.getTotal())
-                        .rows(BeanConvertUtil.toBeanList(pageResultT.getRows(), OrderAddressVO.class))
-                        .build()
+        return Mono.deferContextual(ctx -> {
+            if (!myLong.hasKey(ctx))
+                return Mono.error(new RuntimeException("用户未登录"));
+            Long userId = myLong.findUserId(ctx);
+           return ReactivePageQuery.of(r2dbcEntityTemplate, OrderAddress.class, page)
+                   .eq(BasePojo.Fields.creator, userId)
+                    .page()
+                    .map(pageResultT -> PageResultT.<List<OrderAddressVO>>builder()
+                            .pageNum(pageResultT.getPageNum())
+                            .pageSize(pageResultT.getPageSize())
+                            .total(pageResultT.getTotal())
+                            .rows(BeanConvertUtil.toBeanList(pageResultT.getRows(), OrderAddressVO.class))
+                            .build()
 
-                );
+                    );
+        });
     }
 }

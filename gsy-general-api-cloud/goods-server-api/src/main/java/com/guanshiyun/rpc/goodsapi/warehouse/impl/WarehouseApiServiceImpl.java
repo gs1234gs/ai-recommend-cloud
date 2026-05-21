@@ -1,16 +1,15 @@
 package com.guanshiyun.rpc.goodsapi.warehouse.impl;
 
 import com.guanshiyun.goodsenum.GoodsApiUrl;
+import com.guanshiyun.profile.WarehouseApiVO;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.rpc.config.GoodsWebClientRpc;
 import com.guanshiyun.rpc.goodsapi.warehouse.WarehouseApiService;
-import com.guanshiyun.profile.WarehouseApiVO;
-import com.guanshiyun.webutils.WebClientUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
 
 import java.util.List;
 
@@ -31,7 +30,8 @@ public class WarehouseApiServiceImpl implements WarehouseApiService {
                 )
                 .bodyValue(requestPage)
                 .retrieve()
-                .bodyToMono(WebClientUtils.typeRef());
+                .bodyToMono(new ParameterizedTypeReference<ResultT<List<WarehouseApiVO>>>() {
+                });
     }
 
     //获取仓库列表
@@ -45,7 +45,8 @@ public class WarehouseApiServiceImpl implements WarehouseApiService {
                         .build(productId)
                 )
                 .retrieve()
-                .bodyToMono(WebClientUtils.typeRef());
+                .bodyToMono(new ParameterizedTypeReference<ResultT<List<WarehouseApiVO>>>() {
+                });
     }
 
     //获取仓库列表
@@ -59,7 +60,8 @@ public class WarehouseApiServiceImpl implements WarehouseApiService {
                         .build()
                 )
                 .retrieve()
-                .bodyToMono(WebClientUtils.typeRef());
+                .bodyToMono(new ParameterizedTypeReference<ResultT<List<WarehouseApiVO>>>() {
+                });
     }
 
     @Override
@@ -72,6 +74,7 @@ public class WarehouseApiServiceImpl implements WarehouseApiService {
                         .build(warehouseId)
                 )
                 .retrieve()
-                .bodyToMono(WebClientUtils.typeRef());
+                .bodyToMono(new ParameterizedTypeReference<ResultT<WarehouseApiVO>>() {
+                });
     }
 }

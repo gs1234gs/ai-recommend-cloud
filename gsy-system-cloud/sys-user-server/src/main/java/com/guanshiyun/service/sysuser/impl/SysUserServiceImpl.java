@@ -63,14 +63,15 @@ public class SysUserServiceImpl implements SysUserService {
      * @return Flux<SysUser>
      */
     @Override
-    public Mono<PageResultT<List<SysUser>>> findPage(RequestPage<SysUser> requestPage) {
+    public Mono<PageResultT<List<SysUserVO>>> findPage(RequestPage<SysUserVO> requestPage) {
         RequestPage<SysUser> sysUserRequestPage = BeanConvertUtil.toBean(requestPage, SysUser.class);
         return ReactivePageQuery.of(template, SysUser.class, sysUserRequestPage)
                 .orderByDesc(SysUser.Fields.id)
                 .like(SysUser.Fields.username, requestPage.getCondition().getUsername())
                 .like(SysUser.Fields.nickName, requestPage.getCondition().getNickName())
                 .orderByDesc(BasePojo.Fields.createTime)
-                .page();
+                .page()
+                .map(page -> BeanConvertUtil.toBean(page, SysUserVO.class));
     }
 
     /**

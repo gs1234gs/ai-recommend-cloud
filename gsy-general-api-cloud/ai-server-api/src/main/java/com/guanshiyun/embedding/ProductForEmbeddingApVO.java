@@ -62,7 +62,7 @@ public class ProductForEmbeddingApVO implements Serializable {
             sb.append(String.join(" ", tagNames));
         }
 
-        return sb.toString().trim();
+        return sb.toString();
     }
 
     /**

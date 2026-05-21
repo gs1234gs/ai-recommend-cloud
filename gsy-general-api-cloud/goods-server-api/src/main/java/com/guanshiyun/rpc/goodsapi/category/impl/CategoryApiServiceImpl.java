@@ -1,16 +1,14 @@
 package com.guanshiyun.rpc.goodsapi.category.impl;
 
 import com.guanshiyun.goodsenum.GoodsApiUrl;
+import com.guanshiyun.profile.CategoryApiVO;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.rpc.config.GoodsWebClientRpc;
 import com.guanshiyun.rpc.goodsapi.category.CategoryApiService;
-import com.guanshiyun.profile.CategoryApiVO;
-import com.guanshiyun.webutils.WebClientUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
-
 
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class CategoryApiServiceImpl implements CategoryApiService {
                                         .build()
                                 )
                                 .retrieve()
-                                .bodyToMono(WebClientUtils.typeRef());
+                                .bodyToMono(new ParameterizedTypeReference<ResultT<List<CategoryApiVO>>>() {});
     }
 
     @Override

@@ -7,7 +7,6 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 
-
 import java.time.LocalDateTime;
 /**
  * 基础实体对象
@@ -44,5 +43,5 @@ public class BasePojo {
     /**
      * 是否删除，删除标记,0-未删除，1-已删除
      */
-    private short delFlag;
+    private Short delFlag;
 }

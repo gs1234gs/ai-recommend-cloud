@@ -619,7 +619,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
      * 购买记录从远程API获取，商品和分类信息从本地数据库查询，然后组合
      */
     private Mono<List<PurchaseOrderVOApi>> findPurchaseOrdersWithProductInfo() {
-        return purchaseOrderServiceApi.findByRows(ConstNumber.INT_TWO)
+        return purchaseOrderServiceApi.findByRows(ConstNumber.INT_FIVE)
                 .flatMap(r -> {
                     List<PurchaseOrderVOApi> purchaseOrderVOApis = Optional.ofNullable(r.getData()).orElse(new ArrayList<>());
                     if (purchaseOrderVOApis.isEmpty()) {
@@ -837,7 +837,26 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                         .toList())
                 .build();
     }
+    /**
+     * 从搜索记录构建推荐输入对象（新增）
+     */
+    private ProductForEmbeddingApVO buildProductForEmbeddingFromSearch(SearchContentApi search,
+                                                                         Map<Long, Double> ratioMap) {
+        Long productId = search.getId();
 
+        // 则默认给 1.0 (最高权重)
+        Double score = 1.0;
+        if (ratioMap != null && ratioMap.containsKey(productId)) {
+            score = ratioMap.get(productId);
+        }
+        return ProductForEmbeddingApVO.builder()
+                .id(productId)
+                .title(search.getSearchContent())
+                .score(score)
+                .categoryNames(List.of(search.getSearchContent()))
+                .tagNames(List.of(search.getSearchContent()))
+                .build();
+    }
     /**
      * 从浏览记录构建推荐输入对象
      *
@@ -1386,11 +1405,11 @@ public class RecommendProductServiceImpl implements RecommendProductService {
      */
 
     private Mono<Void> refillPoolWithAiLogic(String poolKey) {
-        Mono<ResultT<List<ClickProfileApi>>> clickMono = userClickServiceApi.findUserClickRecord(ConstNumber.INT_TWO);
-        Mono<ResultT<List<CollectProfileApi>>> collectMono = userCollectServiceApi.findUserCollectRecord(ConstNumber.INT_TWO);
-        Mono<ResultT<List<SearchContentApi>>> searchMono = userSearchServiceApi.findUserSearchRecord(ConstNumber.INT_TWO);
+        Mono<ResultT<List<ClickProfileApi>>> clickMono = userClickServiceApi.findUserClickRecord(ConstNumber.INT_FIVE);
+        Mono<ResultT<List<CollectProfileApi>>> collectMono = userCollectServiceApi.findUserCollectRecord(ConstNumber.INT_FIVE);
+        Mono<ResultT<List<SearchContentApi>>> searchMono = userSearchServiceApi.findUserSearchRecord(ConstNumber.INT_FIVE);
         Mono<List<PurchaseOrderVOApi>> orderMono = findPurchaseOrdersWithProductInfo();
-        Mono<ResultT<List<BrowseProfileApi>>> apiUserBrowseRecord = userBrowseServiceApi.findUserBrowseRecord(ConstNumber.INT_TWO);
+        Mono<ResultT<List<BrowseProfileApi>>> apiUserBrowseRecord = userBrowseServiceApi.findUserBrowseRecord(ConstNumber.INT_FIVE);
 
         return Mono.zip(clickMono, collectMono, searchMono, orderMono, apiUserBrowseRecord)
                 .flatMap(tuple -> {
@@ -1475,7 +1494,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                         } else {
                             // 其他类型用商品ID构造
                             Long productId = br.getProductId();
-                            // 从原数据中获取商品详情（此处简化，实际需根据类型构造）
+                            // 从原数据中获取商品详情
                             ProductForEmbeddingApVO vo = buildProductForEmbeddingFromBehavior(br);
                             if (vo != null) embeddingInput.add(vo);
                         }
@@ -1528,6 +1547,17 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                         double timeWeight = getTimeDecayWeight(b.getBrowseStartTime(), now);
                         productScoreMap.put(pid, productScoreMap.getOrDefault(pid, 0.0) +
                                 (baseWeights.get(GorseFeedbackEnum.BROWSE.getValue()) * timeWeight));
+                    }
+
+                    //搜索行为打分
+                    for (SearchContentApi s : searchList) {
+                        if (Objects.isNull(s.getSearchContent())) continue;
+                        Long pid = s.getId();
+                        if(Objects.isNull(pid)) continue;
+                        double timeWeight = getTimeDecayWeight(s.getSearchTime(), now);
+                        productScoreMap.put(pid, productScoreMap.getOrDefault(pid, 0.0) +
+                                (baseWeights.get(GorseFeedbackEnum.SEARCH.getValue()) * timeWeight));
+
                     }
 
                     // 综合得分倒序 取Top3
@@ -1612,6 +1642,8 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                     embeddingInput.add(vo);
                                 }
                             });
+                    searchList.stream().filter(s -> top3Ids.contains(s.getId()))
+                            .forEach(s -> embeddingInput.add(buildProductForEmbeddingFromSearch(s, top3RatioMap)));
                     RequestBodyProductForEmbeddingApVO<List<ProductForEmbeddingApVO>> requestBody =
                             RequestBodyProductForEmbeddingApVO.<List<ProductForEmbeddingApVO>>builder()
                                     .topK(ProductKey.RECOMMEND_POOL_SIZE)
@@ -1726,6 +1758,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
         baseWeights.put(GorseFeedbackEnum.COLLECT.getValue(), 3.0);    // 收藏基础分（更强烈的兴趣）
         baseWeights.put(GorseFeedbackEnum.PURCHASE.getValue(), 5.0);   // 购买基础分（最强的兴趣）
         baseWeights.put(GorseFeedbackEnum.BROWSE.getValue(), 0.5);
+        baseWeights.put(GorseFeedbackEnum.SEARCH.getValue(), 0.5);
         // 浏览基础分（弱兴趣）
         return baseWeights;
     }

@@ -6,12 +6,13 @@ import com.guanshiyun.mylong.MyLong;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.util.ReflectionUtils;
 import reactor.core.publisher.Mono;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 @Slf4j
@@ -31,41 +32,51 @@ public class R2dbcUpdateHelper {
      */
     public <T> Mono<Long> updateIgnoreNull(String tableName, T entity, String idFieldName) {
         Map<String, Object> updateFields = new LinkedHashMap<>();
-        Object idValue = null;
+        AtomicReference<Object> idValueRef = new AtomicReference<>();
 
         // 遍历实体字段
-        Field[] fields = entity.getClass().getDeclaredFields();
-        for (Field field : fields) {
+        ReflectionUtils.doWithFields(entity.getClass(), field -> {
+            // 过滤掉 static 和 transient 字段
             if (Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) {
-                continue;
+                return;
             }
+
             field.setAccessible(true);
             try {
                 Object value = field.get(entity);
+
+                // 记录 ID 值
                 if (field.getName().equals(idFieldName)) {
-                    idValue = value;
-                    continue;
+
+                    idValueRef.set(value);
+                    return; // 注意：这里用 return 跳过后续逻辑，不要把 ID 放进 updateFields
                 }
+
+                // 【核心逻辑】忽略 null 值，实现动态更新
                 if (value != null) {
                     updateFields.put(field.getName(), value);
                 }
             } catch (IllegalAccessException e) {
-                log.error("获取字段值失败", e);
+                log.error("获取字段值失败, field: {}", field.getName(), e);
             }
-        }
+        });
 
-        if (updateFields.isEmpty() || idValue == null) {
+        if (updateFields.isEmpty() || idValueRef.get() == null) {
             return Mono.just(ConstNumber.LONG_ZERO);
         }
 
         //  驼峰转下划线工具方法
-        Function<String, String> camelToUnderline = (name) -> {
+        Function<String, String> camelToUnderline = name -> {
             if (name == null || name.isEmpty()) return name;
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < name.length(); i++) {
                 char ch = name.charAt(i);
                 if (Character.isUpperCase(ch)) {
-                    sb.append('_').append(Character.toLowerCase(ch));
+                    // 如果不是第一个字符，才加下划线
+                    if (i > 0) {
+                        sb.append('_');
+                    }
+                    sb.append(Character.toLowerCase(ch));
                 } else {
                     sb.append(ch);
                 }
@@ -92,13 +103,12 @@ public class R2dbcUpdateHelper {
         for (Map.Entry<String, Object> entry : updateFields.entrySet()) {
             spec = spec.bind(entry.getKey(), entry.getValue()); // bind(:updateTime, value)
         }
-        spec = spec.bind(idFieldName, idValue);
+        Object realIdValue = idValueRef.get();
+        spec = spec.bind(idFieldName, realIdValue  );
 
-//        return spec.fetch().rowsUpdated().map(Long::valueOf);
         // 执行并判断是否更新成功
-        final Object idValueTemp = idValue;
         return spec.fetch()
                 .rowsUpdated()
-                .flatMap(rowsUpdated -> rowsUpdated > 0 ? Mono.just(myLong.longOrNull(idValueTemp)) : Mono.empty());
+                .flatMap(rowsUpdated -> rowsUpdated > 0 ? Mono.just(myLong.longOrNull(realIdValue)) : Mono.empty());
     }
 }

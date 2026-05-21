@@ -29,7 +29,6 @@ public class OrderAddressController {
         return orderAddressService.save(orderAddressSaveVO)
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
-                    log.error("添加地址失败", throwable);
                     return Mono.error(new Exception("添加地址失败"));
                 });
     }

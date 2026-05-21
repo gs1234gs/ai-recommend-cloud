@@ -1,7 +1,10 @@
 package com.guanshiyun.address;
 
 import com.guanshiyun.base.BasePojo;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
@@ -13,10 +16,9 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @EqualsAndHashCode(callSuper = true)
 @FieldNameConstants
-@ToString(callSuper = true)
 @Table("order_address")
 public class OrderAddress extends BasePojo implements Serializable {
     @Serial

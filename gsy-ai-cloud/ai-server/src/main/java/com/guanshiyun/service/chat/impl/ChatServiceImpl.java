@@ -390,6 +390,9 @@ public class ChatServiceImpl implements ChatService {
     }
 
 
+    /**
+     * 流式会话推荐
+     * */
     @Override
     public Mono<Tuple2<Flux<String>, Long>> chatFluxRecommend(ReqChat reqChat) {
         return Mono.deferContextual(ctx -> {

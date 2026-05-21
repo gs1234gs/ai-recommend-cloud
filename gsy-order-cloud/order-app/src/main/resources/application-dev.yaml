@@ -69,6 +69,7 @@ server:
 logging:
   level:
     root: info
+    io.asyncer.r2dbc.mysql: debug
     io.r2dbc.spi: debug           # R2DBC SPI 层日志
     org.springframework.r2dbc.core: debug   # Spring R2DBC 核心模板日志
     com.zaxxer.r2dbc: debug       # 如果使用 HikariR2DBC（不常见）

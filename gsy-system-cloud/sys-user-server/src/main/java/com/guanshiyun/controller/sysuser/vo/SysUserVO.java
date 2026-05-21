@@ -53,7 +53,6 @@ public class SysUserVO extends BasePojo implements Serializable {
     //登陆时间
     private LocalDateTime loginTime;
 
-
     //角色id
     private List<SysRoleVO> roles;
     //备注
