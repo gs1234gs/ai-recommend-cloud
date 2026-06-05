@@ -18,6 +18,7 @@
         <module>behavior-server-api</module>
         <module>order-server-api</module>
         <module>upload-server-api</module>
+        <module>review-server-api</module>
     </modules>
     <artifactId>gsy-general-api-cloud</artifactId>
     <name>gsy-general-api-cloud</name>

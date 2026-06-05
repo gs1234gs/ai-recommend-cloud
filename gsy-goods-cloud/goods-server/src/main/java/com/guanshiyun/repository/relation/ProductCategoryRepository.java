@@ -22,4 +22,7 @@ public interface ProductCategoryRepository extends R2dbcRepository<ProductCatego
 
     @Query("select * from product_category where product_id in (:productList)")
     Mono<Void> deleteAllByProductIds(List<Long> productList);
+
+    @Query("delete from product_category where product_id = :productId")
+    Mono<Void> deleteByProductId(Long productId);
 }

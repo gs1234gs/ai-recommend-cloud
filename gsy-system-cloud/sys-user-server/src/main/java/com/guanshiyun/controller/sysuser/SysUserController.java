@@ -8,7 +8,6 @@ import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.sysuser.SysUserService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
-import com.guanshiyun.userpojo.SysUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -190,7 +189,7 @@ public class SysUserController {
 
     //添加用户
     @PostMapping("save")
-    public Mono<ResultT<Long>> save(@RequestBody SysUserSaveVO sysUserSaveVO) {
+    public Mono<ResultT<Long>> save(@RequestBody(required = false) SysUserSaveVO sysUserSaveVO) {
         return sysUserService.save(sysUserSaveVO)
                 .flatMap(id ->
                         Mono.just(

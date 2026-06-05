@@ -1,0 +1,101 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.guanshiyun</groupId>
+        <artifactId>guanshiyun</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>gsy-review-cloud</artifactId>
+    <packaging>pom</packaging>
+
+    <name>gsy-review-cloud</name>
+    <url>http://maven.apache.org</url>
+    <modules>
+        <module>review-app</module>
+        <module>review-server</module>
+        <module>review-pojo</module>
+        <module>review-common-utils</module>
+    </modules>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit.version>4.13.2</junit.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.guanshiyun</groupId>
+            <artifactId>goods-server-api</artifactId>
+            <version>${snapshotName}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+
+        <!-- 【关键】WebFlux 专用适配器，替代 sentinel-web-servlet -->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-spring-webflux-adapter</artifactId>
+
+        </dependency>
+        <!-- 规则持久化依赖 -->
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-datasource-nacos</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.guanshiyun</groupId>
+            <artifactId>public-pojo-spring-boot-starter</artifactId>
+            <version>${snapshotName}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.guanshiyun</groupId>
+            <artifactId>microservice-security-spring-boot-starter</artifactId>
+            <version>${snapshotName}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.guanshiyun</groupId>
+            <artifactId>db-table-spring-boot-starter</artifactId>
+            <version>${snapshotName}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.guanshiyun</groupId>
+            <artifactId>review-server-api</artifactId>
+            <version>${snapshotName}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-r2dbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.asyncer</groupId>
+            <artifactId>r2dbc-mysql</artifactId>
+        </dependency>
+        <!-- H2 Database (for dev) -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- R2DBC Driver for H2 -->
+        <dependency>
+            <groupId>io.r2dbc</groupId>
+            <artifactId>r2dbc-h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.guanshiyun</groupId>
+            <artifactId>common-utils-spring-boot-starter</artifactId>
+            <version>${snapshotName}</version>
+        </dependency>
+    </dependencies>
+</project>

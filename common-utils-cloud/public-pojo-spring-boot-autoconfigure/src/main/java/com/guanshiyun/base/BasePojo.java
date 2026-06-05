@@ -6,6 +6,11 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.relational.core.mapping.Column;
 
 import java.time.LocalDateTime;
 /**
@@ -27,21 +32,26 @@ public class BasePojo {
      * 创建者，目前使用 SysUser 的 id 编号
      *
      */
+    @CreatedBy
     private Long creator;
     /**
      * 更新者，目前使用 SysUser 的 id 编号
      */
+    @LastModifiedBy
     private Long updater;
     /**
      * 创建时间
      */
+    @CreatedDate
     private LocalDateTime createTime;
     /**
      * 最后更新时间
      */
+    @LastModifiedDate
     private LocalDateTime updateTime;
     /**
      * 是否删除，删除标记,0-未删除，1-已删除
      */
+    @Column("del_flag")
     private Short delFlag;
 }

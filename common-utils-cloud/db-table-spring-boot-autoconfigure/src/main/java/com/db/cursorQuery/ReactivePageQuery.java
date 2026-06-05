@@ -38,6 +38,8 @@ public class ReactivePageQuery<T> {
         this.validatedPage = PageUtils.pageValidation(page,entityClass);
     }
 
+
+
     public static <T> ReactivePageQuery<T> of(R2dbcEntityTemplate r2dbcEntityTemplate,
                                         Class<T> entityClass,
                                         RequestPage<T> page) {

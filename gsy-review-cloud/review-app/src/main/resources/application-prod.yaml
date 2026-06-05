@@ -1,0 +1,75 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+      discovery:
+        namespace: dev
+    sentinel:
+      transport:
+        dashboard: localhost:8888
+        port: 8719
+      eager: true
+
+      datasource:
+        ds-authority:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr} # 建议引用上方配置，避免硬编码
+            namespace: ${spring.cloud.nacos.discovery.namespace}
+            data-id: ${spring.application.name}-authority-rules
+            group-id: DEFAULT_GROUP
+            rule-type: authority
+            data-type: json
+        ds-flow:
+          nacos:
+            server-addr: ${spring.cloud.nacos.server-addr}
+            namespace: ${spring.cloud.nacos.discovery.namespace} # 【必须添加】同上
+            data-id: ${spring.application.name}-flow-rules
+            group-id: DEFAULT_GROUP
+            rule-type: flow
+            data-type: json
+      enabled: false
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/gsy-order-cloud
+    username: root
+    password: 1234
+  #开启表校验
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+      #      password: yourpassword
+      database: 0
+      timeout: 5000ms
+      lettuce:
+        pool:
+          max-active: 8     # 最大活跃连接数
+          max-idle: 8       # 最大空闲连接数
+          min-idle: 0       # 最小空闲连接数
+          max-wait: -1ms    # 获取连接的最大等待时间（-1 表示无限制）
+    mongodb:
+      uri: mongodb://127.0.0.1:27017/gsy-order-cloud
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      write-dates-as-timestamps: false
+  webflux:
+    multipart:
+      max-in-memory-size: 100MB
+
+gorse:
+  url: 127.0.0.1:8087
+  api-key: api-key
+
+server:
+  port: 9533
+
+logging:
+  level:
+    root: info
+    io.r2dbc.spi: info           # R2DBC SPI 层日志
+    org.springframework.r2dbc.core: info   # Spring R2DBC 核心模板日志
+    com.zaxxer.r2dbc: info       # 如果使用 HikariR2DBC（不常见）
+    com.alibaba.nacos.client: info

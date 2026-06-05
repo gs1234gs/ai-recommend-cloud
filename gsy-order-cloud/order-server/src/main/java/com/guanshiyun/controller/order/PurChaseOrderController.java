@@ -63,7 +63,7 @@ public class PurChaseOrderController {
     }
     @PostMapping("findByUserIdPage")
     public Mono<ResultT<PageResultT<List<PurChaseOrderVO>>>> findByUserIdPage(
-            @RequestBody RequestPage<PurchaseOrderSearchVO> requestPage) {
+            @RequestBody(required = false) RequestPage<PurchaseOrderSearchVO> requestPage) {
         return purChaseOrderService.findByUserIdPage(requestPage)
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {

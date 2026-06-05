@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.13</version>
+        <version>3.5.14</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <packaging>pom</packaging>
@@ -46,7 +46,7 @@
         <url/>
     </scm>
     <properties>
-        <java.version>25</java.version>
+        <java.version>21</java.version>
         <project-version>2025.0.0.0</project-version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
         <snapshotName>0.0.1-SNAPSHOT</snapshotName>
@@ -64,7 +64,7 @@
 <!--        <jaxbapi.version>2.3.1</jaxbapi.version>-->
 <!--        <jafx.version>1.1.1</jafx.version>-->
         <gorse.version>0.5.0</gorse.version>
-        <alibabacloud-oss-v2.version>0.3.2</alibabacloud-oss-v2.version>
+        <alibabacloud-oss-v2.version>0.4.0</alibabacloud-oss-v2.version>
         <aliyun.sms.version>1.0.7</aliyun.sms.version>
     </properties>
     <repositories>

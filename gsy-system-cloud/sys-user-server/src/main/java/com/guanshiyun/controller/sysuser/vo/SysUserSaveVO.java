@@ -1,7 +1,10 @@
 package com.guanshiyun.controller.sysuser.vo;
 
-import com.guanshiyun.base.BasePojo;
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 import lombok.experimental.SuperBuilder;
 
@@ -10,13 +13,14 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode()
 @Data
 @SuperBuilder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldNameConstants
-public class SysUserSaveVO extends BasePojo implements Serializable {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class SysUserSaveVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
     private Long id;

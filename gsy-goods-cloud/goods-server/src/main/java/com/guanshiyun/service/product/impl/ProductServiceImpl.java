@@ -352,6 +352,10 @@ public class ProductServiceImpl implements ProductService {
                         skuRepository.deleteAllByProductId(id)
                                 .thenReturn(deleteCount)
                 )
+                .flatMap(deleteCount->
+                        productCategoryRepository.deleteByProductId(id)
+                                .thenReturn(deleteCount)
+                )
                 .flatMap(count -> {
                     //删除ai
                     return aiChatClientRecommendServiceApi.

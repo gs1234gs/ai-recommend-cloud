@@ -40,7 +40,7 @@ public class Test {
 
     static ListNode remove(ListNode head, int n) {
         // 边界校验
-        if (head == null) {
+        if (Objects.isNull( head)) {
             throw new IllegalArgumentException("head is null");
         }
         if (n <= 0 ) {

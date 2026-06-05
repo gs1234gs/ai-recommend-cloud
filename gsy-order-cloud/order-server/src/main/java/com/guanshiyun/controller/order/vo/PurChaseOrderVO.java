@@ -1,5 +1,6 @@
 package com.guanshiyun.controller.order.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.address.vo.OrderAddressVO;
 import com.guanshiyun.profile.TagApiVO;
@@ -23,6 +24,7 @@ import java.util.List;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 @Accessors(chain = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PurChaseOrderVO extends BasePojo implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;

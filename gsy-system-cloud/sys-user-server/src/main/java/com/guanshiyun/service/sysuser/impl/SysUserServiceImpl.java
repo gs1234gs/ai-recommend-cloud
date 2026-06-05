@@ -2,7 +2,7 @@ package com.guanshiyun.service.sysuser.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import com.db.cursorQuery.ReactivePageQuery;
+import com.db.cursorQuery.ReactiveQuery;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.base.BasePojo;
@@ -25,7 +25,6 @@ import com.guanshiyun.userpojo.SysUser;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,7 +42,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class SysUserServiceImpl implements SysUserService {
     private final SysUserRepository sysUserRepository;
-    private final R2dbcEntityTemplate template;
     private final PasswordEncoder passwordEncoder;
     private final SysUserRoleRepository sysUserRoleRepository;
     private final TransactionalOperator transactionalOperator;
@@ -52,7 +50,7 @@ public class SysUserServiceImpl implements SysUserService {
     private final MyLong myLong;
     private final SysRoleRepository sysRoleRepository;
     private final TenantRepository tenantRepository;
-    private final R2dbcEntityTemplate r2dbcEntityTemplate;
+    private final ReactiveQuery reactiveQuery;
 
     /**
      * Keyset分页查询SysUser
@@ -65,7 +63,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public Mono<PageResultT<List<SysUserVO>>> findPage(RequestPage<SysUserVO> requestPage) {
         RequestPage<SysUser> sysUserRequestPage = BeanConvertUtil.toBean(requestPage, SysUser.class);
-        return ReactivePageQuery.of(template, SysUser.class, sysUserRequestPage)
+        return reactiveQuery.createQuery(SysUser.class, sysUserRequestPage)
                 .orderByDesc(SysUser.Fields.id)
                 .like(SysUser.Fields.username, requestPage.getCondition().getUsername())
                 .like(SysUser.Fields.nickName, requestPage.getCondition().getNickName())
@@ -175,7 +173,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public Mono<Long> save(SysUserSaveVO sysUserSaveVO) {
         final String[] password = {sysUserSaveVO.getPassword()};
-        sysUserSaveVO.setCreateTime(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
         return Mono.deferContextual(ctx -> {
             if (!myLong.hasKey(ctx))
                 return Mono.error(new Exception("用户ID不存在"));
@@ -183,14 +181,14 @@ public class SysUserServiceImpl implements SysUserService {
                     myLong.findUserId(ctx);
             SysUser sysUser = BeanConvertUtil.toBean(sysUserSaveVO, SysUser.class);
             //id为空，表示新增
-            if (Objects.isNull(sysUserSaveVO.getId())) {
+            if (Objects.isNull(sysUser.getId())) {
                 sysUser.setCreator(userId);
-                sysUser.setCreateTime(LocalDateTime.now());
+                sysUser.setCreateTime(now);
                 //密码为空，默认密码为123456
                 if (Objects.isNull(password[0])) {
                     password[0] = "123456";
                 }
-                sysUserSaveVO.setPassword(passwordEncoder.encode(password[0]));
+                sysUser.setPassword(passwordEncoder.encode(password[0]));
                 return sysUserRepository.save(sysUser)
                         .flatMap(sysUserSave ->
                                 sysUserRoleRepository.saveAll(
@@ -214,7 +212,7 @@ public class SysUserServiceImpl implements SysUserService {
             }
             //id不为空，表示修改
             sysUser.setUpdater(userId);
-            sysUser.setUpdateTime(LocalDateTime.now());
+            sysUser.setUpdateTime(now);
             //密码不为空，表示修改密码，否则不修改
             if(Objects.nonNull(password[0])) {
                 sysUser.setPassword(passwordEncoder.encode(password[0]));

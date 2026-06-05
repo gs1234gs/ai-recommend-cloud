@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.13</version>
+        <version>3.5.14</version>
         <relativePath/>
         <!-- lookup parent from repository -->
     </parent>
@@ -27,6 +27,7 @@
 <!--        <module>gsy-pay-cloud</module>-->
         <module>gsy-behavior-cloud</module>
         <module>gsy-upload-cloud</module>
+        <module>gsy-review-cloud</module>
     </modules>
     <url/>
     <licenses>
@@ -42,30 +43,59 @@
         <url/>
     </scm>
     <properties>
-        <java.version>25</java.version>
+        <java.version>21</java.version>
         <project-version>2025.0.0.0</project-version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
 <!--        <fastjson.version>2.0.61</fastjson.version>-->
         <snapshotName>0.0.1-SNAPSHOT</snapshotName>
-        <r2dbc.mysql.version>1.4.1</r2dbc.mysql.version>
+        <r2dbc.mysql.version>1.4.2</r2dbc.mysql.version>
         <junit.version>4.13.2</junit.version>
         <hutool.version>5.8.44</hutool.version>
-        <spring-ai.version>1.1.4</spring-ai.version>
-        <spring-alibaba-ai.version>1.1.2.2</spring-alibaba-ai.version>
+        <spring-ai.version>1.1.6</spring-ai.version>
+        <spring-alibaba-ai.version>1.1.2.3</spring-alibaba-ai.version>
 <!--        <mcp.version>0.17.0</mcp.version>-->
 <!--        <mcp.webflux.version>0.8.0</mcp.webflux.version>-->
         <aliyun.core.version>4.7.8</aliyun.core.version>
         <gorse.version>0.5.0</gorse.version>
-        <all.dash.version>2.22.14</all.dash.version>
+        <all.dash.version>2.22.18</all.dash.version>
         <common.version>2.1</common.version>
 <!--        <reactive.feign.version>4.2.1</reactive.feign.version>-->
 <!--        <jaxb.api.version>2.3.1</jaxb.api.version>-->
         <powerjob.version>5.1.2</powerjob.version>
         <sentinel.version>1.8.9</sentinel.version>
+        <djl.version>0.29.0</djl.version>
+        <jasync.version>2.2.4</jasync.version>
+        <ai.djl.pytorch.version>1.9.1</ai.djl.pytorch.version>
 
     </properties>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.github.jasync-sql</groupId>
+                <artifactId>jasync-mysql</artifactId>
+                <version>${jasync.version}</version>
+            </dependency>
+            <!-- Source: https://mvnrepository.com/artifact/ai.djl/api -->
+            <dependency>
+                <groupId>ai.djl</groupId>
+                <artifactId>api</artifactId>
+                <version>${djl.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <!-- Source: https://mvnrepository.com/artifact/ai.djl.pytorch/pytorch-native-auto -->
+            <dependency>
+                <groupId>ai.djl.pytorch</groupId>
+                <artifactId>pytorch-native-auto</artifactId>
+                <version>${ai.djl.pytorch.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <!-- Source: https://mvnrepository.com/artifact/ai.djl.pytorch/pytorch-engine -->
+            <dependency>
+                <groupId>ai.djl.pytorch</groupId>
+                <artifactId>pytorch-engine</artifactId>
+                <version>${djl.version}</version>
+                <scope>compile</scope>
+            </dependency>
             <dependency>
                 <groupId>com.alibaba.csp</groupId>
                 <artifactId>sentinel-spring-webflux-adapter</artifactId>

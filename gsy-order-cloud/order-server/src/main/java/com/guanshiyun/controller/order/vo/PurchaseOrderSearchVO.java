@@ -1,5 +1,6 @@
 package com.guanshiyun.controller.order.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 @Accessors(chain = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PurchaseOrderSearchVO {
     //开始时间
     private LocalDateTime startTime;

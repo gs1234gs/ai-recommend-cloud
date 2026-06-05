@@ -9,7 +9,6 @@ import lombok.experimental.Accessors;
 /**
  * 提供泛型的分页结果类
  * */
-@ToString
 @Data
 @Builder// 用于创建对象时，自动填充属性的注解，使用链式调用
 @AllArgsConstructor

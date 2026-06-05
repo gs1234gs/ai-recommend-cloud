@@ -14,9 +14,9 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 public class RequestPage<T> {
     // 当前页码
-    private Long pageNum;
+    private Long pageNum = 1L;
     // 每页数量
-    private Integer pageSize;
+    private Integer pageSize = 10;
     // 查询条件
     private T condition;
 }
