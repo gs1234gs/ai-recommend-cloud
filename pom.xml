@@ -43,7 +43,7 @@
         <url/>
     </scm>
     <properties>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <project-version>2025.0.0.0</project-version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
 <!--        <fastjson.version>2.0.61</fastjson.version>-->
@@ -51,7 +51,7 @@
         <r2dbc.mysql.version>1.4.2</r2dbc.mysql.version>
         <junit.version>4.13.2</junit.version>
         <hutool.version>5.8.44</hutool.version>
-        <spring-ai.version>1.1.6</spring-ai.version>
+        <spring-ai.version>1.1.7</spring-ai.version>
         <spring-alibaba-ai.version>1.1.2.3</spring-alibaba-ai.version>
 <!--        <mcp.version>0.17.0</mcp.version>-->
 <!--        <mcp.webflux.version>0.8.0</mcp.webflux.version>-->
@@ -222,10 +222,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.projectlombok</groupId>-->
+<!--            <artifactId>lombok</artifactId>-->
+<!--        </dependency>-->
     </dependencies>
     <build>
         <plugins>
@@ -242,5 +242,25 @@
                 </configuration>
             </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.14.1</version>
+                    <configuration>
+                        <release>25</release>
+                        <encoding>UTF-8</encoding>
+                        <!-- 关键：Lombok 注解处理器 -->
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>org.projectlombok</groupId>
+                                <artifactId>lombok</artifactId>
+                            </path>
+                        </annotationProcessorPaths>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 </project>
