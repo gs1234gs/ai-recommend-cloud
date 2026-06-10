@@ -4,7 +4,6 @@ import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.ReactivePageQuery;
 import com.db.dbnumber.ConstNumber;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
-import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.controller.tag.vo.TagSaveVO;
 import com.guanshiyun.controller.tag.vo.TagVO;
 import com.guanshiyun.mylong.MyLong;
@@ -57,7 +56,7 @@ public class TagServiceImpl implements TagService {
             tag.setUpdater(userId);
             tag.setUpdateTime(now);
             return r2dbcUpdateHelper.updateIgnoreNull(
-                    EntityTableNameUtils.getName(Tag.class),
+                    Tag.class,
                     tag,
                     Tag.Fields.id
             );
@@ -81,13 +80,13 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Mono<PageResultT<List<TagVO>>> findAllByPage(RequestPage<TagVO> requestPage) {
-        return Mono.deferContextual(ctx->{
-            if(!myLong.hasKey(ctx)){
+        return Mono.deferContextual(ctx -> {
+            if (!myLong.hasKey(ctx)) {
                 return Mono.error(new Throwable("未登录"));
             }
             Long userId = myLong.findUserId(ctx);
             Long tenantId = myLong.findTenantId(ctx);
-            return   ReactivePageQuery.of(
+            return ReactivePageQuery.of(
                             r2dbcEntityTemplate,
                             Tag.class,
                             RequestPage.<Tag>builder()

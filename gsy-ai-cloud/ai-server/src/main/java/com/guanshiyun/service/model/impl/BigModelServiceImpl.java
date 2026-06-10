@@ -2,7 +2,6 @@ package com.guanshiyun.service.model.impl;
 
 import com.db.cursorQuery.ReactivePageQuery;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
-import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.bigmodel.BigModel;
 import com.guanshiyun.consts.ConstNumber;
@@ -54,7 +53,7 @@ public class BigModelServiceImpl implements BigModelService {
             bigModel.setUpdater(userId);
             bigModel.setUpdateTime(now);
             return r2dbcUpdateHelper.updateIgnoreNull(
-                    EntityTableNameUtils.getName(BigModel.class),
+                    BigModel.class,
                     bigModel,
                     BigModel.Fields.id
             );

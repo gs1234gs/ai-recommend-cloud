@@ -2,11 +2,13 @@ package com.db.r2dbcupdate;
 
 
 import com.db.dbnumber.ConstNumber;
+import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.mylong.MyLong;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Modifier;
@@ -24,13 +26,17 @@ public class R2dbcUpdateHelper {
     /**
      * 通用动态更新，忽略 null 字段
      *
-     * @param tableName   表名
+     * @param clazz   类
      * @param entity      实体对象
      * @param idFieldName ID 字段名
      * @param <T>         实体类型
      * @return Mono<Long> 更新行数
      */
-    public <T> Mono<Long> updateIgnoreNull(String tableName, T entity, String idFieldName) {
+    public <T> Mono<Long> updateIgnoreNull(Class<T> clazz, T entity, String idFieldName) {
+        String tableName = EntityTableNameUtils.getName(clazz);
+        if(!StringUtils.hasText(tableName)){
+            return Mono.just(ConstNumber.LONG_ZERO);
+        }
         Map<String, Object> updateFields = new LinkedHashMap<>();
         AtomicReference<Object> idValueRef = new AtomicReference<>();
 

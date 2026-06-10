@@ -3,7 +3,6 @@ package com.guanshiyun.service.tenant.impl;
 import com.db.cursorQuery.ReactivePageQuery;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
-import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.tenant.vo.PageTenantVO;
 import com.guanshiyun.controller.tenant.vo.TenantVO;
@@ -34,13 +33,13 @@ public class TenantServiceImpl implements TenantService {
 
     @Override
     public Mono<Long> save(SysTenant tenant) {
-        return Mono.deferContextual(ctx->{
-            if(!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)){
+        return Mono.deferContextual(ctx -> {
+            if (!ctx.hasKey(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY)) {
                 return Mono.error(new Throwable("登陆已经过期"));
             }
             Long userId = myLong.findUserId(ctx);
             LocalDateTime now = LocalDateTime.now();
-            if(Objects.isNull(tenant.getId())){
+            if (Objects.isNull(tenant.getId())) {
                 tenant.setCreator(userId)
                         .setCreateTime(now);
                 return tenantRepository.save(tenant)
@@ -48,8 +47,11 @@ public class TenantServiceImpl implements TenantService {
             }
             tenant.setUpdater(userId)
                     .setUpdateTime(now);
-            return r2dbcUpdateHelper.updateIgnoreNull(EntityTableNameUtils.getName(SysTenant.class)
-                    ,tenant,SysTenant.Fields.id);
+            return r2dbcUpdateHelper.updateIgnoreNull(
+                    SysTenant.class,
+                    tenant,
+                    SysTenant.Fields.id
+            );
         });
 
     }
@@ -65,15 +67,15 @@ public class TenantServiceImpl implements TenantService {
         RequestPage<PageTenantVO> pageTenantVORequestPage = PageUtils.pageValidation(requestPage, PageTenantVO.class);
         RequestPage<SysTenant> request = BeanConvertUtil.toBean(pageTenantVORequestPage, SysTenant.class);
         return ReactivePageQuery.of(
-                r2dbcEntityTemplate,
+                        r2dbcEntityTemplate,
                         SysTenant.class,
-                request
+                        request
 
-        )
-                .like(SysTenant.Fields.name,request.getCondition().getName())
+                )
+                .like(SysTenant.Fields.name, request.getCondition().getName())
                 .orderByDesc(BasePojo.Fields.createTime)
                 .page()
-                .map(page->BeanConvertUtil.toBean(
+                .map(page -> BeanConvertUtil.toBean(
                         page,
                         TenantVO.class
                 ));
@@ -82,6 +84,6 @@ public class TenantServiceImpl implements TenantService {
     @Override
     public Mono<TenantVO> findById(Long id) {
         return tenantRepository.findById(id)
-                .map(t->BeanConvertUtil.toBean(t,TenantVO.class));
+                .map(t -> BeanConvertUtil.toBean(t, TenantVO.class));
     }
 }

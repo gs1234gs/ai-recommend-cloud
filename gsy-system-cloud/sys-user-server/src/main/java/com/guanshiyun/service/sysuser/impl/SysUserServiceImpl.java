@@ -4,7 +4,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import com.db.cursorQuery.ReactiveQuery;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
-import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.sysrole.vo.SysRoleVO;
 import com.guanshiyun.controller.sysuser.vo.SysUserSaveVO;
@@ -154,7 +153,7 @@ public class SysUserServiceImpl implements SysUserService {
                             BeanUtil.copyProperties(sysUser, sysUserDB, CopyOptions.create().ignoreNullValue());
                             sysUserDB.setUpdateTime(LocalDateTime.now());
                             return r2dbcUpdateHelper.updateIgnoreNull(
-                                            EntityTableNameUtils.getName(SysUser.class),
+                                            SysUser.class,
                                             sysUserDB,
                                             SysUser.Fields.id
                                     )
@@ -214,11 +213,11 @@ public class SysUserServiceImpl implements SysUserService {
             sysUser.setUpdater(userId);
             sysUser.setUpdateTime(now);
             //密码不为空，表示修改密码，否则不修改
-            if(Objects.nonNull(password[0])) {
+            if (Objects.nonNull(password[0])) {
                 sysUser.setPassword(passwordEncoder.encode(password[0]));
             }
             return r2dbcUpdateHelper.updateIgnoreNull(
-                            EntityTableNameUtils.getName(SysUser.class),
+                            SysUser.class,
                             sysUser,
                             SysUser.Fields.id
                     ).flatMap(id -> {
@@ -254,7 +253,11 @@ public class SysUserServiceImpl implements SysUserService {
             }
             Long id = myLong.findUserId(ctx);
             sysUser.setId(id);
-            return r2dbcUpdateHelper.updateIgnoreNull(EntityTableNameUtils.getName(SysUser.class), sysUser, SysUser.Fields.id)
+            return r2dbcUpdateHelper.updateIgnoreNull(
+                            SysUser.class,
+                            sysUser,
+                            SysUser.Fields.id
+                    )
                     .flatMap(sysUserRepository::findById)
                     .map(user -> {
                         return BeanConvertUtil.toBean(user, SysUserVO.class);

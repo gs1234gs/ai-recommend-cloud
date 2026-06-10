@@ -5,7 +5,6 @@ import com.db.cursorQuery.ReactivePageQuery;
 import com.db.dbnumber.ConstNumber;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
-import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.order.vo.PurChaseOrderSaveVO;
 import com.guanshiyun.controller.order.vo.PurChaseOrderVO;
@@ -133,7 +132,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
             }
             Long userId = myLong.findUserId(ctx);
             return r2dbcUpdateHelper.updateIgnoreNull(
-                            EntityTableNameUtils.getName(PurChaseOrder.class),
+                            PurChaseOrder.class,
                             PurChaseOrder.builder()
                                     .id(purChaseOrderSaveVO.getId())
                                     .updater(userId)

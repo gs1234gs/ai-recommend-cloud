@@ -5,7 +5,6 @@ import com.db.cursorQuery.CursorQuery;
 import com.db.cursorQuery.ReactivePageQuery;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
-import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.category.Category;
 import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.controller.product.vo.ProductSaveVO;
@@ -156,7 +155,7 @@ public class ProductServiceImpl implements ProductService {
                         product.setUpdater(userId);
                         product.setUpdateTime(now);
                         return r2dbcUpdateHelper.updateIgnoreNull(
-                                        EntityTableNameUtils.getName(Product.class),
+                                        Product.class,
                                         product,
                                         Product.Fields.id
                                 )
@@ -309,7 +308,7 @@ public class ProductServiceImpl implements ProductService {
                             .map(Category::getName)
                             .filter(Objects::nonNull)
                             .collect(Collectors.toList());
-                    if (categoryList.isEmpty()){
+                    if (categoryList.isEmpty()) {
                         return Mono.error(new Throwable("类目列表为空"));
                     }
                     DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
@@ -352,7 +351,7 @@ public class ProductServiceImpl implements ProductService {
                         skuRepository.deleteAllByProductId(id)
                                 .thenReturn(deleteCount)
                 )
-                .flatMap(deleteCount->
+                .flatMap(deleteCount ->
                         productCategoryRepository.deleteByProductId(id)
                                 .thenReturn(deleteCount)
                 )
@@ -423,7 +422,7 @@ public class ProductServiceImpl implements ProductService {
                                         .using(product)
                                 :
                                 r2dbcUpdateHelper.updateIgnoreNull(
-                                        EntityTableNameUtils.getName(Product.class),
+                                        Product.class,
                                         product,
                                         Product.Fields.id
                                 );

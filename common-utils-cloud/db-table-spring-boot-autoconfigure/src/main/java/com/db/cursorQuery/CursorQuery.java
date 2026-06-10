@@ -3,6 +3,8 @@ package com.db.cursorQuery;
 import cn.hutool.core.util.StrUtil;
 import com.db.constsql.SqlConst;
 import com.db.page.CursorPageUtil;
+import com.db.tablename.MyStringUtils;
+import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.responsepojo.PageResultT;
@@ -254,9 +256,9 @@ public class CursorQuery<T> {
         // 递归遍历当前类及其所有父类（直到 Object）
         while (clazz != null && clazz != Object.class) {
             for (Field field : clazz.getDeclaredFields()) {
-                if ("delFlag".equals(field.getName())) {
+                if (BasePojo.Fields.delFlag.equals(field.getName())) {
                     // 找到 delFlag 字段 → 添加 del_flag = 0 条件
-                    this.criteria = this.criteria.and("del_flag").is((short) 0);
+                    this.criteria = this.criteria.and(MyStringUtils.camelToUnderlineSmart(BasePojo.Fields.delFlag)).is((short) 0);
                     return this;
                 }
             }

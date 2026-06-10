@@ -4,7 +4,6 @@ import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.ReactivePageQuery;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
-import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.controller.warehouse.vo.WarehouseSaveVO;
 import com.guanshiyun.controller.warehouse.vo.WarehouseVO;
 import com.guanshiyun.mylong.MyLong;
@@ -56,8 +55,8 @@ public class WarehouseServiceImpl implements WarehouseService {
                     warehouse.setUpdater(useId)
                             .setUpdateTime(now);
                     return r2dbcUpdateHelper.updateIgnoreNull(
-                                    EntityTableNameUtils.getName(Warehouse.class)
-                                    , warehouse,
+                                    Warehouse.class,
+                                    warehouse,
                                     Warehouse.Fields.id
                             )
                             .onErrorResume(throwable -> {

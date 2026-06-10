@@ -4,7 +4,6 @@ import cn.hutool.core.bean.BeanUtil;
 import com.db.dbnumber.ConstNumber;
 import com.db.dbsqlconst.SqlConst;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
-import com.db.tablename.EntityTableNameUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guanshiyun.controller.sku.vo.SKUFindVO;
@@ -38,7 +37,10 @@ import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -115,8 +117,8 @@ public class SKUServiceImpl implements SKUService {
                 return skuRepository.save(sku)
                         .flatMap(skuSave -> {
                             sku.setId(skuSave.getId());
-                           return skuRepository
-                                   .findAllByProductId(skuSave.getProductId()).collectList();
+                            return skuRepository
+                                    .findAllByProductId(skuSave.getProductId()).collectList();
                         })
                         .flatMap(skuList -> {
                             //获取最低价
@@ -147,7 +149,7 @@ public class SKUServiceImpl implements SKUService {
                             ).collect(Collectors.toList());
                             // 更新 Product 表
                             Mono<Long> updateIgnoreNullMono = r2dbcUpdateHelper.updateIgnoreNull(
-                                    EntityTableNameUtils.getName(Product.class),
+                                    Product.class,
                                     product,
                                     Product.Fields.id
                             );
@@ -180,7 +182,7 @@ public class SKUServiceImpl implements SKUService {
                             sku.setStock(stockFinal);
                         }
                         return r2dbcUpdateHelper.updateIgnoreNull(
-                                EntityTableNameUtils.getName(SKU.class),
+                                SKU.class,
                                 sku,
                                 SKU.Fields.id
                         );
@@ -209,7 +211,7 @@ public class SKUServiceImpl implements SKUService {
                                 .map(warehouseId -> SKUWarehouse.builder()
                                         .skuId(sku.getId())
                                         .warehouseId(warehouseId)
-                                        .build()).collect(Collectors.toList()) ;
+                                        .build()).collect(Collectors.toList());
                         //获取最低价
                         BigDecimal minPrice = skuList.stream()
                                 .map(SKU::getPrice)
@@ -234,7 +236,7 @@ public class SKUServiceImpl implements SKUService {
                         Mono<Void> voidMono = skuWarehouseRepository.deleteAllById(deleteSKUWarehouse);
                         Mono<List<SKUWarehouse>> skuWarehouseSaveMono = skuWarehouseRepository.saveAll(saveSKUWarehouse).collectList();
                         Mono<Long> updateIgnoreNullMono = r2dbcUpdateHelper.updateIgnoreNull(
-                                EntityTableNameUtils.getName(Product.class),
+                                Product.class,
                                 product,
                                 Product.Fields.id
                         );
@@ -255,30 +257,30 @@ public class SKUServiceImpl implements SKUService {
 
     @Override
     public Mono<SKUVO> findById(Long id) {
-       return skuWarehouseRepository.findAllBySkuId(id)
-               .collectList()
-               .flatMap(skuWarehouseList->{
-                   return skuRepository.findById(id)
-                           .flatMap(sku -> {
-                               return warehouseRepository
-                                       .findAllById(
-                                               skuWarehouseList
-                                               .stream()
-                                               .map(SKUWarehouse::getWarehouseId)
-                                               .toList()
-                                       )
-                                       .collectList()
-                                       .map(warehouse -> {
-                                           List<WarehouseVO> warehouseVOS =
-                                                   BeanConvertUtil.toBeanList(warehouse, WarehouseVO.class);
-                                          return BeanUtil.toBean(sku, SKUVO.class)
-                                                   .setPicList(parsePicList(sku.getPicList())
-                                                   )
-                                                   .setWarehouseList(warehouseVOS);
-                                       });
-                                   }
-                           );
-               });
+        return skuWarehouseRepository.findAllBySkuId(id)
+                .collectList()
+                .flatMap(skuWarehouseList -> {
+                    return skuRepository.findById(id)
+                            .flatMap(sku -> {
+                                        return warehouseRepository
+                                                .findAllById(
+                                                        skuWarehouseList
+                                                                .stream()
+                                                                .map(SKUWarehouse::getWarehouseId)
+                                                                .toList()
+                                                )
+                                                .collectList()
+                                                .map(warehouse -> {
+                                                    List<WarehouseVO> warehouseVOS =
+                                                            BeanConvertUtil.toBeanList(warehouse, WarehouseVO.class);
+                                                    return BeanUtil.toBean(sku, SKUVO.class)
+                                                            .setPicList(parsePicList(sku.getPicList())
+                                                            )
+                                                            .setWarehouseList(warehouseVOS);
+                                                });
+                                    }
+                            );
+                });
     }
 
     //

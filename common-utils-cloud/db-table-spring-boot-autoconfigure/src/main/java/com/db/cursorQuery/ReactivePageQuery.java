@@ -2,6 +2,8 @@ package com.db.cursorQuery;
 
 import com.db.constsql.SqlConst;
 import com.db.page.PageUtils;
+import com.db.tablename.MyStringUtils;
+import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.sqlenums.LikeType;
@@ -218,9 +220,9 @@ public class ReactivePageQuery<T> {
         // 递归遍历当前类及其所有父类（直到 Object）
         while (clazz != null && clazz != Object.class) {
             for (Field field : clazz.getDeclaredFields()) {
-                if ("delFlag".equals(field.getName())) {
+                if (BasePojo.Fields.delFlag.equals(field.getName())) {
                     // 找到 delFlag 字段 → 添加 del_flag = 0 条件
-                    this.criteria = this.criteria.and("del_flag").is((short) 0);
+                    this.criteria = this.criteria.and(MyStringUtils.camelToUnderlineSmart(BasePojo.Fields.delFlag)).is((short) 0);
                     return this;
                 }
             }

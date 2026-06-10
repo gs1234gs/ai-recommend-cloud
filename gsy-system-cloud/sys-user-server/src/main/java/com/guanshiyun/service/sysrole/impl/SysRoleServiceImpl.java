@@ -5,7 +5,6 @@ import cn.hutool.core.util.StrUtil;
 import com.db.constsql.SqlConst;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
-import com.db.tablename.EntityTableNameUtils;
 import com.db.tablename.MyStringUtils;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.sysrole.vo.SysRoleSaveVO;
@@ -19,6 +18,7 @@ import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.rolepojo.SysRole;
 import com.guanshiyun.service.sysrole.SysRoleService;
+import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -83,7 +83,7 @@ public class SysRoleServiceImpl implements SysRoleService {
             sysRole.setUpdateTime(now);
 
             return r2dbcUpdateHelper.updateIgnoreNull(
-                            EntityTableNameUtils.getName(SysRole.class),
+                            SysRole.class,
                             sysRole,
                             SysRole.Fields.id)
                     .flatMap(id -> sysRoleMenuRepository.findByRoleId(sysRole.getId()).collectList()
@@ -118,7 +118,7 @@ public class SysRoleServiceImpl implements SysRoleService {
 
     @Override
     public Mono<PageResultT<List<SysRoleVO>>> findPage(RequestPage<SysRoleVO> requestPage) {
-        requestPage = PageUtils.pageValidation(requestPage,SysRoleVO.class);
+        requestPage = PageUtils.pageValidation(requestPage, SysRoleVO.class);
         // 前端没传 pageSize 时默认10条
         Long pageNum = requestPage.getPageNum();
         int pageSize = requestPage.getPageSize();
@@ -130,7 +130,7 @@ public class SysRoleServiceImpl implements SysRoleService {
             criteria = criteria.and(SysRole.Fields.name).like(SqlConst.PERCENT + name + SqlConst.PERCENT);
         }
         long offset =
-                (pageNum -1)*pageSize;
+                (pageNum - 1) * pageSize;
         // 数据查询：按 createTime 降序，推荐加上 id 作为二级排序
         Query dataQuery = Query.query(criteria)
                 .sort(Sort.by(
@@ -166,7 +166,7 @@ public class SysRoleServiceImpl implements SysRoleService {
                 .rowsUpdated()
                 .flatMap(rowsUpdated ->
                         databaseClient.sql("delete from sys_role_menu where role_id = :roleId")
-                                .bind(SysRoleMenu.Fields.roleId,id)
+                                .bind(SysRoleMenu.Fields.roleId, id)
                                 .fetch()
                                 .rowsUpdated()
                                 .flatMap(rowsChildren ->
@@ -200,8 +200,8 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Override
     public Mono<Long> update(SysRoleSaveVO sysRoleSaveVO) {
         return r2dbcUpdateHelper.updateIgnoreNull(
-                EntityTableNameUtils.getName(SysRole.class),
-                sysRoleSaveVO,
+                SysRole.class,
+                BeanConvertUtil.toBean(sysRoleSaveVO, SysRole.class),
                 SysRole.Fields.id
         );
     }

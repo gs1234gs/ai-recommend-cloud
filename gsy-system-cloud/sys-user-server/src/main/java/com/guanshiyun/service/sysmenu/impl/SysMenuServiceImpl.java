@@ -2,7 +2,6 @@ package com.guanshiyun.service.sysmenu.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
-import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.menupojo.SysMenu;
 import com.guanshiyun.menupojo.reponse.SysMenuResponse;
@@ -74,7 +73,7 @@ public class SysMenuServiceImpl implements SysMenuService {
         return sysMenuRepository.findAllByParentId(id);
     }
 
-//    @Override
+    //    @Override
 //    public Mono<Long> deleteById(Long id) {
 //        if (Objects.isNull(id))
 //            return Mono.just(ConstNumber.LONG_ZERO);
@@ -99,42 +98,42 @@ public class SysMenuServiceImpl implements SysMenuService {
 //                )
 //                .as(transaction -> transaction.as(transactionalOperator::transactional));
 //    }
-@Override
-public Mono<Long> deleteById(Long id) {
-    if (id == null || id.compareTo(Long.valueOf(131)) <= 0) {
-        return Mono.just(ConstNumber.LONG_ZERO);
+    @Override
+    public Mono<Long> deleteById(Long id) {
+        if (id == null || id.compareTo(Long.valueOf(131)) <= 0) {
+            return Mono.just(ConstNumber.LONG_ZERO);
+        }
+
+        return collectAllDescendantIds(id)
+                .flatMap(allIds -> {
+                    if (allIds.isEmpty()) {
+                        return Mono.just(0L);
+                    }
+
+                    String placeholders = allIds.stream()
+                            .map(i -> "?")
+                            .collect(Collectors.joining(", "));
+
+                    // 删除角色菜单关联
+                    Mono<Long> deleteRoleMenu = bindList(
+                            databaseClient.sql("DELETE FROM sys_role_menu WHERE menu_id IN (" + placeholders + ")"),
+                            allIds
+                    )
+                            .fetch()
+                            .rowsUpdated();
+
+                    // 删除菜单
+                    Mono<Long> deleteMenu = bindList(
+                            databaseClient.sql("DELETE FROM sys_menu WHERE id IN (" + placeholders + ")"),
+                            allIds
+                    )
+                            .fetch()
+                            .rowsUpdated();
+
+                    return deleteRoleMenu.then(deleteMenu)
+                            .as(transactionalOperator::transactional);
+                });
     }
-
-    return collectAllDescendantIds(id)
-            .flatMap(allIds -> {
-                if (allIds.isEmpty()) {
-                    return Mono.just(0L);
-                }
-
-                String placeholders = allIds.stream()
-                        .map(i -> "?")
-                        .collect(Collectors.joining(", "));
-
-                // 删除角色菜单关联
-                Mono<Long> deleteRoleMenu = bindList(
-                        databaseClient.sql("DELETE FROM sys_role_menu WHERE menu_id IN (" + placeholders + ")"),
-                        allIds
-                )
-                        .fetch()
-                        .rowsUpdated();
-
-                // 删除菜单
-                Mono<Long> deleteMenu = bindList(
-                        databaseClient.sql("DELETE FROM sys_menu WHERE id IN (" + placeholders + ")"),
-                        allIds
-                )
-                        .fetch()
-                        .rowsUpdated();
-
-                return deleteRoleMenu.then(deleteMenu)
-                        .as(transactionalOperator::transactional);
-            });
-}
 
     // 辅助方法：绑定列表到 SQL 参数（按位置）
     private DatabaseClient.GenericExecuteSpec bindList(DatabaseClient.GenericExecuteSpec spec, List<?> values) {
@@ -165,7 +164,7 @@ public Mono<Long> deleteById(Long id) {
                     )
                             .fetch()
                             .all()
-                            .map(row ->myLong.myLong(row.get(SysMenu.Fields.id)))
+                            .map(row -> myLong.myLong(row.get(SysMenu.Fields.id)))
                             .collectList()
                             .filter(nextBatch -> !nextBatch.isEmpty());
                 })
@@ -178,24 +177,24 @@ public Mono<Long> deleteById(Long id) {
     @Override
     public Mono<Long> save(SysMenu sysMenu) {
 
-        return Mono.deferContextual(ctx->{
+        return Mono.deferContextual(ctx -> {
             if (!myLong.hasKey(ctx)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
             Long userId = myLong.findUserId(ctx);
-            if(Objects.isNull(sysMenu.getId())){
+            if (Objects.isNull(sysMenu.getId())) {
                 sysMenu.setCreateTime(LocalDateTime.now());
                 sysMenu.setCreator(userId);
-              return sysMenuRepository.save(sysMenu)
-                        .map(save->sysMenu.getId());
+                return sysMenuRepository.save(sysMenu)
+                        .map(save -> sysMenu.getId());
             }
             sysMenu.setUpdater(userId);
             sysMenu.setUpdateTime(LocalDateTime.now());
             return r2dbcUpdateHelper.updateIgnoreNull(
-                    EntityTableNameUtils.getName(SysMenu.class),
-                    sysMenu,
-                    SysMenu.Fields.id
-            )
+                            SysMenu.class,
+                            sysMenu,
+                            SysMenu.Fields.id
+                    )
                     .map(update -> sysMenu.getId());
         });
     }
@@ -204,10 +203,10 @@ public Mono<Long> deleteById(Long id) {
     public Mono<Long> updateById(SysMenu sysMenu) {
         sysMenu.setUpdateTime(LocalDateTime.now());
         return r2dbcUpdateHelper.updateIgnoreNull(
-                        EntityTableNameUtils.getName(SysMenu.class),
-                        sysMenu,
-                        SysMenu.Fields.id
-                );
+                SysMenu.class,
+                sysMenu,
+                SysMenu.Fields.id
+        );
     }
 
     @Override

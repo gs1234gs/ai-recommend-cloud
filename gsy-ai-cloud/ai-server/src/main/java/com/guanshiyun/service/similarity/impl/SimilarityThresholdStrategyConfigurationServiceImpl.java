@@ -3,7 +3,6 @@ package com.guanshiyun.service.similarity.impl;
 import com.db.cursorQuery.ReactivePageQuery;
 import com.db.dbnumber.ConstNumber;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
-import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.controller.similarity.vo.SimilarityThresholdStrategyConfigurationPageVO;
 import com.guanshiyun.controller.similarity.vo.SimilarityThresholdStrategyConfigurationSaveVO;
 import com.guanshiyun.controller.similarity.vo.SimilarityThresholdStrategyConfigurationVO;
@@ -38,8 +37,8 @@ public class SimilarityThresholdStrategyConfigurationServiceImpl
                 BeanConvertUtil.toBean(saveVO, SimilarityThresholdStrategyConfiguration.class);
         if(Objects.nonNull(similarityThresholdStrategyConfiguration.getId())){
             return r2dbcUpdateHelper.updateIgnoreNull(
-                    EntityTableNameUtils.getName(SimilarityThresholdStrategyConfiguration.class),
-                    similarityThresholdStrategyConfigurationRepository,
+                    SimilarityThresholdStrategyConfiguration.class,
+                    similarityThresholdStrategyConfiguration,
                     SimilarityThresholdStrategyConfiguration.Fields.id
             );
         }

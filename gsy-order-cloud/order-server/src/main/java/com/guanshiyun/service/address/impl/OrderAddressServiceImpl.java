@@ -4,7 +4,6 @@ import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.ReactivePageQuery;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
-import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.address.OrderAddress;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.address.vo.OrderAddressSaveVO;
@@ -59,7 +58,7 @@ public class OrderAddressServiceImpl implements OrderAddressService {
             orderAddress.setUpdater(userId);
             orderAddress.setUpdateTime(LocalDateTime.now());
             return r2dbcUpdateHelper.updateIgnoreNull(
-                            EntityTableNameUtils.getName(OrderAddress.class),
+                            OrderAddress.class,
                             orderAddress,
                             OrderAddress.Fields.id)
                     .onErrorResume(throwable -> {
@@ -79,7 +78,6 @@ public class OrderAddressServiceImpl implements OrderAddressService {
                 return Mono.error(new RuntimeException("用户未登录"));
             Long userId =
                     myLong.findUserId(ctx);
-            String name = EntityTableNameUtils.getName(OrderAddress.class);;
             OrderAddress orderAddress = OrderAddress.builder()
                     .id(id)
                     .updater(userId)
@@ -87,7 +85,7 @@ public class OrderAddressServiceImpl implements OrderAddressService {
                     .delFlag((short) 1)
                     .build();
             return r2dbcUpdateHelper.updateIgnoreNull(
-                            name,
+                            OrderAddress.class,
                             orderAddress,
                             OrderAddress.Fields.id)
                     .then()

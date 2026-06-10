@@ -3,7 +3,6 @@ package com.guanshiyun.service.category.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.ReactivePageQuery;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
-import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.category.Category;
 import com.guanshiyun.controller.category.vo.CategorySaveVO;
 import com.guanshiyun.controller.category.vo.CategoryVO;
@@ -38,30 +37,30 @@ public class CategoryServiceImpl implements CategoryService {
     private final SnowflakePermanent snowflakePermanent;
 
     /**
- * 添加 类型
- * */
+     * 添加 类型
+     */
     @Override
     public Mono<Long> save(CategorySaveVO categorySaveVO) {
         Category category = BeanUtil.toBean(categorySaveVO, Category.class).setCode(snowflakePermanent.stringNextId());
-        return Mono.deferContextual(ctx->{
-            if(!myLong.hasKey(ctx))
+        return Mono.deferContextual(ctx -> {
+            if (!myLong.hasKey(ctx))
                 return Mono.error(new RuntimeException("用户未登录"));
             Long userId = myLong.findUserId(ctx);
-            if(Objects.nonNull(category.getId())){
+            if (Objects.nonNull(category.getId())) {
                 category.setUpdater(userId);
                 category.setUpdateTime(LocalDateTime.now());
                 return r2dbcUpdateHelper.updateIgnoreNull(
-                        EntityTableNameUtils.getName(Category.class),
+                        Category.class,
                         category,
                         Category.Fields.id
                 );
             }
             category.setCreator(userId);
             category.setCreateTime(LocalDateTime.now());
-           return categoryRepository.save(category)
-                    .flatMap(save->Mono.just(save.getId()))
-                    .onErrorResume(e->{
-                        log.error("添加类型失败：",e);
+            return categoryRepository.save(category)
+                    .flatMap(save -> Mono.just(save.getId()))
+                    .onErrorResume(e -> {
+                        log.error("添加类型失败：", e);
                         return Mono.error(new RuntimeException("添加类型失败"));
                     });
         });
@@ -77,7 +76,7 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findById(id);
     }
 
-//    @Override
+    //    @Override
 //    public Mono<PageResultT<List<CategoryVO>>> findAllByPage( RequestPage<CategoryVO> requestPage) {
 //        RequestPage<CategoryVO> categoryRequestPage = PageUtils.pageValidation(requestPage, CategoryVO.class);
 //        Integer pageSize = categoryRequestPage.getPageSize();
@@ -111,27 +110,27 @@ public class CategoryServiceImpl implements CategoryService {
 //
 //                );
 //    }
-@Override
-public Mono<PageResultT<List<CategoryVO>>> findPage( RequestPage<CategoryVO> requestPage) {
-    RequestPage<Category> page = BeanConvertUtil.toBean(requestPage, Category.class);
-    return ReactivePageQuery.of(r2dbcEntityTemplate, Category.class, page)
-            .like(Category.Fields.name, requestPage.getCondition().getName())
-            .page()
-            .map(pageResultT ->
-                    BeanConvertUtil.toBean(pageResultT, CategoryVO.class));
-}
+    @Override
+    public Mono<PageResultT<List<CategoryVO>>> findPage(RequestPage<CategoryVO> requestPage) {
+        RequestPage<Category> page = BeanConvertUtil.toBean(requestPage, Category.class);
+        return ReactivePageQuery.of(r2dbcEntityTemplate, Category.class, page)
+                .like(Category.Fields.name, requestPage.getCondition().getName())
+                .page()
+                .map(pageResultT ->
+                        BeanConvertUtil.toBean(pageResultT, CategoryVO.class));
+    }
 
     @Override
     public Mono<List<CategoryVO>> findAll() {
         return categoryRepository.findAll()
-                .mapNotNull(item-> BeanConvertUtil.toBean(item,CategoryVO.class))
+                .mapNotNull(item -> BeanConvertUtil.toBean(item, CategoryVO.class))
                 .collectList();
     }
 
     @Override
     public Flux<CategoryVO> findByProductId(Long productId) {
         return productCategoryRepository.findByProductId(productId)
-                .flatMap(productCategory->categoryRepository.findById(productCategory.getCategoryId()))
-                .mapNotNull(item->BeanConvertUtil.toBean(item,CategoryVO.class));
+                .flatMap(productCategory -> categoryRepository.findById(productCategory.getCategoryId()))
+                .mapNotNull(item -> BeanConvertUtil.toBean(item, CategoryVO.class));
     }
 }

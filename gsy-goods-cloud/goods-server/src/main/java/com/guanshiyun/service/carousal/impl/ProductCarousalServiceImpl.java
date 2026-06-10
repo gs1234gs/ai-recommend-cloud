@@ -1,7 +1,6 @@
 package com.guanshiyun.service.carousal.impl;
 
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
-import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.carousal.ProductCarousal;
 import com.guanshiyun.controller.carousal.vo.ProductCarousalSaveVO;
 import com.guanshiyun.controller.carousal.vo.ProductCarousalVO;
@@ -31,56 +30,56 @@ public class ProductCarousalServiceImpl implements ProductCarousalService {
     @Override
     public Mono<List<ProductCarousalVO>> findAll() {
         return productCarousalRepository.findAll(Sort.sort(ProductCarousal.class).by(ProductCarousal::getCreateTime).descending())
-                .map(p-> BeanConvertUtil.toBean(p, ProductCarousalVO.class))
+                .map(p -> BeanConvertUtil.toBean(p, ProductCarousalVO.class))
                 .collectList()
 //                .map(list-> {
 //                    Collections.shuffle(list);
 //                    return list;
 //                })
-                .onErrorResume(e-> {
+                .onErrorResume(e -> {
                     log.error("查询所有轮播图失败", e);
-                   return Mono.just(List.of());
+                    return Mono.just(List.of());
                 });
     }
 
     @Override
     public Mono<ProductCarousalVO> findById(Long id) {
         return productCarousalRepository.findById(id)
-                .map(p-> BeanConvertUtil.toBean(p, ProductCarousalVO.class))
-                .onErrorResume(e-> {
+                .map(p -> BeanConvertUtil.toBean(p, ProductCarousalVO.class))
+                .onErrorResume(e -> {
                     log.error("查询轮播图失败", e);
-                   return Mono.empty();
+                    return Mono.empty();
                 });
     }
 
     @Override
     public Mono<ProductCarousalVO> save(ProductCarousalSaveVO productCarousalSaveVO) {
-        return Mono.deferContextual(ctx->{
-            if(!myLong.hasKey(ctx)) {
+        return Mono.deferContextual(ctx -> {
+            if (!myLong.hasKey(ctx)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
             Long userId = myLong.findUserId(ctx);
             ProductCarousal productCarousal =
                     BeanConvertUtil.toBean(productCarousalSaveVO, ProductCarousal.class);
-            if(Objects.isNull(productCarousalSaveVO.getId())) {
+            if (Objects.isNull(productCarousalSaveVO.getId())) {
                 productCarousal.setCreator(userId)
                         .setCreateTime(LocalDateTime.now());
                 return productCarousalRepository.save(productCarousal)
-                        .mapNotNull(p-> BeanConvertUtil.toBean(p, ProductCarousalVO.class))
-                        .onErrorResume(e-> {
+                        .mapNotNull(p -> BeanConvertUtil.toBean(p, ProductCarousalVO.class))
+                        .onErrorResume(e -> {
                             log.error("保存轮播图失败", e);
                             return Mono.error(new RuntimeException("保存轮播图失败", e));
                         });
             }
-                productCarousal.setUpdater(userId)
-                        .setUpdateTime(LocalDateTime.now());
+            productCarousal.setUpdater(userId)
+                    .setUpdateTime(LocalDateTime.now());
             return r2dbcUpdateHelper.updateIgnoreNull(
-                    EntityTableNameUtils.getName(ProductCarousal.class),
+                            ProductCarousal.class,
                             productCarousal,
                             ProductCarousal.Fields.id)
                     .flatMap(productCarousalRepository::findById)
-                    .mapNotNull(p-> BeanConvertUtil.toBean(p, ProductCarousalVO.class))
-                    .onErrorResume(e-> {
+                    .mapNotNull(p -> BeanConvertUtil.toBean(p, ProductCarousalVO.class))
+                    .onErrorResume(e -> {
                         log.error("保存轮播图失败", e);
                         return Mono.error(new RuntimeException("保存轮播图失败", e));
                     });
@@ -89,8 +88,8 @@ public class ProductCarousalServiceImpl implements ProductCarousalService {
 
     @Override
     public Mono<Void> deleteById(Long id) {
-        return Mono.deferContextual(ctx->{
-            if(!myLong.hasKey(ctx)) {
+        return Mono.deferContextual(ctx -> {
+            if (!myLong.hasKey(ctx)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
             return productCarousalRepository.deleteById(id);
@@ -99,8 +98,8 @@ public class ProductCarousalServiceImpl implements ProductCarousalService {
 
     @Override
     public Mono<Void> deleteByIds(List<Long> ids) {
-        return Mono.deferContextual(ctx->{
-            if(!myLong.hasKey(ctx)) {
+        return Mono.deferContextual(ctx -> {
+            if (!myLong.hasKey(ctx)) {
                 return Mono.error(new RuntimeException("用户未登录"));
             }
             return productCarousalRepository.deleteAllById(ids);
@@ -110,25 +109,25 @@ public class ProductCarousalServiceImpl implements ProductCarousalService {
     @Override
     public Mono<ProductCarousalSaveVO> update(ProductCarousalSaveVO productCarousalSaveVO) {
         return productCarousalRepository.save(Objects.requireNonNull(BeanConvertUtil.toBean(productCarousalSaveVO, ProductCarousal.class)))
-                .mapNotNull(p-> BeanConvertUtil.toBean(p, ProductCarousalSaveVO.class))
-                .onErrorResume(e-> {
+                .mapNotNull(p -> BeanConvertUtil.toBean(p, ProductCarousalSaveVO.class))
+                .onErrorResume(e -> {
                     log.error("更新轮播图失败", e);
-                   return Mono.empty();
+                    return Mono.empty();
                 });
     }
 
     @Override
     public Mono<List<ProductCarousalVO>> findByType(Integer type) {
         return productCarousalRepository.findByType(type)
-                .mapNotNull(p-> BeanConvertUtil.toBean(p, ProductCarousalVO.class))
+                .mapNotNull(p -> BeanConvertUtil.toBean(p, ProductCarousalVO.class))
                 .collectList()
-                .mapNotNull(list-> {
+                .mapNotNull(list -> {
                     Collections.shuffle(list);
                     return list;
                 })
-                .onErrorResume(e-> {
+                .onErrorResume(e -> {
                     log.error("查询轮播图失败", e);
-                   return Mono.just(List.of());
+                    return Mono.just(List.of());
                 });
     }
 }
