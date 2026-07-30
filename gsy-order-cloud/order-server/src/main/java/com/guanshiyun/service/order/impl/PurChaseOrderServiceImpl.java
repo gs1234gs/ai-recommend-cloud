@@ -2,6 +2,7 @@ package com.guanshiyun.service.order.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.ReactivePageQuery;
+import com.db.cursorQuery.ReactiveQuery;
 import com.db.dbnumber.ConstNumber;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
@@ -62,6 +63,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
     private final TagApiService tagApiService;
     private final ProductApiService productApiService;
     private final GorseClient gorseClient;
+    private final ReactiveQuery reactiveQuery;
 
 
     /**
@@ -196,7 +198,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
         RequestPage<PurchaseOrderSearchVO> purChaseOrderVORequestPage = PageUtils.pageValidation(requestPage, PurchaseOrderSearchVO.class);
         RequestPage<PurChaseOrder> orderRequestPage = BeanConvertUtil.toBean(purChaseOrderVORequestPage, PurChaseOrder.class);
         PurchaseOrderSearchVO condition = purChaseOrderVORequestPage.getCondition();
-        return ReactivePageQuery.of(r2dbcEntityTemplate, PurChaseOrder.class, orderRequestPage)
+        return reactiveQuery.createQuery(PurChaseOrder.class, orderRequestPage)
                 .gte(BasePojo.Fields.createTime, condition.getStartTime())
                 .lte(BasePojo.Fields.createTime, condition.getEndTime())
                 .page()
@@ -229,14 +231,14 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
                                 List<PurChaseOrder> rows = pageResultT.getRows();
                                 List<Long> skuIdList = rows.stream().map(PurChaseOrder::getSkuId).toList();
 //                                List<Long> productIdList = rows.stream().map(PurChaseOrder::getProductId).toList();
-                        if(skuIdList.isEmpty()){
-                            return Mono.just(PageResultT.<List<PurChaseOrderVO>>builder()
-                                    .pageNum(pageResultT.getPageNum())
-                                    .pageSize(pageResultT.getPageSize())
-                                    .total(pageResultT.getTotal())
-                                    .rows(new ArrayList<>())
-                                    .build());
-                        }
+                                if (skuIdList.isEmpty()) {
+                                    return Mono.just(PageResultT.<List<PurChaseOrderVO>>builder()
+                                            .pageNum(pageResultT.getPageNum())
+                                            .pageSize(pageResultT.getPageSize())
+                                            .total(pageResultT.getTotal())
+                                            .rows(new ArrayList<>())
+                                            .build());
+                                }
                                 return skuApiService.findBySkuIds(skuIdList)
                                         .map(skuList -> {
                                             Map<Long, SKUApiVO> skuMap = skuList.getData().stream()

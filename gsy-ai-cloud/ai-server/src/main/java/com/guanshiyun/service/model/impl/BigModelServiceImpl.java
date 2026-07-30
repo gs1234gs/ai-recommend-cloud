@@ -1,6 +1,6 @@
 package com.guanshiyun.service.model.impl;
 
-import com.db.cursorQuery.ReactivePageQuery;
+import com.db.cursorQuery.ReactiveQuery;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.bigmodel.BigModel;
@@ -29,7 +29,8 @@ public class BigModelServiceImpl implements BigModelService {
     private final MyLong myLong;
     private final DatabaseClient databaseClient;
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
-    private final R2dbcUpdateHelper  r2dbcUpdateHelper;
+    private final R2dbcUpdateHelper r2dbcUpdateHelper;
+    private final ReactiveQuery reactiveQuery;
 
     @Override
     public Mono<Long> sava(BigModel bigModel) {
@@ -83,8 +84,8 @@ public class BigModelServiceImpl implements BigModelService {
 
     @Override
     public Mono<PageResultT<List<BigModel>>> findPage(RequestPage<BigModel> requestPage) {
-        return ReactivePageQuery.of(r2dbcEntityTemplate, BigModel.class, requestPage)
-                .like(BigModel.Fields.name,requestPage.getCondition().getName())
+        return reactiveQuery.createQuery(BigModel.class, requestPage)
+                .like(BigModel.Fields.name, requestPage.getCondition().getName())
                 .page();
     }
 }

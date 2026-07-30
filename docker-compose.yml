@@ -1,0 +1,362 @@
+# ============================================================
+# 智能推荐云平台 - Docker Compose 编排
+# Java 25 + Spring Boot 3.5 + Spring Cloud 2025
+# ============================================================
+#
+# 【使用说明】
+# 1. 构建并启动全部服务：  docker compose up -d --build
+# 2. 仅启动某个服务：      docker compose up -d --build gateway
+# 3. 查看服务状态：        docker compose ps
+# 4. 查看服务日志：        docker compose logs -f <service-name>
+# 5. 停止所有服务：        docker compose down
+#
+# 【微服务模块说明】
+# ┌──────────────────────┬────────────────────────────┬────────────┐
+# │ 服务名               │ Maven 模块路径             │ 端口(prod) │
+# ├──────────────────────┼────────────────────────────┼────────────┤
+# │ gateway              │ gsy-gateway-cloud/...     │ 9528       │
+# │ system               │ gsy-system-cloud/...      │ 9527       │
+# │ ai-app               │ gsy-ai-cloud/ai-app       │ 9531       │
+# │ goods                │ gsy-goods-cloud/goods-app │ 9300       │
+# │ order                │ gsy-order-cloud/order-app │ 9532       │
+# │ behavior             │ gsy-behavior-cloud/...    │ 9530       │
+# │ upload               │ gsy-upload-cloud          │ 9529       │
+# │ review               │ gsy-review-cloud/...      │ 9533       │
+# └──────────────────────┴────────────────────────────┴────────────┘
+#
+# 【基础设施服务】(见文末注释部分)
+# Nacos / MySQL / Redis / MongoDB / PostgreSQL / Qdrant / Gorse
+# ============================================================
+
+services:
+  # ==================== API 网关 ====================
+  gateway:
+    build:
+      context: .
+      args:
+        MODULE: gsy-gateway-cloud/gateway-server-app
+    image: gsy-gateway:latest
+    container_name: gsy-gateway
+    ports:
+      - "9528:9528"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - TZ=Asia/Shanghai
+      # Nacos 地址（Docker 内部网络使用服务名）
+      - SPRING_CLOUD_NACOS_SERVER_ADDR=nacos:8848
+      - SPRING_CLOUD_NACOS_USERNAME=nacos
+      - SPRING_CLOUD_NACOS_PASSWORD=nacos
+      - SPRING_CLOUD_NACOS_DISCOVERY_NAMESPACE=dev
+      # Redis
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+    restart: always
+    networks:
+      - gsy-network
+
+  # ==================== 系统服务 ====================
+  system:
+    build:
+      context: .
+      args:
+        MODULE: gsy-system-cloud/system-app
+    image: gsy-system:latest
+    container_name: gsy-system
+    ports:
+      - "9527:9527"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - TZ=Asia/Shanghai
+      - SPRING_CLOUD_NACOS_SERVER_ADDR=nacos:8848
+      - SPRING_CLOUD_NACOS_USERNAME=nacos
+      - SPRING_CLOUD_NACOS_PASSWORD=nacos
+      - SPRING_CLOUD_NACOS_DISCOVERY_NAMESPACE=dev
+      - SPRING_R2DBC_URL=r2dbc:mysql://mysql:3306/gsy-sys-cloud
+      - SPRING_R2DBC_USERNAME=root
+      - SPRING_R2DBC_PASSWORD=1234
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/gsy-sys-cloud
+    restart: always
+    networks:
+      - gsy-network
+
+  # ==================== AI 服务 ====================
+  ai-app:
+    build:
+      context: .
+      args:
+        MODULE: gsy-ai-cloud/ai-app
+    image: gsy-ai:latest
+    container_name: gsy-ai
+    ports:
+      - "9531:9531"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - TZ=Asia/Shanghai
+      - SPRING_CLOUD_NACOS_SERVER_ADDR=nacos:8848
+      - SPRING_CLOUD_NACOS_USERNAME=nacos
+      - SPRING_CLOUD_NACOS_PASSWORD=nacos
+      - SPRING_CLOUD_NACOS_DISCOVERY_NAMESPACE=dev
+      - SPRING_R2DBC_MYSQL_URL=r2dbc:mysql://mysql:3306/gsy-ai-cloud
+      - SPRING_R2DBC_MYSQL_USERNAME=root
+      - SPRING_R2DBC_MYSQL_PASSWORD=1234
+      - SPRING_R2DBC_POSTGRES_URL=r2dbc:postgresql://postgresql:5432/gsy-embedding-cloud
+      - SPRING_R2DBC_POSTGRES_USERNAME=postgres
+      - SPRING_R2DBC_POSTGRES_PASSWORD=123456
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_MONGODB_PRIMARY_URI=mongodb://mongodb:27017/gsy-ai-cloud
+      - SPRING_DATA_MONGODB_SECONDARY_URI=mongodb://mongodb:27017/gsy-embedding-cloud
+    restart: always
+    networks:
+      - gsy-network
+
+  # ==================== 商品服务 ====================
+  goods:
+    build:
+      context: .
+      args:
+        MODULE: gsy-goods-cloud/goods-app
+    image: gsy-goods:latest
+    container_name: gsy-goods
+    ports:
+      - "9300:9300"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - TZ=Asia/Shanghai
+      - SPRING_CLOUD_NACOS_SERVER_ADDR=nacos:8848
+      - SPRING_CLOUD_NACOS_USERNAME=nacos
+      - SPRING_CLOUD_NACOS_PASSWORD=nacos
+      - SPRING_CLOUD_NACOS_DISCOVERY_NAMESPACE=dev
+      - SPRING_R2DBC_URL=r2dbc:mysql://mysql:3306/gsy-goods-cloud
+      - SPRING_R2DBC_USERNAME=root
+      - SPRING_R2DBC_PASSWORD=1234
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/gsy-goods-cloud
+    restart: always
+    networks:
+      - gsy-network
+
+  # ==================== 订单服务 ====================
+  order:
+    build:
+      context: .
+      args:
+        MODULE: gsy-order-cloud/order-app
+    image: gsy-order:latest
+    container_name: gsy-order
+    ports:
+      - "9532:9532"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - TZ=Asia/Shanghai
+      - SPRING_CLOUD_NACOS_SERVER_ADDR=nacos:8848
+      - SPRING_CLOUD_NACOS_USERNAME=nacos
+      - SPRING_CLOUD_NACOS_PASSWORD=nacos
+      - SPRING_CLOUD_NACOS_DISCOVERY_NAMESPACE=dev
+      - SPRING_R2DBC_URL=r2dbc:mysql://mysql:3306/gsy-order-cloud
+      - SPRING_R2DBC_USERNAME=root
+      - SPRING_R2DBC_PASSWORD=1234
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/gsy-order-cloud
+    restart: always
+    networks:
+      - gsy-network
+
+  # ==================== 行为服务 ====================
+  behavior:
+    build:
+      context: .
+      args:
+        MODULE: gsy-behavior-cloud/behavior-app
+    image: gsy-behavior:latest
+    container_name: gsy-behavior
+    ports:
+      - "9530:9530"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - TZ=Asia/Shanghai
+      - SPRING_CLOUD_NACOS_SERVER_ADDR=nacos:8848
+      - SPRING_CLOUD_NACOS_USERNAME=nacos
+      - SPRING_CLOUD_NACOS_PASSWORD=nacos
+      - SPRING_CLOUD_NACOS_DISCOVERY_NAMESPACE=dev
+      - SPRING_R2DBC_URL=r2dbc:mysql://mysql:3306/gsy-behavior-cloud
+      - SPRING_R2DBC_USERNAME=root
+      - SPRING_R2DBC_PASSWORD=1234
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/gsy-behavior-cloud
+    restart: always
+    networks:
+      - gsy-network
+
+  # ==================== 上传服务 ====================
+  upload:
+    build:
+      context: .
+      args:
+        MODULE: gsy-upload-cloud
+    image: gsy-upload:latest
+    container_name: gsy-upload
+    ports:
+      - "9529:9529"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - TZ=Asia/Shanghai
+      - SPRING_CLOUD_NACOS_SERVER_ADDR=nacos:8848
+      - SPRING_CLOUD_NACOS_USERNAME=nacos
+      - SPRING_CLOUD_NACOS_PASSWORD=nacos
+      - SPRING_CLOUD_NACOS_DISCOVERY_NAMESPACE=dev
+    restart: always
+    networks:
+      - gsy-network
+
+  # ==================== 评论服务 ====================
+  review:
+    build:
+      context: .
+      args:
+        MODULE: gsy-review-cloud/review-app
+    image: gsy-review:latest
+    container_name: gsy-review
+    ports:
+      - "9533:9533"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - TZ=Asia/Shanghai
+      - SPRING_CLOUD_NACOS_SERVER_ADDR=nacos:8848
+      - SPRING_CLOUD_NACOS_USERNAME=nacos
+      - SPRING_CLOUD_NACOS_PASSWORD=nacos
+      - SPRING_CLOUD_NACOS_DISCOVERY_NAMESPACE=dev
+      - SPRING_R2DBC_URL=r2dbc:mysql://mysql:3306/gsy-order-cloud
+      - SPRING_R2DBC_USERNAME=root
+      - SPRING_R2DBC_PASSWORD=1234
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/gsy-order-cloud
+    restart: always
+    networks:
+      - gsy-network
+
+networks:
+  gsy-network:
+    driver: bridge
+
+# ============================================================
+# 以下为基础设施服务，根据需要取消注释使用
+# 如果已有外部基础设施服务，请保持注释状态
+# ============================================================
+#
+#  # ==================== Nacos 注册中心 + 配置中心 ====================
+#  nacos:
+#    image: nacos/nacos-server:v2.4.2
+#    container_name: gsy-nacos
+#    ports:
+#      - "8848:8848"
+#      - "9848:9848"
+#    environment:
+#      - MODE=standalone
+#      - SPRING_DATASOURCE_PLATFORM=mysql
+#      - MYSQL_SERVICE_HOST=mysql
+#      - MYSQL_SERVICE_PORT=3306
+#      - MYSQL_SERVICE_DB_NAME=nacos_config
+#      - MYSQL_SERVICE_USER=root
+#      - MYSQL_SERVICE_PASSWORD=1234
+#    restart: always
+#    networks:
+#      - gsy-network
+#
+#  # ==================== MySQL 数据库 ====================
+#  mysql:
+#    image: mysql:8.4
+#    container_name: gsy-mysql
+#    ports:
+#      - "3306:3306"
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=1234
+#      - MYSQL_CHARACTER_SET_SERVER=utf8mb4
+#      - MYSQL_COLLATION_SERVER=utf8mb4_unicode_ci
+#    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+#    volumes:
+#      - mysql-data:/var/lib/mysql
+#    restart: always
+#    networks:
+#      - gsy-network
+#
+#  # ==================== Redis ====================
+#  redis:
+#    image: redis:7-alpine
+#    container_name: gsy-redis
+#    ports:
+#      - "6379:6379"
+#    command: redis-server --appendonly yes
+#    volumes:
+#      - redis-data:/data
+#    restart: always
+#    networks:
+#      - gsy-network
+#
+#  # ==================== MongoDB ====================
+#  mongodb:
+#    image: mongodb:7
+#    container_name: gsy-mongodb
+#    ports:
+#      - "27017:27017"
+#    volumes:
+#      - mongodb-data:/data/db
+#    restart: always
+#    networks:
+#      - gsy-network
+#
+#  # ==================== PostgreSQL (向量嵌入) ====================
+#  postgresql:
+#    image: postgres:16-alpine
+#    container_name: gsy-postgresql
+#    ports:
+#      - "5432:5432"
+#    environment:
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=123456
+#      - POSTGRES_DB=gsy-embedding-cloud
+#    volumes:
+#      - postgresql-data:/var/lib/postgresql/data
+#    restart: always
+#    networks:
+#      - gsy-network
+#
+#  # ==================== Qdrant 向量数据库 ====================
+#  qdrant:
+#    image: qdrant/qdrant:latest
+#    container_name: gsy-qdrant
+#    ports:
+#      - "6333:6333"
+#      - "6334:6334"
+#    volumes:
+#      - qdrant-data:/qdrant/storage
+#    restart: always
+#    networks:
+#      - gsy-network
+#
+#  # ==================== Gorse 推荐引擎 ====================
+#  gorse:
+#    image: zhenghaoz/gorse:latest
+#    container_name: gsy-gorse
+#    ports:
+#      - "8087:8087"
+#    command: server --config /etc/gorse/config.toml
+#    volumes:
+#      - gorse-data:/var/lib/gorse
+#    restart: always
+#    networks:
+#      - gsy-network
+#
+# volumes:
+#   mysql-data:
+#   redis-data:
+#   mongodb-data:
+#   postgresql-data:
+#   qdrant-data:
+#   gorse-data:

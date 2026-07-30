@@ -10,8 +10,6 @@ import com.guanshiyun.service.sysmenurole.SysRoleMenuService;
 import com.guanshiyun.signinpojo.SignUser;
 import com.guanshiyun.user.User;
 import com.guanshiyun.userpojo.SysUser;
-import io.gorse.gorse4j.Gorse;
-import io.gorse.gorse4j.Item;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -22,7 +20,6 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @SpringBootTest
@@ -106,16 +103,17 @@ class SystemAppApplicationTests {
     void test4() throws IOException {
         SignUser block = signInUpService.signIn("15287218571")
                 .block();
-        System.out.println("==================================");
-        System.out.println(block);
-        Gorse client = new Gorse("http://127.0.0.1:8087", "api_key");
-        client.insertUser(new io.gorse.gorse4j.User("bob", Map.of(
-                "company", "gorse",
-                "location", "hangzhou, china"
-        )));
-        client.insertItem(new Item("gorse-io:gorse", false, Map.of(
-                "topics", List.of("recommendation", "machine-learning")
-        ), List.of("go"), "2022-02-22", "Gorse is an open-source recommender system."));
-
+//        System.out.println("==================================");
+//        System.out.println(block);
+//        GorseClient client = new GorseClient("http://127.0.0.1:8087", "api_key");
+//        client.saveUser(new User("bob", Map.of(
+//                "company", "gorse",
+//                "location", "hangzhou, china"
+//        )));
+//        client.insertItem(new Item("gorse-io:gorse", false, Map.of(
+//                "topics", List.of("recommendation", "machine-learning")
+//        ), List.of("go"), "2022-02-22", "Gorse is an open-source recommender system."));
+//
     }
+
 }

@@ -1,6 +1,6 @@
 package com.guanshiyun.service.similarity.impl;
 
-import com.db.cursorQuery.ReactivePageQuery;
+import com.db.cursorQuery.ReactiveQuery;
 import com.db.dbnumber.ConstNumber;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.guanshiyun.controller.similarity.vo.SimilarityThresholdStrategyConfigurationPageVO;
@@ -27,15 +27,16 @@ public class SimilarityThresholdStrategyConfigurationServiceImpl
         implements SimilarityThresholdStrategyConfigurationService {
 
     private final SimilarityThresholdStrategyConfigurationRepository similarityThresholdStrategyConfigurationRepository;
-    private final ActiveSimilarityThresholdConfigurationRepository  activeSimilarityThresholdConfigurationRepository;
+    private final ActiveSimilarityThresholdConfigurationRepository activeSimilarityThresholdConfigurationRepository;
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
+    private final ReactiveQuery reactiveQuery;
 
     @Override
     public Mono<Long> save(SimilarityThresholdStrategyConfigurationSaveVO saveVO) {
         SimilarityThresholdStrategyConfiguration similarityThresholdStrategyConfiguration =
                 BeanConvertUtil.toBean(saveVO, SimilarityThresholdStrategyConfiguration.class);
-        if(Objects.nonNull(similarityThresholdStrategyConfiguration.getId())){
+        if (Objects.nonNull(similarityThresholdStrategyConfiguration.getId())) {
             return r2dbcUpdateHelper.updateIgnoreNull(
                     SimilarityThresholdStrategyConfiguration.class,
                     similarityThresholdStrategyConfiguration,
@@ -49,19 +50,17 @@ public class SimilarityThresholdStrategyConfigurationServiceImpl
     @Override
     public Mono<SimilarityThresholdStrategyConfigurationVO> findById(Long id) {
         return similarityThresholdStrategyConfigurationRepository.findById(id)
-                .map(item->BeanConvertUtil.toBean(item, SimilarityThresholdStrategyConfigurationVO.class));
+                .map(item -> BeanConvertUtil.toBean(item, SimilarityThresholdStrategyConfigurationVO.class));
     }
 
     @Override
     public Mono<PageResultT<List<SimilarityThresholdStrategyConfigurationVO>>> findAllByPageable(RequestPage<SimilarityThresholdStrategyConfigurationPageVO> requestPage) {
-        return ReactivePageQuery.of(
-                r2dbcEntityTemplate,
-                SimilarityThresholdStrategyConfiguration.class,
-                BeanConvertUtil.toBean(requestPage,SimilarityThresholdStrategyConfiguration.class)
-
-        )
+        return reactiveQuery.createQuery(
+                        SimilarityThresholdStrategyConfiguration.class,
+                        BeanConvertUtil.toBean(requestPage, SimilarityThresholdStrategyConfiguration.class)
+                )
                 .page()
-                .map(page-> {
+                .map(page -> {
                     PageResultT<List<SimilarityThresholdStrategyConfigurationVO>> bean =
                             BeanConvertUtil.toBean(page, SimilarityThresholdStrategyConfigurationVO.class);
                     return bean;
@@ -76,11 +75,11 @@ public class SimilarityThresholdStrategyConfigurationServiceImpl
     @Override
     public Mono<Long> enableSimilarityThresholdStrategy(Long id) {
         return similarityThresholdStrategyConfigurationRepository.findById(id)
-                .flatMap(similarity->{
+                .flatMap(similarity -> {
                     Double similarityThreshold = similarity.getSimilarityThreshold();
-                   return activeSimilarityThresholdConfigurationRepository
-                           .updateSimilarityThresholdById(ConstNumber.LONG_ONE,similarityThreshold)
-                           .then(Mono.fromCallable(() -> id));
+                    return activeSimilarityThresholdConfigurationRepository
+                            .updateSimilarityThresholdById(ConstNumber.LONG_ONE, similarityThreshold)
+                            .then(Mono.fromCallable(() -> id));
                 });
     }
 }

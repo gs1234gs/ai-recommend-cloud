@@ -2,7 +2,7 @@ package com.guanshiyun.service.product.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.CursorQuery;
-import com.db.cursorQuery.ReactivePageQuery;
+import com.db.cursorQuery.ReactiveQuery;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.guanshiyun.category.Category;
@@ -67,6 +67,7 @@ public class ProductServiceImpl implements ProductService {
     private final CategoryRepository categoryRepository;
     private final TagRepository tagRepository;
     private final AiChatClientRecommendServiceApi aiChatClientRecommendServiceApi;
+    private final ReactiveQuery reactiveQuery;
 //    private final GorseClient gorseClient;
 
     @Override
@@ -383,8 +384,8 @@ public class ProductServiceImpl implements ProductService {
                 return productCategoryRepository.findByCategoryId(categoryIds.getFirst())
                         .map(ProductCategory::getProductId)
                         .collectList()
-                        .flatMap(productIds -> ReactivePageQuery
-                                .of(r2dbcEntityTemplate, Product.class, productRequestPage)
+                        .flatMap(productIds -> reactiveQuery
+                                .createQuery(Product.class, productRequestPage)
                                 .like(Product.Fields.name, condition.getName())
                                 .in(Product.Fields.id, productIds)
                                 .eq(Product.Fields.tenantId, tenantId)
@@ -394,8 +395,8 @@ public class ProductServiceImpl implements ProductService {
                                 )
                         );
             }
-            return ReactivePageQuery
-                    .of(r2dbcEntityTemplate, Product.class, productRequestPage)
+            return reactiveQuery
+                    .createQuery(Product.class, productRequestPage)
                     .like(Product.Fields.name, condition.getName())
                     .eq(Product.Fields.tenantId, tenantId)
                     .page()

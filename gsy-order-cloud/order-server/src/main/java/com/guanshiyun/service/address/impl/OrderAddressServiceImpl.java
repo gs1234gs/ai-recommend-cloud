@@ -1,7 +1,7 @@
 package com.guanshiyun.service.address.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.db.cursorQuery.ReactivePageQuery;
+import com.db.cursorQuery.ReactiveQuery;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.guanshiyun.address.OrderAddress;
@@ -35,6 +35,7 @@ public class OrderAddressServiceImpl implements OrderAddressService {
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
     private final PurChaseOrderRepository purChaseOrderRepository;
+    private final ReactiveQuery reactiveQuery;
 
     /**
      * 添加更新地址
@@ -171,8 +172,8 @@ public class OrderAddressServiceImpl implements OrderAddressService {
             if (!myLong.hasKey(ctx))
                 return Mono.error(new RuntimeException("用户未登录"));
             Long userId = myLong.findUserId(ctx);
-           return ReactivePageQuery.of(r2dbcEntityTemplate, OrderAddress.class, page)
-                   .eq(BasePojo.Fields.creator, userId)
+            return reactiveQuery.createQuery(OrderAddress.class, page)
+                    .eq(BasePojo.Fields.creator, userId)
                     .page()
                     .map(pageResultT -> PageResultT.<List<OrderAddressVO>>builder()
                             .pageNum(pageResultT.getPageNum())

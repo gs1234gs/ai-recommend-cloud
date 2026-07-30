@@ -1,6 +1,6 @@
 package com.guanshiyun.service.tenant.impl;
 
-import com.db.cursorQuery.ReactivePageQuery;
+import com.db.cursorQuery.ReactiveQuery;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.guanshiyun.base.BasePojo;
@@ -30,6 +30,7 @@ public class TenantServiceImpl implements TenantService {
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
     private final MyLong myLong;
+    private final ReactiveQuery reactiveQuery;
 
     @Override
     public Mono<Long> save(SysTenant tenant) {
@@ -66,12 +67,7 @@ public class TenantServiceImpl implements TenantService {
     public Mono<PageResultT<List<TenantVO>>> findPage(RequestPage<PageTenantVO> requestPage) {
         RequestPage<PageTenantVO> pageTenantVORequestPage = PageUtils.pageValidation(requestPage, PageTenantVO.class);
         RequestPage<SysTenant> request = BeanConvertUtil.toBean(pageTenantVORequestPage, SysTenant.class);
-        return ReactivePageQuery.of(
-                        r2dbcEntityTemplate,
-                        SysTenant.class,
-                        request
-
-                )
+        return reactiveQuery.createQuery(SysTenant.class, request)
                 .like(SysTenant.Fields.name, request.getCondition().getName())
                 .orderByDesc(BasePojo.Fields.createTime)
                 .page()

@@ -2,6 +2,7 @@ package com.db.r2dbcupdate;
 
 
 import com.db.dbnumber.ConstNumber;
+import com.db.dbsqlconst.SqlConst;
 import com.db.tablename.EntityTableNameUtils;
 import com.guanshiyun.mylong.MyLong;
 import lombok.RequiredArgsConstructor;
@@ -66,7 +67,6 @@ public class R2dbcUpdateHelper {
                 log.error("获取字段值失败, field: {}", field.getName(), e);
             }
         });
-
         if (updateFields.isEmpty() || idValueRef.get() == null) {
             return Mono.just(ConstNumber.LONG_ZERO);
         }
@@ -91,7 +91,7 @@ public class R2dbcUpdateHelper {
         };
 
         // 构建动态 SQL：列名转下划线，参数仍用驼峰
-        StringBuilder sql = new StringBuilder("UPDATE ").append(tableName).append(" SET ");
+        StringBuilder sql = new StringBuilder(SqlConst.SQL_UPDATE).append(tableName).append(SqlConst.SQL_SET);
         for (Map.Entry<String, Object> entry : updateFields.entrySet()) {
             String column = camelToUnderline.apply(entry.getKey()); // updateTime → update_time
             sql.append(column).append("=:").append(entry.getKey()).append(", ");
@@ -100,10 +100,11 @@ public class R2dbcUpdateHelper {
 
         // WHERE 条件列名也转换
         String idColumn = camelToUnderline.apply(idFieldName);
-        sql.append(" WHERE ").append(idColumn).append("=:").append(idFieldName);
+        sql.append(SqlConst.SQL_WHERE).append(idColumn).append("=:").append(idFieldName);
 
         // 构建执行器
-        DatabaseClient.GenericExecuteSpec spec = databaseClient.sql(sql.toString());
+        String sqlString = sql.toString();
+        DatabaseClient.GenericExecuteSpec spec = databaseClient.sql(sqlString);
 
         // 绑定参数：参数名是驼峰（对应 :updateTime），值是字段值
         for (Map.Entry<String, Object> entry : updateFields.entrySet()) {

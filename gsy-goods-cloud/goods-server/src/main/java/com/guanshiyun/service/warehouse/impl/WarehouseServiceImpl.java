@@ -1,7 +1,7 @@
 package com.guanshiyun.service.warehouse.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.db.cursorQuery.ReactivePageQuery;
+import com.db.cursorQuery.ReactiveQuery;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.guanshiyun.controller.warehouse.vo.WarehouseSaveVO;
@@ -34,6 +34,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final MyLong myLong;
     private final DatabaseClient databaseClient;
     private final R2dbcEntityTemplate r2dbcEntityTemplate;
+    private final ReactiveQuery reactiveQuery;
 
     //保存仓库信息,仓库ID为空则保存，非空则更新
     @Override
@@ -113,8 +114,7 @@ public class WarehouseServiceImpl implements WarehouseService {
                     if (!myLong.hasKey(ctx))
                         return Mono.error(new Throwable("用户未登录"));
                     Long tenantId = myLong.findTenantId(ctx);
-                    return ReactivePageQuery.of(r2dbcEntityTemplate,
-                                    Warehouse.class, page)
+                    return reactiveQuery.createQuery(Warehouse.class, page)
                             .like(Warehouse.Fields.name, requestPage.getCondition().getName())
                             .eq(Warehouse.Fields.tenantId, tenantId)
                             .page()

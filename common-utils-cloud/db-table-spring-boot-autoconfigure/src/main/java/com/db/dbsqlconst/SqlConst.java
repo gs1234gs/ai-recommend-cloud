@@ -45,7 +45,9 @@ public class SqlConst {
     public static final String SQL_WHERE_ID = " where id = ";
     public static final String SQL_WHERE_ID_IN = " where id in ";
     public static final String SQL_WHERE_ID_NOT_IN = " where id not in ";
-    public static final String SQL_PREFIX = "%";
+    public static final String SQL_PREFIX = " % ";
     //空格
     public static final String SQL_SPACE = " ";
+    public static final String SQL_UPDATE = " update ";
+    public static final String SQL_SET = " set ";
 }

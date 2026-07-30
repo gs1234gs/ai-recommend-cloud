@@ -57,7 +57,6 @@ public class SKUServiceImpl implements SKUService {
     private final ObjectMapper objectMapper;
     private final SKUWarehouseRepository skuWarehouseRepository;
     private final WarehouseRepository warehouseRepository;
-
     /**
      * 解析 picList 字段（数据库里存的是 JSON 字符串）
      */

@@ -1,7 +1,7 @@
 package com.guanshiyun.service.tag.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.db.cursorQuery.ReactivePageQuery;
+import com.db.cursorQuery.ReactiveQuery;
 import com.db.dbnumber.ConstNumber;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.guanshiyun.controller.tag.vo.TagSaveVO;
@@ -34,6 +34,7 @@ public class TagServiceImpl implements TagService {
     private final ProductTagRepository productTagRepository;
     private final SnowflakePermanent snowflakePermanent;
     private final MyLong myLong;
+    private final ReactiveQuery reactiveQuery;
 
     @Override
     public Mono<Long> save(TagSaveVO tagSaveVO) {
@@ -86,8 +87,7 @@ public class TagServiceImpl implements TagService {
             }
             Long userId = myLong.findUserId(ctx);
             Long tenantId = myLong.findTenantId(ctx);
-            return ReactivePageQuery.of(
-                            r2dbcEntityTemplate,
+            return reactiveQuery.createQuery(
                             Tag.class,
                             RequestPage.<Tag>builder()
                                     .condition(BeanUtil.toBean(

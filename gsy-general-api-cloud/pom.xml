@@ -102,7 +102,7 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.14.1</version>
                     <configuration>
-                        <release>25</release>
+                        <release>21</release>
                         <encoding>UTF-8</encoding>
                         <!-- 关键：Lombok 注解处理器 -->
                         <annotationProcessorPaths>

@@ -1,7 +1,7 @@
 package com.guanshiyun.service.category.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.db.cursorQuery.ReactivePageQuery;
+import com.db.cursorQuery.ReactiveQuery;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.guanshiyun.category.Category;
 import com.guanshiyun.controller.category.vo.CategorySaveVO;
@@ -35,6 +35,8 @@ public class CategoryServiceImpl implements CategoryService {
     private final MyLong myLong;
     private final ProductCategoryRepository productCategoryRepository;
     private final SnowflakePermanent snowflakePermanent;
+    private final ReactiveQuery reactiveQuery;
+
 
     /**
      * 添加 类型
@@ -113,7 +115,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Mono<PageResultT<List<CategoryVO>>> findPage(RequestPage<CategoryVO> requestPage) {
         RequestPage<Category> page = BeanConvertUtil.toBean(requestPage, Category.class);
-        return ReactivePageQuery.of(r2dbcEntityTemplate, Category.class, page)
+        return reactiveQuery.createQuery(Category.class, page)
                 .like(Category.Fields.name, requestPage.getCondition().getName())
                 .page()
                 .map(pageResultT ->

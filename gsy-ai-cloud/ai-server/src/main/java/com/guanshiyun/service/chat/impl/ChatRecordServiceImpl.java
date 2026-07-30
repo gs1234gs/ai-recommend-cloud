@@ -2,6 +2,7 @@ package com.guanshiyun.service.chat.impl;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import com.db.cursorQuery.ReactiveQuery;
 import com.db.page.PageUtils;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.chat.ChatRecord;
@@ -48,6 +49,7 @@ public class ChatRecordServiceImpl implements ChatRecordService {
     private final ChatRecordContentMongodbRepository chatRecordContentMongodbRepository;
     private final MyLong myLong;
     private final ReactiveMongoTemplate reactiveMongoTemplate;
+    private final ReactiveQuery reactiveQuery;
 
 
     /**

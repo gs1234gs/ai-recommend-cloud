@@ -17,8 +17,10 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 分页查询构造器（R2DBC版）
@@ -30,64 +32,82 @@ public class ReactivePageQuery<T> {
     //  使用经过 validate 的 page
     private final RequestPage<T> validatedPage;
     private Criteria criteria = Criteria.empty();
-    private Sort.Order order = Sort.Order.desc(SqlConst.ID);
+    private Sort order = Sort.by(Sort.Order.desc(SqlConst.ID));
 
     public ReactivePageQuery(R2dbcEntityTemplate r2dbcEntityTemplate,
                              Class<T> entityClass,
                              RequestPage<T> page) {
         this.r2dbcEntityTemplate = r2dbcEntityTemplate;
         this.entityClass = entityClass;
-        this.validatedPage = PageUtils.pageValidation(page,entityClass);
+        this.validatedPage = PageUtils.pageValidation(page, entityClass);
     }
 
 
-
     public static <T> ReactivePageQuery<T> of(R2dbcEntityTemplate r2dbcEntityTemplate,
-                                        Class<T> entityClass,
-                                        RequestPage<T> page) {
+                                              Class<T> entityClass,
+                                              RequestPage<T> page) {
         return new ReactivePageQuery<>(r2dbcEntityTemplate, entityClass, page)
                 .delFlagQuery(entityClass); // 自动触发 validate
     }
 
-    public ReactivePageQuery<T> eq(String field, Object value){
+    public ReactivePageQuery<T> eq(String field, Object value) {
         if (value != null) {
             this.criteria = this.criteria.and(field).is(value);
         }
         return this;
     }
-    public ReactivePageQuery<T> like(String field, String value){
+
+    public ReactivePageQuery<T> like(String field, String value) {
         return like(field, value, LikeType.CONTAINS);
     }
-    public ReactivePageQuery<T> likeLeft(String field, String value){
+
+    public ReactivePageQuery<T> likeLeft(String field, String value) {
         return like(field, value, LikeType.STARTS_WITH);
     }
-    public ReactivePageQuery<T> likeRight(String field, String value){
+
+    public ReactivePageQuery<T> likeRight(String field, String value) {
         return like(field, value, LikeType.ENDS_WITH);
     }
-    public ReactivePageQuery<T> orderByDesc(String field){
-        this.order = Sort.Order.desc(field);
+
+    public ReactivePageQuery<T> orderByDesc(String... fields) {
+        if (Objects.isNull(fields) || fields.length == 0) {
+            return this;
+        }
+        Sort.Order[] orders = Arrays.stream(fields)
+                .map(field -> Sort.Order.desc(field))
+                .toArray(Sort.Order[]::new);
+        this.order = Sort.by(orders);
         return this;
     }
-    public ReactivePageQuery<T> orderByAsc(String field){
-        this.order = Sort.Order.asc(field);
+
+    public ReactivePageQuery<T> orderByAsc(String... fields) {
+        if (Objects.isNull(fields) || fields.length == 0) {
+            return this;
+        }
+        Sort.Order[] orders = Arrays.stream(fields)
+                .map(field -> Sort.Order.asc(field))
+                .toArray(Sort.Order[]::new);
+        this.order = Sort.by(orders);
         return this;
     }
-    public Mono<Long> count(){
-        return r2dbcEntityTemplate.count(Query.query( criteria), entityClass);
+
+    public Mono<Long> count() {
+        return r2dbcEntityTemplate.count(Query.query(criteria), entityClass);
     }
-    public Flux<T> list(){
+
+    public Flux<T> list() {
         Long pageNum = validatedPage.getPageNum();
         Integer pageSize = validatedPage.getPageSize();
         long offset = (pageNum - 1) * pageSize;
         Query limit = Query.query(criteria)
-                .sort(Sort.by(order))
+                .sort(order)
                 .limit(pageSize)
                 .offset(offset);
         return r2dbcEntityTemplate.select(limit, entityClass);
     }
 
 
-    public Mono<PageResultT<List<T>>> page(){
+    public Mono<PageResultT<List<T>>> page() {
         return count()
                 .flatMap(total -> list()
                         .collectList()
@@ -109,6 +129,7 @@ public class ReactivePageQuery<T> {
         }
         return this;
     }
+
     public ReactivePageQuery<T> gt(String field, Object value) {
         if (value != null) {
             this.criteria = this.criteria.and(field).greaterThan(value);
@@ -163,7 +184,7 @@ public class ReactivePageQuery<T> {
      */
     public <V> ReactivePageQuery<T> notIn(String field, Collection<V> values) {
         if (values != null && !values.isEmpty()) {
-            this.criteria = this.criteria.and(field).notIn( values);
+            this.criteria = this.criteria.and(field).notIn(values);
         }
         return this;
     }
@@ -175,7 +196,7 @@ public class ReactivePageQuery<T> {
      */
     public ReactivePageQuery<T> ne(String field, Object value) {
         if (value != null) {
-            this.criteria = this.criteria.and(field).notIn( value);
+            this.criteria = this.criteria.and(field).notIn(value);
         } else {
             // null 情况下使用 isNull()
             return isNotNull(field);
@@ -200,6 +221,7 @@ public class ReactivePageQuery<T> {
         this.criteria = this.criteria.and(field).isNotNull();
         return this;
     }
+
     private ReactivePageQuery<T> like(String field, String value, LikeType type) {
         if (!StringUtils.hasText(value)) return this;
 

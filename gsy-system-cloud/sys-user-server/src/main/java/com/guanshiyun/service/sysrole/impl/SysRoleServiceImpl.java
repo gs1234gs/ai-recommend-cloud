@@ -1,11 +1,8 @@
 package com.guanshiyun.service.sysrole.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
-import com.db.constsql.SqlConst;
-import com.db.page.PageUtils;
+import com.db.cursorQuery.ReactiveQuery;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
-import com.db.tablename.MyStringUtils;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.sysrole.vo.SysRoleSaveVO;
 import com.guanshiyun.controller.sysrole.vo.SysRoleVO;
@@ -21,10 +18,7 @@ import com.guanshiyun.service.sysrole.SysRoleService;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
-import org.springframework.data.relational.core.query.Criteria;
-import org.springframework.data.relational.core.query.Query;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.reactive.TransactionalOperator;
@@ -47,6 +41,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     private final R2dbcUpdateHelper r2dbcUpdateHelper;
     private final SysRoleMenuRepository sysRoleMenuRepository;
     private final MyLong myLong;
+    private final ReactiveQuery reactiveQuery;
 
     //添加或者更新角色
     @Override
@@ -118,44 +113,24 @@ public class SysRoleServiceImpl implements SysRoleService {
 
     @Override
     public Mono<PageResultT<List<SysRoleVO>>> findPage(RequestPage<SysRoleVO> requestPage) {
-        requestPage = PageUtils.pageValidation(requestPage, SysRoleVO.class);
-        // 前端没传 pageSize 时默认10条
-        Long pageNum = requestPage.getPageNum();
-        int pageSize = requestPage.getPageSize();
-        // 条件
-        Criteria criteria = Criteria.empty();
-        String name = requestPage.getCondition().getName();
-        //不为空，模糊查询
-        if (StrUtil.isNotBlank(name)) {
-            criteria = criteria.and(SysRole.Fields.name).like(SqlConst.PERCENT + name + SqlConst.PERCENT);
-        }
-        long offset =
-                (pageNum - 1) * pageSize;
-        // 数据查询：按 createTime 降序，推荐加上 id 作为二级排序
-        Query dataQuery = Query.query(criteria)
-                .sort(Sort.by(
-                        Sort.Order.desc(MyStringUtils.camelToUnderlineSmart(BasePojo.Fields.createTime)),
-                        Sort.Order.desc(SysRole.Fields.id) // 防止 createTime 重复导致数据错位
-                ))
-                .offset(offset)
-                .limit(pageSize);
-        // 总数查询
-        Query countQuery = Query.query(criteria);
-        return template.select(countQuery, SysRole.class)
-                .count()
-                .flatMap(count -> template.select(dataQuery, SysRole.class)
-                        .map(role -> BeanUtil.toBean(role, SysRoleVO.class))
-                        .collectList()
-                        .map(list -> PageResultT.<List<SysRoleVO>>builder()
-                                .total(count)
-                                .rows(list)
-                                .build()
-                        )
-                )
-                .onErrorResume(throwable -> {
-                    log.error("查询角色列表异常", throwable);
-                    return Mono.just(PageResultT.<List<SysRoleVO>>builder().build());
-                });
+        RequestPage<SysRole> pageRequest = BeanConvertUtil.toBean(requestPage, SysRole.class);
+        SysRole condition = pageRequest.getCondition();
+      return Mono.deferContextual(ctx->{
+          Boolean hasKey = myLong.hasKey(ctx);
+          if(!hasKey){
+              return Mono.error(new Exception("用户不存在"));
+          }
+          Long tenantId = myLong.findTenantId(ctx);
+          return reactiveQuery.createQuery(SysRole.class, pageRequest)
+                   .like(SysRole.Fields.name, condition.getName())
+                   .orderByDesc(BasePojo.Fields.createTime,SysRole.Fields.id)
+                   .page()
+                   .map(page -> BeanConvertUtil.toBean(page, SysRoleVO.class))
+                   .onErrorResume(throwable -> {
+                       log.error("查询角色列表异常", throwable);
+                       return Mono.just(PageResultT.<List<SysRoleVO>>builder().build());
+                   });
+       });
     }
 
     @Override
