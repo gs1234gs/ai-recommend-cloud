@@ -51,6 +51,13 @@ public class ResultT<T> {
                 .build();
     }
 
+    public static <T> ResultT<T> success(String msg,T data){
+        return ResultT.<T>builder()
+                .code(HttpStatus.OK.value())
+                .msg(msg)
+                .build();
+    }
+
     public static <T> ResultT<T> success(String msg){
         return ResultT.<T>builder()
                 .code(HttpStatus.OK.value())

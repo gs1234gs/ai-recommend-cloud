@@ -18,7 +18,6 @@ import com.guanshiyun.service.sysrole.SysRoleService;
 import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.reactive.TransactionalOperator;
@@ -34,7 +33,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class SysRoleServiceImpl implements SysRoleService {
     private final SysRoleRepository sysRoleRepository;
-    private final R2dbcEntityTemplate template;
     private final DatabaseClient databaseClient;
     private final TransactionalOperator transactionalOperator;
     private final SysUserRoleRepository sysUserRoleRepository;
@@ -139,23 +137,19 @@ public class SysRoleServiceImpl implements SysRoleService {
                 .bind(SysRole.Fields.id, id)
                 .fetch()
                 .rowsUpdated()
-                .flatMap(rowsUpdated ->
-                        databaseClient.sql("delete from sys_role_menu where role_id = :roleId")
+                .flatMap(rowsUpdated -> databaseClient.sql("delete from sys_role_menu where role_id = :roleId")
                                 .bind(SysRoleMenu.Fields.roleId, id)
                                 .fetch()
                                 .rowsUpdated()
                                 .flatMap(rowsChildren ->
                                         databaseClient.sql("delete from sys_user_role where role_id = :roleId")
-                                                .bind(
-                                                        SysRoleMenu.Fields.roleId, id)
+                                                .bind(SysRoleMenu.Fields.roleId, id)
                                                 .fetch()
                                                 .rowsUpdated()
                                                 .thenReturn(rowsUpdated)
                                 )
                 )
-                .as(transaction ->
-                        transaction.as(transactionalOperator::transactional)
-                );
+                .as(transactionalOperator::transactional);
     }
 
     //根据用户id获取角色

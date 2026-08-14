@@ -50,4 +50,8 @@ public class SqlConst {
     public static final String SQL_SPACE = " ";
     public static final String SQL_UPDATE = " update ";
     public static final String SQL_SET = " set ";
+
+    //逗号
+    public static final String COMMA_SPACE = ", ";    // 逗号+空格
+    public static final String EQUALS_COLON = "=:";
 }

@@ -9,15 +9,12 @@ import com.guanshiyun.service.signin.SignInUpService;
 import com.guanshiyun.signinpojo.SignUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -58,18 +55,8 @@ public class SignInUpController {
                 .flatMap(check -> {
                     return signInUpService.signUp(signUpUser)
                             .map(up -> {
-                                if (up) {
-                                    return ResultT.<Boolean>builder()
-                                            .code(HttpStatus.OK.value())
-                                            .msg("注册成功")
-                                            .data(up)
-                                            .build();
-                                }
-                                return ResultT.<Boolean>builder()
-                                        .code(HttpStatus.BAD_REQUEST.value())
-                                        .msg("用户已存在,请重新注册")
-                                        .data(up)
-                                        .build();
+                                if (up) return ResultT.success("注册成功",up);
+                                return ResultT.error("用户已存在,请重新注册", up);
                             });
                 });
 
@@ -79,23 +66,6 @@ public class SignInUpController {
     @PostMapping("/findCode")
     public Mono<ResultT<String>> findCode(@RequestBody SignUser signUser) {
         return customReactiveAuthenticationManager.sendVerificationCode(signUser.getUsername())
-                .map(msg -> ResultT.<String>builder()
-                        .code(HttpStatus.OK.value())
-                        .msg(msg)
-                        .build());
-    }
-
-    //固定用户
-    public List<String> getFixedUsers() {
-        return List.of("admin",
-                "guanshiyun",
-                "xvchaliu",
-                "test",
-                "15287919470",
-                "152872185729",
-                "152872185711",
-                "15385699875",
-                "15385699878",
-                "15287945678");
+                .map(ResultT::success);
     }
 }

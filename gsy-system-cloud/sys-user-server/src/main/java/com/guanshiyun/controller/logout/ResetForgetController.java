@@ -19,8 +19,7 @@ public class ResetForgetController {
 
 
     @PostMapping("/forget")
-    public Mono<Result> resetForget(
-            @RequestBody SignRequestUser signRequestUser){
+    public Mono<Result> resetForget(@RequestBody SignRequestUser signRequestUser){
         return resetForgetService.resetForget(signRequestUser);
     }
 

@@ -94,13 +94,13 @@ public class R2dbcUpdateHelper {
         StringBuilder sql = new StringBuilder(SqlConst.SQL_UPDATE).append(tableName).append(SqlConst.SQL_SET);
         for (Map.Entry<String, Object> entry : updateFields.entrySet()) {
             String column = camelToUnderline.apply(entry.getKey()); // updateTime → update_time
-            sql.append(column).append("=:").append(entry.getKey()).append(", ");
+            sql.append(column).append(SqlConst.EQUALS_COLON).append(entry.getKey()).append(SqlConst.COMMA_SPACE);
         }
         sql.setLength(sql.length() - 2); // 去掉最后逗号
 
         // WHERE 条件列名也转换
         String idColumn = camelToUnderline.apply(idFieldName);
-        sql.append(SqlConst.SQL_WHERE).append(idColumn).append("=:").append(idFieldName);
+        sql.append(SqlConst.SQL_WHERE).append(idColumn).append(SqlConst.EQUALS_COLON).append(idFieldName);
 
         // 构建执行器
         String sqlString = sql.toString();
