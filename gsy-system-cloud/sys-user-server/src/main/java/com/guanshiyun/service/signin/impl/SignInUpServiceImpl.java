@@ -58,7 +58,6 @@ public class SignInUpServiceImpl implements SignInUpService {
 //            return Mono.error(new Throwable("用户名长度不能小于6"));
 //        }
         String username = signUser.getUsername();
-
         SysUser sysUser = SysUser.builder()
                 .id(null)
                 .createTime(LocalDateTime.now())
@@ -72,8 +71,8 @@ public class SignInUpServiceImpl implements SignInUpService {
                         .flatMap(user ->
                                 sysUserRoleService.addUserRole(user.getId(), List.of(RoleIdConst.ROLE_COMMON_USER))
                                         .flatMap(result -> {
-                                                    //添加角色
-                                                    log.info("注册成功: {}", result);
+                                            //添加角色
+                                            log.info("注册成功: {}", result);
                                             LinkedHashMap<String, Object> linkedHashMap = new LinkedHashMap<>();
                                             linkedHashMap.put(SysUser.Fields.username, username);
                                             linkedHashMap.put("school", "滇西应用技术大学");
@@ -85,10 +84,8 @@ public class SignInUpServiceImpl implements SignInUpService {
                                             return gorseClient.saveUser(gorseUser)
                                                     .thenReturn(Boolean.TRUE);
                                                 }
-
                                         )
                         )
-
                         .transform(transactionalOperator::transactional)
                 )
                 .onErrorResume(throwable -> {
@@ -101,7 +98,7 @@ public class SignInUpServiceImpl implements SignInUpService {
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         // 添加用户类型角色（前缀"ROLE_"）
         authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getType()));
-        return sysMenuFlux(user.getId())
+        return sysMenu(user.getId())
                 .collectList()
                 .flatMap(menus -> {
 //                         return  Mono.just(
@@ -144,7 +141,7 @@ public class SignInUpServiceImpl implements SignInUpService {
                 });
     }
 
-    public Flux<SysMenu> sysMenuFlux(Long userId) {
+    public Flux<SysMenu> sysMenu(Long userId) {
 
         return sysUserRoleService.findRoleIdsByUserId(userId)
                 .collectList()
