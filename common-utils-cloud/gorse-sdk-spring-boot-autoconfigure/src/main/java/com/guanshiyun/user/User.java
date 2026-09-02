@@ -1,5 +1,6 @@
 package com.guanshiyun.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -24,7 +25,9 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@JsonIgnoreProperties(
+        ignoreUnknown = true
+)
 @EqualsAndHashCode
 @Accessors(chain = true)
 @FieldNameConstants

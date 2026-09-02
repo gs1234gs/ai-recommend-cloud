@@ -26,7 +26,10 @@ public class RedisReactiveAutoConfiguration {
 
     @Bean
     public ReactiveRedisUtil reactiveRedisUtil(ReactiveRedisTemplate<String, String> reactiveRedisTemplate, ObjectMapper objectMapper) {
-        return new ReactiveRedisUtil(reactiveRedisTemplate,objectMapper);
+        return ReactiveRedisUtil.builder()
+                .redisTemplate(reactiveRedisTemplate)
+                .objectMapper(objectMapper)
+                .build();
     }
 
 }

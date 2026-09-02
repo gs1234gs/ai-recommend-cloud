@@ -2,6 +2,7 @@ package com.guanshiyun.reactiveredis;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import reactor.core.publisher.Flux;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 @RequiredArgsConstructor
+@Builder
 public class ReactiveRedisUtil {
 
     private final ReactiveRedisTemplate<String, String> redisTemplate;

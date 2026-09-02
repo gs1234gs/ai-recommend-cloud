@@ -2,6 +2,7 @@ package com.guanshiyun.goser;
 
 import com.guanshiyun.feedback.Feedback;
 import com.guanshiyun.items.Item;
+import com.guanshiyun.items.ItemIterator;
 import com.guanshiyun.rowAffected.RowAffected;
 import com.guanshiyun.user.User;
 import lombok.AllArgsConstructor;
@@ -17,6 +18,8 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 @Slf4j
 @Data
@@ -68,6 +71,15 @@ public class GorseClient implements Serializable {
                 "/api/item/" + itemId,
                 null,
                 Item.class
+        );
+    }
+
+    public Mono<ItemIterator> searchItems(String query, int n) {
+        String encodedQuery = URLEncoder.encode(query, StandardCharsets.UTF_8);
+      return this.request(HttpMethod.GET,
+                "/api/items?q=" + encodedQuery + "&n=" + n,
+                null,
+                ItemIterator.class
         );
     }
 

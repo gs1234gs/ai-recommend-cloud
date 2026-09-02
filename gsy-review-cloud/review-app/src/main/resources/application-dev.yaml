@@ -64,7 +64,7 @@ gorse:
   api-key: api-key
 
 server:
-  port: 9533
+  port: 9534
 
 logging:
   level:

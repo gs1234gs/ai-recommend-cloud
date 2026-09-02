@@ -83,4 +83,10 @@ public class Feedback implements Serializable {
      */
     @JsonProperty("Timestamp")
     private String timestamp;
+
+    @JsonProperty("Labels")
+    private Object labels;
+
+    @JsonProperty("Comment")
+    private String comment;
 }
