@@ -54,7 +54,7 @@
         <all.dash.version>2.22.31</all.dash.version>
         <common.version>2.1</common.version>
         <powerjob.version>5.1.2</powerjob.version>
-        <sentinel.version>1.8.9</sentinel.version>
+        <sentinel.version>1.8.10</sentinel.version>
         <djl.version>0.29.0</djl.version>
         <jasync.version>2.2.4</jasync.version>
         <ai.djl.pytorch.version>1.9.1</ai.djl.pytorch.version>

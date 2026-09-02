@@ -1,18 +1,13 @@
 package com.guanshiyun;
 
-import com.guanshiyun.audit.AuditingConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration;
 
 /**
  * Hello world!
  *
  */
-@SpringBootApplication(exclude = {
-        R2dbcAutoConfiguration.class,
-        AuditingConfig.class
-})
+@SpringBootApplication
 public class UploadAppApplication
 {
     public static void main( String[] args )

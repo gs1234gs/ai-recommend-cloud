@@ -29,7 +29,11 @@
             <artifactId>microservice-security-spring-boot-starter</artifactId>
             <version>${snapshotName}</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.guanshiyun</groupId>
+            <artifactId>ai-server-api</artifactId>
+            <version>${snapshotName}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-loadbalancer</artifactId>
@@ -56,8 +60,28 @@
         <dependency>
             <groupId>com.alibaba.csp</groupId>
             <artifactId>sentinel-spring-webflux-adapter</artifactId>
-
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-r2dbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.asyncer</groupId>
+            <artifactId>r2dbc-mysql</artifactId>
+        </dependency>
+        <!-- H2 Database (for dev) -->
+<!--        <dependency>-->
+<!--            <groupId>com.h2database</groupId>-->
+<!--            <artifactId>h2</artifactId>-->
+<!--            <scope>runtime</scope>-->
+<!--        </dependency>-->
+
+        <!-- R2DBC Driver for H2 -->
+<!--        <dependency>-->
+<!--            <groupId>io.r2dbc</groupId>-->
+<!--            <artifactId>r2dbc-h2</artifactId>-->
+<!--            <scope>runtime</scope>-->
+<!--        </dependency>-->
         <!-- 规则持久化依赖 -->
         <dependency>
             <groupId>com.alibaba.csp</groupId>

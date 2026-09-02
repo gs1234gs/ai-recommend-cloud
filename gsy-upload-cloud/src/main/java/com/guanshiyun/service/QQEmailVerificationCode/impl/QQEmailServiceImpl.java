@@ -5,8 +5,9 @@ import com.guanshiyun.service.QQEmailVerificationCode.QQEmailCodeService;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -15,23 +16,21 @@ import reactor.core.publisher.Mono;
 @Service
 @RequiredArgsConstructor
 public class  QQEmailServiceImpl implements QQEmailCodeService {
-    private final JavaMailSender javaMailSender;
-
-    // 从配置文件中读取发件人邮箱，避免硬编码
-    @Value("${spring.mail.username}")
-    private String fromEmail;
+    private final ObjectProvider<JavaMailSender> mailSenderProvider;
 
     /**
      * 发送邮箱验证码
      */
     @Override
     public Mono<Boolean> sendQQEmailCode(QQCode qqCode) {
+        JavaMailSender javaMailSender = mailSenderProvider.getObject();
+        String fromEmail = ((JavaMailSenderImpl) javaMailSender).getUsername();
         return Mono.fromCallable(() -> {
-
             // 2. 准备发送邮件
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
+            assert fromEmail != null;
             helper.setFrom(fromEmail);
             helper.setTo(qqCode.getEmail());
             helper.setSubject("滇西集团验证码");

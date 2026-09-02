@@ -38,35 +38,17 @@ spring:
   webflux:
     multipart:
       max-in-memory-size: 100MB
-  mail:
-    host: smtp.qq.com             # QQ邮箱的SMTP服务器地址
-    port: 587                     # 端口号（也可以用465并配合开启SSL）
-    username: 2167162427@qq.com      # 你的QQ邮箱完整地址
-    password: rnsiyliiwkfreaic       # 注意！这里填授权码，不是QQ登录密码
-    default-encoding: utf-8       # 默认编码，防止中文乱码
-    properties:
-      mail:
-        smtp:
-          auth: true              # 开启身份认证
-          starttls:
-            enable: true          # 开启TLS加密
-            required: true        # 必须使用TLS加密
-
-#aliyun-oss
-aliyun:
-  oss:
-    endpoint: https://oss-cn-beijing.aliyuncs.com
-    bucketName: gsy-ai-recommend-cloud
-    accessKeyId: LTAI5tNC3nPEEfGJ2P56wTvG
-    accessKeySecret: 5VeOsZIVmOSGPsBVWvIcyhE4y4MUbE
-    region: cn-beijing
-  sms:
-    access-key-id: LTAI5tNC3nPEEfGJ2P56wTvG
-    access-key-secret: 5VeOsZIVmOSGPsBVWvIcyhE4y4MUbE
-    region: cn-hangzhou
-    sign-name: 阿里云
-    template-code: SMS_123456789 # 你的验证码模板CODE
-    endpoint: dysmsapi.aliyuncs.com
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/gsy-up-cloud
+    username: root
+    password: 1234
+    pool:
+      enabled: true                 # 显式开启连接池（Spring Boot 3通常默认开启，写上更稳妥）
+      initial-size: 20              # 应用启动时预先创建好的空闲连接数（避免冷启动时临时建连接耗时）
+      max-size: 150                 # 【最关键】最大连接数！默认通常只有10，根据你的压测需求建议调到50~100
+      max-idle-time: 30m            # 连接的最大空闲时间，超过这个时间没被使用就会被释放
+      max-life-time: 60m            # 连接的最大存活时间，防止长连接在数据库端异常断开
+      max-acquire-time: 10s         # 获取连接的最大等待超时时间（配合你的压测代码，防止请求无限卡死）
 
 logging:
   level:

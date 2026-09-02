@@ -1,5 +1,14 @@
 package com.guanshiyun.client;
 
+import com.alibaba.cloud.ai.dashscope.api.DashScopeApi;
+import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatModel;
+import com.alibaba.cloud.ai.dashscope.chat.DashScopeChatOptions;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.guanshiyun.base.ApiKey;
+import com.guanshiyun.service.apikey.ApiKeyService;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.ollama.OllamaEmbeddingModel;
 import org.springframework.ai.ollama.api.OllamaApi;
@@ -8,8 +17,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import java.util.Objects;
+
 @Configuration
+@RequiredArgsConstructor
 public class AiEmbeddingConfig {
+
+    private final ApiKeyService apiKeyService;
+    private final ObjectMapper objectMapper;
     /**
      * 【关键修改】Bean 名称改为 "localEmbeddingModel" (不能叫 ollamaEmbeddingModel)
      * 这样 Ollama 的自动配置就不会覆盖它了！
@@ -32,13 +47,22 @@ public class AiEmbeddingConfig {
                 .build();
     }
 
-//    @Bean
-//    public DashScopeChatModel dashScopeChatModel() {
-//        return DashScopeChatModel.builder()
-//                .dashScopeApi(DashScopeApi.builder().apiKey(dashScopeApiKey).baseUrl("https://api.dashscope.com").build())
-//                .defaultOptions(DashScopeChatOptions.builder()
-//                        .model("Qwen3.5-Plus")
-//                        .build())
-//                .build();
-//    }
+    @SneakyThrows
+    @Bean
+    public DashScopeChatModel dashScopeChatModel() {
+        String apiKey= Objects.requireNonNull(apiKeyService.findApiKey().block()).getAiDashscope();
+        var aiDashscope = objectMapper.readValue(apiKey, new TypeReference<ApiKey.AiDashscope>() {
+        });
+        return DashScopeChatModel.builder()
+                .dashScopeApi(
+                        DashScopeApi.builder()
+                        .apiKey(aiDashscope.getApiKey())
+                        .baseUrl("https://api.dashscope.com")
+                        .build()
+                )
+                .defaultOptions(DashScopeChatOptions.builder()
+                        .model("qwen-plus")
+                        .build())
+                .build();
+    }
 }

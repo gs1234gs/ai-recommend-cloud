@@ -17,4 +17,7 @@ public class AiApiUrl {
     public static final String EMBEDDING_PRODUCT_RECOMMEND_BY_GORSE_SAVE = EMBEDDING + "/product/gorseItem";
     //delete
     public static final String EMBEDDING_PRODUCT_RECOMMEND_BY_GORSE_DELETE = EMBEDDING + "/product/gorseItem/{itemId}";
+
+    //获取密钥
+    public static String FIND_API_KEY_URL = "/apikey/find";
 }
