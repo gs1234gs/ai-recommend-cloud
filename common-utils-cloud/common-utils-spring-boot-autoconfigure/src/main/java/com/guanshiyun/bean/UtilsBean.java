@@ -2,6 +2,7 @@ package com.guanshiyun.bean;
 
 
 import com.guanshiyun.mylong.MyLong;
+import com.guanshiyun.print.runner.AppStartRunner;
 import com.guanshiyun.snowflake.SnowflakePermanent;
 import com.guanshiyun.utils.WebContextUtils;
 import org.springframework.context.annotation.Bean;
@@ -35,5 +36,10 @@ public class UtilsBean {
     @Bean
     public WebContextUtils webContextUtils() {
         return new WebContextUtils(myLong());
+    }
+
+    @Bean
+    public AppStartRunner appStartRunner() {
+        return new AppStartRunner();
     }
 }
