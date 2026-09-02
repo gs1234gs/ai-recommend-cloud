@@ -1,12 +1,12 @@
 package com.guanshiyun.controller.sysrole;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.guanshiyun.controller.sysrole.vo.SysRoleSaveVO;
 import com.guanshiyun.controller.sysrole.vo.SysRoleVO;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.sysrole.SysRoleService;
+import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -74,7 +74,7 @@ public class SysRoleController {
     @GetMapping("findRoleListByUserId/{userId}")
     public Mono<ResultT<List<SysRoleVO>>> findAllByUserId(@PathVariable Long userId) {
         return sysRoleService.findAllByUserId(userId)
-                .map(role -> BeanUtil.toBean(role, SysRoleVO.class))
+                .map(role -> BeanConvertUtil.toBean(role, SysRoleVO.class))
                 .collectList()
                 .map(ResultT::success)
                 .switchIfEmpty(Mono.just(ResultT.error("获取角色列表失败")))

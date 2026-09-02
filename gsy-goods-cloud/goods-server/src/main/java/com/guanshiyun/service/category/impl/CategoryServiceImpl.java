@@ -1,6 +1,5 @@
 package com.guanshiyun.service.category.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.ReactiveQuery;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.guanshiyun.category.Category;
@@ -43,7 +42,7 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public Mono<Long> save(CategorySaveVO categorySaveVO) {
-        Category category = BeanUtil.toBean(categorySaveVO, Category.class).setCode(snowflakePermanent.stringNextId());
+        Category category = BeanConvertUtil.toBean(categorySaveVO, Category.class).setCode(snowflakePermanent.stringNextId());
         return Mono.deferContextual(ctx -> {
             if (!myLong.hasKey(ctx))
                 return Mono.error(new RuntimeException("用户未登录"));

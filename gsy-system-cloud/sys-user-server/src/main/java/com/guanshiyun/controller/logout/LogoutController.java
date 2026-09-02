@@ -19,10 +19,10 @@ public class LogoutController {
     @GetMapping()
     public Mono<ResultT<Long>> logout(){
         return logoutService.logout()
-                .map(aLong -> ResultT.success("退出成功！", aLong))
+                .map(aLong -> ResultT.<Long>success("退出成功！", aLong))
                 .onErrorResume(throwable ->{
                     log.error("退出失败！", throwable);
-                    return Mono.just(ResultT.error("退出失败！" + throwable.getMessage()));
-                        });
+                    return Mono.just(ResultT.<Long>error("退出失败！",null));
+                });
     }
 }

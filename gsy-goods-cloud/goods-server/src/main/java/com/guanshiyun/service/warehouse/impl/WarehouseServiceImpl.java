@@ -1,6 +1,5 @@
 package com.guanshiyun.service.warehouse.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.ReactiveQuery;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
@@ -39,7 +38,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     //保存仓库信息,仓库ID为空则保存，非空则更新
     @Override
     public Mono<Long> save(WarehouseSaveVO warehouseSaveVO) {
-        Warehouse warehouse = BeanUtil.toBean(warehouseSaveVO, Warehouse.class);
+        Warehouse warehouse = BeanConvertUtil.toBean(warehouseSaveVO, Warehouse.class);
         return Mono.deferContextual(ctx -> {
                     if (!myLong.hasKey(ctx))
                         return Mono.error(new Throwable("用户未登录"));
@@ -104,7 +103,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         Long pageNum = chatRecordRequestPage.getPageNum();
         //每页数量
         Integer pageSize = PageUtils.pageSize(chatRecordRequestPage.getPageSize());
-        Warehouse warehouse = BeanUtil.toBean(requestPage.getCondition(), Warehouse.class);
+        Warehouse warehouse = BeanConvertUtil.toBean(requestPage.getCondition(), Warehouse.class);
         RequestPage<Warehouse> page = RequestPage.<Warehouse>builder()
                 .condition(warehouse)
                 .pageNum(pageNum)
@@ -126,7 +125,7 @@ public class WarehouseServiceImpl implements WarehouseService {
                                         .total(pageResultT.getTotal())
                                         .rows(rows.stream()
                                                 .map(warehouseItem ->
-                                                        BeanUtil.toBean(warehouseItem, WarehouseVO.class)
+                                                        BeanConvertUtil.toBean(warehouseItem, WarehouseVO.class)
                                                 )
                                                 .toList()
                                         )
@@ -148,7 +147,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     @Override
     public Mono<WarehouseVO> findById(Long id) {
         return warehouseRepository.findById(id)
-                .map(warehouse -> BeanUtil.toBean(warehouse, WarehouseVO.class));
+                .map(warehouse -> BeanConvertUtil.toBean(warehouse, WarehouseVO.class));
     }
 
     @Override

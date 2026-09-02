@@ -1,7 +1,6 @@
 package com.guanshiyun.service.chat.impl;
 
 
-import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.ReactiveQuery;
 import com.db.page.PageUtils;
 import com.guanshiyun.base.BasePojo;
@@ -16,6 +15,7 @@ import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.chat.ChatRecordService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
+import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -124,7 +124,7 @@ public class ChatRecordServiceImpl implements ChatRecordService {
                             .map(entity -> {
                                 // 转换 VO，此时 entity.getContentTexts() 应为 null (因为被 exclude 了)
                                 // 双重保险：确保 VO 中也不包含内容
-                                return BeanUtil.toBean(entity, ChatRecordVO.class);
+                                return BeanConvertUtil.toBean(entity, ChatRecordVO.class);
                             })
                             .collectList();
 

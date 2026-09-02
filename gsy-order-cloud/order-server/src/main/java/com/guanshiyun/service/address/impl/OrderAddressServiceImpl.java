@@ -1,6 +1,5 @@
 package com.guanshiyun.service.address.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.ReactiveQuery;
 import com.db.page.PageUtils;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
@@ -42,7 +41,7 @@ public class OrderAddressServiceImpl implements OrderAddressService {
      */
     @Override
     public Mono<Long> save(OrderAddressSaveVO orderAddressSaveVO) {
-        OrderAddress orderAddress = BeanUtil.toBean(orderAddressSaveVO, OrderAddress.class);
+        OrderAddress orderAddress = BeanConvertUtil.toBean(orderAddressSaveVO, OrderAddress.class);
         return Mono.deferContextual(ctx -> {
             if (!myLong.hasKey(ctx))
                 return Mono.error(new RuntimeException("用户未登录"));
@@ -101,7 +100,7 @@ public class OrderAddressServiceImpl implements OrderAddressService {
     public Mono<OrderAddressVO> findByOrderId(Object orderId) {
         return purChaseOrderRepository.findById(myLong.myLong(orderId))
                 .flatMap(purChaseOrder -> orderAddressRepository.findById(purChaseOrder.getAddressId())
-                        .map(orderAddress -> BeanUtil.toBean(orderAddress, OrderAddressVO.class)))
+                        .map(orderAddress -> BeanConvertUtil.toBean(orderAddress, OrderAddressVO.class)))
                 .onErrorResume(throwable -> {
                     log.error("查询地址失败：", throwable);
                     return Mono.error(new Exception("查询地址失败"));
@@ -114,7 +113,7 @@ public class OrderAddressServiceImpl implements OrderAddressService {
     public Mono<List<OrderAddressVO>> findByUserId(Long userId) {
         return orderAddressRepository.findByUserId(userId)
                 .map(orderAddress ->
-                        BeanUtil.toBean(orderAddress, OrderAddressVO.class))
+                        BeanConvertUtil.toBean(orderAddress, OrderAddressVO.class))
                 .collectList()
                 .onErrorResume(throwable -> {
                     log.error("查询地址失败：", throwable);
@@ -132,7 +131,7 @@ public class OrderAddressServiceImpl implements OrderAddressService {
 
             return orderAddressRepository.findByUserId(userId)
                     .map(orderAddress ->
-                            BeanUtil.toBean(orderAddress, OrderAddressVO.class))
+                            BeanConvertUtil.toBean(orderAddress, OrderAddressVO.class))
                     .collectList()
 
                     .onErrorResume(throwable -> {
@@ -148,7 +147,7 @@ public class OrderAddressServiceImpl implements OrderAddressService {
                 .collectList()
                 .flatMap(addressListId ->
                         orderAddressRepository.findByOrderIds(addressListId)
-                                .map(orderAddress -> BeanUtil.toBean(orderAddress, OrderAddressVO.class))
+                                .map(orderAddress -> BeanConvertUtil.toBean(orderAddress, OrderAddressVO.class))
                                 .collectList()
                 )
                 .onErrorResume(throwable -> {
@@ -160,7 +159,7 @@ public class OrderAddressServiceImpl implements OrderAddressService {
     @Override
     public Mono<OrderAddressVO> findById(Long id) {
         return orderAddressRepository.findById(id)
-                .map(orderAddress -> BeanUtil.toBean(orderAddress, OrderAddressVO.class));
+                .map(orderAddress -> BeanConvertUtil.toBean(orderAddress, OrderAddressVO.class));
     }
 
     @Override

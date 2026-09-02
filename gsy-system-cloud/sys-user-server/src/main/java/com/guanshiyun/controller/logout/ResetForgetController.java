@@ -1,7 +1,7 @@
 package com.guanshiyun.controller.logout;
 
 import com.guanshiyun.pojo.signreqpojo.SignRequestUser;
-import com.guanshiyun.responsepojo.Result;
+import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.resetforget.ResetForgetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,7 @@ public class ResetForgetController {
 
 
     @PostMapping("/forget")
-    public Mono<Result> resetForget(@RequestBody SignRequestUser signRequestUser){
+    public Mono<ResultT<Object>> resetForget(@RequestBody SignRequestUser signRequestUser){
         return resetForgetService.resetForget(signRequestUser);
     }
 

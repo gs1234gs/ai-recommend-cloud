@@ -1,7 +1,6 @@
 package com.guanshiyun.exception;
 
 
-import com.guanshiyun.responsepojo.Result;
 import com.guanshiyun.responsepojo.ResultT;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,24 +18,15 @@ public class GlobalException {
     @ExceptionHandler(Throwable.class)
     public Mono<ResultT<Object>> handleAllException(Throwable e, ServerWebExchange exchange) {
         log.error("全局异常捕获：{}", e.getMessage(), e);
-
-        return Mono.just(ResultT.builder()
-                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                .msg(e.getMessage())
-                .data(null) // 可返回堆栈信息（生产可删）
-                .build());
+        return Mono.just(ResultT.error(e.getMessage()));
     }
 
     /**
      * 捕获自定义异常
      */
     @ExceptionHandler(RuntimeException.class)
-    public Mono<Result> handleRuntimeException(RuntimeException ex) {
-        return Mono.just(Result.builder()
-                .code(HttpStatus.FORBIDDEN.value())
-                .msg(ex.getMessage())
-                .data(null)
-                .build());
+    public Mono<ResultT<Object>> handleRuntimeException(RuntimeException ex) {
+        return Mono.just(ResultT.error(HttpStatus.FORBIDDEN.value(),ex.getMessage()));
     }
 
 }

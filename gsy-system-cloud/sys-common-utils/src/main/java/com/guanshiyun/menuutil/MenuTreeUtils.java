@@ -1,11 +1,10 @@
 package com.guanshiyun.menuutil;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.guanshiyun.menupojo.SysMenu;
 import com.guanshiyun.menupojo.reponse.SysMenuResponse;
+import com.guanshiyun.utils.BeanConvertUtil;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
-
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,7 @@ import java.util.stream.Collectors;
 public class MenuTreeUtils {
     public Flux<SysMenuResponse> buildMenuTree(List<SysMenu> menus) {
         List<SysMenuResponse> sysMenuResponseList = menus.stream().map(
-                menu -> BeanUtil.toBean(menu, SysMenuResponse.class)
+                menu -> BeanConvertUtil.toBean(menu, SysMenuResponse.class)
         ).toList();
         // 将菜单按父节点分组
         Map<Long, List<SysMenuResponse>> parentMap = sysMenuResponseList.stream()

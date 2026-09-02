@@ -1,6 +1,5 @@
 package com.guanshiyun.service.order.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.ReactivePageQuery;
 import com.db.cursorQuery.ReactiveQuery;
 import com.db.dbnumber.ConstNumber;
@@ -80,7 +79,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
             LocalDateTime now = LocalDateTime.now();
             //订单
             PurChaseOrder purChaseOrder =
-                    BeanUtil.toBean(purChaseOrderSaveVO, PurChaseOrder.class);
+                    BeanConvertUtil.toBean(purChaseOrderSaveVO, PurChaseOrder.class);
             purChaseOrder
                     .setId(id)
                     .setOrderPlacementTime(now)
@@ -154,7 +153,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
     @Override
     public Mono<List<PurChaseOrderVO>> findByUserId(Long userId, Integer rows) {
         return purChaseOrderRepository.findAllByUserId(userId, rows)
-                .map(purChaseOrder -> BeanUtil.toBean(purChaseOrder, PurChaseOrderVO.class))
+                .map(purChaseOrder -> BeanConvertUtil.toBean(purChaseOrder, PurChaseOrderVO.class))
                 .collectList();
     }
 
@@ -162,7 +161,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
     public Mono<List<PurChaseOrderVO>> findByUserIds(List<Long> userIds, Integer rows) {
         return purChaseOrderRepository.findAllByUserIds(userIds, rows)
                 .map(purChaseOrder ->
-                        BeanUtil.toBean(purChaseOrder, PurChaseOrderVO.class)
+                        BeanConvertUtil.toBean(purChaseOrder, PurChaseOrderVO.class)
                 )
                 .collectList();
     }
@@ -181,7 +180,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
                                 SKUApiVO skuApiVO = tuple.getT1().getData();
                                 List<TagApiVO> tagApiVO = tuple.getT2().getData();
                                 ProductApiVO productApiVO = tuple.getT3().getData();
-                                return BeanUtil.toBean(purChaseOrder, PurchaseOrderDetailVO.class)
+                                return BeanConvertUtil.toBean(purChaseOrder, PurchaseOrderDetailVO.class)
                                         .setName(productApiVO.getName())
                                         .setSku(skuApiVO)
                                         .setTag(tagApiVO);
@@ -260,7 +259,7 @@ public class PurChaseOrderServiceImpl implements PurChaseOrderService {
                                                                 .map(list -> list.getFirst())         // 取第一张
                                                                 .orElse("https://default.com/placeholder.png"); // 默认图
 
-                                                        return BeanUtil.toBean(p, PurChaseOrderVO.class)
+                                                        return BeanConvertUtil.toBean(p, PurChaseOrderVO.class)
                                                                 .setName(skuName)
                                                                 .setImage(skuImage);
                                                     }).toList();

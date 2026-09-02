@@ -1,6 +1,5 @@
 package com.db.query;
 
-import cn.hutool.core.util.StrUtil;
 import com.db.constsql.SqlConst;
 import lombok.NoArgsConstructor;
 import org.springframework.data.relational.core.query.Criteria;
@@ -40,7 +39,7 @@ public class SafeCriteria {
     }
 
     public SafeCriteria eqIfNotNull(String column, Object value) {
-        if (Objects.nonNull(value) && StrUtil.isNotBlank(value.toString())) {
+        if (Objects.nonNull(value) && !StringUtils.hasText(value.toString())) {
             criteria = criteria.and(column).is(value);
         }
         return this;

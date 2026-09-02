@@ -82,7 +82,7 @@ gorse:
   api-key: api-key
 
 server:
-  port: 9300
+  port: 9533
 
 logging:
   level:

@@ -1,6 +1,5 @@
 package com.guanshiyun.service.sysrole.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.ReactiveQuery;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.guanshiyun.base.BasePojo;
@@ -44,7 +43,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     //添加或者更新角色
     @Override
     public Mono<Long> save(SysRoleSaveVO sysRoleSaveVO) {
-        SysRole sysRole = BeanUtil.toBean(sysRoleSaveVO, SysRole.class);
+        SysRole sysRole = BeanConvertUtil.toBean(sysRoleSaveVO, SysRole.class);
         LocalDateTime now = LocalDateTime.now();
 
         return Mono.deferContextual(ctx -> {
@@ -163,7 +162,7 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Override
     public Mono<SysRoleVO> findById(Long id) {
         return sysRoleRepository.findById(id)
-                .map(sysRole -> BeanUtil.toBean(sysRole, SysRoleVO.class));
+                .map(sysRole -> BeanConvertUtil.toBean(sysRole, SysRoleVO.class));
     }
 
     @Override

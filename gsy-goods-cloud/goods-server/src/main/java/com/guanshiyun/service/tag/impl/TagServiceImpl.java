@@ -1,6 +1,5 @@
 package com.guanshiyun.service.tag.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.ReactiveQuery;
 import com.db.dbnumber.ConstNumber;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
@@ -14,6 +13,7 @@ import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.service.tag.TagService;
 import com.guanshiyun.snowflake.SnowflakePermanent;
 import com.guanshiyun.tag.Tag;
+import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
@@ -38,7 +38,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Mono<Long> save(TagSaveVO tagSaveVO) {
-        Tag tag = BeanUtil.toBean(tagSaveVO, Tag.class);
+        Tag tag = BeanConvertUtil.toBean(tagSaveVO, Tag.class);
         LocalDateTime now = LocalDateTime.now();
         return Mono.deferContextual(ctx -> {
             if (!myLong.hasKey(ctx))
@@ -76,7 +76,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public Mono<TagVO> findById(Long id) {
         return tagRepository.findById(id)
-                .map(tag -> BeanUtil.toBean(tag, TagVO.class));
+                .map(tag -> BeanConvertUtil.toBean(tag, TagVO.class));
     }
 
     @Override
@@ -90,7 +90,7 @@ public class TagServiceImpl implements TagService {
             return reactiveQuery.createQuery(
                             Tag.class,
                             RequestPage.<Tag>builder()
-                                    .condition(BeanUtil.toBean(
+                                    .condition(BeanConvertUtil.toBean(
                                             requestPage.getCondition(),
                                             Tag.class)
                                     )
@@ -106,7 +106,7 @@ public class TagServiceImpl implements TagService {
                                 .pageSize(page.getPageSize())
                                 .total(page.getTotal())
                                 .rows(page.getRows().stream()
-                                        .map(tag -> BeanUtil.toBean(tag, TagVO.class))
+                                        .map(tag -> BeanConvertUtil.toBean(tag, TagVO.class))
                                         .toList()
                                 )
                                 .build();
@@ -136,7 +136,7 @@ public class TagServiceImpl implements TagService {
                 .flatMap(tagRepository::findById)
                 .collectList()
                 .map(tags -> tags.stream()
-                        .map(tag -> BeanUtil.toBean(tag, TagVO.class))
+                        .map(tag -> BeanConvertUtil.toBean(tag, TagVO.class))
                         .toList()
                 );
 

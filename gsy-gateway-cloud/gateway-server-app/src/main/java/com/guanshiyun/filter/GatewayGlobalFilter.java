@@ -12,7 +12,7 @@ import com.guanshiyun.consts.ConstMapClassNickName;
 import com.guanshiyun.consts.PublicEndpoints;
 import com.guanshiyun.mylong.MyLong;
 import com.guanshiyun.reactiveredis.ReactiveRedisUtil;
-import com.guanshiyun.responsepojo.Result;
+import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +23,7 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.util.StringUtils;
@@ -169,9 +170,9 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
                             response.bufferFactory()
                                     .wrap(
                                             objectMapper.writeValueAsBytes(
-                                                    Result
+                                                    ResultT
                                                             .builder()
-                                                            .code(401)
+                                                            .code(HttpStatus.UNAUTHORIZED.value())
                                                             .msg("未登陆")
                                                             .build()
                                             )
@@ -193,9 +194,9 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
                     response.bufferFactory()
                             .wrap(
                                     objectMapper.writeValueAsBytes(
-                                            Result
+                                            ResultT
                                                     .builder()
-                                                    .code(401)
+                                                    .code(HttpStatus.UNAUTHORIZED.value())
                                                     .msg("登陆已经过期")
                                                     .build()
                                     )
@@ -221,9 +222,9 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
                                     response.bufferFactory()
                                             .wrap(
                                                     objectMapper.writeValueAsBytes(
-                                                            Result
+                                                            ResultT
                                                                     .builder()
-                                                                    .code(401)
+                                                                    .code(HttpStatus.UNAUTHORIZED.value())
                                                                     .msg("登陆已经过期")
                                                                     .build()
                                                     )
@@ -241,9 +242,9 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
                                     response.bufferFactory()
                                             .wrap(
                                                     objectMapper.writeValueAsBytes(
-                                                            Result
+                                                            ResultT
                                                                     .builder()
-                                                                    .code(401)
+                                                                    .code(HttpStatus.UNAUTHORIZED.value())
                                                                     .msg("登陆已经过期")
                                                                     .build()
                                                     )
@@ -265,9 +266,9 @@ public class GatewayGlobalFilter implements GlobalFilter, Ordered {
 //                                    return response.writeWith(Mono.just(
 //                                            response.bufferFactory()
 //                                                    .wrap(JSONObject.toJSONString(
-//                                                                    Result
+//                                                                    ResultT
 //                                                                            .builder()
-//                                                                            .code(401)
+//                                                                            .code(HttpStatus.UNAUTHORIZED.value())
 //                                                                            .msg("用户没有权限访问")
 //                                                                            .build()
 //                                                            ).getBytes(StandardCharsets.UTF_8)

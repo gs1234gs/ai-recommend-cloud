@@ -1,6 +1,5 @@
 package com.guanshiyun.service.product.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.CursorQuery;
 import com.db.cursorQuery.ReactiveQuery;
 import com.db.page.PageUtils;
@@ -72,7 +71,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Mono<Long> saveProduct(ProductSaveVO productSaveVO) {
-        Product product = BeanUtil.toBean(productSaveVO, Product.class);
+        Product product = BeanConvertUtil.toBean(productSaveVO, Product.class);
         List<Long> tagIds = productSaveVO.getTagId();
         LocalDateTime now = LocalDateTime.now();
         List<Long> categoryIds = productSaveVO.getCategoryId();
@@ -416,7 +415,7 @@ public class ProductServiceImpl implements ProductService {
                 return Mono.error(new Throwable("用户未登录"));
             return Flux.fromIterable(productSaveVOList)
                     .concatMap(productSaveVO -> {
-                        Product product = BeanUtil.toBean(productSaveVO, Product.class);
+                        Product product = BeanConvertUtil.toBean(productSaveVO, Product.class);
                         product.setTenantId(tenantId);
                         return Objects.isNull(productSaveVO.getId()) ?
                                 r2dbcEntityTemplate.insert(Product.class)

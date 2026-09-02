@@ -1,7 +1,5 @@
 package com.guanshiyun.service.sysuser.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
 import com.db.cursorQuery.ReactiveQuery;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.guanshiyun.base.BasePojo;
@@ -150,7 +148,7 @@ public class SysUserServiceImpl implements SysUserService {
         }
         return sysUserRepository.findById(sysUser.getId())
                 .flatMap(sysUserDB -> {
-                            BeanUtil.copyProperties(sysUser, sysUserDB, CopyOptions.create().ignoreNullValue());
+                            BeanConvertUtil.toBean(sysUser, sysUserDB);
                             sysUserDB.setUpdateTime(LocalDateTime.now());
                             return r2dbcUpdateHelper.updateIgnoreNull(
                                             SysUser.class,

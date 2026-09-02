@@ -1,6 +1,5 @@
 package com.guanshiyun.service.collect.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.collect.UserCollectMongodb;
@@ -72,7 +71,7 @@ public class UserCollectServiceImpl implements UserCollectService {
                 return Mono.error(new RuntimeException("用户ID不能为空"));
             }
 
-            UserCollectMongodb userCollectMongodb = BeanUtil.toBean(userCollectSaveVO, UserCollectMongodb.class);
+            UserCollectMongodb userCollectMongodb = BeanConvertUtil.toBean(userCollectSaveVO, UserCollectMongodb.class);
             Long id = snowflakePermanent.nextId();
             LocalDateTime now = LocalDateTime.now();
             Long userId = ctx.get(ThreadSecurityLocalKey.THREAD_SECURITY_LOCAL_USER_ID_KEY);

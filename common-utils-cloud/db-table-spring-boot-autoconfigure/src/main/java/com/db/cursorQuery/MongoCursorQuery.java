@@ -1,6 +1,5 @@
 package com.db.cursorQuery;
 
-import cn.hutool.core.util.StrUtil;
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.responsepojo.PageResultT;
 import com.guanshiyun.sqlenums.LikeType;
@@ -9,9 +8,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
 
 import java.util.Collection;
 import java.util.List;
@@ -62,7 +61,7 @@ public class MongoCursorQuery<T> {
     }
 
     private MongoCursorQuery<T> like(String field, String value, LikeType type) {
-        if (StrUtil.isNotBlank(value)) {
+        if (StringUtils.hasText(value)) {
             String pattern = switch (type) {
                 case STARTS_WITH -> "^" + value.trim();
                 case ENDS_WITH -> value.trim() + "$";

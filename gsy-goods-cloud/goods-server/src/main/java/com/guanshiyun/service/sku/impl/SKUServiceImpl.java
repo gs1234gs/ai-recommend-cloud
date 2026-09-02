@@ -1,6 +1,5 @@
 package com.guanshiyun.service.sku.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.db.dbnumber.ConstNumber;
 import com.db.dbsqlconst.SqlConst;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
@@ -85,7 +84,7 @@ public class SKUServiceImpl implements SKUService {
     @Override
     public Mono<Long> save(SKUSaveVO skuVO) {
         List<Long> warehouseIds = skuVO.getWarehouseIds();
-        SKU sku = BeanUtil.toBean(skuVO, SKU.class)
+        SKU sku = BeanConvertUtil.toBean(skuVO, SKU.class)
                 .setPicList(objectMapper.writeValueAsString(skuVO.getPicList()));
         return Mono.deferContextual(ctx -> {
             // 判断用户是否登录
@@ -272,7 +271,7 @@ public class SKUServiceImpl implements SKUService {
                                                 .map(warehouse -> {
                                                     List<WarehouseVO> warehouseVOS =
                                                             BeanConvertUtil.toBeanList(warehouse, WarehouseVO.class);
-                                                    return BeanUtil.toBean(sku, SKUVO.class)
+                                                    return BeanConvertUtil.toBean(sku, SKUVO.class)
                                                             .setPicList(parsePicList(sku.getPicList())
                                                             )
                                                             .setWarehouseList(warehouseVOS);
@@ -365,7 +364,7 @@ public class SKUServiceImpl implements SKUService {
                                     Map<Long, List<SKUVO>> skuByProductId =
                                             skuList.stream()
                                                     .map(sku ->
-                                                            BeanUtil.toBean(sku, SKUVO.class)
+                                                            BeanConvertUtil.toBean(sku, SKUVO.class)
                                                                     .setPicList(parsePicList(sku.getPicList()))
                                                     )
                                                     .collect(Collectors.groupingBy(SKUVO::getProductId));
@@ -405,7 +404,7 @@ public class SKUServiceImpl implements SKUService {
     @Override
     public Flux<SKUVO> findByProductId(Long productId) {
         return skuRepository.findAllByProductId(productId)
-                .map(sku -> BeanUtil.toBean(sku, SKUVO.class)
+                .map(sku -> BeanConvertUtil.toBean(sku, SKUVO.class)
                         .setPicList(parsePicList(sku.getPicList()))
                 );
     }
@@ -430,7 +429,7 @@ public class SKUServiceImpl implements SKUService {
     @Override
     public Mono<List<SKUVO>> findAllByIds(List<Long> skuIds) {
         return skuRepository.findAllById(skuIds)
-                .mapNotNull(item -> BeanUtil.toBean(item, SKUVO.class))
+                .mapNotNull(item -> BeanConvertUtil.toBean(item, SKUVO.class))
                 .collect(Collectors.toList())
                 .onErrorResume(Mono::error);
     }

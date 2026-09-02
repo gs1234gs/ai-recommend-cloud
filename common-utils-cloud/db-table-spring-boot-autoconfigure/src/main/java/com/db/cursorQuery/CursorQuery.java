@@ -1,6 +1,5 @@
 package com.db.cursorQuery;
 
-import cn.hutool.core.util.StrUtil;
 import com.db.constsql.SqlConst;
 import com.db.page.CursorPageUtil;
 import com.db.tablename.MyStringUtils;
@@ -14,11 +13,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Criteria;
 import org.springframework.data.relational.core.query.Query;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.lang.reflect.Field;
-
 import java.util.Collection;
 import java.util.List;
 
@@ -65,7 +64,7 @@ public class CursorQuery<T> {
     }
 
     private CursorQuery<T> like(String field, String value, LikeType type) {
-        if (StrUtil.isBlank(value)) return this;
+        if (!StringUtils.hasText(value)) return this;
 
         String pattern = switch (type) {
             case STARTS_WITH -> value.trim() + SqlConst.PERCENT;

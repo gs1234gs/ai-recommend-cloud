@@ -50,7 +50,7 @@
         <snapshotName>0.0.1-SNAPSHOT</snapshotName>
         <r2dbc.mysql.version>1.4.2</r2dbc.mysql.version>
         <junit.version>4.13.2</junit.version>
-        <hutool.version>5.8.44</hutool.version>
+<!--        <hutool.version>5.8.44</hutool.version>-->
         <spring-ai.version>1.1.7</spring-ai.version>
         <spring-alibaba-ai.version>1.1.2.3</spring-alibaba-ai.version>
 <!--        <mcp.version>0.17.0</mcp.version>-->
@@ -175,11 +175,11 @@
                 <artifactId>gorse-client</artifactId>
                 <version>${gorse.version}</version>
             </dependency>
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>cn.hutool</groupId>-->
+<!--                <artifactId>hutool-all</artifactId>-->
+<!--                <version>${hutool.version}</version>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>io.asyncer</groupId>
                 <artifactId>r2dbc-mysql</artifactId>
@@ -214,10 +214,10 @@
             <artifactId>reactor-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>cn.hutool</groupId>-->
+<!--            <artifactId>hutool-all</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>

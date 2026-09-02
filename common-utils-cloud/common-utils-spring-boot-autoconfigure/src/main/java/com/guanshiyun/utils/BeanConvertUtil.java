@@ -1,34 +1,56 @@
 package com.guanshiyun.utils;
 
-import cn.hutool.core.bean.BeanUtil;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.guanshiyun.requestpojo.RequestCursorPage;
 import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.responsepojo.CursorPageResult;
 import com.guanshiyun.responsepojo.PageResultT;
+import lombok.SneakyThrows;
 
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class BeanConvertUtil {
-
+    private static final ObjectMapper mapper = new ObjectMapper();
+    static {
+        // 容错配置：如果目标类缺少某些字段，或者源对象有目标类不认识的字段，直接忽略，不抛异常
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    }
     /**
      * 将 source 转换成 targetClass 类型的 Bean
      */
+    @SneakyThrows
     public static <T> T toBean(Object source, Class<T> targetClass) {
-        if (Objects.isNull(source)) return BeanUtil.toBean(source, targetClass);
+        T target = targetClass.getDeclaredConstructor().newInstance();
+        if (Objects.isNull(source)) return target;
         try {
-            return BeanUtil.toBean(source, targetClass);
+            return mapper.convertValue(source, targetClass);
+
         } catch (Exception e) {
             throw new RuntimeException("Bean conversion failed", e);
         }
+    }
+
+    @SneakyThrows
+    public static void toBean(Object source, Object target) {
+        if (Objects.isNull(source) || Objects.isNull(target)){
+            throw new IllegalArgumentException("Source or target is null");
+        }
+        mapper.readerForUpdating(target).readValue(mapper.writeValueAsString(source));
     }
 
     // ========== 以下方法使用 Hutool，支持嵌套转换 ==========
 
     public static <T> List<T> toBeanList(Collection<?> source, Class<T> targetClass) {
         return source.stream()
-                .map(item -> BeanUtil.toBean(item, targetClass))
+                .map(item -> mapper.convertValue(item, targetClass))
                 .toList();
     }
 
@@ -40,7 +62,7 @@ public class BeanConvertUtil {
             return collectionFactory.get();
         }
         return source.stream()
-                .map(item -> BeanUtil.toBean(item, targetClass))
+                .map(item -> mapper.convertValue(item, targetClass))
                 .collect(Collectors.toCollection(collectionFactory));
     }
 
@@ -58,19 +80,22 @@ public class BeanConvertUtil {
             result = new ArrayList<>();
         }
 
-        source.forEach(item -> result.add(BeanUtil.toBean(item, targetClass)));
+        source.forEach(item -> {
+            result.add(mapper.convertValue(item, targetClass));
+        });
         return result;
     }
 
     // ========== 分页工具 ==========
 
+    @SneakyThrows
     public static <S, T> RequestPage<T> toBean(RequestPage<S> source, Class<T> targetConditionClass) {
         if (source == null) return null;
 
         T convertedCondition = null;
         if (source.getCondition() != null) {
-            //  使用 Hutool 支持嵌套
-            convertedCondition = BeanUtil.toBean(source.getCondition(), targetConditionClass);
+            // 通过反射实例化目标 Condition 对象
+            convertedCondition = toBean(source.getCondition(), targetConditionClass);
         }
 
         RequestPage<T> target = new RequestPage<>();
@@ -129,8 +154,7 @@ public class BeanConvertUtil {
 
         T convertedCondition = null;
         if (source.getCondition() != null) {
-            //  使用 Hutool 支持嵌套
-            convertedCondition = BeanUtil.toBean(source.getCondition(), targetConditionClass);
+            convertedCondition = mapper.convertValue(source.getCondition(), targetConditionClass);
         }
 
         return RequestCursorPage.<T>builder()

@@ -1,6 +1,5 @@
 package com.guanshiyun.service.product.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.db.cursorQuery.CursorQuery;
 import com.db.dbnumber.ConstNumber;
 import com.db.page.CursorPageUtil;
@@ -542,7 +541,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                     .flatMap(tagRepository::findById)
                     .collectList()
                     .map(tags -> tags.stream()
-                            .map(tag -> BeanUtil.toBean(tag, TagVO.class))
+                            .map(tag -> BeanConvertUtil.toBean(tag, TagVO.class))
                             .toList()
                     );
             Mono<List<SKU>> skuListMono = sKURepository.findAllByProductId(id).collectList();

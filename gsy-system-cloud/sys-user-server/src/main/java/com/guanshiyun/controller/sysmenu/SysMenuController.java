@@ -1,6 +1,5 @@
 package com.guanshiyun.controller.sysmenu;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.menupojo.SysMenu;
 import com.guanshiyun.menupojo.reponse.SysMenuResponse;
@@ -8,6 +7,7 @@ import com.guanshiyun.menuutil.MenuTreeUtils;
 import com.guanshiyun.responsepojo.ResultT;
 import com.guanshiyun.service.sysmenu.SysMenuService;
 import com.guanshiyun.tree.TreeUtil;
+import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -50,7 +50,7 @@ public class SysMenuController
                 .map(ResultT::success)
                 .onErrorResume(throwable -> {
                     log.warn("获取菜单失败", throwable);
-                    return Mono.just(ResultT.error("获取菜单失败 ： " + throwable.getMessage()));
+                    return Mono.just(ResultT.error("获取菜单失败 ： "));
                 });
     }
 
@@ -59,7 +59,7 @@ public class SysMenuController
     {
         // 明确泛型
         return sysMenuService.findMenuByUserId()
-                .map(menu -> BeanUtil.toBean(menu, SysMenuResponse.class))
+                .map(menu -> BeanConvertUtil.toBean(menu, SysMenuResponse.class))
                 .collectList()
                 .map(menuList ->
                         TreeUtil.buildTree(
@@ -70,7 +70,11 @@ public class SysMenuController
                                 SysMenuResponse.Fields.sort
                         )
                 )
-                .map(ResultT::success);
+                .map(ResultT::success)
+                .onErrorResume(e->{
+                    log.warn("获取菜单失败", e);
+                    return Mono.just(ResultT.error("获取菜单失败 ： " + e.getMessage()));
+                });
     }
 
     //获取菜单列表
@@ -79,7 +83,7 @@ public class SysMenuController
             @PathVariable(name = "id", required = false) Long id)
     {
         return sysMenuService.findAllByParentId(id)
-                .map(menu -> BeanUtil.toBean(menu, SysMenuResponse.class))
+                .map(menu -> BeanConvertUtil.toBean(menu, SysMenuResponse.class))
                 .collectList()
                 .flatMap(menuList -> Mono.just(
                         ResultT.success(TreeUtil.buildTree(
@@ -103,7 +107,7 @@ public class SysMenuController
                 )
                 .onErrorResume(throwable -> {
                     log.warn("删除菜单失败", throwable);
-                    return Mono.just(ResultT.error("删除失败 " + throwable.getMessage()));
+                    return Mono.just(ResultT.error("删除失败 "));
                 });
     }
 
@@ -114,7 +118,7 @@ public class SysMenuController
         return sysMenuService.save(sysMenu)
                 .map(ResultT::success)
                 .switchIfEmpty(Mono.just(ResultT.error("添加失败")))
-                .onErrorResume(throwable -> Mono.just(ResultT.error("添加失败" + throwable.getMessage())));
+                .onErrorResume(throwable -> Mono.just(ResultT.error("添加失败")));
     }
 
     //修改菜单
@@ -124,7 +128,7 @@ public class SysMenuController
         return sysMenuService.updateById(sysMenu)
                 .map(ResultT::success)
                 .switchIfEmpty(Mono.just(ResultT.error("修改失败")))
-                .onErrorResume(throwable -> Mono.just(ResultT.error("修改失败" + throwable.getMessage())));
+                .onErrorResume(throwable -> Mono.just(ResultT.error("修改失败")));
     }
 
     //获取菜单树
@@ -135,7 +139,7 @@ public class SysMenuController
                 .collectList()
                 .flatMap(menuList -> menuTreeUtils.buildMenuTree(menuList).collectList())
                 .map(ResultT::success)
-                .onErrorResume(throwable -> Mono.just(ResultT.error("获取菜单树失败" + throwable.getMessage())))
+                .onErrorResume(throwable -> Mono.just(ResultT.error("获取菜单树失败")))
                 .switchIfEmpty(Mono.just(ResultT.error("获取菜单树失败")));
     }
 
@@ -144,7 +148,7 @@ public class SysMenuController
     public Mono<ResultT<List<SysMenuResponse>>> findAll()
     {
         return sysMenuService.findAll()
-                .map(menu -> BeanUtil.toBean(menu, SysMenuResponse.class))
+                .map(menu -> BeanConvertUtil.toBean(menu, SysMenuResponse.class))
                 .collectList()
                 .map(menuList ->
                         TreeUtil.buildTree(menuList,
@@ -155,7 +159,7 @@ public class SysMenuController
                         )
                 )
                 .map(ResultT::success)
-                .onErrorResume(throwable -> Mono.just(ResultT.error("获取菜单树失败" + throwable.getMessage())))
+                .onErrorResume(throwable -> Mono.just(ResultT.error("获取菜单树失败")))
                 .switchIfEmpty(Mono.just(ResultT.error("获取菜单树失败")));
     }
 
@@ -164,7 +168,7 @@ public class SysMenuController
     public Mono<ResultT<List<SysMenuResponse>>> findMenuByRoleId(@PathVariable Long roleId)
     {
         return sysMenuService.findMenuByRoleId(roleId)
-                .map(menu -> BeanUtil.toBean(menu, SysMenuResponse.class))
+                .map(menu -> BeanConvertUtil.toBean(menu, SysMenuResponse.class))
                 .collectList()
                 .map(menuList -> ResultT.success(TreeUtil.buildTree(
                                 menuList,
@@ -174,6 +178,6 @@ public class SysMenuController
                                 SysMenuResponse.Fields.sort
                         ))
                 )
-                .onErrorResume(throwable -> Mono.just(ResultT.error("获取菜单树失败" + throwable.getMessage())));
+                .onErrorResume(throwable -> Mono.just(ResultT.error("获取菜单树失败")));
     }
 }

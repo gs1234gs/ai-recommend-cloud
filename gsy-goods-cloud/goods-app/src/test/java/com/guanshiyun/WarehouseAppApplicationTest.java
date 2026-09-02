@@ -1,6 +1,5 @@
 package com.guanshiyun;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.guanshiyun.controller.product.vo.ProductVO;
 import com.guanshiyun.controller.warehouse.vo.WarehouseSaveVO;
 import com.guanshiyun.controller.warehouse.vo.WarehouseVO;
@@ -9,13 +8,13 @@ import com.guanshiyun.requestpojo.RequestPage;
 import com.guanshiyun.service.product.ProductService;
 import com.guanshiyun.service.warehouse.WarehouseService;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
+import com.guanshiyun.utils.BeanConvertUtil;
 import com.guanshiyun.warehouse.Warehouse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import reactor.core.publisher.Mono;
 import reactor.util.context.Context;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ public class WarehouseAppApplicationTest {
     void testCreateWarehouses() {
         warehouseService.saveAll(
                 createWarehouses()
-                        .stream().map(w-> BeanUtil.toBean(w, Warehouse.class))
+                        .stream().map(w-> BeanConvertUtil.toBean(w, Warehouse.class))
                         .toList()
         ).subscribe(i->{
             System.out.println("保存成功："+i);

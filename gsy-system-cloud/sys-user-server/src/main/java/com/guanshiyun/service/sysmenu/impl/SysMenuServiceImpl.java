@@ -1,6 +1,5 @@
 package com.guanshiyun.service.sysmenu.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
 import com.guanshiyun.consts.ConstNumber;
 import com.guanshiyun.menupojo.SysMenu;
@@ -10,6 +9,7 @@ import com.guanshiyun.repository.menurole.SysRoleMenuRepository;
 import com.guanshiyun.repository.sysmenu.SysMenuRepository;
 import com.guanshiyun.repository.userrole.SysUserRoleRepository;
 import com.guanshiyun.service.sysmenu.SysMenuService;
+import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.r2dbc.core.DatabaseClient;
@@ -224,6 +224,6 @@ public class SysMenuServiceImpl implements SysMenuService {
     @Override
     public Mono<SysMenuResponse> findById(Long id) {
         return sysMenuRepository.findById(id)
-                .map(sysMenu -> BeanUtil.toBean(sysMenu, SysMenuResponse.class));
+                .map(sysMenu -> BeanConvertUtil.toBean(sysMenu, SysMenuResponse.class));
     }
 }

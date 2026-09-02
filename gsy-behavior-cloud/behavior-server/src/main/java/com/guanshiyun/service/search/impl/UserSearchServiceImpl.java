@@ -1,6 +1,5 @@
 package com.guanshiyun.service.search.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.db.dbnumber.ConstNumber;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.search.vo.UserSearchSaveVO;
@@ -11,6 +10,7 @@ import com.guanshiyun.search.UserSearchMongodb;
 import com.guanshiyun.service.search.UserSearchService;
 import com.guanshiyun.snowflake.SnowflakePermanent;
 import com.guanshiyun.threadcontext.ThreadSecurityLocalKey;
+import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -43,7 +43,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
         return Mono.deferContextual(ctx -> {
             UserSearchMongodb userSearchMongodb =
-                    BeanUtil.toBean(userSearchVO, UserSearchMongodb.class);
+                    BeanConvertUtil.toBean(userSearchVO, UserSearchMongodb.class);
             Long id = snowflakePermanent.nextId();
             LocalDateTime now = LocalDateTime.now();
             userSearchMongodb.setId(id).setCreateTime(now);
@@ -101,7 +101,7 @@ public class UserSearchServiceImpl implements UserSearchService {
 
             return reactiveMongoTemplate.find(query, UserSearchMongodb.class)
                     .map(item ->
-                            BeanUtil.toBean(item, UserSearchVO.class))
+                            BeanConvertUtil.toBean(item, UserSearchVO.class))
                     .collectList()
                     .onErrorResume(e -> {
                         log.error("搜索行为获取失败，userId: {}", userId, e);
