@@ -57,7 +57,7 @@ public class AiEmbeddingConfig {
                 .dashScopeApi(
                         DashScopeApi.builder()
                         .apiKey(aiDashscope.getApiKey())
-                        .baseUrl("https://api.dashscope.com")
+//                        .baseUrl("https://dashscope.aliyuncs.com")
                         .build()
                 )
                 .defaultOptions(DashScopeChatOptions.builder()

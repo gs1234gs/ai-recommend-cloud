@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.guanshiyun.base.BasePojo;
 import com.guanshiyun.controller.warehouse.vo.WarehouseVO;
+import com.guanshiyun.sku.SKU;
+import com.guanshiyun.utils.BeanConvertUtil;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.SuperBuilder;
@@ -11,7 +13,6 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -69,4 +70,28 @@ public class SKUVO extends BasePojo implements Serializable {
     private Long productId;
     //仓库
     private List<WarehouseVO> warehouseList;
+
+    @SneakyThrows
+    public static SKUVO toSKUVO(SKU sku) {
+        return SKUVO.builder()
+                .id(sku.getId())
+                .name(sku.getName())
+                .skuCode(sku.getSkuCode())
+                .price(sku.getPrice())
+                .stock(sku.getStock())
+                .salesVolume(sku.getSalesVolume())
+                .status(sku.getStatus())
+                .weight(sku.getWeight())
+                .sort(sku.getSort())
+                .publishTime(sku.getPublishTime())
+                .offlineTime(sku.getOfflineTime())
+                .detailContent(sku.getDetailContent())
+                .picList(BeanConvertUtil.parsePicList(sku.getPicList()))
+                .productId(sku.getProductId())
+                .build();
+    }
+
+    public static List<SKUVO> toSKUVOList(List<SKU> skus) {
+       return skus.stream().map(SKUVO::toSKUVO).toList();
+    }
 }

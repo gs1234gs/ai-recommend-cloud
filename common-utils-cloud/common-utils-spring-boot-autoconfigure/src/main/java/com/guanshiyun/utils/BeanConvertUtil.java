@@ -1,6 +1,7 @@
 package com.guanshiyun.utils;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -165,5 +166,28 @@ public class BeanConvertUtil {
                 .build();
     }
 
+    /**
+     * 解析 picList 字段（数据库里存的是 JSON 字符串）
+     */
+    @SneakyThrows
+    public static List<String> parsePicList(Object picListObj) {
+        if (picListObj == null) {
+            return List.of();
+        }
+
+        // 如果已经是 String（数据库读出来的就是 String）
+        if (picListObj instanceof String s) {
+//            return JSONObject.parseObject(s, List.class);
+            //noinspection Convert2Diamond
+            return mapper.readValue(s, new TypeReference<List<String>>() {
+            });
+        }
+
+        // 其他类型（防止未来改成其他类型）
+        String json = mapper.writeValueAsString(picListObj);
+        //noinspection Convert2Diamond
+        return mapper.readValue(json, new TypeReference<List<String>>() {
+        });
+    }
 }
 

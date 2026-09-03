@@ -570,7 +570,7 @@ public class RecommendProductServiceImpl implements RecommendProductService {
                                                 .map(price -> price.setScale(2, RoundingMode.HALF_UP))
                                                 .orElse(BigDecimal.ZERO)
                                 )
-                                .skuList(BeanConvertUtil.toBeanList(skuList, SKUVO.class))
+                                .skuList(SKUVO.toSKUVOList(skuList))
                                 .build();
                         return Mono.just(
                                         detailVO

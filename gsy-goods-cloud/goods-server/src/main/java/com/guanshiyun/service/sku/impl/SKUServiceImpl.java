@@ -3,7 +3,6 @@ package com.guanshiyun.service.sku.impl;
 import com.db.dbnumber.ConstNumber;
 import com.db.dbsqlconst.SqlConst;
 import com.db.r2dbcupdate.R2dbcUpdateHelper;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.guanshiyun.controller.sku.vo.SKUFindVO;
 import com.guanshiyun.controller.sku.vo.SKUGroupByProductIdVO;
@@ -56,29 +55,6 @@ public class SKUServiceImpl implements SKUService {
     private final ObjectMapper objectMapper;
     private final SKUWarehouseRepository skuWarehouseRepository;
     private final WarehouseRepository warehouseRepository;
-    /**
-     * 解析 picList 字段（数据库里存的是 JSON 字符串）
-     */
-    @SneakyThrows
-    private List<String> parsePicList(Object picListObj) {
-        if (picListObj == null) {
-            return List.of();
-        }
-
-        // 如果已经是 String（数据库读出来的就是 String）
-        if (picListObj instanceof String s) {
-//            return JSONObject.parseObject(s, List.class);
-            //noinspection Convert2Diamond
-            return objectMapper.readValue(s, new TypeReference<List<String>>() {
-            });
-        }
-
-        // 其他类型（防止未来改成其他类型）
-        String json = objectMapper.writeValueAsString(picListObj);
-        //noinspection Convert2Diamond
-        return objectMapper.readValue(json, new TypeReference<List<String>>() {
-        });
-    }
 
     @SneakyThrows
     @Override
@@ -272,8 +248,7 @@ public class SKUServiceImpl implements SKUService {
                                                     List<WarehouseVO> warehouseVOS =
                                                             BeanConvertUtil.toBeanList(warehouse, WarehouseVO.class);
                                                     return BeanConvertUtil.toBean(sku, SKUVO.class)
-                                                            .setPicList(parsePicList(sku.getPicList())
-                                                            )
+                                                            .setPicList(BeanConvertUtil.parsePicList(sku.getPicList()))
                                                             .setWarehouseList(warehouseVOS);
                                                 });
                                     }
@@ -365,7 +340,7 @@ public class SKUServiceImpl implements SKUService {
                                             skuList.stream()
                                                     .map(sku ->
                                                             BeanConvertUtil.toBean(sku, SKUVO.class)
-                                                                    .setPicList(parsePicList(sku.getPicList()))
+                                                                    .setPicList(BeanConvertUtil.parsePicList(sku.getPicList()))
                                                     )
                                                     .collect(Collectors.groupingBy(SKUVO::getProductId));
 
@@ -405,7 +380,7 @@ public class SKUServiceImpl implements SKUService {
     public Flux<SKUVO> findByProductId(Long productId) {
         return skuRepository.findAllByProductId(productId)
                 .map(sku -> BeanConvertUtil.toBean(sku, SKUVO.class)
-                        .setPicList(parsePicList(sku.getPicList()))
+                        .setPicList(BeanConvertUtil.parsePicList(sku.getPicList()))
                 );
     }
 
