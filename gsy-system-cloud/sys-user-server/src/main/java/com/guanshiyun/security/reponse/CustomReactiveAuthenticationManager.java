@@ -32,6 +32,7 @@ public class CustomReactiveAuthenticationManager implements ReactiveAuthenticati
     private final SignInUpService signInUpService;
     private final QQEmailApi qqEmailApi;
     private final ReactiveRedisUtil reactiveRedisUtil;
+    private final SecureRandom secureRandom = new SecureRandom();
 
     @Override
     public Mono<Authentication> authenticate(Authentication authentication) {
@@ -118,11 +119,11 @@ public class CustomReactiveAuthenticationManager implements ReactiveAuthenticati
 
     //生成六位数验证码
     private String generateVerificationCode() {
-        SecureRandom secureRandom = new SecureRandom();
 // 生成 100000 到 999999 之间的数，确保一定是 6 位（不会出现 012345 这种情况）
         int codeInt = secureRandom.nextInt(900000) + 100000;
         return String.valueOf(codeInt);
     }
+//   static SecureRandom secureRandom = new SecureRandom();
     public static void main(String[] args) {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         System.out.println(bCryptPasswordEncoder.encode("123456"));

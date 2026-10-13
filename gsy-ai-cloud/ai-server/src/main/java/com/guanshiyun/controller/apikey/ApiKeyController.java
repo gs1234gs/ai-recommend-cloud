@@ -18,7 +18,7 @@ public class ApiKeyController {
     private final ApiKeyService apiKeyService;
 
     @GetMapping("find")
-    Mono<ResultT<ApiKey>> findAll() {
+    public Mono<ResultT<ApiKey>> findAll() {
         return apiKeyService.findApiKey()
                 .map(spikey -> {
                     log.info("apikey findAll: {}", spikey);
